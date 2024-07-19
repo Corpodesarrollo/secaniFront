@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FiltrarnnaComponent } from './filtrarnna.component';
+import { CrearContactoComponent } from './crear-contacto.component';
 
-describe('FiltrarnnaComponent', () => {
-  let component: FiltrarnnaComponent;
-  let fixture: ComponentFixture<FiltrarnnaComponent>;
+describe('CrearContactoComponent', () => {
+  let component: CrearContactoComponent;
+  let fixture: ComponentFixture<CrearContactoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FiltrarnnaComponent]
+      imports: [CrearContactoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FiltrarnnaComponent);
+    fixture = TestBed.createComponent(CrearContactoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

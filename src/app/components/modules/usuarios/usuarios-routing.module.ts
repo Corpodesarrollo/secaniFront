@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CrearcontactoComponent } from './crearcontacto/crearcontacto.component';
+import { CrearContactoComponent } from './crear-contacto/crear-contacto.component';
 
 const routes: Routes = [
-  {
-    path: 'crearcontacto',
-    component: CrearcontactoComponent
-  },
+  { path: 'crear_contacto', component: CrearContactoComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class NnaRoutingModule { }
+export class UsuariosRoutingModule { }

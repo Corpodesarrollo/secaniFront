@@ -8,11 +8,11 @@ export const routes: Routes = [
     { path: '', component: LoginComponent },
     { path: 'login', component: LoginComponent },
     {
-        path: 'nna',
+        path: 'usuarios',
         component: ContentComponent,
         loadChildren: () =>
-            import('./components/modules/nna/nna.module').then(
-                (m) => m.NnaModule
+            import('./components/modules/usuarios/usuarios.module').then(
+                (m) => m.UsuariosModule
             )
     },
 ];
