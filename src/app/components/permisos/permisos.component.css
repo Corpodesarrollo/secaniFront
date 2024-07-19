@@ -1,0 +1,160 @@
+.navbar-urp {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.nav-button {
+    padding: 15px 30px;
+    border: none;
+    background-color: #FFFFFF;
+    font-size: 14px;
+    border-radius: 10px;
+    color: black;
+}
+
+.nav-button:hover {
+    background-color: #ddd;
+}
+
+a.active .nav-button {
+    background-color: #73B7AD;
+    color: white;
+    border-radius: 10px;
+}
+
+/************* Estilos rectangulo de los filtros *****************/
+
+.rectangle {
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+}
+
+.content-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    /* Espacio entre los elementos */
+}
+
+.dropdown-container {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+
+.dropdown-container label {
+    margin-bottom: 5px;
+}
+
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    color: white;
+    border-radius: 10px;
+    padding: 15px 30px;
+    border: none;
+}
+
+.buttons-container button {
+    color: white;
+    border-radius: 10px;
+    padding: 10px 30px;
+    border: none;
+}
+
+.consultar-button {
+    background-color: #73B7AD;
+}
+
+.limpiar-button {
+    background-color: #4d4d4d84;
+}
+
+.consultar-button:hover {
+    background-color: #73b7adba;
+}
+
+.limpiar-button:hover {
+    background-color: #4d4d4d36;
+}
+/***************** Estilos rectangulo con tabla *****************/
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    /* Espacio entre el botón y la tabla */
+}
+
+.top-right-button {
+    background-color: #FF9801;
+    border: none;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.top-right-button:hover {
+    background-color: #ff9901c3;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: center;
+    padding: 8px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    color: #B5B7C0;
+}
+
+.data-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.data-table th.large-column {
+    width: 500px;
+    /* Ancho mayor para la primera columna */
+}
+
+.data-table td {
+    text-align: center;
+    /* Centra el texto en las celdas de datos */
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+    text-align: left;
+    /* Alinea la primera columna a la izquierda */
+}
+
+/* Cambia el color de fondo del checkbox cuando está marcado */
+.p-checkbox.p-highlight {
+    background-color: #73B7AD;
+    /* Cambia el color de fondo aquí */
+}
+
+/* Cambia el color de fondo del checkbox cuando no está marcado */
+.p-checkbox {
+    background-color: #73B7AD;
+    /* Cambia el color de fondo aquí */
+}

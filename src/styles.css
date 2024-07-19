@@ -2,10 +2,24 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
-.color-fondo{
+button{
+    cursor: pointer;
+}
+
+.formato-fondo {
+    background-color: rgba(115, 183, 173, 0.05);
+    /* Color 73B7AD con opacidad del 5% */
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    padding: 15px;
+}
+
+.color-fondo {
     background-color: #73B7AD;
 }
 
-.fuente-letra{
+.fuente-letra {
     font-family: 'Montserrat', sans-serif;
 }
