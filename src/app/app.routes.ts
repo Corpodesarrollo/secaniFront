@@ -8,7 +8,7 @@ export const routes: Routes = [
     
     { path: '', component: LoginComponent },
     { path: 'login', component: LoginComponent },
-    { path: 'permisos', component: PermisosComponent }
+    { path: 'permisos', component: PermisosComponent },
     {
         path: 'usuarios',
         component: ContentComponent,
