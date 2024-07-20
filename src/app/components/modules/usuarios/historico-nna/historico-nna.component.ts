@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-historico-nna',
-  standalone: true,
-  imports: [],
+  standalone: false,
   templateUrl: './historico-nna.component.html',
   styleUrl: './historico-nna.component.css'
 })

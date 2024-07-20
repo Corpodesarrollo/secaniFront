@@ -5,5 +5,5 @@
 export const environment = {
   production: false,
   url: 'http://localhost:5078/api/', 
-  urlMsAuthention: 'https://localhost:7084/', 
+  url_MsAuthention: 'https://localhost:7084/', 
 };

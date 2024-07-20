@@ -1,6 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+body,
+html {
+    height: 100%;
+}
 
 button{
     cursor: pointer;
@@ -23,3 +29,20 @@ button{
 .fuente-letra {
     font-family: 'Montserrat', sans-serif;
 }
+
+/**
+Estilos menú
+SECÁNI-RQ00-HU00- Menú y Perfiles
+*/
+.menu-rq00-hu00 {
+    background: #D9D9D980;
+    height: 100%;
+    gap: 0px;
+    opacity: 0px;
+    min-height: 100vh;
+}
+
+/**
+Fin estilos menú
+SECÁNI-RQ00-HU00- Menú y Perfiles
+*/
