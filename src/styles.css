@@ -3,10 +3,32 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
-.color-fondo{
+body,
+html {
+    height: 100%;
+}
+
+.color-fondo {
     background-color: #73B7AD;
 }
 
-.fuente-letra{
+.fuente-letra {
     font-family: 'Montserrat', sans-serif;
 }
+
+/**
+Estilos menú
+SECÁNI-RQ00-HU00- Menú y Perfiles
+*/
+.menu-rq00-hu00 {
+    background: #D9D9D980;
+    height: 100%;
+    gap: 0px;
+    opacity: 0px;
+    min-height: 100vh;
+}
+
+/**
+Fin estilos menú
+SECÁNI-RQ00-HU00- Menú y Perfiles
+*/
