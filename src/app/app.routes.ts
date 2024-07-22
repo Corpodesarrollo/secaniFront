@@ -5,7 +5,8 @@ import { ContentComponent } from './components/content/content.component';
 
 export const routes: Routes = [
 
-    { path: '', component: LoginComponent },
+    { path: '', component: ContentComponent },
+    { path: 'home', component: ContentComponent },
     { path: 'login', component: LoginComponent },
     {
         path: 'usuarios',
