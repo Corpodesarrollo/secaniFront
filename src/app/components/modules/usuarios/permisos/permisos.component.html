@@ -17,23 +17,23 @@
         <div class="content-container">
             <div class="dropdown-container">
                 <label for="dropdown1">Rol*</label>
-                <select id="dropdown1">
-                    <option value="option1">Agente de seguimiento</option>
-                    <option value="option2">Administrador</option>
-                    <option value="option3">Funcionario</option>
+                <select id="dropdown1" (change)="onSelectChangeRol($event)">
+                    <option *ngFor="let option of selectRoles" [value]="option.id">
+                        {{ option.name }}
+                    </option>
                 </select>
             </div>
             <div class="dropdown-container">
                 <label for="dropdown2">Modulo*</label>
-                <select id="dropdown2">
-                    <option value="option1">Usuarios 1</option>
-                    <option value="option2">Usuarios 2</option>
-                    <option value="option3">Usuarios 3</option>
+                <select id="dropdown2" (change)="onSelectChangeModulo($event)">
+                    <option *ngFor="let option of selectModulos" [value]="option.id">
+                        {{ option.name }}
+                    </option>
                 </select>
             </div>
             <div class="buttons-container">
-                <button class="consultar-button">CONSULTAR</button>
-                <button class="limpiar-button">LIMPIAR</button>
+                <button class="consultar-button" (click)="onConsultarClick()">CONSULTAR</button>
+                <button class="limpiar-button" (click)="onLimpiarClick()">LIMPIAR</button>
             </div>
         </div>
     </div>
@@ -43,25 +43,27 @@
             <button class="top-right-button">GUARDAR</button>
         </div>
         <br>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th class="large-column">Funcionalidad</th>
-                    <th>Crear</th>
-                    <th>Consultar</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Historico NNA</td>
-                    <td><p-checkbox [(ngModel)]="checked1" [binary]="true" [checkboxIcon]="checked1 ? 'pi pi-check' : 'pi pi-times'" /></td>
-                    <td><p-checkbox [(ngModel)]="checked2" [binary]="true" [checkboxIcon]="checked2 ? 'pi pi-check' : 'pi pi-times'" /></td>
-                    <td><p-checkbox [(ngModel)]="checked3" [binary]="true" [checkboxIcon]="checked3 ? 'pi pi-check' : 'pi pi-times'" /></td>
-                    <td><p-checkbox [(ngModel)]="checked4" [binary]="true" [checkboxIcon]="checked4 ? 'pi pi-check' : 'pi pi-times'" /></td>
-                </tr>
-            </tbody>
-        </table>
+        <div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="large-column">Funcionalidad</th>
+                        <th>Crear</th>
+                        <th>Consultar</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="tableData.length > 0">
+                    <tr *ngFor="let row of tableData">
+                        <td>{{ row.column1 }}</td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column2"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column3"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column4"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column5"></p-checkbox></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>

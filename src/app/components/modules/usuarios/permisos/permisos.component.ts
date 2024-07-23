@@ -1,19 +1,84 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
+import { GenericService } from '../../../../services/generic.services';
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })
 
 export class PermisosComponent {
-  checked1: boolean = false;
-  checked2: boolean = false;
-  checked3: boolean = false;
-  checked4: boolean = false;
+  selectRoles: any[] = [];
+  selectModulos: any[] = [];
+
+  selectedRol: number | null = null;
+  selectedModulo: number | null = null;
+
+  tableData: any[] = [];
+
+  constructor(private dataService: GenericService) { }
+
+  ngOnInit(): void {
+    this.dataService.get_withoutParametersAxios("lista_roles").subscribe({
+      next: (data) => this.selectRoles = data,
+      error: (e) => console.error('Se presento un error al llenar la lista de roles', e),
+      complete: () => console.info('Se lleno la lista de roles')
+    });
+
+    this.dataService.get_withoutParametersAxios("lista_modulos").subscribe({
+      next: (data) => this.selectModulos = data,
+      error: (e) => console.error('Se presento un error al llenar la lista de modulos', e),
+      complete: () => console.info('Se lleno la lista de modulos')
+    });
+  }
+
+  onSelectChangeRol(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedRol = Number(selectElement.value);
+  }
+
+  onSelectChangeModulo(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedModulo = Number(selectElement.value);
+  }
+
+  onConsultarClick(): void {
+    const params: { [key: string]: any } = {};
+
+    if (this.selectedRol !== null) {
+      params['param1'] = this.selectedRol;
+    }
+
+    if (this.selectedModulo !== null) {
+      params['param2'] = this.selectedModulo;
+    }
+
+    // Limpiar la tabla antes de llenarla con nuevos datos
+    this.tableData = [];
+
+    this.dataService.getAxios('permisos', params).subscribe({
+      next: (data) => this.tableData = data,
+      error: (e) => console.error('Se presento un error al llenar la tabla de permisos', e),
+      complete: () => console.info('Se lleno la tabla de permisos')
+    });
+  }
+
+  onSaveClick(): void {
+    // Enviar los datos modificados al servidor para actualizar la información
+    this.dataService.putAxios('permisos', this.tableData).subscribe({
+      next: (response) => console.info('Se actualizaron los permisos' , response),
+      error: (e) => console.error('Se presento un error al actualizar los permisos', e),
+      complete: () => console.info('Se actualizaron los permisos correctamente')
+    });
+  }
+
+  onLimpiarClick(): void {
+    this.tableData = [];
+  }
 }
