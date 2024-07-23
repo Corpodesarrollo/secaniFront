@@ -161,10 +161,10 @@ export class MiSemanaComponent {
   }
 
   async eventos(usuarioId: number){
-    this.events = await this.servicios.GetSeguimientoUsuario(usuarioId, this.fechaInicial, this.fechaFinal);
-    /*this.events = [  { id: 1, title: 'Ramona Soler', start: '2024-07-16T10:00:00', end: '2024-07-16T10:30:00' },
+    //this.events = await this.servicios.GetSeguimientoUsuario(usuarioId, this.fechaInicial, this.fechaFinal);
+    this.events = [  { id: 1, title: 'Ramona Soler', start: '2024-07-16T10:00:00', end: '2024-07-16T10:30:00' },
       { id: 2, title: 'Evento 2', start: '2024-07-17T14:00:00', end: '2024-07-17T14:30:00' },
-    ];*/
+    ];
     this.calendarOptions.events = this.events;
   }
 
