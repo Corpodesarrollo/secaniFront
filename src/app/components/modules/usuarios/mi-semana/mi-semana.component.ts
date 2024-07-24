@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { DragDropModule } from 'primeng/dragdrop';
+import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import esLocale from '@fullcalendar/core/locales/es';
 import { CardModule } from 'primeng/card';
@@ -16,13 +17,13 @@ import { MiSemanaService } from './mi-semana.services';
   templateUrl: './mi-semana.component.html',
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
-  imports: [ CommonModule, FullCalendarModule, DragDropModule, CardModule]
+  imports: [ CommonModule, FullCalendarModule, DragDropModule, CardModule, DialogModule]
 })
 export class MiSemanaComponent {
   events: any[] = [];
   businessHours: any[] = [];
 
-  holidays: string[] = ['2024-07-18']; // Lista de días feriados
+  holidays: string[] = []; // Lista de días feriados
 
   selectedDate: Date | undefined;
   esLocale: any;
@@ -35,8 +36,11 @@ export class MiSemanaComponent {
   fechaInicial: any;
   fechaFinal: any;
 
-  constructor(public servicios: MiSemanaService) {
+  displayModal: boolean = false;
+  headerDialog: string = '';
+  bodyDialog: string = '';
 
+  constructor(public servicios: MiSemanaService) {
 
 
     this.esLocale = {
@@ -65,7 +69,7 @@ export class MiSemanaComponent {
       slotMinTime: '07:00:00',
       slotMaxTime: '18:00:00',
       hiddenDays: [0, 6],   // Ocultar el sabado y domingo
-      allDaySlot: false, // Elimina la franja "todo el día"
+      allDaySlot: false,
       height: 1320, // Establece la altura del calendario
       editable: true, // Permite arrastrar y soltar
       droppable: true, // Permite soltar eventos externos
@@ -84,7 +88,7 @@ export class MiSemanaComponent {
       },
       eventDrop: this.handleEventDrop.bind(this),
       eventContent: this.renderEventContent.bind(this),
-
+      eventClick: this.handleEventClick.bind(this)
     };
   }
 
@@ -97,13 +101,14 @@ export class MiSemanaComponent {
     2. Cargar los datos del perfil de horario del usuario, mezclar con los festivos
     */
 
-    // TODO:  SERVICIO DE FESTIVOS Y DE HORARIO LABORAL USUARIO
+    // TODO: Determinar id del usuario
     //let usuarioId = sessionStorage.getItem('usuarioId');
-    let usuarioId = 1;
+    this.usuarioId = 1;
 
     this.diasLimite(this.currentDate);
-    await this.horarioLaboral(usuarioId);
-    await this.eventos(usuarioId);
+    await this.eventos(this.usuarioId);
+    await this.horarioLaboral(this.usuarioId);
+
 
 
 
@@ -135,36 +140,79 @@ export class MiSemanaComponent {
 
 
   async horarioLaboral(usuarioId: number){
-    //TODO: REALIZAR CONSUMO HORARIO LABORAL E INTERVENIR CON FESTIVOS
+
 
     let festivos = await this.servicios.GetFestivos(this.fechaInicial, this.fechaFinal);
-    //let horarioLaboral = await this.servicios.GetHorarioLaboral(this.usuarioId);
+    //console.log("festivos", festivos)
+    let horarioLaboral = await this.servicios.GetHorarioLaboral(this.usuarioId, this.fechaInicial, this.fechaFinal);
 
-    let horario =  [
-      {
-        daysOfWeek: [ 1, 2, 3 ], // Lunes, Martes, Miércoles
-        startTime: '08:00', // 8am
-        endTime: '18:00' // 6pm
-      },
-      {
-        daysOfWeek: [ 4 ], // Jueves
-        startTime: '07:00',
-        endTime:  '07:00'  //(date: { toISOString: () => string; }) => this.holidays.includes(date.toISOString().split('T')[0]) ? '12:00' : '18:00'
-      },
-      {
-        daysOfWeek: [ 5 ], // Viernes
-        startTime: '09:00', // 9am
-        endTime: '17:00' // 5pm
-      }
-    ];
+
+    const getDayOfWeek = (dateString: string): number => {
+      const date = new Date(dateString);
+      // Los días en JavaScript van de 0 (domingo) a 6 (sábado)
+      const day = date.getDay();
+      // Ajustamos para que el lunes sea 1, martes 2, etc.
+      return day === 0 ? 7 : day;
+    };
+
+    // Convertir las fechas festivas a un conjunto para una búsqueda rápida
+    const festivosSet = new Set(festivos.map((festivo: { festivo: string }) => festivo.festivo));
+
+    // Transformación de la respuesta
+    let horario = horarioLaboral.map((item: { fecha: string; horaEntrada: string; horaSalida: string }) => {
+      const dayOfWeek = getDayOfWeek(item.fecha);
+
+      // Verificar si la fecha es festiva
+      const isFestivo = festivosSet.has(item.fecha);
+
+      // Ajustar startTime y endTime si es festivo
+      return {
+        daysOfWeek: [dayOfWeek],
+        startTime: isFestivo ? '07:00:00' : item.horaEntrada,
+        endTime: isFestivo ? '07:00:00' : item.horaSalida
+      };
+    });
+
+
     this.calendarOptions.businessHours = horario;
   }
 
   async eventos(usuarioId: number){
-    //this.events = await this.servicios.GetSeguimientoUsuario(usuarioId, this.fechaInicial, this.fechaFinal);
-    this.events = [  { id: 1, title: 'Ramona Soler', start: '2024-07-16T10:00:00', end: '2024-07-16T10:30:00' },
-      { id: 2, title: 'Evento 2', start: '2024-07-17T14:00:00', end: '2024-07-17T14:30:00' },
-    ];
+    let eventosBD = await this.servicios.GetSeguimientoUsuario(usuarioId, this.fechaInicial, this.fechaFinal);
+
+
+    // Función para sumar 30 minutos a una fecha
+    let addMinutes = (date: Date, minutes: number): Date => {
+      return new Date(date.getTime() + minutes * 60000);
+    };
+
+    this.events = eventosBD.map((item: { primerNombre: any; segundoNombre: any; primerApellido: any; segundoApellido: any; fechaSeguimiento: string | number | Date; cantidadAlertas: any; fechaNotificacionSIVIGILA: any; id: any; }) => {
+      // Concatenar nombres y apellidos
+      let title = `${item.primerNombre} ${item.segundoNombre} ${item.primerApellido} ${item.segundoApellido}`.trim();
+
+      // Fecha de seguimiento como start
+      let start = new Date(item.fechaSeguimiento);
+
+      // Sumar 30 minutos a la fecha de seguimiento para el end
+      let end = addMinutes(start, 30);
+
+      let cantidadAlertas = item.cantidadAlertas;
+      let fechaNotificacionSIVIGILA = item.fechaNotificacionSIVIGILA;
+
+      return {
+        id: item.id,
+        title: title,
+        start: start, // .toISOString()
+        end: end,
+        cantidadAlertas: cantidadAlertas,
+        fechaNotificacionSIVIGILA: fechaNotificacionSIVIGILA,
+      };
+    });
+
+    /*this.events =  [  { id: 1, title: 'Ramona Soler', start: '2024-07-23T10:00:00', end: '2024-07-23T10:30:00' },
+      { id: 2, title: 'Evento 2', start: '2024-07-24T14:00:00', end: '2024-07-24T14:30:00' },
+    ]*/
+    console.log("this.events", this.events);
     this.calendarOptions.events = this.events;
   }
 
@@ -176,7 +224,7 @@ export class MiSemanaComponent {
     if (this.calendarApi) {
       this.calendarApi.gotoDate(this.currentDate);
     }
-    console.log(' this.currentDate ', this.currentDate);
+
   }
 
   handleNext() {
@@ -185,7 +233,7 @@ export class MiSemanaComponent {
     if (this.calendarApi) {
       this.calendarApi.gotoDate(this.currentDate);
     }
-    console.log(' this.currentDate ', this.currentDate);
+
   }
 
   adjustToWeekStart(date: Date): Date {
@@ -198,19 +246,36 @@ export class MiSemanaComponent {
   }
 
 
-  handleEventDrop(info: any) {
+  async handleEventDrop(info: any) {
     const event = info.event;
-    console.log(`Evento ID: ${event.id}, Nueva Fecha y Hora: ${event.start}`);
 
-    //TODO:  CONSUMIR SERVICIO DE ACTUALIZACION DE DATOS SERVICIO
+    let data = {
+      "Id": event.id,
+      "FechaSeguimiento": this.formatDateTimeForSQLServer(event.start)
+    }
+
+    let respuesta = await this.servicios.PutActualizarSeguimiento(data);
+    console.log("respuesta ", respuesta);
+  }
+
+  formatDateTimeForSQLServer(dateString: string): string {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0 a 11
+    const day = String(date.getDate()).padStart(2, '0');
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 
   isEventAllowed(dropInfo: any) {
     const date = dropInfo.startStr.split('T')[0]; // Obtiene la parte de la fecha sin la hora
     const now = new Date();
     const eventStart = new Date(dropInfo.startStr);
-
-    console.log('this.holidays.includes(date) ', this.holidays.includes(date), ' => ', eventStart, ' now ', now)
 
     // Verifica si la fecha es un feriado o es anterior a la fecha y hora actual
     if (this.holidays.includes(date) || eventStart < now) {
@@ -223,12 +288,20 @@ export class MiSemanaComponent {
 
   renderEventContent(eventInfo: any) {
     const eventTime = new Date(eventInfo.event.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    return { html: `<div class="fc-event-custom"><b>${eventInfo.event.title}</b><br><br>Hora Sugerida: ${eventTime}</div>` };
+    return { html: `<div class="fc-event-custom"><b>${eventInfo.event.title}</b><br>Hora Sugerida: ${eventTime}</div>` };
+  }
+
+  handleEventClick(info: any) {
+    const event = info.event;
+    console.log(event)
+    //console.log(`Evento ID: ${event.id}, Nueva Fecha y Hora: ${event.start}`);
+    this.displayModal = true;
+    this.headerDialog = "Seguimiento "+this.formatDateTimeForSQLServer(event.start);
+
+    this.bodyDialog = "<p style='text-align: center'>"+event.title+"<br>Seguimiento No. "+event.id+"<br>Alertas Detectadas: "+event.extendedProps.cantidadAlertas+"<br>Reportado por SIVIGILA el "+event.extendedProps.fechaNotificacionSIVIGILA+"</p>"
+
   }
 
 
-   // Método para inicializar la API del calendario
-   initializeCalendarApi(event: any) {
-    this.calendarApi = event.view.calendar;
-  }
+
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Generico } from '../../core/services/generico';
+import { Generico } from '../../../../core/services/generico';
 
 
 @Injectable({
@@ -8,10 +8,7 @@ import { Generico } from '../../core/services/generico';
 export class MiSemanaService {
   constructor(private comun: Generico) {}
 
-  GetDummy = async () => {
-    let url = `${'WeatherForecast'}`;
-    return await  this.comun.retorno_get(url);
-  }
+
 
   GetSeguimientoUsuario = async (UsuarioId: number, FechaInicial: Date, FechaFinal: Date) => {
     let url = `${'Seguimiento/GetSeguimientoUsuario?UsuarioId='+UsuarioId+'+&FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
@@ -23,10 +20,14 @@ export class MiSemanaService {
     return await  this.comun.retorno_get(url);
   }
 
-  GetHorarioLaboral = async (UsuarioId: number) => {
-    let url = `${'Seguimiento/GetSeguimientoUsuario?UsuarioId='+UsuarioId}`;
+  GetHorarioLaboral = async (UsuarioId: number, FechaInicial: Date, FechaFinal: Date) => {
+    let url = `${'Seguimiento/GetSeguimientoHorarioAgente?UsuarioId='+UsuarioId+'&FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
+  PutActualizarSeguimiento = async (data: any) => {
+    let url = `${'Seguimiento/PutSeguimientotActualizacionFecha'}`;
+    return await  this.comun.retorno_put(url, data);
+  }
 
 }
