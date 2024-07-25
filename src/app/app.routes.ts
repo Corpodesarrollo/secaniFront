@@ -14,5 +14,13 @@ export const routes: Routes = [
             import('./components/modules/usuarios/usuarios.module').then(
                 (m) => m.UsuariosModule
             )
+    },
+    {
+        path: 'administracion',
+        component: ContentComponent,
+        loadChildren: () =>
+            import('./components/modules/administracion/administracion.module').then(
+                (m) => m.AdministracionModule
+            )
     }
 ];
