@@ -1,11 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+
 @import "primeicons/primeicons.css";
+
 
 body,
 html {
     height: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .color-fondo {
@@ -44,7 +47,20 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
     text-decoration: none !important;
 }
 
+.sinSubMenus .p-menuitem-icon{
+    margin-left: -20px !important;
+}
+
+.sinSubMenus span{
+    font-weight: bold;
+}
 /**
 Fin estilos menú
 SECÁNI-RQ00-HU00- Menú y Perfiles
 */
+
+.main-fondo{
+    background: #73B7AD0D;
+    margin-top: 0px;
+    margin-left: 0px !important;
+}

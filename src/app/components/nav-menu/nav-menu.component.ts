@@ -4,7 +4,6 @@ import { CabecerasGenericas } from '../../services/cabecerasGenericas';
 import { GenericService } from '../../services/generic.services';
 import { environment } from '../../../environments/environment';
 import { MenuModel } from '../../models/MenuModel';
-import { MenuModule } from 'primeng/menu';
 import { Router } from '@angular/router';
 
 @Component({
@@ -65,7 +64,8 @@ export class NavMenuComponent implements OnInit {
           route: '/' + menu.menuPath,
           command: () => {
             this.router.navigate(['/' + menu.menuPath]);
-          }
+          },
+          styleClass:"sinSubMenus"
         };
         menuMap.get(menu.menuNombre)?.items.push(subI);
       }
