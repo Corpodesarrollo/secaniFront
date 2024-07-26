@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject, throwError, from } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { retry, catchError, map } from 'rxjs/operators';
 
 import { CabecerasGenericas } from './cabecerasGenericas';
 import { environment } from '../../environments/environment';
 
-
+import axios, { AxiosResponse } from 'axios';
 
 
 @Injectable({
@@ -29,11 +29,19 @@ export class GenericService {
   ) {}
 
   public get(modulo: string, parameters: string) {
-    return this.http.get(`${this.url}${modulo}${parameters}`);
+    return this.http.get<any[]>(`${this.url}${modulo}${parameters}`);
   }
 
   public get_withoutParameters(modulo: string) {
-    return this.http.get(`${this.url}${modulo}`);
+    return this.http.get<any[]>(`${this.url}${modulo}`);
+  }
+
+  public get_withoutParametersAxios(modulo: string): Observable<any[]> {
+    return from(axios.get<any[]>(`${this.url}${modulo}`).then(response => response.data));
+  }
+
+  public getAxios(modulo: string, params: { [key: string]: any }): Observable<any[]> {
+    return from(axios.get<any[]>(`${this.url}${modulo}`, { params }).then(response => response.data));
   }
 
   public async getAsync(modulo: string, parameters: string) {
@@ -58,6 +66,10 @@ export class GenericService {
 
   public put(modulo: string, parameters: any) {
     return this.http.put(`${this.url}${modulo}`, parameters);
+  }
+
+  public putAxios(modulo: string, data: any): Observable<any> {
+    return from(axios.put(`${this.url}${modulo}`, data).then(response => response.data));
   }
 
   public putpromise(modulo: string, parameters: any) {

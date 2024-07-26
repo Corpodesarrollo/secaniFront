@@ -1,0 +1,69 @@
+<body class="formato-fondo fuente-letra">
+    <h1>Administración de usuarios, roles y permisos</h1>
+
+    <div class="navbar-urp">
+        <a [routerLink]="['/home']" routerLinkActive="active">
+            <button class="nav-button">USUARIOS</button>
+        </a>
+        <a [routerLink]="['/about']" routerLinkActive="active">
+            <button class="nav-button">ROLES</button>
+        </a>
+        <a [routerLink]="['/administracion/permisos']" routerLinkActive="active">
+            <button class="nav-button">PERMISOS</button>
+        </a>
+    </div>
+
+    <div class="rectangle">
+        <div class="content-container">
+            <div class="dropdown-container">
+                <label for="dropdown1">Rol*</label>
+                <select id="dropdown1" (change)="onSelectChangeRol($event)">
+                    <option *ngFor="let option of selectRoles" [value]="option.id">
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="dropdown-container">
+                <label for="dropdown2">Modulo*</label>
+                <select id="dropdown2" (change)="onSelectChangeModulo($event)">
+                    <option *ngFor="let option of selectModulos" [value]="option.id">
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="buttons-container">
+                <button class="consultar-button" (click)="onConsultarClick()">CONSULTAR</button>
+                <button class="limpiar-button" (click)="onLimpiarClick()">LIMPIAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="rectangle">
+        <div class="header">
+            <button class="top-right-button">GUARDAR</button>
+        </div>
+        <br>
+        <div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="large-column">Funcionalidad</th>
+                        <th>Crear</th>
+                        <th>Consultar</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="tableData.length > 0">
+                    <tr *ngFor="let row of tableData">
+                        <td>{{ row.column1 }}</td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column2"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column3"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column4"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column5"></p-checkbox></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
