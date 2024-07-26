@@ -23,10 +23,10 @@ export class GenericService {
   private notificacionRegistroHogar = new Subject<any>();
 
   constructor(private http: HttpClient,
-    
+
     private common: CabecerasGenericas,
-    
-  ) {}
+
+  ) { }
 
   public get(modulo: string, parameters: string) {
     return this.http.get<any[]>(`${this.url}${modulo}${parameters}`);
@@ -44,8 +44,8 @@ export class GenericService {
     return from(axios.get<any[]>(`${this.url}${modulo}`, { params }).then(response => response.data));
   }
 
-  public async getAsync(modulo: string, parameters: string) {
-    return await this.http.get(`${this.url}${modulo}${parameters}`).toPromise();
+  public async getAsync(url: string = this.url, modulo: string, parameters: string) {
+    return await this.http.get(`${url}${modulo}${parameters}`).toPromise();
   }
 
   public async getAsyncLocal(url: string) {
@@ -56,8 +56,8 @@ export class GenericService {
     return this.http.post(`${this.url}${modulo}`, parameters);
   }
 
-  public async postAsync(modulo: string, parameters: any) {
-    return await this.http.post(`${this.url}${modulo}`, parameters).toPromise();
+  public async postAsync(url: string = this.url,modulo: string, parameters: any) {
+    return await this.http.post(`${url}${modulo}`, parameters).toPromise();
   }
 
   public async postAsyncX(modulo: string, parameters: any) {

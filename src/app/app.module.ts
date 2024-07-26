@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
 
 @NgModule({
   declarations: [
@@ -25,9 +26,11 @@ import { RouterModule, Routes } from '@angular/router';
     NavMenuComponent,
     HeaderComponent,
     FooterComponent,
-    ContentComponent
+    ContentComponent,
   ],
   imports: [
+    UsuariosModule,
+
     RouterModule.forRoot(routes),
 
     BrowserModule,
@@ -36,6 +39,8 @@ import { RouterModule, Routes } from '@angular/router';
     CommonModule,
     RouterModule,
     FormsModule,
+    
+    
 
     /** PrimeNG */
     MenuModule,
