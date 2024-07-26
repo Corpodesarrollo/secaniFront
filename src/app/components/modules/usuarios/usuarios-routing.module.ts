@@ -4,7 +4,7 @@ import { CrearContactoComponent } from './crear-contacto/crear-contacto.componen
 import { HistoricoNnaComponent } from './historico-nna/historico-nna.component';
 
 const routes: Routes = [
-  { path: 'crear_contacto', component: CrearContactoComponent }
+  { path: 'crear_contacto', component: CrearContactoComponent },
   { path: 'historico_nna', component: HistoricoNnaComponent }
 ];
 
