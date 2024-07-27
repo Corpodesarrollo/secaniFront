@@ -1,0 +1,114 @@
+[
+    {
+      "Id": 1,
+      "EstadoNNA": "Diagnóstico descartado",
+      "Descripcion": "Negativo para cáncer",
+      "ColorBG": "#73b7ad",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 2,
+      "EstadoNNA": "Sin diagnóstico",
+      "Descripcion": "Presunción de Diagnóstico (Pendiente por confirmar). A la espera de exámenes especializados.",
+      "ColorBG": "#3563d3",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 3,
+      "EstadoNNA": "Diagnóstico confirmado",
+      "Descripcion": "Aún no ha iniciado tratamiento.",
+      "ColorBG": "#c2d0f2",
+      "ColorText": "#0d08f7"
+    },
+    {
+      "Id": 4,
+      "EstadoNNA": "EP Tratamiento en domicilio",
+      "Descripcion": "Mantenimiento largo de quimioterapia vía oral en casa (con medicamentos en casa o domicilio).",
+      "ColorBG": "#ffeacc",
+      "ColorText": "#f7c208"
+    },
+    {
+      "Id": 5,
+      "EstadoNNA": "EP Ambulatorio",
+      "Descripcion": "Tratamiento vía Oral e Intravenoso (En clínica)",
+      "ColorBG": "#008e65",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 6,
+      "EstadoNNA": "EP Intrahospitalario",
+      "Descripcion": "Hospitalización, Aplicación de medicamentos quimioterapéuticos, entre otros. Puede estar en tratamiento quirúrgico.",
+      "ColorBG": "#ff9801",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 7,
+      "EstadoNNA": "EP Trasplante",
+      "Descripcion": "Programado, durante y pos trasplante.",
+      "ColorBG": "f42f63",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 8,
+      "EstadoNNA": "Valoración por oncología",
+      "Descripcion": "Es un Seguimiento mensual: Niños valorados por Oncología , donde los niños se envían a remisión ya que se encuentran en seguimiento y monitoreo. Así mismo podrían ser los NNA que se encuentran en Post-tratamiento donde se realiza el Seguimiento después de finalizado el tratamiento (4 años).",
+      "ColorBG": "cacaca",
+      "ColorText": "#686868"
+    },
+    {
+      "Id": 9,
+      "EstadoNNA": "Tratamiento finalizado",
+      "Descripcion": "Son niños que se valoran cada seis meses por 1 año y después anual por 2 años.\nEn monitoreo cada 6 meses o Anual hasta dos años o más hasta que lo determine el médico tratante.",
+      "ColorBG": "#13d61c",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 10,
+      "EstadoNNA": "Fallecido",
+      "Descripcion": "NNA Fallecido.",
+      "ColorBG": "#000000",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 11,
+      "EstadoNNA": "Mayor de 18 años",
+      "Descripcion": "A partir del día que comple los 18 años el sistema asigna este estado de manera automática.",
+      "ColorBG": "#73b7ad",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 12,
+      "EstadoNNA": "Sobreviviente",
+      "Descripcion": "El sistema valida que el NNA lleve 5 años de finalizado el tratamiento.",
+      "ColorBG": "#3563d3",
+      "ColorText": "#ffffff"
+    },
+    {
+      "Id": 13,
+      "EstadoNNA": "No contactado",
+      "Descripcion": "Son niños reportados desde Sivigila que con los números registrados no contestan o están equivocados y nunca se ha podido realizar seguimiento.\n\nEl sistema debe tener en cuenta los siguientes criterios para permitir al agente de seguimiento asignar este estado:\n- 6 meses desde la notificación sin contar con ningún contacto exitoso.\n- Que cuente por lo menos con un intento de llamada semanal por 6 meses.\n\nAl seleccionar este estado el sistema debe generar una alerta (Categoría 7. Otros) a la EPS asociada al menor para la actualización de los datos.",
+      "ColorBG": "#c2d0f2",
+      "ColorText": "#0d08f7"
+    },
+    {
+      "Id": 14,
+      "EstadoNNA": "Pendientes de cierre",
+      "Descripcion": "NNA que se realizó seguimiento en el cual cumplieron con los cinco (5) años desde la fecha de notificación o última recaída, pero dejaron de contestar por 1 año.\nEl sistema debe validar que:\nLa fecha de notificación o la fecha de la última recaída sea mayor a 5 años.\nEl último estado podría ser Tratamiento finalizado o Valoración por oncología.",
+      "ColorBG": "#ffeacc",
+      "ColorText": "NULL"
+    },
+    {
+      "Id": 15,
+      "EstadoNNA": "Registrado",
+      "Descripcion": "Registrado en el sistema, sin ningún seguimiento.",
+      "ColorBG": "#008e65",
+      "ColorText": "NULL"
+    },
+    {
+      "Id": 16,
+      "EstadoNNA": "Registro temporal",
+      "Descripcion": "Registro por parte del cuidador y al hacer la validación, no se encontró el NNA en la BD.",
+      "ColorBG": "#ff9801",
+      "ColorText": "NULL"
+    }
+  ]

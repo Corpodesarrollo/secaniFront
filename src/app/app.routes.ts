@@ -1,13 +1,14 @@
 import { Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
-import { PermisosComponent } from './components/permisos/permisos.component';
 import { ContentComponent } from './components/content/content.component';
+import { PermisosComponent } from './components/modules/administracion/permisos/permisos.component';
 
 
 export const routes: Routes = [
 
-    { path: '', component: LoginComponent },
+    { path: '', component: ContentComponent },
+    { path: 'home', component: ContentComponent },
     { path: 'login', component: LoginComponent },
 
     { path: 'mi-semana',
@@ -21,6 +22,14 @@ export const routes: Routes = [
         loadChildren: () =>
             import('./components/modules/usuarios/usuarios.module').then(
                 (m) => m.UsuariosModule
+            )
+    },
+    {
+        path: 'administracion',
+        component: ContentComponent,
+        loadChildren: () =>
+            import('./components/modules/administracion/administracion.module').then(
+                (m) => m.AdministracionModule
             )
     }
 ];

@@ -24,10 +24,10 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
-    "axios": "^1.7.2",
     "fullcalendar": "^6.1.15",
 
-    "primeicons": "^7.0.0",
+
+    "@popperjs/core": "^2.11.8",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "primeicons": "^7.0.0",

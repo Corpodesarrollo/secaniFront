@@ -1,11 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+
 @import "primeicons/primeicons.css";
+
 
 body,
 html {
     height: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 button{
@@ -15,11 +18,13 @@ button{
 .formato-fondo {
     background-color: rgba(115, 183, 173, 0.05);
     /* Color 73B7AD con opacidad del 5% */
-    margin: 0;
-    padding: 0;
     height: 100%;
     width: 100%;
     padding: 15px;
+}
+
+.formato-menu{
+    background: #d9d9d981;
 }
 
 .color-fondo {
@@ -41,13 +46,42 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
 */
 .menu-rq00-hu00 {
     background: #D9D9D980;
-    height: 100%;
     gap: 0px;
     opacity: 0px;
     min-height: 100vh;
 }
 
+
+.menu-rq00-hu00 .p-menu {
+    padding: 0.5rem 0;
+    background: none !important;
+    color: #4b5563;
+    border: 0px solid #e5e7eb;
+    border-radius: 0px;
+    width: 100% !important;
+}
+.menu-rq00-hu00 .p-menu .p-submenu-header{
+    background:none;
+    padding: 0;
+}
+.menu-rq00-hu00 .p-menu .p-menuitem-link {
+    text-decoration: none !important;
+}
+
+.sinSubMenus .p-menuitem-icon{
+    margin-left: -20px !important;
+}
+
+.sinSubMenus span{
+    font-weight: bold;
+}
 /**
 Fin estilos menú
 SECÁNI-RQ00-HU00- Menú y Perfiles
 */
+
+.main-fondo{
+    background: #73B7AD0D;
+    margin-top: 0px;
+    margin-left: 0px !important;
+}
