@@ -1,25 +1,33 @@
-import { Component } from '@angular/core';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { Component, ViewChild } from '@angular/core';
+import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { DragDropModule } from 'primeng/dragdrop';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import esLocale from '@fullcalendar/core/locales/es';
 import { CardModule } from 'primeng/card';
 
 import { Calendar } from '@fullcalendar/core';
 import { MiSemanaService } from './mi-semana.services';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mi-semana',
   templateUrl: './mi-semana.component.html',
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
-  imports: [ CommonModule, FullCalendarModule, DragDropModule, CardModule, DialogModule]
+  imports: [ CommonModule, ReactiveFormsModule,
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, ]
 })
 export class MiSemanaComponent {
+  @ViewChild('calendar')
+  calendarComponent!: FullCalendarComponent;
   events: any[] = [];
   businessHours: any[] = [];
 
@@ -32,15 +40,24 @@ export class MiSemanaComponent {
   currentDate: Date = new Date();
   calendarApi: Calendar | undefined;
 
-  usuarioId: number = 0;
+  usuarioId: string = '';
   fechaInicial: any;
   fechaFinal: any;
 
   displayModal: boolean = false;
   headerDialog: string = '';
   bodyDialog: string = '';
+  headerDialogReasignar: string = '';
+  displayModal2: boolean = false;
+  bodyDialog2: string = '';
+  infoEvent: any;
+  displayModal3: boolean = false;
 
-  constructor(public servicios: MiSemanaService) {
+  form!: FormGroup;
+  agentes: any;
+  //agenteSeleccionado: any;
+
+  constructor(public servicios: MiSemanaService,  private fb: FormBuilder, private router: Router) {
 
 
     this.esLocale = {
@@ -94,7 +111,11 @@ export class MiSemanaComponent {
 
 
   async  ngOnInit(){
+    this.form = this.fb.group({
+      agenteSeleccionado: [null, Validators.required],
+      motivo: ['', Validators.required],
 
+    });
     /*
     Reglas
     1. Cargar los datos del seguimiento
@@ -103,13 +124,11 @@ export class MiSemanaComponent {
 
     // TODO: Determinar id del usuario
     //let usuarioId = sessionStorage.getItem('usuarioId');
-    this.usuarioId = 1;
+    this.usuarioId = '1';
 
     this.diasLimite(this.currentDate);
-    await this.eventos(this.usuarioId);
-    await this.horarioLaboral(this.usuarioId);
-
-
+    await this.horarioLaboral();
+    await this.eventos();
 
 
 
@@ -134,13 +153,14 @@ export class MiSemanaComponent {
     f1.setDate(currentDate.getDate() - currentWeekday + 1);
     f2.setDate(currentDate.getDate() - currentWeekday + 5);
 
-    this.fechaInicial = formatDate(f1);
-    this.fechaFinal = formatDate(f2);
+    this.fechaInicial = formatDate(f1)+' 00:00:00';
+    this.fechaFinal = formatDate(f2)+' 23:59:59';
   }
 
 
-  async horarioLaboral(usuarioId: number){
+  async horarioLaboral(){
 
+    this.calendarOptions.businessHours = '';
 
     let festivos = await this.servicios.GetFestivos(this.fechaInicial, this.fechaFinal);
     //console.log("festivos", festivos)
@@ -177,8 +197,8 @@ export class MiSemanaComponent {
     this.calendarOptions.businessHours = horario;
   }
 
-  async eventos(usuarioId: number){
-    let eventosBD = await this.servicios.GetSeguimientoUsuario(usuarioId, this.fechaInicial, this.fechaFinal);
+  async eventos(){
+    let eventosBD = await this.servicios.GetSeguimientoUsuario(this.usuarioId, this.fechaInicial, this.fechaFinal);
 
 
     // Función para sumar 30 minutos a una fecha
@@ -212,27 +232,46 @@ export class MiSemanaComponent {
     /*this.events =  [  { id: 1, title: 'Ramona Soler', start: '2024-07-23T10:00:00', end: '2024-07-23T10:30:00' },
       { id: 2, title: 'Evento 2', start: '2024-07-24T14:00:00', end: '2024-07-24T14:30:00' },
     ]*/
-    console.log("this.events", this.events);
+    //console.log("this.events", this.events);
     this.calendarOptions.events = this.events;
   }
 
 
   handlePrev() {
 
-    this.currentDate = new Date();
-    this.currentDate = this.adjustToWeekStart(new Date(this.currentDate.setDate(this.currentDate.getDate() - 7)));
-    if (this.calendarApi) {
-      this.calendarApi.gotoDate(this.currentDate);
+    const currentDate = new Date(this.currentDate);
+    const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() - 7));
+    this.currentDate = this.adjustToWeekStart(oneWeekAhead);
+
+    if (this.calendarComponent) {
+      const calendarApi = this.calendarComponent.getApi();
+      calendarApi.gotoDate(this.currentDate);
+    } else {
+      console.error('Calendar component is not initialized');
     }
+    this.diasLimite(this.currentDate);
+    this.horarioLaboral();
+    this.eventos();
+    console.log(this.currentDate);
 
   }
 
   handleNext() {
-    this.currentDate = new Date();
-    this.currentDate = this.adjustToWeekStart(new Date(this.currentDate.setDate(this.currentDate.getDate() + 7)));
-    if (this.calendarApi) {
-      this.calendarApi.gotoDate(this.currentDate);
+    const currentDate = new Date(this.currentDate);
+    const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() + 7));
+    this.currentDate = this.adjustToWeekStart(oneWeekAhead);
+
+    if (this.calendarComponent) {
+      const calendarApi = this.calendarComponent.getApi();
+      calendarApi.gotoDate(this.currentDate);
+    } else {
+      console.error('Calendar component is not initialized');
     }
+    this.diasLimite(this.currentDate);
+    this.horarioLaboral();
+    this.eventos();
+    console.log(this.currentDate);
+
 
   }
 
@@ -240,7 +279,7 @@ export class MiSemanaComponent {
     const day = date.getDay();
     const diff = date.getDate() - day + (day === 0 ? -6 : 1);
 
-    console.log('la fechaaa '+diff);
+    //console.log('la fechaaa '+diff);
 
     return new Date(date.setDate(diff));
   }
@@ -293,15 +332,72 @@ export class MiSemanaComponent {
 
   handleEventClick(info: any) {
     const event = info.event;
-    console.log(event)
+    this.infoEvent = event;
     //console.log(`Evento ID: ${event.id}, Nueva Fecha y Hora: ${event.start}`);
     this.displayModal = true;
-    this.headerDialog = "Seguimiento "+this.formatDateTimeForSQLServer(event.start);
-
-    this.bodyDialog = "<p style='text-align: center'>"+event.title+"<br>Seguimiento No. "+event.id+"<br>Alertas Detectadas: "+event.extendedProps.cantidadAlertas+"<br>Reportado por SIVIGILA el "+event.extendedProps.fechaNotificacionSIVIGILA+"</p>"
+    this.headerDialog = "Seguimiento "+this.formatDate(event.start);
+    let fechaTemp = event.extendedProps.fechaNotificacionSIVIGILA.slice(0, 23) + 'Z';
+    let fechaSivigila = this.formatDate(new Date(fechaTemp));
+    console.log(fechaSivigila, event.extendedProps.fechaNotificacionSIVIGILA)
+    this.bodyDialog = "<p>"+event.title+"<br>Seguimiento No. "+event.id+"<br>Alertas Detectadas: "+event.extendedProps.cantidadAlertas+"<br>Reportado por SIVIGILA el "+fechaSivigila+"</p>"
 
   }
 
+  formatDate(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+    return new Intl.DateTimeFormat('es-ES', options).format(date);
+  }
 
+  async reasignar(){
+
+    this.agentes = await this.servicios.GetSeguimientoAgentes(this.usuarioId);
+    console.log(this.agentes);
+
+    this.bodyDialog2 = "<p>"+this.infoEvent.title+"<br>Seguimiento No. "+this.infoEvent.id;
+    this.displayModal = false;
+    this.displayModal2 = true;
+    console.log(this.infoEvent)
+
+
+
+  }
+
+  async guardar(){
+    if (this.form.valid) {
+      console.log(this.form.value);
+
+      let data = {
+        id: this.infoEvent.id,
+        usuarioId: this.form.value.agenteSeleccionado.id,
+        observacionesSolicitante: this.form.value.motivo
+      }
+
+       let respuesta = await this.servicios.PutSeguimientoActualizacionUsuario(data);
+      //let respuesta = 1;
+
+      if( respuesta == 1 ){
+        this.displayModal2 = false;
+        this.displayModal3 = true;
+        this.ngOnInit();
+      }
+      else {
+        alert("No es posible reasignar seguimientos en horarios vencidos");
+      }     // Lógica de guardado
+    } else {
+      console.log('Formulario inválido');
+    }
+  }
+
+  cerrarDialog(){
+    this.displayModal2 = false;
+  }
 
 }

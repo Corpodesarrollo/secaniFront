@@ -1,10 +1,58 @@
 <h1>Mi semana</h1>
 
+
 <p-card >
-  <full-calendar [options]="calendarOptions" [events]="events" ></full-calendar>
+  <full-calendar #calendar [options]="calendarOptions" [events]="events" ></full-calendar>
 </p-card>
 
 <p-dialog [header]="headerDialog" [(visible)]="displayModal" [modal]="true">
-  <div [innerHtml] = "bodyDialog"></div>
+  <div [innerHtml] = "bodyDialog" style="text-align:center"></div>
+  <p-footer>
+    <button type="button" pButton class="color-fondo">Iniciar Seguimiento</button>
+    &nbsp;
+    <button type="button" pButton  class="color-fondo" (click) = "reasignar()">Reasignar Seguimiento</button>
+  </p-footer>
+</p-dialog>
 
+
+<p-dialog header="Reasignar Seguimiento" [(visible)]="displayModal2" [modal]="true">
+  <div [innerHtml] = "bodyDialog2" style="text-align:center"></div>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <label for="agenteSeleccionado"><b>Agente de Seguimiento</b></label>
+    <br>
+    <p-dropdown
+        [options]="agentes"
+        formControlName="agenteSeleccionado"
+        id="agenteSeleccionado"
+        optionLabel="fullName"
+        placeholder="Seleccione un agente" />
+    <br>
+    <label for="motivo"><b>Motivo</b></label>
+    <br>
+    <textarea
+      rows="5"
+      cols="30"
+      pInputTextarea
+      formControlName="motivo" id="motivo">
+    </textarea>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <button type="button" pButton class="color-fondo_gris" (click) = "cerrarDialog()" >Cancelar</button>
+      </div>
+      <div class="col-sm-6">
+        <button type="submit" pButton class="color-fondo">Guardar</button>
+      </div>
+    </div>
+  </form>
+
+
+</p-dialog>
+
+<p-dialog  [(visible)]="displayModal3" [modal]="true">
+  <div style="text-align:center">
+    <img src="/iconos/ok.png" alt="icono ok"/>
+    <br><br><b>Seguimiento reasignado con éxito</b>
+  </div>
 </p-dialog>

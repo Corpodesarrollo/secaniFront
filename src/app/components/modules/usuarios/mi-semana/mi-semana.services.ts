@@ -10,7 +10,7 @@ export class MiSemanaService {
 
 
 
-  GetSeguimientoUsuario = async (UsuarioId: number, FechaInicial: Date, FechaFinal: Date) => {
+  GetSeguimientoUsuario = async (UsuarioId: string, FechaInicial: Date, FechaFinal: Date) => {
     let url = `${'Seguimiento/GetSeguimientoUsuario?UsuarioId='+UsuarioId+'+&FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
@@ -20,13 +20,23 @@ export class MiSemanaService {
     return await  this.comun.retorno_get(url);
   }
 
-  GetHorarioLaboral = async (UsuarioId: number, FechaInicial: Date, FechaFinal: Date) => {
+  GetHorarioLaboral = async (UsuarioId: string, FechaInicial: Date, FechaFinal: Date) => {
     let url = `${'Seguimiento/GetSeguimientoHorarioAgente?UsuarioId='+UsuarioId+'&FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
   PutActualizarSeguimiento = async (data: any) => {
     let url = `${'Seguimiento/PutSeguimientotActualizacionFecha'}`;
+    return await  this.comun.retorno_put(url, data);
+  }
+
+  GetSeguimientoAgentes = async (UsuarioId:string) => {
+    let url = `${'Seguimiento/GetSeguimientoAgentes?UsuarioId='+UsuarioId}`;
+    return await  this.comun.retorno_get(url);
+  }
+
+  PutSeguimientoActualizacionUsuario = async (data: any) => {
+    let url = `${'Seguimiento/PutSeguimientoActualizacionUsuario'}`;
     return await  this.comun.retorno_put(url, data);
   }
 
