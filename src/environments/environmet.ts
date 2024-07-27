@@ -1,3 +1,3 @@
 export const environment = {
-  urlBase: 'http://localhost:15200/'
+  urlBase: 'https://localhost:7085/'
 }
