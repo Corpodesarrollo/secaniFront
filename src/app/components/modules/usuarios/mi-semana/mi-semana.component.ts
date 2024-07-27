@@ -252,7 +252,7 @@ export class MiSemanaComponent {
     this.diasLimite(this.currentDate);
     this.horarioLaboral();
     this.eventos();
-    console.log(this.currentDate);
+    //console.log(this.currentDate);
 
   }
 
@@ -270,7 +270,7 @@ export class MiSemanaComponent {
     this.diasLimite(this.currentDate);
     this.horarioLaboral();
     this.eventos();
-    console.log(this.currentDate);
+    //console.log(this.currentDate);
 
 
   }
@@ -294,7 +294,7 @@ export class MiSemanaComponent {
     }
 
     let respuesta = await this.servicios.PutActualizarSeguimiento(data);
-    console.log("respuesta ", respuesta);
+    //console.log("respuesta ", respuesta);
   }
 
   formatDateTimeForSQLServer(dateString: string): string {
