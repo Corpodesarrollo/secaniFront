@@ -12,11 +12,14 @@ import { MenuModule } from 'primeng/menu';
 import { BadgeModule } from 'primeng/badge';
 import { RippleModule } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
+import { TableModule } from 'primeng/table';
 import { ContentComponent } from './components/content/content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { BotonNotificacionComponent } from "./components/modules/boton-notificacion/boton-notificacion.component";
+
 
 @NgModule({
   declarations: [
@@ -25,24 +28,24 @@ import { RouterModule, Routes } from '@angular/router';
     NavMenuComponent,
     HeaderComponent,
     FooterComponent,
-    ContentComponent
+    ContentComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
-
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     CommonModule,
     RouterModule,
     FormsModule,
-
     /** PrimeNG */
     MenuModule,
     BadgeModule,
     RippleModule,
     AvatarModule,
-  ],
+    TableModule,
+    BotonNotificacionComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })

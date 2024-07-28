@@ -1,0 +1,17 @@
+
+<button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center" (click)="showDialog = true" style="background-color: #73b7ad;">
+  <i class="pi pi-bell mr-4" pBadge style="font-size: 1.5rem" value="2"></i> <span class="ms-3">Notificaciones</span>
+</button>
+
+<p-dialog header="Notificaciones" [(visible)]="showDialog" [modal]="true" [style]="{width: '400px'}">
+  <div *ngFor="let notification of notifications" class="notification-item">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="notification-text fw-bold">
+        El Agente de seguimiento Marisol Garcia le ha asignado el caso No. 01241.
+      </div>
+      <button class="btn rounded-3 btn-sm px-3" style="background-color: lightgray;">Ver</button>
+    </div>
+    <div class="notification-date text-muted">07/06/2024</div>
+    <hr>
+  </div>
+</p-dialog>
