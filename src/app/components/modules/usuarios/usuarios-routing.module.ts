@@ -5,7 +5,7 @@ import { EAPBComponent } from './eapb/eapb.component';
 
 const routes: Routes = [
   { path: 'crear_contacto', component: CrearContactoComponent },
-  { path: 'consultar_eapb', component: EAPBComponent }
+  { path: 'consultar_eapb', component:  EAPBComponent},
 ];
 
 @NgModule({
