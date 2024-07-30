@@ -1,0 +1,18 @@
+:host ::ng-deep .fc-event-custom {
+  padding-left: 10px;
+  height: 100%;
+  width: 100%;
+  color: black; /* Usa el color del texto del evento */
+  background-color: #F4F9FD; /* Usa el color de fondo del evento */
+}
+
+:host ::ng-deep .fc-timegrid-slot {
+  height: 55px !important; /* Ajusta la altura según tus necesidades */
+}
+
+:host ::ng-deep .fc-non-business {
+  background-color: red !important;
+  opacity: 0.5; /* Ajusta la opacidad si es necesario */
+}
+
+
