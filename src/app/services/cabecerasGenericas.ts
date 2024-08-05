@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 })
 export class CabecerasGenericas {
 
-  BASE_URL = environment.url;
+  BASE_URL = environment.url_MsAuthention;
 
   private headers_service: any = '';
 
@@ -48,8 +48,8 @@ export class CabecerasGenericas {
     return retorno;
   }
 
-  async retorno_get(urltemp: string){
-    const url = this.BASE_URL + urltemp;
+  async retorno_get(urltemp: string, baseUrl:string = this.BASE_URL){
+    const url = baseUrl + urltemp;
     if(this.headers_service.Authorization === 'Bearer null'){
       this.obtnerCabeceras();
     }

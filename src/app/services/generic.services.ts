@@ -14,7 +14,7 @@ import axios, { AxiosResponse } from 'axios';
 })
 export class GenericService {
 
-  private url = environment.url;
+  private url = environment.url_MsAuthention;
 
   private notificacionSubject = new Subject<any>();
 

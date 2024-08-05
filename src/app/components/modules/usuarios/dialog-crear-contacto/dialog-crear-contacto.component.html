@@ -1,0 +1,163 @@
+<p-button styleClass="btn fondo-color-principal text-color-blanco" (onClick)="showDialog()" label="Agregar contacto"
+    icon="pi pi-plus" />
+<p-dialog header="" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <div class="text-center">
+
+        <form [formGroup]="formNNAContacto">
+            <div class="row text-left">
+                <div class="col-sm-12">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <label>
+                                Crear contacto
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Nombres y apellidos*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="nombreCompletoContacto" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('nombreCompletoContacto')?.invalid && formNNAContacto.get('nombreCompletoContacto')?.touched">
+                            <small class="errors"
+                                *ngIf="isEmpty(formNNAContacto.get('nombreCompletoContacto')?.value)">Nombres y
+                                apellidos es requerido.</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Parentesco*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="parentescoContacto">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let parentescoContacto of listadoParentesco"
+                                    [value]="parentescoContacto.id">
+                                    {{ parentescoContacto.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('parentescoContacto')?.invalid && formNNAContacto.get('parentescoContacto')?.touched">
+                            <small class="errors"
+                                *ngIf="isEmpty(formNNAContacto.get('parentescoContacto')?.value)">Parentesco
+                                es
+                                requerido.</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Cuidador*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="cuidadorContacto">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let cuidadorContacto of listadoCuidador" [value]="cuidadorContacto.id">
+                                    {{ cuidadorContacto.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('cuidadorContacto')?.invalid && formNNAContacto.get('cuidadorContacto')?.touched">
+                            <small class="errors"
+                                *ngIf="isEmpty(formNNAContacto.get('cuidadorContacto')?.value)">Cuidador
+                                es
+                                requerido.</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Teléfono*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="numeroTelefonoContacto" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('nombreCompletoContacto')?.invalid && formNNAContacto.get('nombreCompletoContacto')?.touched">
+                            <small class="errors"
+                                *ngIf="isEmpty(formNNAContacto.get('nombreCompletoContacto')?.value)">Teléfono es
+                                requerido.</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Correo electrónico:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" formControlName="correoElectronicoContacto" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('correoElectronicoContacto')?.invalid && formNNAContacto.get('correoElectronicoContacto')?.touched">
+                            <small class="errors"
+                                *ngIf="isEmpty(formNNAContacto.get('correoElectronicoContacto')?.value)">Correo
+                                electrónico es requerido.</small>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('correoElectronicoContacto')?.invalid && formNNAContacto.get('correoElectronicoContacto')?.touched">
+                            <small class="errors"
+                                *ngIf="formNNAContacto.get('correoElectronicoContacto')?.hasError('email') && formNNAContacto.get('correoElectronicoContacto')?.touched">El formato del correo electrónico es inválido.</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Estado*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="estadoContacto">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let estadoContacto of listadoEstado" [value]="estadoContacto.id">
+                                    {{ estadoContacto.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNAContacto.get('estadoContacto')?.invalid && formNNAContacto.get('estadoContacto')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNAContacto.get('estadoContacto')?.value)">Estado
+                                es
+                                requerido.</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn rondear fondo-color-cancelar  text-color-blanco col-12"
+                                (click)="cancelar()">Cancelar</button>
+                        </div>
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn rondear fondo-color-principal  text-color-blanco col-12" (click)="guardar()" [disabled]="!formNNAContacto.valid">Guardar</button>
+                        </div>
+                        <div class="col-sm-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</p-dialog>

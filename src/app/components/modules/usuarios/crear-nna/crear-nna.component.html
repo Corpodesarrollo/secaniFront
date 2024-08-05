@@ -1,0 +1,512 @@
+<div class="row container-fluid d-flex">
+    <div class="col-12 menu">
+        <a href="/usuarios/historico_nna" (click)="btn_historial_nna()">Histórico NNA</a> > Crear NNA
+    </div>
+    <div class="col-2 contenido">
+        <div class="fondo-color-principal text-color-blanco rondear text-center">Información <br /> NNA
+        </div>
+    </div>
+    <div class="card">
+        <form [formGroup]="formNNA" (ngSubmit)="onSubmit()">
+            <div class="row container-fluid">
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Tipo de ID*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="tipoId">
+                                <option selected value="">Seleccione</option>
+                                <option *ngFor="let tipoId of listadoTipoId" [value]="tipoId.id">
+                                    {{ tipoId.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12" *ngIf="formNNA.get('tipoId')?.invalid && formNNA.get('tipoId')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('tipoId')?.value)">Tipo ID es
+                                requerido.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Número de ID*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="numeroId" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('numeroId')?.invalid && formNNA.get('numeroId')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('numeroId')?.value)">Número de ID es
+                                requerido.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 text-end">
+                            <app-dialog-validar-existencia [tipoId]="formNNA.get('tipoId')?.value"
+                                [numeroId]="formNNA.get('numeroId')?.value"
+                                (dataToParent)="handleDataValidarExistencia($event)"></app-dialog-validar-existencia>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('validaExistencia')?.invalid && formNNA.get('validaExistencia')?.touched">
+                                <small class="errors" *ngIf="isEmpty(formNNA.get('validaExistencia')?.value)">Validar
+                                    Existencia
+                                    es requerido.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+
+                </div>
+            </div>
+            <div class="row container-fluid">
+                <div class="col-sm-12">
+                    <label>Identificación del menor de edad</label>
+                </div>
+                <div class="col-sm-6">
+                    <label>Afiliación al SGSSS</label> (Información contrastada con ADRES)
+                </div>
+            </div>
+
+            <div class="row container-fluid">
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Primer nombre*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="primerNombre" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('primerNombre')?.invalid && formNNA.get('primerNombre')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('primerNombre')?.value)">Primer nombre es
+                                requerido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Régimen de afiliación*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="regimenAfiliacion">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let regimen of listadoRegimenAfiliacion" [value]="regimen.id">
+                                    {{ regimen.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('regimenAfiliacion')?.invalid && formNNA.get('regimenAfiliacion')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('regimenAfiliacion')?.value)">Régimen de
+                                afiliación
+                                es requerido.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Segundo nombre:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="segundoNombre" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                EAPB*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="eapb">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let eapb of listadoEAPB" [value]="eapb.id">
+                                    {{ eapb.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12" *ngIf="formNNA.get('eapb')?.invalid && formNNA.get('eapb')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('eapb')?.value)">EAPB es requerido.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Primer apellido*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="primerApellido" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('primerApellido')?.invalid && formNNA.get('primerApellido')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('primerApellido')?.value)">Primer apellido
+                                es
+                                requerido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Segundo apellido:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="segundoApellido" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('segundoApellido')?.invalid && formNNA.get('segundoApellido')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('segundoApellido')?.value)">Segundo
+                                apellido es
+                                requerido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Estado de ingreso a la estrategia*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="estadoIngresoEstrategia">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let estado of listadoEstadoIngresoEstrategia" [value]="estado.id">
+                                    {{ estado.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('estadoIngresoEstrategia')?.invalid && formNNA.get('estadoIngresoEstrategia')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('estadoIngresoEstrategia')?.value)">Estado
+                                de
+                                ingreso a la estrategia es requerido.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Fecha de nacimiento*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="date" class="form-control" formControlName="fechaNacimiento" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('fechaNacimiento')?.invalid && formNNA.get('fechaNacimiento')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('fechaNacimiento')?.value)">Fecha de
+                                nacimiento es
+                                requerido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Fecha de ingreso a la estrategia*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="date" class="form-control" formControlName="fechaIngresoEstrategia" />
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('fechaIngresoEstrategia')?.invalid && formNNA.get('fechaIngresoEstrategia')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('fechaIngresoEstrategia')?.value)">Fecha de
+                                ingreso
+                                a la estrategia es requerido.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Sexo*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <button class="btn rondear">Femenino</button>
+                            <button class="btn rondear">Masculino</button>
+                        </div>
+                        <div class="col-sm-12" *ngIf="formNNA.get('sexo')?.invalid && formNNA.get('sexo')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('sexo')?.value)">Sexo es requerido.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>
+                                Origen del reporte*:
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-select" formControlName="originReporte">
+                                <option value="">Seleccione</option>
+                                <option *ngFor="let origen of listadoOrigenReporte" [value]="origen.id">
+                                    {{ origen.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12"
+                            *ngIf="formNNA.get('originReporte')?.invalid && formNNA.get('originReporte')?.touched">
+                            <small class="errors" *ngIf="isEmpty(formNNA.get('originReporte')?.value)">Origen del
+                                reporte es
+                                requerido.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    País de nacimiento*:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-select" formControlName="paisNacimiento"
+                                    (change)="departamento($event)">
+                                    <option value="">Seleccione</option>
+                                    <option *ngFor="let pais of listadoPais" [value]="pais.id">
+                                        {{ pais.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('paisNacimiento')?.invalid && formNNA.get('paisNacimiento')?.touched">
+                                <small class="errors" *ngIf="isEmpty(formNNA.get('paisNacimiento')?.value)">País de
+                                    nacimiento
+                                    es
+                                    requerido.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Departamento de nacimiento*:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-select" formControlName="departamentoNacimiento"
+                                    (change)="ciudad($event)">
+                                    <option value="">Seleccione</option>
+                                    <option *ngFor="let depa of listadoDepartamento" [value]="depa.id">
+                                        {{ depa.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('departamentoNacimiento')?.invalid && formNNA.get('departamentoNacimiento')?.touched">
+                                <small class="errors"
+                                    *ngIf="isEmpty(formNNA.get('departamentoNacimiento')?.value)">Departamento
+                                    de
+                                    nacimiento es requerido.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Ciudad de nacimiento*:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-select" formControlName="ciudadNacimiento">
+                                    <option value="">Seleccione</option>
+                                    <option *ngFor="let ciudad of listadoCiudad" [value]="ciudad.id">
+                                        {{ ciudad.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('ciudadNacimiento')?.invalid && formNNA.get('ciudadNacimiento')?.touched">
+                                <small class="errors" *ngIf="isEmpty(formNNA.get('ciudadNacimiento')?.value)">Ciudad de
+                                    nacimiento
+                                    es requerido.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Grupo poblacional:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-select" formControlName="grupoPoblacion">
+                                    <option value="">Seleccione</option>
+                                    <option *ngFor="let grupoPoblacion of listadoGrupoPoblacional"
+                                        [value]="grupoPoblacion.id">
+                                        {{ grupoPoblacion.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>
+                                    Identificación del cuidador o representante legal*
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Nombre*:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" formControlName="nombreCompletoCuidador" />
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('nombreCompletoCuidador')?.invalid && formNNA.get('nombreCompletoCuidador')?.touched">
+                                <small class="errors"
+                                    *ngIf="isEmpty(formNNA.get('nombreCompletoCuidador')?.value)">Nombre
+                                    cuidador
+                                    o representante legal es requerido.</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Parentesco*:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-select" formControlName="parentescoCuidador">
+                                    <option value="">Seleccione</option>
+                                    <option *ngFor="let parentescoCuidador of listadoParentesco"
+                                        [value]="parentescoCuidador.id">
+                                        {{ parentescoCuidador.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('parentescoCuidador')?.invalid && formNNA.get('parentescoCuidador')?.touched">
+                                <small class="errors"
+                                    *ngIf="isEmpty(formNNA.get('parentescoCuidador')?.value)">Parentesco
+                                    es
+                                    requerido.</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Etnia*:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-select" formControlName="etnia">
+                                    <option value="">Seleccione</option>
+                                    <option *ngFor="let etnia of listadoEtnia" [value]="etnia.id">
+                                        {{ etnia.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('etnia')?.invalid && formNNA.get('etnia')?.touched">
+                                <small class="errors" *ngIf="isEmpty(formNNA.get('etnia')?.value)">Etnia es
+                                    requerido.</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Correo electrónico:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" formControlName="correoElectronicoCuidador" />
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('correoElectronicoCuidador')?.invalid && formNNA.get('correoElectronicoCuidador')?.touched">
+                                <small class="errors"
+                                    *ngIf="formNNA.get('correoElectronicoCuidador')?.hasError('email') && formNNA.get('correoElectronicoCuidador')?.touched">El
+                                    formato del correo electrónico es inválido.</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    Teléfono de contacto:
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" formControlName="numeroTelefonoCuidador" />
+                            </div>
+                            <div class="col-sm-12"
+                                *ngIf="formNNA.get('numeroTelefonoCuidador')?.invalid && formNNA.get('numeroTelefonoCuidador')?.touched">
+                                <small class="errors"
+                                    *ngIf="isEmpty(formNNA.get('numeroTelefonoCuidador')?.value)">Teléfono
+                                    de
+                                    contacto es requerido.</small>
+                            </div>
+                            <div class="col-sm-12 text-end">
+                                + teléfono
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <app-crear-contacto [nnaId]="nnaId"                                
+                                (dataToParent)="handleDataContacto($event)"></app-crear-contacto>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="col-sm-12 text-center">
+        <button class="btn rondear fondo-color-secundario  text-color-blanco col-1">Guardar</button>
+        <br />
+        <br />
+    </div>
+
+</div>
