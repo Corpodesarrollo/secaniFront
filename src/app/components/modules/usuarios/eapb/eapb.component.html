@@ -2,31 +2,31 @@
     <div class="header-container">
         <h1>EAPB</h1>
         <div class="top-right-buttons">
-            <button type="button" class="btn-general btn-crear" data-bs-toggle="modal" data-bs-target="#exampleModal">Crear</button>
+            <button type="button" class="btn-general btn-crear" (click)="onCreate()">Crear</button>
             <button class="btn-general btn-notificacion">Notificaciones</button>
         </div>
     </div>
 
-    <app-modal-crear></app-modal-crear>
+    <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
 
     <div class="rectangle">
 
         <div class="container mt-4">
             <div class="row align-bottom">
                 <div class="col-md-4">
-                    <select id="mySelect" class="form-select">
-                        <option selected disabled>Seleccione una EAPB</option>
-                        <option value="1">Opción 1</option>
-                        <option value="2">Opción 2</option>
-                        <option value="3">Opción 3</option>
+                    <select id="mySelect" class="form-select" [(ngModel)]="selectedArea" (change)="onAreaChange()">
+                        <option value="">Todas las EAPB</option>
+                        <option value="EPS Sanitas">EPS Sanitas</option>
+                        <option value="EPS Compensar">EPS Compensar</option>
+                        <option value="EPS Cafam">EPS Cafam</option>
                     </select>
                 </div>
                 <div class="col-md-8">
-                    <div class="input-group"    >
-                        <input type="text" class="form-control" placeholder="Buscar...">
+                    <div class="input-group">
+                        <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearchTermChange()" placeholder="Buscar...">
                         <div class="input-group-append">
                             <button class="btn btn-buscar" type="button"><i class="pi pi-search"></i></button>
-                            <button class="btn btn-secondary" type="button"><i class="pi pi-trash"></i></button>
+                            <button class="btn btn-secondary" type="button" (click)="clearFilters()"><i class="pi pi-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -49,21 +49,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>EPS Sanitas</td>
-                        <td>Luz Maria Soler</td>
-                        <td>Jefe de Enfermeras</td>
-                        <td>3208987514</td>
-                        <td>luz-sanitas.com</td>
-                        <td>Activo</td>
+                    <tr *ngIf="paginatedData.length === 0">
+                        <td colspan="7" class="no-records">No se encontraron registros</td>
+                    </tr>
+                    <tr *ngFor="let item of paginatedData">
+                        <td>{{ item.eapb }}</td>
+                        <td>{{ item.nombreApe }}</td>
+                        <td>{{ item.cargo }}</td>
+                        <td>{{ item.telefono }}</td>
+                        <td>{{ item.correo }}</td>
+                        <td>{{ item.estado }}</td>
                         <td class="table-actions">
-                            <button class="btn-round">
+                            <button class="btn-round" (click)="onEdit(item)">
                                 <i class="pi pi-pencil"></i>
                             </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <br>
+        <div class="pagination-controls">
+            <button (click)="previousPage()" [disabled]="currentPage === 1" class="btn-round"><i class="pi pi-angle-left"></i></button>
+            <span style="margin: 0 20px;">{{ currentPage }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage * pageSize >= data.length" class="btn-round"><i class="pi pi-angle-right"></i></button>
         </div>
     </div>
 </body>

@@ -43,13 +43,14 @@
 
 /***************** Estilos rectangulo filtros *****************/
 
-.btn-buscar{
+.btn-buscar {
     background-color: #73B7AD;
     margin: 0 5px;
 }
 
 .btn-buscar:hover {
-    background-color: #73b7adca; /* Color de fondo al pasar el cursor */
+    background-color: #73b7adca;
+    /* Color de fondo al pasar el cursor */
 }
 
 /***************** Estilos rectangulo con tabla *****************/
@@ -95,27 +96,46 @@
 }
 
 .btn-round {
-    width: 35px; /* Ajusta el tamaño según sea necesario */
-    height: 35px; /* Ajusta el tamaño según sea necesario */
-    border-radius: 50%; /* Hace que el botón sea redondo */
+    width: 35px;
+    /* Ajusta el tamaño según sea necesario */
+    height: 35px;
+    /* Ajusta el tamaño según sea necesario */
+    border-radius: 50%;
+    /* Hace que el botón sea redondo */
     justify-content: center;
     align-items: center;
     border: none;
-    background-color: #73B7AD; /* Color de fondo */
-    color: white; /* Color del icono */
+    background-color: #73B7AD;
+    /* Color de fondo */
+    color: white;
+    /* Color del icono */
     font-size: 16px;
     cursor: pointer;
 }
 
 .btn-round .pi {
-    font-size: 15px; /* Ajusta el tamaño del icono */
+    font-size: 15px;
+    /* Ajusta el tamaño del icono */
 }
 
 .btn-round:hover {
-    background-color: #73b7adca; /* Color de fondo al pasar el cursor */
+    background-color: #73b7adca;
+    /* Color de fondo al pasar el cursor */
 }
 
 .table-actions {
     text-align: center;
     vertical-align: middle;
+}
+
+.no-records {
+    text-align: center;
+    font-weight: bold;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
 }
