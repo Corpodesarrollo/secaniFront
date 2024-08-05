@@ -1,0 +1,48 @@
+.fondo-color-principal {
+    background: #73B7AD;
+}
+
+.text-color-blanco {
+    color: #FFFFFF;
+}
+
+.fondo-color-secundario {
+    background: #FF9801;
+}
+
+.contenido {
+    margin-top: 30px;
+    padding-bottom: 20px;
+}
+
+.titulo {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29.26px;
+    text-align: left;
+}
+
+.menu {
+    margin-top: 25px;
+}
+
+.rondear{
+    border-radius: 10px;
+}
+
+.card {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 0px;
+    background: #FFFFFF;
+    padding-top: 20px;
+}
+label{
+    font-weight: bold;
+}
+.row{
+    margin-top: 10px;
+}
+.p-datatable-table {
+    font-size: 5px !important;
+}

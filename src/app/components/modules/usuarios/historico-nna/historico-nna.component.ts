@@ -5,11 +5,12 @@ import { GenericService } from '../../../../services/generic.services';
 import { environment } from '../../../../../environments/environment';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-historico-nna',
   templateUrl: './historico-nna.component.html',
-  styleUrl: './historico-nna.component.css'
+  styleUrls: ['../general.component.css','./historico-nna.component.css']
 })
 export class HistoricoNnaComponent {
   visualizars!: any;
@@ -25,7 +26,14 @@ export class HistoricoNnaComponent {
   first = 0;
   rows = 10;
 
-  constructor(private service: GenericService) { }
+  permisos_nna:any={
+    canAdd:true,
+    canDel:false,
+    canView:false,
+    CanEdit:false
+  }
+
+  constructor(private service: GenericService, private router: Router) { }
 
   async ngOnInit() {
     var url = environment.url_MsNna;
@@ -51,7 +59,7 @@ export class HistoricoNnaComponent {
       orden: this.filtroOrganizar
     };
     this.visualizars = await this.service.postAsync(url, 'NNA/ConsultarNNAFiltro', parameter) ?? [];
-    console.log("HU Visualizar", this.visualizars);
+    //console.log("HU Visualizar", this.visualizars);
   }
 
 
@@ -102,6 +110,10 @@ export class HistoricoNnaComponent {
 
   isFirstPage(): boolean {
     return this.visualizars ? this.first === 0 : true;
+  }
+
+  btn_crear_nna(){
+    this.router.navigate(["/usuarios/crear_nna"]);
   }
 
 }

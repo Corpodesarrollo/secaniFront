@@ -1,0 +1,54 @@
+.fondo-color-principal {
+    background: #73B7AD;
+}
+.text-color-blanco {
+    color: #FFFFFF;
+}
+.fondo-color-secundario {
+    background: #FF9801;
+}
+
+.fondo-color-cancelar {
+    background: #4D4D4D80;
+}
+
+.contenido {
+    margin-top: 30px;
+    padding-bottom: 20px;
+}
+.titulo {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29.26px;
+    text-align: left;
+}
+.menu {
+    margin-top: 25px;
+}
+.rondear{
+    border-radius: 10px;
+}
+.card {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 0px;
+    background: #FFFFFF;
+    padding-top: 20px;
+}
+label{
+    font-weight: bold;
+    text-align: left !important;
+}
+.row{
+    margin-top: 10px;
+}
+.content-row{
+    margin-top: -10px;
+}
+.errors{
+    color: #ff0000;
+    font-size: small;
+}
+.text-left{
+    text-align: left;
+}
