@@ -139,3 +139,22 @@
     align-items: center;
     margin-top: 10px;
 }
+
+.btn-principal {
+    text-align: center;
+    background: #73B7AD;
+    color: #FFFFFF;
+    width: Fixed (129px)px;
+    height: Fixed (23.52px)px;
+    top: 296.75px;
+    left: 1224px;
+    padding: 4px 12px 4px 12px;
+    gap: 10px;
+    border-radius: 4px 4px 4px 4px;
+    opacity: 0px;
+    border: 0px;
+}
+
+.btn-principal span {
+    margin-left: 10px;    
+}

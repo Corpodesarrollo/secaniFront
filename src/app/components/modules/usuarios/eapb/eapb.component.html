@@ -11,33 +11,47 @@
 
     <div class="rectangle">
 
-        <div class="container mt-4">
-            <div class="row align-bottom">
-                <div class="col-md-4">
-                    <select id="mySelect" class="form-select" [(ngModel)]="selectedArea" (change)="onAreaChange()">
+        <div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="eapb" class="form-label">EAPB</label>
+                    <select class="form-select" aria-label="eapb" [(ngModel)]="filtroEAPB" (change)="onFiltroEAPBChange()"
+                        [value]="filtroEAPB" id="eapb" name="eapb">
                         <option value="">Todas las EAPB</option>
                         <option value="EPS Sanitas">EPS Sanitas</option>
                         <option value="EPS Compensar">EPS Compensar</option>
                         <option value="EPS Cafam">EPS Cafam</option>
+                        <!-- <option selected value="">Seleccione</option>
+                        <option *ngFor="let agente of filtroEAPB" [value]="agente.id">
+                            {{ agente.fullName }}
+                        </option>-->
                     </select>
                 </div>
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearchTermChange()" placeholder="Buscar...">
-                        <div class="input-group-append">
-                            <button class="btn btn-buscar" type="button"><i class="pi pi-search"></i></button>
-                            <button class="btn btn-secondary" type="button" (click)="clearFilters()"><i class="pi pi-trash"></i></button>
-                        </div>
-                    </div>
+                <div class="col-6">
+                    <label for="buscar" class="form-label">&nbsp; <span
+                            class="pi pi-search"></span></label>
+                    <input type="text" class="form-control" id="buscar" name="buscar" (change)="onFiltroBuscarChange()"
+                        placeholder="Buscar" [value]="filtroBuscar" [(ngModel)]="filtroBuscar">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 d-flex mt-3">
+                    <button class="btn-principal ms-auto p-2" (click)="limpiar()">
+                        <i class="pi pi-trash"></i>
+                        <span>Limpiar filtros</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <hr>
+        <br>
 
         <div>
-            <table class="data-table">
-                <thead>
+            <p-table [value]="data" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
+                <ng-template pTemplate="header">
                     <tr>
                         <th>EAPB</th>
                         <th>Nombres y apellidos</th>
@@ -47,32 +61,23 @@
                         <th>Estado</th>
                         <th>Editar</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr *ngIf="paginatedData.length === 0">
-                        <td colspan="7" class="no-records">No se encontraron registros</td>
-                    </tr>
-                    <tr *ngFor="let item of paginatedData">
-                        <td>{{ item.eapb }}</td>
-                        <td>{{ item.nombreApe }}</td>
-                        <td>{{ item.cargo }}</td>
-                        <td>{{ item.telefono }}</td>
-                        <td>{{ item.correo }}</td>
-                        <td>{{ item.estado }}</td>
+                </ng-template>
+                <ng-template pTemplate="body" let-data>
+                    <tr>
+                        <td>{{ data.eapb }}</td>
+                        <td>{{ data.nombreApe }}</td>
+                        <td>{{ data.cargo }}</td>
+                        <td>{{ data.telefono }}</td>
+                        <td>{{ data.correo }}</td>
+                        <td>{{ data.estado }}</td>
                         <td class="table-actions">
-                            <button class="btn-round" (click)="onEdit(item)">
+                            <button class="btn-round" (click)="onEdit(data)">
                                 <i class="pi pi-pencil"></i>
                             </button>
                         </td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
-        <br>
-        <div class="pagination-controls">
-            <button (click)="previousPage()" [disabled]="currentPage === 1" class="btn-round"><i class="pi pi-angle-left"></i></button>
-            <span style="margin: 0 20px;">{{ currentPage }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage * pageSize >= data.length" class="btn-round"><i class="pi pi-angle-right"></i></button>
+                </ng-template>
+            </p-table>
         </div>
     </div>
 </body>
