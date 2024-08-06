@@ -5,9 +5,9 @@
     </div>
 </div>
 <div class="row mb-3">
-    <div class="col-12">
-        <div class="row">
-            <div class="btn col-auto text-white rounded-4 text-center me-2 py-0" style="width: 150px; background-color: #73b7ad;">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div class="button-group">
+            <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '1'}" style="width: 150px;" (click)="applyFilter('1')">
                 <div class="row">
                     <div class="col">
                         Hoy
@@ -15,11 +15,11 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <h3 class="fw-bold mb-0">10</h3>
+                        <h3 class="fw-bold mb-0">{{cntFiltros.hoy}}</h3>
                     </div>
                 </div>
-            </div>
-            <div class="btn col-auto bg-white rounded-4 text-center me-2 py-0" style="width: 150px;">
+            </button>
+            <button class="btn col-auto rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '2'}" style="width: 150px;" (click)="applyFilter('2')">
                 <div class="row">
                     <div class="col">
                         Con alerta
@@ -27,11 +27,11 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <h3 class="fw-bold mb-0">6</h3>
+                        <h3 class="fw-bold mb-0">{{cntFiltros.conAlerta}}</h3>
                     </div>
                 </div>
-            </div>
-            <div class="btn col-auto bg-white rounded-4 text-center me-2 py-0" style="width: 150px;">
+            </button>
+            <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '3'}" style="width: 150px;" (click)="applyFilter('3')">
                 <div class="row">
                     <div class="col">
                         Todos
@@ -39,11 +39,11 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <h3 class="fw-bold mb-0">50</h3>
+                        <h3 class="fw-bold mb-0">{{cntFiltros.todos}}</h3>
                     </div>
                 </div>
-            </div>
-            <div class="btn col-auto bg-white rounded-4 text-center me-2 py-0" style="width: 220px;">
+            </button>
+            <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '4'}" style="width: 240px;" (click)="applyFilter('4')">
                 <div class="row">
                     <div class="col">
                         Solicitados por cuidador
@@ -51,40 +51,41 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <h3 class="fw-bold mb-0">5</h3>
+                        <h3 class="fw-bold mb-0">{{cntFiltros.solicitadosPorCuidador}}</h3>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-12">
         <p-card>
             <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th class="header-th">No. Caso</th>
-                        <th class="header-th">Fecha Notificación</th>
+                        <th class="header-th" [width]="100">No. Caso</th>
+                        <th class="header-th" [width]="120">Fecha Notificación</th>
                         <th class="header-th">Nombre</th>
-                        <th class="header-th">Estado</th>
+                        <th class="header-th" [width]="200">Estado</th>
                         <th class="header-th">Asunto Última Actuación</th>
-                        <th class="header-th">Última Actuación</th>
-                        <th class="header-th">Alertas</th>
-                        <th class="header-th">Acción</th>
+                        <th class="header-th" [width]="120">Última Actuación</th>
+                        <th class="header-th" [width]="100">Alertas</th>
+                        <th class="header-th" [width]="100">Acción</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-seguimiento>
                     <tr>
-                        <td><a href="#">{{ seguimiento.idCaso }}</a></td>
+                        <td><a href="#">{{ seguimiento.noCaso }}</a></td>
                         <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
-                        <td>{{ seguimiento.nombre }}</td>
-                        <td><span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.estadoNNA }}</span></td>
+                        <td>{{ seguimiento.nombreCompleto }}</td>
+                        <td><span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.nombre }}</span></td>
                         <td>{{ seguimiento.asuntoUltimaActuacion }}</td>
-                        <td>{{ seguimiento.ultimaActuacion | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ seguimiento.fechaUltimaActuacion | date:'dd/MM/yyyy' }}</td>
                         <td>
-                            <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.estado.id)" class="badge text-white me-1">
-                            {{ alerta.alerta.subcategoria.categoriaAlertaId }}.{{ alerta.alerta.subcategoria.indicador }}
+                            <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
+                            {{ alerta.nombre }}
                             </span>
                         </td>
                         <td>

@@ -29,3 +29,17 @@
 .notificacion-button .p-button {
     background-color: #73b7ad !important;
 }
+
+.badge-notifications {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0.25em 0.6em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: inline-block;
+  transform: translate(50%, -50%);
+}

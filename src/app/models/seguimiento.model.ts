@@ -1,12 +1,13 @@
-import { AlertaSeguimiento } from "./alertaSeguimiento.model";
+import { EstadoAlerta } from "./estadoAlerta.model";
 import { EstadoNNA } from "./estadoNNA.model";
 
 export interface Seguimiento {
-    idCaso?: number;
-    fechaNotificacion?: Date;
-    nombre?: string;
-    estado?: EstadoNNA;
-    asuntoUltimaActuacion?: string;
-    ultimaActuacion?: Date;
-    alertas?: AlertaSeguimiento[];
+    id?: number;
+    noCaso: number;
+    fechaNotificacion: Date;
+    nombreCompleto: string;
+    estado: EstadoNNA;
+    asuntoUltimaActuacion: string;
+    fechaUltimaActuacion: Date;
+    alertas: EstadoAlerta[];
 }

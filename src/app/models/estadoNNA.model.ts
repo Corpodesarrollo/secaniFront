@@ -1,6 +1,6 @@
 export interface EstadoNNA {
     id?: number;
-    estadoNNA: string;
+    nombre: string;
     descripcion?: string;
     colorBG?: string;
     colorText?: string;
