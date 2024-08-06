@@ -2,11 +2,11 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
-import { Seguimiento } from '../../../models/seguimiento.model';
+import { Seguimiento } from '../../../../models/seguimiento.model';
 import { CommonModule } from '@angular/common';
-import { BotonNotificacionComponent } from "../boton-notificacion/boton-notificacion.component";
-import { GenericService } from '../../../services/generic.services';
-import { SeguimientoCntFiltros } from '../../../models/seguimientoCntFiltros.model';
+import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
+import { GenericService } from '../../../../services/generic.services';
+import { SeguimientoCntFiltros } from '../../../../models/seguimientoCntFiltros.model';
 
 @Component({
   selector: 'app-consultar-seguimientos',

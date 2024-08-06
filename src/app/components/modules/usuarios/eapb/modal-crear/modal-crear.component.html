@@ -42,7 +42,7 @@
                         <label for="correo" class="col-sm-4 col-form-label">Correo *</label>
                         <div class="col-sm-8">
                             <input type="correo" id="correo" class="form-control" formControlName="correo">
-                            <div *ngIf="contactForm.get('correo')!.hasError('correo') && contactForm.get('correo')!.touched" class="text-danger">
+                            <div *ngIf="contactForm.get('correo')!.hasError('pattern') && contactForm.get('correo')!.touched" class="text-danger">
                                 Correo no válido
                             </div>
                         </div>

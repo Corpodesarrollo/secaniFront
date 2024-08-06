@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  url: 'https://localhost:7084/',
   url_MsAuthention: 'https://localhost:7084/', 
   url_MsNna: 'https://localhost:7291/',
   url_MSSeguimiento: 'https://localhost:7085/',

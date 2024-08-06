@@ -26,7 +26,7 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       nombreApe: [''],
       cargo: [''],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      correo: ['', [Validators.required, Validators.email]],
+      correo: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')]],
       estado: ['Activo']
     });
   }
@@ -59,6 +59,7 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   resetForm() {
     this.contactForm.reset();
+    this.contactForm.get('estado')?.setValue('Activo');
     this.contactForm.get('eapb')?.enable();
   }
 

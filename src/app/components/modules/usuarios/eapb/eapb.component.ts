@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalCrearComponent } from './modal-crear/modal-crear.component';
 import { TableModule } from 'primeng/table';
+import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-eapb',
   standalone: true,
-  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule],
+  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent],
   templateUrl: './eapb.component.html',
   styleUrl: './eapb.component.css'
 })
@@ -20,7 +21,7 @@ export class EAPBComponent implements OnInit {
   
   data: any[] = [
     { eapb: 'EPS Sanitas', nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987514', correo: 'luz1@sanitas.com', estado: 'Activo' },
-    { eapb: 'EPS Sanitas', nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987515', correo: 'luz2@sanitas.com', estado: 'Activo' },
+    { eapb: 'EPS Sanitas', nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987515', correo: 'luz2@sanitas.com', estado: 'Inactivo' },
     { eapb: 'EPS Sanitas', nombreApe: 'Felipe Arias', cargo: 'Jefe de Doctores', telefono: '3208987516', correo: 'luz3@sanitas.com', estado: 'Activo' },
     { eapb: 'EPS Sanitas', nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987516', correo: 'luz3@sanitas.com', estado: 'Activo' },
     { eapb: 'EPS Compensar', nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987516', correo: 'luz3@sanitas.com', estado: 'Activo' },

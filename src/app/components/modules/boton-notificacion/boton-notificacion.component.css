@@ -11,6 +11,7 @@
 .btn {
   position: relative;
   padding: 0.5rem 1rem; /* Ajusta el padding si es necesario */
+  margin: 0px 10px;
 }
 
 .btn .pi {

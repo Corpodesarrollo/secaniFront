@@ -10,6 +10,7 @@ import { DialogValidarExistenciaComponent } from './dialog-validar-existencia/di
 import { CrearNnaComponent } from './crear-nna/crear-nna.component';
 import { CrearContactoComponent } from './crear-contacto/crear-contacto.component';
 import { DialogCrearContactoComponent } from './dialog-crear-contacto/dialog-crear-contacto.component';
+import { CommonModule } from '@angular/common';
 
 
 
