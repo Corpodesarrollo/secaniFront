@@ -1,0 +1,15 @@
+<p-button styleClass="btn fondo-color-principal text-color-blanco" (onClick)="showDialog()" label="VALIDAR EXISTENCIA"  />
+<p-dialog 
+    header="" 
+    [(visible)]="visible" 
+    [modal]="true" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [style]="{ width: '50vw' }" 
+    [draggable]="false" 
+    [resizable]="false">
+        <div class="text-center">
+            <span>El menor ya está registrado en SECÁNI</span>
+            <br/><br/>
+            <button (click)="btn_ver_detalle_nna()" class="btn fondo-color-principal text-color-blanco">Ver detalle NNA</button>
+        </div>
+</p-dialog>

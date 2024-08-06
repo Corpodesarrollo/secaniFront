@@ -1,14 +1,20 @@
 import { Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
-import { PermisosComponent } from './components/permisos/permisos.component';
 import { ContentComponent } from './components/content/content.component';
 import { ConsultarSeguimientosComponent } from './components/modules/consultar-seguimientos/consultar-seguimientos.component';
+import { PermisosComponent } from './components/modules/administracion/permisos/permisos.component';
 
 export const routes: Routes = [
 
-    { path: '', component: LoginComponent },
+    { path: '', component: ContentComponent },
+    { path: 'home', component: ContentComponent },
     { path: 'login', component: LoginComponent },
+
+    { path: 'mi-semana',
+      loadComponent: () =>
+        import('./components/modules/usuarios/mi-semana/mi-semana.component').then( (c) => c.MiSemanaComponent),
+    },
     { path: 'permisos', component: PermisosComponent },
     {
         path: 'usuarios',
@@ -18,5 +24,13 @@ export const routes: Routes = [
                 (m) => m.UsuariosModule
             )
     },
-    { path: 'seguimiento', component: ConsultarSeguimientosComponent }
+    { path: 'seguimiento', component: ConsultarSeguimientosComponent },
+    {
+        path: 'administracion',
+        component: ContentComponent,
+        loadChildren: () =>
+            import('./components/modules/administracion/administracion.module').then(
+                (m) => m.AdministracionModule
+            )
+    }
 ];

@@ -19,7 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { BotonNotificacionComponent } from "./components/modules/boton-notificacion/boton-notificacion.component";
-
+import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +31,8 @@ import { BotonNotificacionComponent } from "./components/modules/boton-notificac
     ContentComponent,
   ],
   imports: [
+    UsuariosModule,
+
     RouterModule.forRoot(routes),
     BrowserModule,
     BrowserAnimationsModule,

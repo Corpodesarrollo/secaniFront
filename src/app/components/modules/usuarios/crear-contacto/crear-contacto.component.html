@@ -1,1 +1,32 @@
-<p>crear-contacto works!</p>
+<div class="row">
+    <div class="col-sm-12 text-end">
+        <app-dialog-crear-contacto [nnaId]="nnaId"                                
+        (dataToParent)="handleDataContacto($event)"></app-dialog-crear-contacto>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <p-table [value]="listadoContacto" [paginator]="false" [first]="first" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '10mrem; font-size:5px' }" (onPage)="pageChange($event)">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Contacto</th>
+                    <th>Parantesco</th>
+                    <th>Correo electrónico</th>
+                    <th>Teléfono de contacto</th>
+                    <th>Acción</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-listadoContacto>
+                <tr>
+                    <td>{{ listadoContacto.nombreCompletoContacto }}</td>
+                    <td>{{ listadoContacto.parentescoContacto }}</td>
+                    <td>{{ listadoContacto.correoElectronicoContacto }}</td>
+                    <td>{{ listadoContacto.numeroTelefonoContacto }}</td>
+                    <td>{{ listadoContacto }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

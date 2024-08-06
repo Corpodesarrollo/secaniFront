@@ -1,0 +1,48 @@
+.hnna-titulo-content {
+    margin-top: 30px;
+    padding-bottom: 20px;
+}
+
+.hnna-titulo {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29.26px;
+    text-align: left;
+}
+
+.hnna-titulo-menu {
+    margin-top: 25px;
+}
+
+.card {
+    margin-bottom: 20px;
+    border: 0px;
+    background: #FFFFFF;
+    padding-top: 20px;
+}
+
+.btn-principal {
+    text-align: center;
+    background: #73B7AD;
+    color: #FFFFFF;
+    width: Fixed (129px)px;
+    height: Fixed (23.52px)px;
+    top: 296.75px;
+    left: 1224px;
+    padding: 4px 12px 4px 12px;
+    gap: 10px;
+    border-radius: 4px 4px 4px 4px;
+    opacity: 0px;
+    border: 0px;
+}
+
+.btn-principal span {
+    margin-left: 10px;
+}
+
+.hnna-titulo-menu .btn-crear {
+    margin-left: 15px;
+    background: #FF9801;
+    color: white;
+    
+}
