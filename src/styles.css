@@ -3,6 +3,7 @@
 @import "primeng/resources/primeng.css";
 
 @import "primeicons/primeicons.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 body,
 html {
