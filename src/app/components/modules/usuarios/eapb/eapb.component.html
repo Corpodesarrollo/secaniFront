@@ -1,0 +1,83 @@
+<body class="formato-fondo fuente-letra">
+    <div class="header-container">
+        <h1>EAPB</h1>
+        <div class="top-right-buttons">
+            <button type="button" class="btn-general btn-crear" (click)="onCreate()">Crear</button>
+            <button class="btn-general btn-notificacion">Notificaciones</button>
+        </div>
+    </div>
+
+    <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
+
+    <div class="rectangle">
+
+        <div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="eapb" class="form-label">EAPB</label>
+                    <select class="form-select" aria-label="eapb" [(ngModel)]="filtroEAPB" (change)="onFiltroEAPBChange()"
+                        [value]="filtroEAPB" id="eapb" name="eapb">
+                        <option value="">Todas las EAPB</option>
+                        <option value="EPS Sanitas">EPS Sanitas</option>
+                        <option value="EPS Compensar">EPS Compensar</option>
+                        <option value="EPS Cafam">EPS Cafam</option>
+                        <!-- <option selected value="">Seleccione</option>
+                        <option *ngFor="let agente of filtroEAPB" [value]="agente.id">
+                            {{ agente.fullName }}
+                        </option>-->
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label for="buscar" class="form-label">&nbsp; <span
+                            class="pi pi-search"></span></label>
+                    <input type="text" class="form-control" id="buscar" name="buscar" (change)="onFiltroBuscarChange()"
+                        placeholder="Buscar" [value]="filtroBuscar" [(ngModel)]="filtroBuscar">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 d-flex mt-3">
+                    <button class="btn-principal ms-auto p-2" (click)="limpiar()">
+                        <i class="pi pi-trash"></i>
+                        <span>Limpiar filtros</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div>
+            <p-table [value]="data" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>EAPB</th>
+                        <th>Nombres y apellidos</th>
+                        <th>Cargo</th>
+                        <th>Numero de contacto</th>
+                        <th>Correo electronico</th>
+                        <th>Estado</th>
+                        <th>Editar</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data>
+                    <tr>
+                        <td>{{ data.eapb }}</td>
+                        <td>{{ data.nombreApe }}</td>
+                        <td>{{ data.cargo }}</td>
+                        <td>{{ data.telefono }}</td>
+                        <td>{{ data.correo }}</td>
+                        <td>{{ data.estado }}</td>
+                        <td class="table-actions">
+                            <button class="btn-round" (click)="onEdit(data)">
+                                <i class="pi pi-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</body>

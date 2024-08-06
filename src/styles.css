@@ -3,6 +3,8 @@
 @import "primeng/resources/primeng.css";
 
 @import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 body,
@@ -13,6 +15,10 @@ html {
 
 button{
     cursor: pointer;
+}
+
+h1{
+    font-weight: bold;
 }
 
 .formato-fondo {
