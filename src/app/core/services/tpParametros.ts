@@ -12,6 +12,12 @@ export class TpParametros {
 
     }
 
+    async getTpEstadosNNA() {
+        var urlbase:string = environment.url_MsNna
+        var url = "NNA/TpEstadosNNA";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
     async getTpTipoId() {
         var urlbase:string = environment.url_MsNna
         var url = "NNA/GetTpTipoId";

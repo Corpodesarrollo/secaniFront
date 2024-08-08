@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { BotonNotificacionComponent } from "./components/modules/boton-notificacion/boton-notificacion.component";
 import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
+import { TablasParametricas } from './core/services/tablasParametricas';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
     TableModule,
     BotonNotificacionComponent
 ],
-  providers: [],
+  providers: [TablasParametricas],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
