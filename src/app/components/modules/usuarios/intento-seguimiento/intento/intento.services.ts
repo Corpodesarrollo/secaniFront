@@ -40,4 +40,9 @@ export class IntentoService {
     return await  this.comun.retorno_post(url, data);
   }
 
+  GetTipoFallasLlamada = async () => {
+    let url = `${'Intento/GetTiposFallas'}`;
+    return await  this.comun.retorno_get(url);
+  }
+
 }

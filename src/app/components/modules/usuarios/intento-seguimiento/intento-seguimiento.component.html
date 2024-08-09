@@ -1,6 +1,4 @@
 <!--- CODIGO NUEVO A INSERTAR EN COMPONENTE -->
-{{seguimiento | json}}
-
 <p-dialog  [(visible)]="displayModalIntento" [modal]="true"  (onHide)="onModalHide()">
   <div style="text-align:center" *ngIf="ContactoNNA != {}">
     <app-intento
@@ -74,9 +72,9 @@
       <tr class="custom-row-border">
           <td>{{ intentos.nombres }}</td>
           <td>{{ intentos.parentescoId }}</td>
-          <td>{{ valor_cuidador(contactos.cuidador) }}</td>
           <td>{{ intentos.email }}</td>
           <td>{{ intentos.telefonos }}</td>
+          <td>{{ intentos.fechaIntento | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
           <td>{{ valor_tipoIntento(intentos.tipoFallaIntentoId) }}</td>
           <td>{{ intentos.tipoFallaIntentoNombre }}</td>
 

@@ -34,7 +34,7 @@
         <label for="TipoFallaIntentoId"><h5>Tipo de falla en la llamada</h5></label>
         <select id="TipoFallaIntentoId" class="form-select" formControlName="TipoFallaIntentoId">
           <option value="" disabled selected>Seleccione...</option>
-          <option *ngFor="let doc of tiposFallas" [value]="doc.id_tipo_falla">{{ doc.nombre_tipo_falla }}</option>
+          <option *ngFor="let doc of tiposFallas" [value]="doc.id">{{ doc.nombre }}</option>
         </select>
       </div>
       <div class="col-md-2"></div>

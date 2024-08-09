@@ -53,17 +53,19 @@ export class IntentoComponent implements OnInit {
     console.log("this.verMenu", this.verMenu);
   }
 
-  intentoFallido(){
+  async intentoFallido(){
     this.verMenu = false;
     this.verFormularioFallido = true;
 
 
-    //TODO: Consumir servicio que tenga la lista de fallas
-    this.tiposFallas = [
+   this.tiposFallas = await this.servicio.GetTipoFallasLlamada();
+
+
+    /*this.tiposFallas = [
       {id_tipo_falla: 1, nombre_tipo_falla: 'Falla 1'},
       {id_tipo_falla: 2, nombre_tipo_falla: 'Falla 2'},
       {id_tipo_falla: 3, nombre_tipo_falla: 'Falla 3'},
-    ];
+    ];*/
 
   }
 
