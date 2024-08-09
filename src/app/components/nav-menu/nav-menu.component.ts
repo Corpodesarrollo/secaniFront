@@ -26,7 +26,7 @@ export class NavMenuComponent implements OnInit {
     var arregloMenu: any[] = [];
     var menuRowsResponse: any = await this.service.postAsync(url, 'Permisos/MenuXRolId', parameters) ?? [];
     var menuRows: MenuModel[] = menuRowsResponse;
-    console.log(menuRows);
+    //console.log(menuRows);
 
     // Crear un mapa para agrupar los menús por nombre
     const menuMap = new Map<string, any>();
@@ -78,7 +78,7 @@ export class NavMenuComponent implements OnInit {
 
     this.items = arregloMenu;
 
-    console.log("Items :: ", this.items);
+    //console.log("Items :: ", this.items);
     /*
         this.items = [
           {

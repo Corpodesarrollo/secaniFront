@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosResponse } from 'axios';
-import { environment } from '../../../environments/environmet';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environmet';
 })
 export class Generico {
 
-  private BASE_URL = environment.urlBase;
+  private BASE_URL = environment.url_MSSeguimiento;
   private headers: any = '';
   private headersWithoutToken: any = '';
 
@@ -66,10 +66,10 @@ export class Generico {
     return this.handleRequest(request);
   }
 
-  async retorno_get(urltemp: string): Promise<any> {
+  async retorno_get(urltemp: string, baseUrl:string = this.BASE_URL): Promise<any> {
 
     const headers = await this.headersWithToken();
-    const url = `${this.BASE_URL}${urltemp}`;
+    const url = `${baseUrl}${urltemp}`;
     const request = axios.get(url, { headers });
     return this.handleRequest(request);
   }

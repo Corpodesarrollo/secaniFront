@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 export function getBaseUrl() {
-  return environment.url;
+  return environment.url_MsAuthention;
 }
 
 
@@ -14,3 +14,5 @@ export function getBaseUrl() {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch((err) => console.error(err));
+
+  

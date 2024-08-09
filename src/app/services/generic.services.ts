@@ -14,7 +14,7 @@ import axios, { AxiosResponse } from 'axios';
 })
 export class GenericService {
 
-  private url = environment.url;
+  private url = environment.url_MsAuthention;
 
   private notificacionSubject = new Subject<any>();
 
@@ -28,8 +28,20 @@ export class GenericService {
 
   ) { }
 
-  public get(modulo: string, parameters: string) {
-    return this.http.get<any[]>(`${this.url}${modulo}${parameters}`);
+  private getApiUrl(api: string): string {
+    switch (api) {
+      case 'Seguimiento':
+        return environment.url_MSSeguimiento;
+      case 'Authentication':
+        return environment.url_MsAuthention;
+      default:
+        return environment.url;
+    }
+  }
+
+  public get(modulo: string, parameters: string, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    return this.http.get(`${apiUrl}${modulo}${parameters}`);
   }
 
   public get_withoutParameters(modulo: string) {
@@ -52,8 +64,9 @@ export class GenericService {
     return await this.http.get(`${url}`).toPromise();
   }
 
-  public post(modulo: string, parameters: any) {
-    return this.http.post(`${this.url}${modulo}`, parameters);
+  public post(modulo: string, parameters: any, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    return this.http.post(`${apiUrl}${modulo}`, parameters);
   }
 
   public async postAsync(url: string = this.url,modulo: string, parameters: any) {

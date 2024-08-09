@@ -1,0 +1,46 @@
+.p-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+}
+
+/* boton-notificacion.component.css */
+/* boton-notificacion.component.css */
+.btn {
+  position: relative;
+  padding: 0.5rem 1rem; /* Ajusta el padding si es necesario */
+  margin: 0px 10px;
+}
+
+.btn .pi {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+  top: -10px; /* Ajusta según el tamaño del icono */
+  right: -10px; /* Ajusta según el tamaño del icono */
+  transform: translate(50%, -50%);
+  font-size: 0.75rem;
+  padding: 0.2em 0.5em;
+}
+
+.notificacion-button .p-button {
+    background-color: #73b7ad !important;
+}
+
+.badge-notifications {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0.25em 0.6em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: inline-block;
+  transform: translate(50%, -50%);
+}
