@@ -31,5 +31,21 @@ export const routes: Routes = [
             import('./components/modules/administracion/administracion.module').then(
                 (m) => m.AdministracionModule
             )
-    }
+    },
+    { path: 'intento',
+      loadComponent: () =>
+        import('./components/modules/usuarios/intento-seguimiento/intento/intento.component').then( (c) => c.IntentoComponent),
+    },
+    { path: 'intento-exitoso',
+      loadComponent: () =>
+        import('./components/modules/usuarios/intento-seguimiento/intento-exitoso/intento-exitoso.component').then( (c) => c.IntentoExitosoComponent),
+    },
+    { path: 'intento-seguimiento',
+      loadComponent: () =>
+        import('./components/modules/usuarios/intento-seguimiento/intento-seguimiento.component').then( (c) => c.IntentoSeguimientoComponent),
+    },
+    { path: 'casos-entidad',
+      loadComponent: () =>
+        import('./components/modules/usuarios/casos-entidad/casos-entidad.component').then( (c) => c.CasosEntidadComponent),
+    },
 ];
