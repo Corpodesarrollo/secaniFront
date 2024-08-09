@@ -5,11 +5,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { GenericService } from '../../../../services/generic.services';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })

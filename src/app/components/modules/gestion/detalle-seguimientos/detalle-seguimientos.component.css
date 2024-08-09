@@ -1,0 +1,44 @@
+/*Estilos para el titulo de la vista*/
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+}
+
+.header-left,
+.header-right {
+    flex: 1;
+}
+
+.header-right {
+    text-align: right;
+}
+
+.title {
+    margin-top: 3ch;
+}
+
+/*Estilos para las tarjetas de la vista*/
+
+.header-th {
+    color: gray;
+    font-weight: normal;
+    font-size: 14px;
+    background-color: white;
+}
+
+/*Estilos de lso botones inferiores*/
+
+.btn-detalle-seguimiento{
+    background-color: #FF9801;
+    color: white;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.btn-detalle-seguimiento:hover {
+    background-color: #ff9901c3;
+    color: white;
+}

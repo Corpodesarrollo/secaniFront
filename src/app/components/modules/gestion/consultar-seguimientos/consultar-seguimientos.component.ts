@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { GenericService } from '../../../../services/generic.services';
 import { SeguimientoCntFiltros } from '../../../../models/seguimientoCntFiltros.model';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-consultar-seguimientos',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent ],
+  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule],
   templateUrl: './consultar-seguimientos.component.html',
   styleUrl: './consultar-seguimientos.component.css',
   encapsulation: ViewEncapsulation.None
@@ -41,14 +42,14 @@ export class ConsultarSeguimientosComponent implements OnInit {
         this.cntFiltros = data;
       }
     });
-   }
+  }
 
-   applyFilter(filter: string) {
+  applyFilter(filter: string) {
     this.activeFilter = filter;
     this.CargarDatos(filter);
   }
 
-  CargarDatos(filter: string){
+  CargarDatos(filter: string) {
     this.repos.get('Seguimiento/GetAllByIdUser/', `${this.idUsuario}/${filter}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;

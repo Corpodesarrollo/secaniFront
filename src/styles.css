@@ -81,6 +81,11 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
 .sinSubMenus span{
     font-weight: bold;
 }
+
+.p-card{
+    margin-top: 20px;
+    margin-right: 10px;
+}
 /**
 Fin estilos menú
 SECÁNI-RQ00-HU00- Menú y Perfiles

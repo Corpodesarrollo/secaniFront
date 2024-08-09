@@ -44,8 +44,10 @@ export class GenericService {
     return this.http.get(`${apiUrl}${modulo}${parameters}`);
   }
 
-  public get_withoutParameters(modulo: string) {
-    return this.http.get<any[]>(`${this.url}${modulo}`);
+  public get_withoutParameters(modulo: string, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    console.log(`${apiUrl}${modulo}`)
+    return this.http.get<any[]>(`${apiUrl}${modulo}`);
   }
 
   public get_withoutParametersAxios(modulo: string): Observable<any[]> {

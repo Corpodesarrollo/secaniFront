@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { ModalCrearComponent } from './modal-crear/modal-crear.component';
 import { TableModule } from 'primeng/table';
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
+import { CardModule } from 'primeng/card';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-eapb',
   standalone: true,
-  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent],
+  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent, CardModule],
   templateUrl: './eapb.component.html',
   styleUrl: './eapb.component.css'
 })

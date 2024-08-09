@@ -12,6 +12,7 @@ import { Route, Router } from '@angular/router';
   templateUrl: './historico-nna.component.html',
   styleUrls: ['../general.component.css','./historico-nna.component.css']
 })
+
 export class HistoricoNnaComponent {
   visualizars!: any;
 
