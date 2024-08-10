@@ -7,6 +7,10 @@
 
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+:root {
+    --color-base: #73b7ad; /* Reemplaza este valor por tu color */
+}
+
 body,
 html {
     height: 100%;

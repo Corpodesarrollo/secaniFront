@@ -4,19 +4,20 @@ import { MenuItem } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { SeguimientoStepsComponent } from '../seguimiento-steps/seguimiento-steps.component';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import { InputTextModule } from 'primeng/inputtext';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
-import { parametricas } from '../../../../../models/parametricas.model';
-import { NNA } from '../../../../../models/nna.model';
+import { Parametricas } from '../../../../../models/parametricas.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-seguimiento-estado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule],
   templateUrl: './seguimiento-estado.component.html',
   styleUrl: './seguimiento-estado.component.css'
 })
@@ -24,13 +25,13 @@ export class SeguimientoEstadoComponent  implements OnInit {
   estado:string = 'Registrado';
     
   items: MenuItem[] = [];
-  estados: parametricas[] = [];
-  diagnosticos: parametricas[] = [];
-  IPS: parametricas[] = [];
+  estados: Parametricas[] = [];
+  diagnosticos: Parametricas[] = [];
+  IPS: Parametricas[] = [];
 
-  selectedDiagnostico: parametricas | undefined;
-  selectedEstado: parametricas | undefined;
-  selectedIPS: parametricas | undefined;
+  selectedDiagnostico: Parametricas | undefined;
+  selectedEstado: Parametricas | undefined;
+  selectedIPS: Parametricas | undefined;
 
   diagnostico: InfoDiagnostico = {
     id: 0,
@@ -43,10 +44,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
     numeroRecaidas: 0
   };
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas) {
-  }
-
-  onSubmit() {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -56,7 +54,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
     ];
 
     this.estados = await this.tpp.getTpEstadosNNA();
-    this.selectedEstado = this.estados[2];
+    //this.selectedEstado = this.estados[2];
   }
 
   applyRecaida(value: number) {
@@ -64,5 +62,11 @@ export class SeguimientoEstadoComponent  implements OnInit {
     if(value === 0) {
       this.diagnostico.numeroRecaidas = 0;
     }
+  }
+
+  Siguiente() {
+    this.router.navigate(['/gestion/seguimiento/traslado-seguimiento']).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 }

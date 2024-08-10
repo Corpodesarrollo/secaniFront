@@ -1,4 +1,4 @@
-export interface parametricas {
+export interface Parametricas {
     id: number;
     codigo?: string;
     nombre: string;

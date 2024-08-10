@@ -1,0 +1,171 @@
+<body class="formato-fondo fuente-letra pe-4">
+    <div class="row mb-3  align-items-center">
+        <div class="col-12 d-flex justify-content-between">
+            <p-breadcrumb class="" [model]="items">
+                <ng-template pTemplate="item" let-item>
+                    <ng-container *ngIf="item.route; else elseBlock">
+                        <a [routerLink]="item.route" class="p-menuitem-link">
+                            <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                            <span class="text-primary font-semibold">{{ item.label }}</span>
+                        </a>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                        <a [href]="item.url">
+                            <span class="text-color">{{ item.label }}</span>
+                        </a>
+                    </ng-template>
+                </ng-template>
+            </p-breadcrumb>
+            <div>
+                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">&nbsp;</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <app-seguimiento-steps [stepsCount]="4" [activeIndex]="3" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p-card>
+                <div class="row">
+                    <div class="col-6 pe-5">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3 fs-5">Información relacionada con la adherencia al tratamiento</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Ha dejado de aistir al tratamiento?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.haInasistidoTratamiento}" style="width: 70px;" (click)="HaInasistidoTratamiento(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.haInasistidoTratamiento}" style="width: 70px;" (click)="HaInasistidoTratamiento(false)">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="adherencia.haInasistidoTratamiento">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Por cuánto tiempo ha dejado de aistir?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="adherencia.tiempoInasistencia">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="adherencia.haInasistidoTratamiento">
+                            <div class="col-8">
+                                <label for="unidadesTiempo" class="fw-bold">Unidad de medida del tiempo</label>
+                            </div>
+                            <div class="col-4 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedUnidadTiempo"
+                                    [options]="unidadesTiempo"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="unidadesTiempo"
+                                    id="unidadesTiempo"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="adherencia.haInasistidoTratamiento">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">Causas de Inasistencia</label>
+                            </div>
+                            <div class="col-4 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedCausaInasistencia"
+                                    [options]="causasInasistencia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="causasInasistencia"
+                                    id="causasInasistencia"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2" *ngIf="adherencia.haInasistidoTratamiento">
+                            <div class="col-12 p-fluid">
+                                <input id="malaAtencionIPSCual" type="text" pInputText [(ngModel)]="adherencia.causaInasistenciaOtra" placeholder="Otra ¿Cuál?">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 pe-5">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3 fs-5">Información relacionada con la posibilidad de dar continuidad al calendario escolar</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Está estudiando actualmente?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.estudiandoActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.estudiandoActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(false)">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-3 flex flex-wrap p-fluid" *ngIf="adherencia.estudiandoActualmente">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿En algún momento ha dejado de asistir al colegio?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.haInasistidoEstudio}" style="width: 70px;" (click)="HaInasistidoEstudio(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.haInasistidoEstudio}" style="width: 70px;" (click)="HaInasistidoEstudio(false)">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="adherencia.haInasistidoEstudio && adherencia.estudiandoActualmente">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Por cuánto tiempo ha dejado de aistir?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="adherencia.tiempoInasistenciaEstudio">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="adherencia.haInasistidoEstudio && adherencia.estudiandoActualmente">
+                            <div class="col-8">
+                                <label for="unidadesTiempo" class="fw-bold">Unidad de medida del tiempo</label>
+                            </div>
+                            <div class="col-4 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedUnidadTiempo2"
+                                    [options]="unidadesTiempo"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="unidadesTiempo2"
+                                    id="unidadesTiempo2"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row mb-3 p-fluid">
+                            <div class="col-8">
+                                <label for="hanInformadoDiagnosticos" class="fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.hanInformadoDiagnosticos}" style="width: 70px;" (click)="adherencia.hanInformadoDiagnosticos = true">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.hanInformadoDiagnosticos}" style="width: 70px;" (click)="adherencia.hanInformadoDiagnosticos = false">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center p-fluid">
+                            <div class="col-12">
+                                <label for="observacion" class="fw-bold mb-2">Observación ¿Por qué?</label>
+                                <textarea id="observacion" pInputText rows="2" [(ngModel)]="adherencia.observacion" placeholder="Escriba aquí"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+            <div class="row align-items-center mt-3">
+                <div class="col-12 text-center">
+                    <button class="btn text-white rounded-4 btn-lg me-3" type="submit" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

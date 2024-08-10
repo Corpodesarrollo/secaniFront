@@ -1,4 +1,4 @@
-import { parametricas } from "../../models/parametricas.model";
+import { Parametricas } from "../../models/parametricas.model";
 import { GenericService } from "../../services/generic.services";
 import { Injectable } from '@angular/core';
 
@@ -6,18 +6,26 @@ import { Injectable } from '@angular/core';
   providedIn: 'root' // Esto lo registra como un proveedor de raíz
 })
 export class TablasParametricas {
-    tabla: parametricas[] = [];
+    tabla: Parametricas[] = [];
 
      constructor(
         private repos: GenericService,
     ) { }
 
-    public getTP(tabla: string) : parametricas[] {
+    public getTP(tabla: string) : Parametricas[] {
         // this.repos.get('api/TablaParametrica/', `${tabla}`, 'Entidad').subscribe({
         //     next: (data: any) => {
         //         this.tabla = data;
         //     }
         // });
+
+        /*
+        this.departamentos = this.tp.getTP('Departamentos');
+    this.municipios = this.tp.getTP('Municipios');
+    this.barrios = this.tp.getTP('Barrios');
+    this.areas = this.tp.getTP('Areas');
+    this.tiposRecidencia = this.tp.getTP('TipoRecidencia');
+        */
 
         switch (tabla) {
             case 'Parentescos':
@@ -104,6 +112,156 @@ export class TablasParametricas {
                     {id: 4, nombre: 'Compensar'},
                     {id: 5, nombre: 'Nueva EPS'},
                     {id: 6, nombre: 'Otro'}
+                ];
+
+            case 'Departamentos':
+                return this.tabla = [
+                    {id: 1, nombre: 'Amazonas'},
+                    {id: 2, nombre: 'Antioquia'},
+                    {id: 3, nombre: 'Arauca'},
+                    {id: 4, nombre: 'Atlántico'},
+                    {id: 5, nombre: 'Bolívar'},
+                    {id: 6, nombre: 'Boyacá'},
+                    {id: 7, nombre: 'Caldas'},
+                    {id: 8, nombre: 'Caquetá'},
+                    {id: 9, nombre: 'Casanare'},
+                    {id: 10, nombre: 'Cauca'},
+                    {id: 11, nombre: 'Cesar'},
+                    {id: 12, nombre: 'Chocó'},
+                    {id: 13, nombre: 'Córdoba'},
+                    {id: 14, nombre: 'Cundinamarca'},
+                    {id: 15, nombre: 'Guainía'},
+                    {id: 16, nombre: 'Guaviare'},
+                    {id: 17, nombre: 'Huila'},
+                    {id: 18, nombre: 'La Guajira'},
+                    {id: 19, nombre: 'Magdalena'},
+                    {id: 20, nombre: 'Meta'},
+                    {id: 21, nombre: 'Nariño'},
+                    {id: 22, nombre: 'Norte de Santander'},
+                    {id: 23, nombre: 'Putumayo'},
+                    {id: 24, nombre: 'Quindío'},
+                    {id: 25, nombre: 'Risaralda'},
+                    {id: 26, nombre: 'San Andrés y Providencia'},
+                    {id: 27, nombre: 'Santander'},
+                    {id: 28, nombre: 'Sucre'},
+                    {id: 29, nombre: 'Tolima'},
+                    {id: 30, nombre: 'Valle del Cauca'},
+                    {id: 31, nombre: 'Vaupés'},
+                    {id: 32, nombre: 'Vichada'}
+                ];
+
+            case 'Municipios':
+                return this.tabla = [
+                    {id: 1, nombre: 'Medellín'},
+                    {id: 2, nombre: 'Bello'},
+                    {id: 3, nombre: 'Envigado'},
+                    {id: 4, nombre: 'Itagüí'},
+                    {id: 5, nombre: 'Sabaneta'},
+                    {id: 6, nombre: 'Rionegro'},
+                    {id: 7, nombre: 'La Ceja'},
+                    {id: 8, nombre: 'La Estrella'},
+                    {id: 9, nombre: 'Caldas'},
+                    {id: 10, nombre: 'Copacabana'},
+                    {id: 11, nombre: 'Girardota'},
+                    {id: 12, nombre: 'Barbosa'},
+                ];
+
+            case 'Barrios':
+                return this.tabla = [
+                    {id: 1, nombre: 'Barrio 1'},
+                    {id: 2, nombre: 'Barrio 2'},
+                    {id: 3, nombre: 'Barrio 3'},
+                    {id: 4, nombre: 'Barrio 4'},
+                    {id: 5, nombre: 'Barrio 5'},
+                    {id: 6, nombre: 'Barrio 6'},
+                    {id: 7, nombre: 'Barrio 7'},
+                    {id: 8, nombre: 'Barrio 8'},
+                    {id: 9, nombre: 'Barrio 9'},
+                    {id: 10, nombre: 'Barrio 10'},
+                    {id: 11, nombre: 'Barrio 11'},
+                    {id: 12, nombre: 'Barrio 12'},
+                ];
+
+            case 'Areas':
+                return this.tabla = [
+                    {id: 1, nombre: 'Area 1'},
+                    {id: 2, nombre: 'Area 2'},
+                    {id: 3, nombre: 'Area 3'},
+                    {id: 4, nombre: 'Area 4'},
+                    {id: 5, nombre: 'Area 5'},
+                    {id: 6, nombre: 'Area 6'},
+                    {id: 7, nombre: 'Area 7'},
+                    {id: 8, nombre: 'Area 8'},
+                    {id: 9, nombre: 'Area 9'},
+                    {id: 10, nombre: 'Area 10'},
+                    {id: 11, nombre: 'Area 11'},
+                    {id: 12, nombre: 'Area 12'},
+                ];
+
+            case 'TipoRecidencia':
+                return this.tabla = [
+                    {id: 1, nombre: 'Casa'},
+                    {id: 2, nombre: 'Apartamento'},
+                    {id: 3, nombre: 'Finca'},
+                    {id: 4, nombre: 'Otro'}
+                ];
+
+            case 'TiposRecursos':
+                return this.tabla = [
+                    {id: 1, nombre: 'Derecho de Petición'},
+                    {id: 2, nombre: 'Tutela'},
+                    {id: 3, nombre: 'Acción de Grupo'},
+                    {id: 4, nombre: 'Acción Popular'},
+                    {id: 5, nombre: 'Acción de Cumplimiento'},
+                    {id: 6, nombre: 'Otro'}
+                ];
+
+            case 'IPS':
+                return this.tabla = [
+                    {id: 1, nombre: 'IPS 1'},
+                    {id: 2, nombre: 'IPS 2'},
+                    {id: 3, nombre: 'IPS 3'},
+                    {id: 4, nombre: 'IPS 4'},
+                    {id: 5, nombre: 'IPS 5'},
+                    {id: 6, nombre: 'IPS 6'},
+                    {id: 7, nombre: 'IPS 7'},
+                    {id: 8, nombre: 'IPS 8'},
+                    {id: 9, nombre: 'IPS 9'},
+                    {id: 10, nombre: 'IPS 10'},
+                    {id: 11, nombre: 'IPS 11'},
+                    {id: 12, nombre: 'IPS 12'},
+                ];
+
+            case 'CategoriaAlerta':
+                return this.tabla = [
+                    {id: 1, nombre: 'Categoria 1'},
+                    {id: 2, nombre: 'Categoria 2'},
+                    {id: 3, nombre: 'Categoria 3'},
+                    {id: 4, nombre: 'Categoria 4'},
+                    {id: 5, nombre: 'Categoria 5'},
+                    {id: 6, nombre: 'Categoria 6'},
+                    {id: 7, nombre: 'Categoria 7'},
+                    {id: 8, nombre: 'Categoria 8'},
+                    {id: 9, nombre: 'Categoria 9'},
+                    {id: 10, nombre: 'Categoria 10'},
+                    {id: 11, nombre: 'Categoria 11'},
+                    {id: 12, nombre: 'Categoria 12'},
+                ];
+
+            case 'SubcategoriaAlerta':
+                return this.tabla = [
+                    {id: 1, nombre: 'Subcategoria 1'},
+                    {id: 2, nombre: 'Subcategoria 2'},
+                    {id: 3, nombre: 'Subcategoria 3'},
+                    {id: 4, nombre: 'Subcategoria 4'},
+                    {id: 5, nombre: 'Subcategoria 5'},
+                    {id: 6, nombre: 'Subcategoria 6'},
+                    {id: 7, nombre: 'Subcategoria 7'},
+                    {id: 8, nombre: 'Subcategoria 8'},
+                    {id: 9, nombre: 'Subcategoria 9'},
+                    {id: 10, nombre: 'Subcategoria 10'},
+                    {id: 11, nombre: 'Subcategoria 11'},
+                    {id: 12, nombre: 'Subcategoria 12'},
                 ];
 
             default:

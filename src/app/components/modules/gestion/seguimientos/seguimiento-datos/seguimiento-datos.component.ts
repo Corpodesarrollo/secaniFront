@@ -7,15 +7,16 @@ import { SeguimientoStepsComponent } from '../seguimiento-steps/seguimiento-step
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import { InputTextModule } from 'primeng/inputtext';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
-import { parametricas } from '../../../../../models/parametricas.model';
+import { Parametricas } from '../../../../../models/parametricas.model';
 import { Router } from '@angular/router';
 import { NNA } from '../../../../../models/nna.model';
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })
@@ -48,27 +49,27 @@ export class SeguimientoDatosComponent implements OnInit {
     fechaNotificacionSIVIGILA: new Date(),
   };
 
-  selectedTipoID: parametricas | undefined;
-  selectedPaisNacimiento: parametricas | undefined;
-  selectedEtnia: parametricas | undefined;
-  selectedGrupoPoblacional: parametricas | undefined;
-  selectedRegimenAfiliacion: parametricas | undefined;
-  selectedEAPB: parametricas | undefined;
-  selectedParentesco: parametricas | undefined;
-  selectedOrigenReporte: parametricas | undefined;
+  selectedTipoID: Parametricas | undefined;
+  selectedPaisNacimiento: Parametricas | undefined;
+  selectedEtnia: Parametricas | undefined;
+  selectedGrupoPoblacional: Parametricas | undefined;
+  selectedRegimenAfiliacion: Parametricas | undefined;
+  selectedEAPB: Parametricas | undefined;
+  selectedParentesco: Parametricas | undefined;
+  selectedOrigenReporte: Parametricas | undefined;
   
   items: MenuItem[] = [];
   contactForm: FormGroup;
   submitted: boolean = false;
 
-  parentescos: parametricas[] = [];
-  tipoID: parametricas[] = [];
-  origenReporte: parametricas[] = [];
-  paisNacimiento: parametricas[] = [];
-  etnias: parametricas[] = [];
-  gruposPoblacionales: parametricas[] = [];
-  regimenAfiliacion: parametricas[] = [];
-  EAPB: parametricas[] = [];
+  parentescos: Parametricas[] = [];
+  tipoID: Parametricas[] = [];
+  origenReporte: Parametricas[] = [];
+  paisNacimiento: Parametricas[] = [];
+  etnias: Parametricas[] = [];
+  gruposPoblacionales: Parametricas[] = [];
+  regimenAfiliacion: Parametricas[] = [];
+  EAPB: Parametricas[] = [];
 
   constructor(private fb: FormBuilder, private tp: TablasParametricas, private router: Router) {
     this.contactForm = this.fb.group({
