@@ -1,0 +1,38 @@
+.titulo{
+  font-family: Montserrat;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29.26px;
+  text-align: left;
+  color: #4D4D4D;
+
+}
+
+:host ::ng-deep .custom-tag {
+  background-color: #098659;
+  color: #ffffff;
+}
+
+.custom-row-border tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.custom-row-border td {
+  border-bottom: 1px solid #ddd;
+}
+
+
+.tituloAlerta{
+  font-family: Montserrat;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24.38px;
+  text-align: center;
+  color: #4D4D4D;
+
+}
+
+.table tr th,
+.table tr td {
+  padding: 10px; /* Ajusta el valor según el espaciado deseado */
+}

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { UsuariosRoutingModule } from './usuarios-routing.module';
 import { HistoricoNnaComponent } from './historico-nna/historico-nna.component';
@@ -18,6 +17,7 @@ import { DialogCrearNnaMsgRolCoordinadorComponent } from './dialog-crear-nna-msg
 import { CalendarModule } from 'primeng/calendar';
 import { DialogNnaMsgSeguimientoComponent } from '../../dialog-nna-msg-seguimiento/dialog-nna-msg-seguimiento.component';
 
+import { CommonModule } from '@angular/common';
 
 
 

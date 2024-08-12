@@ -1,0 +1,13 @@
+.btn-guardar{
+    background-color: #73B7AD;
+    color: white;
+}
+
+.btn-guardar:hover {
+    background-color: #73b7adca; /* Color de fondo al pasar el cursor */
+    color: white;
+}
+
+label{
+    font-weight: bold;
+}

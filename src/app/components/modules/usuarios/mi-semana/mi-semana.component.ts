@@ -17,13 +17,15 @@ import { MiSemanaService } from './mi-semana.services';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { IntentoComponent } from '../intento-seguimiento/intento/intento.component';
+
 @Component({
   selector: 'app-mi-semana',
   templateUrl: './mi-semana.component.html',
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, ]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent]
 })
 export class MiSemanaComponent {
   @ViewChild('calendar')
@@ -399,5 +401,8 @@ export class MiSemanaComponent {
   cerrarDialog(){
     this.displayModal2 = false;
   }
+
+
+
 
 }

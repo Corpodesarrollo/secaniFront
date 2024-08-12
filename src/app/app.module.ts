@@ -12,11 +12,13 @@ import { MenuModule } from 'primeng/menu';
 import { BadgeModule } from 'primeng/badge';
 import { RippleModule } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
+import { TableModule } from 'primeng/table';
 import { ContentComponent } from './components/content/content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { BotonNotificacionComponent } from "./components/modules/boton-notificacion/boton-notificacion.component";
 import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
 import { DialogModule } from 'primeng/dialog';
 
@@ -34,7 +36,6 @@ import { DialogModule } from 'primeng/dialog';
     UsuariosModule,
 
     RouterModule.forRoot(routes),
-
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -50,7 +51,9 @@ import { DialogModule } from 'primeng/dialog';
     BadgeModule,
     RippleModule,
     AvatarModule,
-  ],
+    TableModule,
+    BotonNotificacionComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })
