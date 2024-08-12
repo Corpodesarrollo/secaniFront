@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { UsuariosRoutingModule } from './usuarios-routing.module';
 import { HistoricoNnaComponent } from './historico-nna/historico-nna.component';
@@ -11,6 +10,7 @@ import { DialogValidarExistenciaComponent } from './dialog-validar-existencia/di
 import { CrearNnaComponent } from './crear-nna/crear-nna.component';
 import { CrearContactoComponent } from './crear-contacto/crear-contacto.component';
 import { DialogCrearContactoComponent } from './dialog-crear-contacto/dialog-crear-contacto.component';
+import { CommonModule } from '@angular/common';
 
 
 

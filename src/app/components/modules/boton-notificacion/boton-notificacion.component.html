@@ -1,0 +1,20 @@
+<button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center" (click)="showDialog = true" style="background-color: #73b7ad;">
+  <span class="position-relative">
+    <i class="pi pi-bell" style="font-size: 1.5rem;"></i>
+    <span *ngIf="cntNotificaciones > 0" class="badge-notifications">{{cntNotificaciones}}</span>
+  </span>
+  <span class="ms-3">Notificaciones</span>
+</button>
+
+<p-dialog header="Notificaciones" [(visible)]="showDialog" [modal]="true" [style]="{width: '400px'}">
+  <div *ngFor="let notificacion of notificaciones" class="notification-item">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="notification-text fw-bold">
+        {{notificacion.textoNotificacion}}
+      </div>
+      <button class="btn rounded-3 btn-sm px-3" style="background-color: lightgray;" (click)="openUrl(notificacion.uRLNotificacion, notificacion.idNotificacion )">Ver</button>
+    </div>
+    <div class="notification-date text-muted">{{notificacion.fechaNotificacion | date:'dd/MM/yyyy' }}</div>
+    <hr>
+  </div>
+</p-dialog>

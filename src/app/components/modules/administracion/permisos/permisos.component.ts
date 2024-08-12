@@ -3,12 +3,13 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
 import { GenericService } from '../../../../services/generic.services';
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })
@@ -21,6 +22,9 @@ export class PermisosComponent {
   selectedModulo: number | null = null;
 
   tableData: any[] = [];
+
+  first = 0;
+  rows = 10;
 
   constructor(private dataService: GenericService) { }
 
@@ -80,5 +84,31 @@ export class PermisosComponent {
 
   onLimpiarClick(): void {
     this.tableData = [];
+  }
+
+  /**Paginador**/
+  next() {
+    this.first = this.first + this.rows;
+  }
+
+  prev() {
+    this.first = this.first - this.rows;
+  }
+
+  reset() {
+    this.first = 0;
+  }
+
+  pageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+  }
+
+  isLastPage(): boolean {
+    return this.tableData ? this.first === this.tableData.length - this.rows : true;
+  }
+
+  isFirstPage(): boolean {
+    return this.tableData ? this.first === 0 : true;
   }
 }

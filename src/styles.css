@@ -3,15 +3,23 @@
 @import "primeng/resources/primeng.css";
 
 @import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 body,
 html {
     height: 100%;
     font-family: 'Montserrat', sans-serif;
+    background-color: #F8FBFB;
 }
 
 button{
     cursor: pointer;
+}
+
+h1{
+    font-weight: bold;
 }
 
 .formato-fondo {
@@ -83,5 +91,6 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
     background: #73B7AD0D;
     margin-top: 0px;
     margin-left: 0px !important;
+    font-family: 'Montserrat', sans-serif;
 }
 
