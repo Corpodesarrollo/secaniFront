@@ -14,16 +14,14 @@ export class DialogValidarExistenciaComponent {
 
   @Input() tipoId: any; // Recibir datos del padre
   @Input() numeroId: any; // Recibir datos del padre
-  @Output() dataToParent = new EventEmitter<any>(); // Emitir datos al padre
+  @Output() dataToParentValidarExistencia = new EventEmitter<any>(); // Emitir datos al padre
 
   constructor(private service: GenericService, private router: Router, private axios: Generico) { }
 
   visible: boolean = false;
 
-  async showDialog() {
-    if (await this.validarExistencia() != null) {
-      this.visible = true;
-    }
+  showDialog() {
+    this.visible = true;
   }
 
   btn_ver_detalle_nna() {
@@ -31,12 +29,29 @@ export class DialogValidarExistenciaComponent {
   }
 
   async validarExistencia() {
-    var baseUrl = environment.url_MsNna;
-    var url = "NNA/ConsultarNNAsByTipoIdNumeroId/" + this.tipoId + "/" + this.numeroId;
-    var response:any = await this.axios.retorno_get(url, baseUrl);
-    this.dataToParent.emit(response); // Ensure this is an EventEmitter
-    console.log("validarExistencia :: ", response, url, this.dataToParent);
-    return response;
+    const baseUrl = environment.url_MsNna;
+    const url = `NNA/ConsultarNNAsByTipoIdNumeroId/${this.tipoId}/${this.numeroId}`;
+    
+    try {
+      const response: any = await this.axios.retorno_get(url, baseUrl);
+      
+      //console.log("validarExistencia :: ", response, url);
+  
+      if (response && Object.keys(response).length > 0) {
+        this.showDialog();
+      } else {
+        // Handle the case where the response is empty
+        //console.log('Response is empty or invalid');
+      }
+  
+      this.dataToParentValidarExistencia.emit(response); // Ensure this is an EventEmitter
+  
+      return response;
+    } catch (error) {
+      //console.error('Error in validarExistencia:', error);
+      // Handle errors here (e.g., show an error message or take appropriate action)
+      return null;
+    }
   }
 
 }

@@ -1,9 +1,6 @@
 .fondo-color-principal {
     background: #73B7AD;
 }
-.text-color-blanco {
-    color: #FFFFFF;
-}
 .fondo-color-secundario {
     background: #FF9801;
 }
@@ -28,6 +25,9 @@
 .rondear{
     border-radius: 10px;
 }
+.rondear-full{
+    border-radius: 100%;
+}
 .card {
     margin-top: 10px;
     margin-bottom: 20px;
@@ -51,4 +51,19 @@ label{
 }
 .text-left{
     text-align: left;
+}
+.text-right{
+    text-align: right;
+}
+.text-color-blanco {
+    color: #FFFFFF;
+}
+.text-color-azul {
+    color: #006eff;
+}
+.text-color-rojo {
+    color: #ff0000;
+}
+.pi{
+    margin-right: 5px;
 }

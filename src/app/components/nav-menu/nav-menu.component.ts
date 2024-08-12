@@ -20,9 +20,15 @@ export class NavMenuComponent implements OnInit {
 
   async ngOnInit() {
     var url = environment.url_MsAuthention;
+    //Cordinador
+    sessionStorage.setItem('roleId','311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
+    //Agente seguimiento
+    //sessionStorage.setItem('roleId','14CDDEA5-FA06-4331-8359-036E101C5046');
+    //Parametro ejemplo agente de seguimiento
     var parameters = {
-      'roleId': '14CDDEA5-FA06-4331-8359-036E101C5046'
+      'roleId': sessionStorage.getItem('roleId')
     };
+
     var arregloMenu: any[] = [];
     var menuRowsResponse: any = await this.service.postAsync(url, 'Permisos/MenuXRolId', parameters) ?? [];
     var menuRows: MenuModel[] = menuRowsResponse;

@@ -18,7 +18,7 @@
                                         (change)="buscar()" id="Estado" name="Estado">
                                         <option selected value="0">Seleccione</option>
                                         <option *ngFor="let estado of estadosNNA" [value]="estado.id">
-                                            {{ estado.estadoNNA }}
+                                            {{ estado.nombre }}
                                         </option>
                                     </select>
                                 </div>

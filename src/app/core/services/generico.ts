@@ -70,8 +70,8 @@ export class Generico {
 
     const headers = await this.headersWithToken();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers });
-    return this.handleRequest(request);
+    const request:any = await axios.get(url, { headers });
+    return await this.handleRequest(request);
   }
 
   async retorno_put(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
@@ -112,5 +112,10 @@ export class Generico {
     const url = `${this.BASE_URL}${urltemp}`;
     const request = axios.post(url, data, { headers });
     return this.handleRequest(request);
+  }
+
+  // Método para verificar si un campo está vacío
+  isEmpty(value: any): boolean {
+    return value === null || value === undefined || value.trim() === '';
   }
 }

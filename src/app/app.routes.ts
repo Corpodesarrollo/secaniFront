@@ -11,9 +11,10 @@ export const routes: Routes = [
     { path: 'home', component: ContentComponent },
     { path: 'login', component: LoginComponent },
 
-    { path: 'mi-semana',
-      loadComponent: () =>
-        import('./components/modules/usuarios/mi-semana/mi-semana.component').then( (c) => c.MiSemanaComponent),
+    {
+        path: 'mi-semana',
+        loadComponent: () =>
+            import('./components/modules/usuarios/mi-semana/mi-semana.component').then((c) => c.MiSemanaComponent),
     },
     { path: 'permisos', component: PermisosComponent },
     {
@@ -22,6 +23,14 @@ export const routes: Routes = [
         loadChildren: () =>
             import('./components/modules/usuarios/usuarios.module').then(
                 (m) => m.UsuariosModule
+            )
+    },
+    {
+        path: 'gestion',
+        component: ContentComponent,
+        loadChildren: () =>
+            import('./components/modules/gestion/gestion.module').then(
+                (m) => m.GestionModule
             )
     },
     {

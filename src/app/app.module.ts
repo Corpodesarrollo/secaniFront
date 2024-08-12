@@ -18,6 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
+import { DialogModule } from 'primeng/dialog';
+
 
 @NgModule({
   declarations: [
@@ -39,6 +41,7 @@ import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
     CommonModule,
     RouterModule,
     FormsModule,
+    DialogModule,
     
     
 
