@@ -1,0 +1,18 @@
+<body class="formato-fondo fuente-letra">
+    <h1>Mi Perfil</h1>
+
+    <p-card>
+        <div class="card-content">
+            <div class="left-content">
+                <!-- Componentes alineados a la izquierda -->
+                <p>Contenido Izquierdo</p>
+            </div>
+            <div class="right-content">
+                <p-card [style]="{ backgroundColor: '#73b7ad48' }">
+                    <span style="margin-right: 150px; font-weight: bold;">Estado</span>
+                    <p-inputSwitch [(ngModel)]="switchState"></p-inputSwitch>
+                </p-card>
+            </div>
+        </div>
+    </p-card>
+</body>
