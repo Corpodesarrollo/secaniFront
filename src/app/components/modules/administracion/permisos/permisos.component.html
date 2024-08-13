@@ -68,27 +68,6 @@
                     </tr>
                 </ng-template>
             </p-table>
-
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th class="large-column">Funcionalidad</th>
-                        <th>Crear</th>
-                        <th>Consultar</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="tableData.length > 0">
-                    <tr *ngFor="let row of tableData">
-                        <td>{{ row.column1 }}</td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column2"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column3"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column4"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="row.column5"></p-checkbox></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </p-card>
 </body>
