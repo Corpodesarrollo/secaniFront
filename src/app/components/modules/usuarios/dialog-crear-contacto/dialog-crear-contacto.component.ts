@@ -74,11 +74,11 @@ export class DialogCrearContactoComponent {
   }
 
   guardar() {
-    console.log("dialogo crear contacto guardar", this.formNNAContacto.valid, this.formNNAContacto.value);
+    //console.log("dialogo crear contacto guardar", this.formNNAContacto.valid, this.formNNAContacto.value);
     if (this.formNNAContacto.valid) {
       this.dataToParent.emit(this.formNNAContacto.value); // Ensure this is an EventEmitter
 
-      console.log("guardar contacto", this.formNNAContacto.value);
+      //console.log("guardar contacto", this.formNNAContacto.value);
 
       this.cancelar();
     }
