@@ -33,6 +33,10 @@ export class SeguimientoEstadoComponent  implements OnInit {
   selectedEstado: Parametricas | undefined;
   selectedIPS: Parametricas | undefined;
 
+  isLoadingDiagnostico: boolean = true;
+  isLoadingEstados: boolean = true;
+  isLoadingIPS: boolean = true;
+
   diagnostico: InfoDiagnostico = {
     id: 0,
     idSeguimiento: 0,
@@ -54,7 +58,11 @@ export class SeguimientoEstadoComponent  implements OnInit {
     ];
 
     this.estados = await this.tpp.getTpEstadosNNA();
-    //this.selectedEstado = this.estados[2];
+    this.isLoadingEstados = false;
+    this.diagnosticos =  await this.tp.getTP('CIE10');
+    this.isLoadingDiagnostico = false;
+
+    this.selectedEstado = this.estados.find(x => x.nombre === "Registrado");
   }
 
   applyRecaida(value: number) {

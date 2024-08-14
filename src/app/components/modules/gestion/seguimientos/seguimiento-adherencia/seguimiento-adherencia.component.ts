@@ -45,6 +45,9 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   selectedUnidadTiempo2: Parametricas | undefined;
   selectedCausaInasistencia: Parametricas | undefined;
 
+  isLoadingUnidadesTiempo: boolean = true;
+  isLoadingCausasInasistencia: boolean = true;
+
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
@@ -57,8 +60,11 @@ export class SeguimientoAdherenciaComponent implements OnInit {
       { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
     ];
 
-    this.unidadesTiempo = this.tp.getTP('UnidadesTiempo');
-    this.causasInasistencia = this.tp.getTP('CausasInasistencia');
+    this.unidadesTiempo =  await this.tp.getTP('UnidadesTiempo');
+    this.isLoadingUnidadesTiempo = false;
+
+    this.causasInasistencia =  await this.tp.getTP('CausasInasistencia');
+    this.isLoadingCausasInasistencia = false;
   }
 
   HaInasistidoTratamiento(value: boolean) {

@@ -5,18 +5,18 @@ export interface InfoTraslado {
     //procedencia
     idDepartamentoProcedencia: number;
     idMunicipioProcedencia: number;
-    idBarrioProcedencia: number;
+    barrioProcedencia: string;
     idAreaProcedencia: number;
     direccionProcedencia: string;
-    estratoProcedencia: number;
+    idEstratoProcedencia: number;
     telefonoProcedencia: string;
     //actual
     idDepartamentoActual: number;
     idMunicipioActual: number;
-    idBarrioActual: number;
+    barrioActual: string;
     idAreaActual: number;
     direccionActual: string;
-    estratoActual: number;
+    idEstratoActual: number;
     telefonoActual: string;
     //informacion
     tieneCapacidadAsumirTraslado: boolean;

@@ -14,6 +14,7 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { Router } from '@angular/router';
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
+import { TpParametros } from '../../../../../core/services/tpParametros';
 
 @Component({
   selector: 'app-seguimiento-dificultades',
@@ -51,6 +52,10 @@ export class SeguimientoDificultadesComponent implements OnInit {
   selectedCategoriaAlerta: Parametricas | undefined;
   selectedSubcategoriaAlerta: Parametricas | undefined;
 
+  isLoadingTipoRecurso: boolean = true;
+  isLoadingCategoriaAlerta: boolean = true;
+  isLoadingSubcategoriaAlerta: boolean = true;
+
   tiposRecursos: Parametricas[] = [];
   IPS: Parametricas[] = [];
   categoriaAlerta: Parametricas[] = [];
@@ -63,19 +68,21 @@ export class SeguimientoDificultadesComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
-  constructor(private tp: TablasParametricas, private router: Router) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
       { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
     ];
 
-    this.tiposRecursos = this.tp.getTP('TiposRecursos');
-    this.IPS = this.tp.getTP('IPS');
-    this.categoriaAlerta = this.tp.getTP('CategoriaAlerta');
-    this.subcategoriaAlerta = this.tp.getTP('SubcategoriaAlerta');
+    //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
+    this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
+    this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
+    this.isLoadingCategoriaAlerta = false;
+    this.subcategoriaAlerta =  await this.tpp.getSubCategoriaAlerta();
+    this.isLoadingSubcategoriaAlerta = false;
   }
 
   MalaAtencion() {

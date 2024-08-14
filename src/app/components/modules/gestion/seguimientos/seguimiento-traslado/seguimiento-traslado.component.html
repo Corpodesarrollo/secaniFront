@@ -23,7 +23,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <app-seguimiento-steps [stepsCount]="4" [activeIndex]="2" />
+            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="2" />
         </div>
     </div>
     <div class="row">
@@ -92,16 +92,7 @@
                                 <label for="barrio" class="fw-bold">Barrio</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <p-dropdown
-                                    [(ngModel)]="selectedBarrioProcedencia"
-                                    [options]="barrios"
-                                    optionLabel="nombre"
-                                    [filter]="true"
-                                    filterBy="nombre"
-                                    [showClear]="true"
-                                    name="estado"
-                                    id="estado"
-                                    placeholder="Seleccione" />
+                                <input id="barrioActual" type="text" pInputText [(ngModel)]="traslado.barrioActual">
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -134,7 +125,16 @@
                                 <label for="estratoProcedencia" class="fw-bold">Estrato</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <input id="estratoProcedencia" type="number" min="0" max="7" pInputText [(ngModel)]="traslado.estratoProcedencia" />
+                                <p-dropdown
+                                    [(ngModel)]="selectedEstratoProcedencia"
+                                    [options]="estratos"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="estratoProcedencia"
+                                    id="estratoProcedencia"
+                                    placeholder="Seleccione" />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -188,19 +188,10 @@
                         </div>
                         <div class="row align-items-center mb-2">
                             <div class="col-4">
-                                <label for="barrio" class="fw-bold">Barrio</label>
+                                <label for="barrioActual" class="fw-bold">Barrio</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <p-dropdown
-                                    [(ngModel)]="selectedBarrioActual"
-                                    [options]="barrios"
-                                    optionLabel="nombre"
-                                    [filter]="true"
-                                    filterBy="nombre"
-                                    [showClear]="true"
-                                    name="estado"
-                                    id="estado"
-                                    placeholder="Seleccione" />
+                                <input id="barrioActual" type="text" pInputText [(ngModel)]="traslado.barrioActual">
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -233,7 +224,16 @@
                                 <label for="telefono" class="fw-bold">Estrato</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <input id="telefono" type="number" min="0" max="7" pInputText [(ngModel)]="traslado.estratoActual">
+                                <p-dropdown
+                                    [(ngModel)]="selectedEstratoActual"
+                                    [options]="estratos"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="estratoActual"
+                                    id="estratoActual"
+                                    placeholder="Seleccione" />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">

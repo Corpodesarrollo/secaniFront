@@ -61,8 +61,20 @@ export class TpParametros {
     }
 
     async getTPOrigenReporte() {
-        var urlbase:string = environment.url_MsNna
-        var url = "NNA/GetTPOrigenReporte";
+        var urlbase:string = environment.url_MSParametricas
+        var url = "OrigenReporte";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
+    async getCategoriaAlerta() {
+        var urlbase:string = environment.url_MSParametricas
+        var url = "CategoriaAlerta";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
+    async getSubCategoriaAlerta() {
+        var urlbase:string = environment.url_MSParametricas
+        var url = "SubCategoriaAlerta";
         return await this.axios.retorno_get(url,urlbase);
     }
 

@@ -23,7 +23,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <app-seguimiento-steps [stepsCount]="4" [activeIndex]="3" />
+            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="4" />
         </div>
     </div>
     <div class="row">
@@ -62,6 +62,7 @@
                                     [(ngModel)]="selectedUnidadTiempo"
                                     [options]="unidadesTiempo"
                                     optionLabel="nombre"
+                                    [loading]="isLoadingUnidadesTiempo"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
@@ -78,6 +79,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedCausaInasistencia"
                                     [options]="causasInasistencia"
+                                    [loading]="isLoadingCausasInasistencia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -108,7 +110,7 @@
                                 <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.estudiandoActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(false)">NO</button>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-3 flex flex-wrap p-fluid" *ngIf="adherencia.estudiandoActualmente">
+                        <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
                             <div class="col-8">
                                 <label for="estado" class="fw-bold">¿En algún momento ha dejado de asistir al colegio?</label>
                             </div>
@@ -133,6 +135,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedUnidadTiempo2"
                                     [options]="unidadesTiempo"
+                                    [loading]="isLoadingUnidadesTiempo"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"

@@ -23,7 +23,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <app-seguimiento-steps [stepsCount]="4" [activeIndex]="0" />
+            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="0" />
         </div>
     </div>
     <div class="row">
@@ -69,6 +69,7 @@
                                                     formControlName="parentesco"
                                                     [(ngModel)]="selectedParentesco"
                                                     [options]="parentescos"
+                                                    [loading]="isLoadingParentesco"
                                                     optionLabel="nombre"
                                                     [filter]="true"
                                                     filterBy="nombre"
@@ -131,7 +132,9 @@
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
+                                    [(ngModel)]="selectedOrigenReporte"
                                     [options]="origenReporte"
+                                    [loading]="isLoadingOrigenReporte"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -194,6 +197,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedTipoID"
                                     [options]="tipoID"
+                                    [loading]="isLoadingTipoID"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -226,6 +230,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedPaisNacimiento"
                                     [options]="paisNacimiento"
+                                    [loading]="isLoadingPaisNacimiento"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -249,6 +254,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedEtnia"
                                     [options]="etnias"
+                                    [loading]="isLoadingEtnia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -264,6 +270,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedGrupoPoblacional"
                                     [options]="gruposPoblacionales"
+                                    [loading]="isLoadingGrupoPoblacional"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -293,6 +300,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedRegimenAfiliacion"
                                     [options]="regimenAfiliacion"
+                                    [loading]="isLoadingRegimenAfiliacion"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -308,6 +316,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedEAPB"
                                     [options]="EAPB"
+                                    [loading]="isLoadingEAPB"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"

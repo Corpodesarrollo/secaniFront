@@ -34,8 +34,8 @@ export class GenericService {
         return environment.url_MSSeguimiento;
       case 'Authentication':
         return environment.url_MsAuthention;
-      case 'Entidad':
-        return environment.url_MSEntidad;
+      case 'Parametricas':
+        return environment.url_MSParametricas;
       case 'Permisos':
         return environment.url_MSPermisos;
       case 'NNA':

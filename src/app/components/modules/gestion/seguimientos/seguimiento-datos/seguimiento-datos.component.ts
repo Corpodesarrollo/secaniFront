@@ -12,6 +12,7 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { Router } from '@angular/router';
 import { NNA } from '../../../../../models/nna.model';
+import { TpParametros } from '../../../../../core/services/tpParametros';
 
 @Component({
   selector: 'app-seguimiento-datos',
@@ -57,6 +58,15 @@ export class SeguimientoDatosComponent implements OnInit {
   selectedEAPB: Parametricas | undefined;
   selectedParentesco: Parametricas | undefined;
   selectedOrigenReporte: Parametricas | undefined;
+
+  isLoadingTipoID: boolean = true;
+  isLoadingPaisNacimiento: boolean = true;
+  isLoadingEtnia: boolean = true;
+  isLoadingGrupoPoblacional: boolean = true;
+  isLoadingRegimenAfiliacion: boolean = true;
+  isLoadingEAPB: boolean = true;
+  isLoadingParentesco: boolean = true;
+  isLoadingOrigenReporte: boolean = true;
   
   items: MenuItem[] = [];
   contactForm: FormGroup;
@@ -71,7 +81,7 @@ export class SeguimientoDatosComponent implements OnInit {
   regimenAfiliacion: Parametricas[] = [];
   EAPB: Parametricas[] = [];
 
-  constructor(private fb: FormBuilder, private tp: TablasParametricas, private router: Router) {
+  constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, private router: Router) {
     this.contactForm = this.fb.group({
       nombre: ['', [Validators.required]],
       parentesco: ['', [Validators.required]],
@@ -90,28 +100,35 @@ export class SeguimientoDatosComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
       { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
     ];
 
-    this.parentescos = this.tp.getTP('Parentescos');
-    this.tipoID = this.tp.getTP('TipoID');
-    this.origenReporte = this.tp.getTP('OrigenReporte');
-    this.paisNacimiento = this.tp.getTP('PaisNacimiento');
-    this.etnias = this.tp.getTP('Etnia');
-    this.gruposPoblacionales = this.tp.getTP('GrupoPoblacional');
-    this.regimenAfiliacion = this.tp.getTP('RegimenAfiliacion');
-    this.EAPB = this.tp.getTP('EAPB');
+    this.parentescos = await this.tp.getTP('RLCPDParentesco');
+    this.isLoadingParentesco = false;
 
-    this.selectedTipoID = this.tipoID[2];
-    this.selectedPaisNacimiento = this.paisNacimiento[0];
-    this.selectedEtnia = this.etnias[0];
-    this.selectedGrupoPoblacional = this.gruposPoblacionales[0];
-    this.selectedRegimenAfiliacion = this.regimenAfiliacion[0];
-    this.selectedEAPB = this.EAPB[0];
-    this.selectedParentesco = this.parentescos[1];
+    this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
+    this.isLoadingTipoID = false;
+
+    this.origenReporte = await this.tpp.getTPOrigenReporte();
+    this.isLoadingOrigenReporte = false;
+
+    this.paisNacimiento = await this.tp.getTP('Pais');
+    this.isLoadingPaisNacimiento = false;
+
+    this.etnias =  await this.tp.getTP('GrupoEtnico');
+    this.isLoadingEtnia = false;
+
+    this.gruposPoblacionales = await this.tp.getTP('LCETipoPoblacionEspecial');
+    this.isLoadingGrupoPoblacional = false;
+
+    this.regimenAfiliacion = await this.tp.getTP('APSRegimenAfiliacion');
+    this.isLoadingRegimenAfiliacion = false;
+
+    this.EAPB = await this.tp.getTP('CodigoEAPByNit');
+    this.isLoadingEAPB = false;
 
     this.CalcularEdad();
   }

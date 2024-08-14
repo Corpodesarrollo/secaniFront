@@ -27,17 +27,17 @@ export class SeguimientoTrasladoComponent implements OnInit {
     requirioTraslado: false,
     idDepartamentoProcedencia: 0,
     idMunicipioProcedencia: 0,
-    idBarrioProcedencia: 0,
+    barrioProcedencia: '',
     idAreaProcedencia: 0,
     direccionProcedencia: '',
-    estratoProcedencia: 0,
+    idEstratoProcedencia: 0,
     telefonoProcedencia: '',
     idDepartamentoActual: 0,
     idMunicipioActual: 0,
-    idBarrioActual: 0,
+    barrioActual: '',
     idAreaActual: 0,
     direccionActual: '',
-    estratoActual: 0,
+    idEstratoActual: 0,
     telefonoActual: '',
     tieneCapacidadAsumirTraslado: false,
     EAPBApoyoTraslado: false,
@@ -54,17 +54,18 @@ export class SeguimientoTrasladoComponent implements OnInit {
 
   selectedDepartamentoProcedencia: Parametricas | undefined;
   selectedMunicipioProcedencia: Parametricas | undefined;
-  selectedBarrioProcedencia: Parametricas | undefined;
-  selectedAreaProcedencia: Parametricas | undefined;
+  selectedAreaProcedencia: Parametricas | undefined;  
   selectedDepartamentoActual: Parametricas | undefined;
   selectedMunicipioActual: Parametricas | undefined;
   selectedBarrioActual: Parametricas | undefined;
   selectedAreaActual: Parametricas | undefined;
   selectedTipoRecidenciaActual: Parametricas | undefined;
+  selectedEstratoProcedencia: Parametricas | undefined;
+  selectedEstratoActual: Parametricas | undefined;
 
+  estratos: Parametricas[] = [];
   departamentos: Parametricas[] = [];
   municipios: Parametricas[] = [];
-  barrios: Parametricas[] = [];
   areas: Parametricas[] = [];
   tiposRecidencia: Parametricas[] = [];
   
@@ -80,11 +81,11 @@ export class SeguimientoTrasladoComponent implements OnInit {
       { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
     ];
 
-    this.departamentos = this.tp.getTP('Departamentos');
-    this.municipios = this.tp.getTP('Municipios');
-    this.barrios = this.tp.getTP('Barrios');
-    this.areas = this.tp.getTP('Areas');
-    this.tiposRecidencia = this.tp.getTP('TipoRecidencia');
+    this.departamentos = await this.tp.getTP('Departamento');
+    this.municipios = await this.tp.getTP('Municipio');
+    this.areas = await this.tp.getTP('ZonaTerritorial');
+    this.estratos = await this.tp.getTP('EstratoSocioeconomico');
+    this.tiposRecidencia = await this.tp.getTP('RIBATipoVivienda');
   }
 
   ApoyoFundacion(value: boolean) {
