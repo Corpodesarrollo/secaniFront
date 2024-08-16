@@ -34,6 +34,10 @@ export class GenericService {
         return environment.url_MSSeguimiento;
       case 'Authentication':
         return environment.url_MsAuthention;
+      case 'Entidad':
+        return environment.url_MSEntidad;
+      case 'TablaParametrica':
+        return environment.url_MSTablasParametricas;
       default:
         return environment.url;
     }
@@ -46,7 +50,6 @@ export class GenericService {
 
   public get_withoutParameters(modulo: string, api: string = '') {
     const apiUrl = this.getApiUrl(api);
-    console.log(`${apiUrl}${modulo}`)
     return this.http.get<any[]>(`${apiUrl}${modulo}`);
   }
 
@@ -71,7 +74,7 @@ export class GenericService {
     return this.http.post(`${apiUrl}${modulo}`, parameters);
   }
 
-  public async postAsync(url: string = this.url,modulo: string, parameters: any) {
+  public async postAsync(url: string = this.url, modulo: string, parameters: any) {
     return await this.http.post(`${url}${modulo}`, parameters).toPromise();
   }
 

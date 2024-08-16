@@ -2,6 +2,8 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { FormsModule, FormBuilder, FormGroup, Validators  } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { EAPB } from '../../../../../models/eapb.model';
+import { GenericService } from '../../../../../services/generic.services';
 
 declare var bootstrap: any;
 
@@ -18,9 +20,17 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   contactForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  listaEAPB: EAPB[] = [];
+
+  constructor(private fb: FormBuilder, private dataService: GenericService) {}
 
   ngOnInit(): void {
+    this.dataService.get('TablaParametrica/', 'CodigoEAPByNit', 'TablaParametrica').subscribe({
+      next: (data: any) => this.listaEAPB = data,
+      error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
+      complete: () => console.info('Se lleno la lista de EAPB')
+    });
+
     this.contactForm = this.fb.group({
       eapb: ['', [Validators.required]],
       nombreApe: [''],
