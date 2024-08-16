@@ -1,0 +1,378 @@
+<body class="formato-fondo fuente-letra pe-4">
+    <div class="row mb-3  align-items-center">
+        <div class="col-12 d-flex justify-content-between">
+            <p-breadcrumb class="" [model]="items">
+                <ng-template pTemplate="item" let-item>
+                    <ng-container *ngIf="item.route; else elseBlock">
+                        <a [routerLink]="item.route" class="p-menuitem-link">
+                            <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                            <span class="text-primary font-semibold">{{ item.label }}</span>
+                        </a>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                        <a [href]="item.url">
+                            <span class="text-color">{{ item.label }}</span>
+                        </a>
+                    </ng-template>
+                </ng-template>
+            </p-breadcrumb>
+            <div>
+                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">&nbsp;</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="2" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p-card>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="fw-bold pe-3 fs-5">Información del diagnóstico y tratamiento</label>
+                    </div>
+                </div>
+                <div class="row align-items-center mb-2 pe-5">
+                    <div class="col-4">
+                        <label for="fechaNacimiento" class="fw-bold">Requirió trasladarse de ciudad para acceder al tratamiento</label>
+                    </div>
+                    <div class="col-2 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': traslado.requirioTraslado}" style="width: 70px;" (click)="traslado.requirioTraslado = true">SÍ</button>
+                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': !traslado.requirioTraslado}" style="width: 70px;" (click)="traslado.requirioTraslado = false">NO</button>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 pe-5">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold mb-3">Residencia de procedencia</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="estado" class="fw-bold">Departamento</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedDepartamentoProcedencia"
+                                    [options]="departamentos"
+                                    [loading]="isLoadingDepartamentoProcedencia"
+                                    (onChange)="CargarMunicipios('Procedencia')"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="DepartamentoProcedencia"
+                                    id="DepartamentoProcedencia"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="estado" class="fw-bold">Municipio</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedMunicipioProcedencia"
+                                    [options]="municipiosProcedencia"
+                                    [loading]="isLoadingMunicipioProcedencia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="municipiosProcedencia"
+                                    id="municipiosProcedencia"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="barrio" class="fw-bold">Barrio</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="barrioActual" type="text" pInputText [(ngModel)]="traslado.barrioActual">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="barrio" class="fw-bold">Área</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedAreaProcedencia"
+                                    [options]="areas"
+                                    [loading]="isLoadingAreaProcedencia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="AreaProcedencia"
+                                    id="AreaProcedencia"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="direccion" class="fw-bold">Dirección</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="direccion" type="text" pInputText [(ngModel)]="traslado.direccionProcedencia" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="estratoProcedencia" class="fw-bold">Estrato</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedEstratoProcedencia"
+                                    [options]="estratos"
+                                    [loading]="isLoadingEstratoProcedencia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="estratoProcedencia"
+                                    id="estratoProcedencia"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="telefonoProcedencia" class="fw-bold">Teléfono fijo</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="telefonoProcedencia" type="text" pInputText [(ngModel)]="traslado.telefonoProcedencia">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 pe-5" *ngIf="traslado.requirioTraslado">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold mb-3">Residencia de actual</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="estado" class="fw-bold">Departamento</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedDepartamentoActual"
+                                    [options]="departamentos"
+                                    [loading]="isLoadingDepartamentoProcedencia"
+                                    (onChange)="CargarMunicipios('actual')"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="DepartamentoActual"
+                                    id="DepartamentoActual"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="estado" class="fw-bold">Municipio</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedMunicipioActual"
+                                    [options]="municipiosActual"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="estado"
+                                    id="estado"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="barrioActual" class="fw-bold">Barrio</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="barrioActual" type="text" pInputText [(ngModel)]="traslado.barrioActual">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="barrio" class="fw-bold">Área</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedAreaActual"
+                                    [options]="areas"
+                                    [loading]="isLoadingAreaProcedencia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="AreaProcedencia"
+                                    id="AreaProcedencia"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="direccion" class="fw-bold">Dirección</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="direccion" type="text" pInputText [(ngModel)]="traslado.direccionActual">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="telefono" class="fw-bold">Estrato</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedEstratoActual"
+                                    [options]="estratos"
+                                    [loading]="isLoadingEstratoProcedencia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="estratoActual"
+                                    id="estratoActual"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="telefono" class="fw-bold">Teléfono fijo</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="telefono" type="text" pInputText [(ngModel)]="traslado.telefonoActual">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mb-2" *ngIf="traslado.requirioTraslado">
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row" *ngIf="traslado.requirioTraslado">
+                    <div class="col-6 pe-5">
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Cuenta con la capacidad económica para asumir el traslado del menor?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': traslado.tieneCapacidadAsumirTraslado}" style="width: 70px;" (click)="traslado.tieneCapacidadAsumirTraslado = true">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !traslado.tieneCapacidadAsumirTraslado}" style="width: 70px;" (click)="traslado.tieneCapacidadAsumirTraslado = false">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿La EAPN le ha suministrado servicios sociales de apoyo (alojamiento, alimentación y desplazamiento) para el traslado?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': traslado.EAPBApoyoTraslado}" style="width: 70px;" (click)="traslado.EAPBApoyoTraslado = true">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !traslado.EAPBApoyoTraslado}" style="width: 70px;" (click)="traslado.EAPBApoyoTraslado = false">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Los servicios sociales de apoyo fueron entregados con oportunidad?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': traslado.apoyoEntregadoOportunidad}" style="width: 70px;" (click)="traslado.apoyoEntregadoOportunidad = true">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !traslado.apoyoEntregadoOportunidad}" style="width: 70px;" (click)="traslado.apoyoEntregadoOportunidad = false">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Los servicios sociales de apoyo logran dar cobertura al traslado del menor?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': traslado.apoyoConCoberturaTraslado}" style="width: 70px;" (click)="traslado.apoyoConCoberturaTraslado = true">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !traslado.apoyoConCoberturaTraslado}" style="width: 70px;" (click)="traslado.apoyoConCoberturaTraslado = false">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-8">
+                                <label for="estado" class="fw-bold">¿Ha solicitado apoyo en alguna fundación?</label>
+                            </div>
+                            <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': traslado.haSolicitadoApoyoFundacion}" style="width: 70px;" (click)="ApoyoFundacion(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !traslado.haSolicitadoApoyoFundacion}" style="width: 70px;" (click)="ApoyoFundacion(false)">NO</button>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2" *ngIf="traslado.haSolicitadoApoyoFundacion">
+                            <div class="col-4">
+                                <label for="nombreFundacion" class="fw-bold">Nombre de la fundación</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="nombreFundacion" type="text" pInputText [(ngModel)]="traslado.nombreFundacion" [disabled]="!traslado.haSolicitadoApoyoFundacion" placeholder="Escriba aquí">
+                            </div>
+                        </div>
+                        <div class="row mb-2" *ngIf="traslado.haSolicitadoApoyoFundacion">
+                            <div class="col-4">
+                                <label for="apoyoRecibidoFundacion" class="fw-bold">Apoyo recibido por la fundacion</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <textarea id="apoyoRecibidoFundacion" pInputText rows="2" [(ngModel)]="traslado.apoyoRecibidoFundacion" [disabled]="!traslado.haSolicitadoApoyoFundacion" placeholder="Escriba aquí"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 pe-5">
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="estado" class="fw-bold">El sitio de residencia actual es</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedTipoRecidenciaActual"
+                                    [options]="tiposRecidencia"
+                                    [loading]="isLoadingTipoRecidenciaActual"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="TipoRecidenciaActual"
+                                    id="TipoRecidenciaActual"
+                                    placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-8 offset-4 p-fluid">
+                                <input type="text" pInputText [(ngModel)]="traslado.OtroRecidenciaActual" placeholder="Otro ¿Cuál?">
+                            </div>
+                        </div>
+                        <div class="row mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="quienAsumeCostoTraslado" class="fw-bold">¿Quién asumió los costos del traslado?</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <textarea id="quienAsumeCostoTraslado" pInputText rows="4" [(ngModel)]="traslado.quienAsumeCostoTraslado" placeholder="Escriba aquí"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="quienAsumeCostoVivienda" class="fw-bold">¿Quién asumió los costos de la vivienda?</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <textarea id="quienAsumeCostoVivienda" pInputText rows="4" [(ngModel)]="traslado.quienAsumeCostoVivienda" placeholder="Escriba aquí"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+            <div class="row align-items-center mt-3">
+                <div class="col-12 text-center">
+                    <button class="btn text-white rounded-4 btn-lg me-3" type="submit" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

@@ -12,6 +12,12 @@ export class TpParametros {
 
     }
 
+    async getTpEstadosNNA() {
+        var urlbase:string = environment.url_MsNna
+        var url = "NNA/TpEstadosNNA";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
     async getTpTipoId() {
         var urlbase:string = environment.url_MsNna;
         var url = "NNA/GetTpTipoId";
@@ -49,14 +55,32 @@ export class TpParametros {
     }
 
     async getTPCiudad(departamentoId:any) {
-        var urlbase:string = environment.url_MsNna;
-        var url = "NNA/GetTPCiudad/"+departamentoId;
+        var urlbase:string = environment.url_MSParametricas
+        var url = "TablaParametrica/Municipios/"+departamentoId;
         return await this.axios.retorno_get(url,urlbase);
     }
 
     async getTPOrigenReporte() {
-        var urlbase:string = environment.url_MsNna;
-        var url = "NNA/GetTPOrigenReporte";
+        var urlbase:string = environment.url_MSParametricas
+        var url = "OrigenReporte";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
+    async getCategoriaAlerta() {
+        var urlbase:string = environment.url_MSParametricas
+        var url = "CategoriaAlerta";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
+    async getSubCategoriaAlerta() {
+        var urlbase:string = environment.url_MSParametricas
+        var url = "SubCategoriaAlerta";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
+    async getDiagnosticos() {
+        var urlbase:string = environment.url_MSParametricas
+        var url = "CIE10";
         return await this.axios.retorno_get(url,urlbase);
     }
 

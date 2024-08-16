@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
+import { TablasParametricas } from './core/services/tablasParametricas';
 import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -57,7 +58,7 @@ import { DialogNnaMsgSeguimientoComponent } from './components/modules/dialog-nn
     
     
 ],
-  providers: [],
+  providers: [TablasParametricas],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

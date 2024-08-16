@@ -1,0 +1,22 @@
+
+::ng-deep .p-steps .p-steps-item .p-menuitem-link{
+    
+    background-color: transparent;
+    padding-bottom: 20px;
+}
+
+::ng-deep li.p-highlight.p-steps-current .p-steps-number {
+    border: 5px solid #73b7ad;
+    background-color: #b5d9d4;
+    color: transparent;
+}
+
+::ng-deep .p-steps-number {
+    border: 5px solid #d5d8d8;
+    background-color: #eff2f2;
+    color: transparent;
+}
+
+::ng-deep .ng-star-inserted{
+    text-decoration: none;
+}
