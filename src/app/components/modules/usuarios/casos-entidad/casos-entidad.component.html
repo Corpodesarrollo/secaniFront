@@ -1,0 +1,91 @@
+<br>
+<p class="titulo">Casos NNA cáncer infantil</p>
+<br>
+
+<p-table [value]="casos" [tableStyle]="{ 'min-width': '50rem' }"
+[paginator]="true"
+[rows]="10"
+[paginatorPosition]="'bottom'"
+[alwaysShowPaginator]="true"
+[rowsPerPageOptions]="[5, 10, 20]">
+  <ng-template pTemplate="header">
+      <tr>
+          <th id="a1">ID Caso</th>
+          <th id="a2">Fecha notificación</th>
+          <th id="a3">Nombre NNA</th>
+          <th id="a4">Alertas</th>
+          <th id="a5">Observaciones</th>
+          <th id="a6">Estado</th>
+          <th id="a7">Respuesta</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-casos>
+      <tr class="custom-row-border">
+          <td>{{ casos.idCaso }}</td>
+          <td>{{ casos.fechaNotificacion }}</td>
+          <td>{{ casos.nombreNNA }}</td>
+          <td><p-tag [value]="casos.alerta"   styleClass="custom-tag"/></td>
+          <td>{{ casos.observaciones }}</td>
+          <td><p-tag [value]="casos.estado"   styleClass="custom-tag"/></td>
+          <td><a (click) = "verRespuesta()"><img src="iconos/ojo.svg" alt="ojo"/></a></td>
+      </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog  [(visible)]="displayModal" [modal]="true">
+  <div style="text-align:center">
+    <p class="tituloAlerta">Respuesta a notificación de alerta</p>
+    1.Accesibilidad - 1.F No tener implementados esquemas de diagnóstico.
+  </div>
+  <br>
+  <table class="table">
+    <tr>
+      <th>
+        Para
+      </th>
+      <td>
+        aaaa
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Con copia
+      </th>
+      <td>
+        bbb
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Asunto
+      </th>
+      <td>
+        ccccccc
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Mensaje
+      </th>
+      <td>
+        ddddd
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Firma
+      </th>
+      <td>
+        eeee
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Adjuntos
+      </th>
+      <td>
+        hhhh
+      </td>
+    </tr>
+  </table>
+</p-dialog>

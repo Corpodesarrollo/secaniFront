@@ -18,9 +18,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { BotonNotificacionComponent } from "./components/modules/boton-notificacion/boton-notificacion.component";
+
 import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
 import { TablasParametricas } from './core/services/tablasParametricas';
+import { ListboxModule } from 'primeng/listbox';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { DialogNnaMsgSeguimientoComponent } from './components/modules/dialog-nna-msg-seguimiento/dialog-nna-msg-seguimiento.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,7 @@ import { TablasParametricas } from './core/services/tablasParametricas';
     HeaderComponent,
     FooterComponent,
     ContentComponent,
+    
   ],
   imports: [
     UsuariosModule,
@@ -41,13 +46,17 @@ import { TablasParametricas } from './core/services/tablasParametricas';
     CommonModule,
     RouterModule,
     FormsModule,
+
     /** PrimeNG */
     MenuModule,
     BadgeModule,
     RippleModule,
     AvatarModule,
     TableModule,
-    BotonNotificacionComponent
+
+    /**Component standalone */
+    
+    
 ],
   providers: [TablasParametricas],
   bootstrap: [AppComponent]
