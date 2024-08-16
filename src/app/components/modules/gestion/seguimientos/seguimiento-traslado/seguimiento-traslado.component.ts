@@ -63,9 +63,17 @@ export class SeguimientoTrasladoComponent implements OnInit {
   selectedEstratoProcedencia: Parametricas | undefined;
   selectedEstratoActual: Parametricas | undefined;
 
+  isLoadingDepartamentoProcedencia: boolean = true;
+  isLoadingMunicipioProcedencia: boolean = false;
+  isLoadingMunicipioActual: boolean = false;
+  isLoadingAreaProcedencia: boolean = true;
+  isLoadingEstratoProcedencia: boolean = true;
+  isLoadingTipoRecidenciaActual: boolean = true;
+
   estratos: Parametricas[] = [];
   departamentos: Parametricas[] = [];
-  municipios: Parametricas[] = [];
+  municipiosProcedencia: Parametricas[] = [];
+  municipiosActual: Parametricas[] = [];
   areas: Parametricas[] = [];
   tiposRecidencia: Parametricas[] = [];
   
@@ -82,10 +90,34 @@ export class SeguimientoTrasladoComponent implements OnInit {
     ];
 
     this.departamentos = await this.tp.getTP('Departamento');
-    this.municipios = await this.tp.getTP('Municipio');
+    this.isLoadingDepartamentoProcedencia = false;
+
     this.areas = await this.tp.getTP('ZonaTerritorial');
+    this.isLoadingAreaProcedencia = false;
+
     this.estratos = await this.tp.getTP('EstratoSocioeconomico');
+    this.isLoadingEstratoProcedencia = false;
+
     this.tiposRecidencia = await this.tp.getTP('RIBATipoVivienda');
+    this.isLoadingTipoRecidenciaActual = false;
+  }
+
+  async CargarMunicipios(tipo: string) {
+    if (tipo === 'Procedencia') {
+      this.isLoadingMunicipioProcedencia = true;
+      this.municipiosProcedencia = [];
+      if (this.selectedDepartamentoProcedencia) {
+        this.municipiosProcedencia = await this.tpp.getTPCiudad(this.selectedDepartamentoProcedencia.codigo);
+      }
+      this.isLoadingMunicipioProcedencia = false;
+    } else {
+      this.isLoadingMunicipioActual = true;
+      this.municipiosActual = [];
+      if (this.selectedDepartamentoActual) {
+        this.municipiosActual = await this.tpp.getTPCiudad(this.selectedDepartamentoActual.codigo);
+      }
+      this.isLoadingMunicipioActual = false;
+    }
   }
 
   ApoyoFundacion(value: boolean) {

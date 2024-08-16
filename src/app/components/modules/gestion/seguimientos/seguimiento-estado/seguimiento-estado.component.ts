@@ -13,11 +13,12 @@ import { Parametricas } from '../../../../../models/parametricas.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Router } from '@angular/router';
+import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimiento-alertas.component";
 
 @Component({
   selector: 'app-seguimiento-estado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
   templateUrl: './seguimiento-estado.component.html',
   styleUrl: './seguimiento-estado.component.css'
 })
@@ -59,7 +60,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
 
     this.estados = await this.tpp.getTpEstadosNNA();
     this.isLoadingEstados = false;
-    this.diagnosticos =  await this.tp.getTP('CIE10');
+    this.diagnosticos =  await this.tpp.getDiagnosticos();
     this.isLoadingDiagnostico = false;
 
     this.selectedEstado = this.estados.find(x => x.nombre === "Registrado");

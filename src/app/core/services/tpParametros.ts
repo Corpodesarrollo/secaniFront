@@ -55,8 +55,8 @@ export class TpParametros {
     }
 
     async getTPCiudad(departamentoId:any) {
-        var urlbase:string = environment.url_MsNna
-        var url = "NNA/GetTPCiudad/"+departamentoId;
+        var urlbase:string = environment.url_MSParametricas
+        var url = "TablaParametrica/Municipios/"+departamentoId;
         return await this.axios.retorno_get(url,urlbase);
     }
 
@@ -75,6 +75,12 @@ export class TpParametros {
     async getSubCategoriaAlerta() {
         var urlbase:string = environment.url_MSParametricas
         var url = "SubCategoriaAlerta";
+        return await this.axios.retorno_get(url,urlbase);
+    }
+
+    async getDiagnosticos() {
+        var urlbase:string = environment.url_MSParametricas
+        var url = "CIE10";
         return await this.axios.retorno_get(url,urlbase);
     }
 

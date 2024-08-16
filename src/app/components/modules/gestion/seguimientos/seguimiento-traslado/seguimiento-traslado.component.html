@@ -61,12 +61,14 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedDepartamentoProcedencia"
                                     [options]="departamentos"
+                                    [loading]="isLoadingDepartamentoProcedencia"
+                                    (onChange)="CargarMunicipios('Procedencia')"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="DepartamentoProcedencia"
+                                    id="DepartamentoProcedencia"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -77,13 +79,14 @@
                             <div class="col-8 p-fluid">
                                 <p-dropdown
                                     [(ngModel)]="selectedMunicipioProcedencia"
-                                    [options]="municipios"
+                                    [options]="municipiosProcedencia"
+                                    [loading]="isLoadingMunicipioProcedencia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="municipiosProcedencia"
+                                    id="municipiosProcedencia"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -103,12 +106,13 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedAreaProcedencia"
                                     [options]="areas"
+                                    [loading]="isLoadingAreaProcedencia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="AreaProcedencia"
+                                    id="AreaProcedencia"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -128,6 +132,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedEstratoProcedencia"
                                     [options]="estratos"
+                                    [loading]="isLoadingEstratoProcedencia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -160,12 +165,14 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedDepartamentoActual"
                                     [options]="departamentos"
+                                    [loading]="isLoadingDepartamentoProcedencia"
+                                    (onChange)="CargarMunicipios('actual')"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="DepartamentoActual"
+                                    id="DepartamentoActual"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -176,7 +183,7 @@
                             <div class="col-8 p-fluid">
                                 <p-dropdown
                                     [(ngModel)]="selectedMunicipioActual"
-                                    [options]="municipios"
+                                    [options]="municipiosActual"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -202,12 +209,13 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedAreaActual"
                                     [options]="areas"
+                                    [loading]="isLoadingAreaProcedencia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="AreaProcedencia"
+                                    id="AreaProcedencia"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -227,6 +235,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedEstratoActual"
                                     [options]="estratos"
+                                    [loading]="isLoadingEstratoProcedencia"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
@@ -324,12 +333,13 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedTipoRecidenciaActual"
                                     [options]="tiposRecidencia"
+                                    [loading]="isLoadingTipoRecidenciaActual"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="TipoRecidenciaActual"
+                                    id="TipoRecidenciaActual"
                                     placeholder="Seleccione" />
                             </div>
                         </div>

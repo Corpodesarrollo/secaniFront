@@ -15,12 +15,13 @@ import { Parametricas } from '../../../../../models/parametricas.model';
 import { Router } from '@angular/router';
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
+import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimiento-alertas.component";
 
 @Component({
   selector: 'app-seguimiento-dificultades',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-            DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent],
   templateUrl: './seguimiento-dificultades.component.html',
   styleUrl: './seguimiento-dificultades.component.css'
 })
@@ -46,7 +47,6 @@ export class SeguimientoDificultadesComponent implements OnInit {
     motivo: '',
     idTipoRecurso: 0
   };
-
 
   selectedTipoRecurso: Parametricas | undefined;
   selectedCategoriaAlerta: Parametricas | undefined;
