@@ -1,3 +1,5 @@
+import { AlertasTratamiento } from "./alertasTratamiento.model";
+
 export interface InfoDiagnostico {
     id: number;
     idEstado: number;
@@ -10,4 +12,9 @@ export interface InfoDiagnostico {
     recaidas: number;
     numeroRecaidas: number;
     fechaUltimaRecaida?: Date;
+    otrasRazones?: string;
+    observaciones?: string;
+    fechaDefuncion?: Date;
+    causaMuerte?: string;
+    alertas?: AlertasTratamiento[];
 }

@@ -72,9 +72,9 @@ export class TpParametros {
         return await this.axios.retorno_get(url,urlbase);
     }
 
-    async getSubCategoriaAlerta() {
+    async getSubCategoriaAlerta(id:any) {
         var urlbase:string = environment.url_MSParametricas
-        var url = "SubCategoriaAlerta";
+        var url = "CategoriaAlerta/Subcategorias/" + id;
         return await this.axios.retorno_get(url,urlbase);
     }
 

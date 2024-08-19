@@ -14,6 +14,7 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Router } from '@angular/router';
 import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimiento-alertas.component";
+import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 
 @Component({
   selector: 'app-seguimiento-estado',
@@ -24,7 +25,7 @@ import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimien
 })
 export class SeguimientoEstadoComponent  implements OnInit {
   estado:string = 'Registrado';
-    
+  stepsCount: number = 5;
   items: MenuItem[] = [];
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];
@@ -38,6 +39,11 @@ export class SeguimientoEstadoComponent  implements OnInit {
   isLoadingEstados: boolean = true;
   isLoadingIPS: boolean = true;
 
+  estadoFallecido: boolean = false;
+  estadoEnTratamiento: boolean = false;
+  estadoSinTratamiento: boolean = false;
+  estadoSinDiagnostico: boolean = false;
+
   diagnostico: InfoDiagnostico = {
     id: 0,
     idSeguimiento: 0,
@@ -46,7 +52,10 @@ export class SeguimientoEstadoComponent  implements OnInit {
     fechaConsulta: new Date(),
     IPSActual: 0,
     recaidas: 0,
-    numeroRecaidas: 0
+    numeroRecaidas: 0,
+    otrasRazones: "",
+    observaciones: "",
+    alertas: []
   };
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router) {
@@ -64,6 +73,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.isLoadingDiagnostico = false;
 
     this.selectedEstado = this.estados.find(x => x.nombre === "Registrado");
+    await this.onChangeEstado();
   }
 
   applyRecaida(value: number) {
@@ -73,9 +83,60 @@ export class SeguimientoEstadoComponent  implements OnInit {
     }
   }
 
+  async onChangeEstado() {
+    if(this.selectedEstado?.nombre === "Fallecido") {
+      this.estadoFallecido = true;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
+    }
+    else if(this.selectedEstado?.nombre === "Registrado") {
+      this.stepsCount = 5;
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = true;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
+    }
+    else if(this.selectedEstado?.nombre === "Diagnóstico confirmado") {
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = true;
+      this.estadoSinDiagnostico = false;
+    }
+    else if(this.selectedEstado?.nombre === "Sin diagnóstico") {
+      this.stepsCount = 3;
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = true;
+    }
+  }
+
+  onAlertasChange(alertas: AlertasTratamiento[]) {
+    this.diagnostico.alertas = alertas;
+  }
+
   Siguiente() {
-    this.router.navigate(['/gestion/seguimiento/traslado-seguimiento']).then(() => {
-      window.scrollTo(0, 0);
-    });
+    if(this.estadoSinDiagnostico) {
+      this.router.navigate(['/gestion/seguimiento/sin-diagnostico-seguimiento'], {
+        state: { diagnostico: this.diagnostico }
+      }).then(() => {
+        window.scrollTo(0, 0);
+      });
+    }else if(this.estadoFallecido) {
+      this.router.navigate(['/gestion/seguimiento/fallecido-seguimiento']).then(() => {
+        window.scrollTo(0, 0);
+      });
+    }else if(this.estadoEnTratamiento) {
+      this.router.navigate(['/gestion/seguimiento/estado-seguimiento']).then(() => {
+        window.scrollTo(0, 0);
+      });
+    }else if(this.estadoSinTratamiento) {
+      this.router.navigate(['/gestion/seguimiento/sin-tratamiento-seguimiento'], {
+        state: { diagnostico: this.diagnostico }
+      }).then(() => {
+        window.scrollTo(0, 0);
+      });
+    }
   }
 }

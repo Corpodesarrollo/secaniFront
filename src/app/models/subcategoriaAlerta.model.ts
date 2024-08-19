@@ -1,6 +1,7 @@
-export interface SubcategoriaAlerta {
+export class SubcategoriaAlerta {
     id?: number;
-    subcategoriaAlerta: string;
-    categoriaAlertaId: number;
-    indicador: string;
+    subCategoriaAlerta?: string;
+    categoriaAlertaId?: number;
+    indicador?: string;
+    nombre?: string;
 }

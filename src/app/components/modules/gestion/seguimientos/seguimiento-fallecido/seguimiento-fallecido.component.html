@@ -1,0 +1,88 @@
+<body class="formato-fondo fuente-letra pe-4">
+    <div class="row mb-3  align-items-center">
+        <div class="col-12 d-flex justify-content-between">
+            <p-breadcrumb class="" [model]="items">
+                <ng-template pTemplate="item" let-item>
+                    <ng-container *ngIf="item.route; else elseBlock">
+                        <a [routerLink]="item.route" class="p-menuitem-link">
+                            <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                            <span class="text-primary font-semibold">{{ item.label }}</span>
+                        </a>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                        <a [href]="item.url">
+                            <span class="text-color">{{ item.label }}</span>
+                        </a>
+                    </ng-template>
+                </ng-template>
+            </p-breadcrumb>
+            <div>
+                Estado: <span class="badge font-semibold ms-3 bg-secondary" style="width: 150px;">{{estado}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <app-seguimiento-steps [stepsCount]="3" [activeIndex]="2" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <p-card [style]="{ 'height': '100%' }">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3 fs-5">Fallecido</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="fechaDefuncion" class="fw-bold">Fecha de defunción</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="diagnostico.fechaDefuncion"  />
+                            </div>
+                        </div>
+                        <div class="row mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="causaMuerte" class="fw-bold">Causas de la muerte</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <textarea id="causaMuerte" pInputText rows="2" [(ngModel)]="diagnostico.causaMuerte"></textarea>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-12">
+                                <label for="observaciones" class="fw-bold">¿Desea agregar algo más a la entrevista realizada? / Observaciones</label>
+                                <textarea id="observaciones" pInputText rows="3" maxlength="5000" [(ngModel)]="diagnostico.observaciones" placeholder="Escriba aquí"></textarea>
+                            </div>
+                        </div>
+                    </p-card>
+                </div>
+                <div class="col-6">
+                    <p-card [style]="{ 'background-color': '#eef2f8', 'height': '100%' }">
+                        <div class="row">
+                            <div class="col-12">
+                                <i class="pi pi-comment me-2 text-primary" style="font-size: 2rem"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 fs-5" style="text-align: justify;">
+                                <p>
+                                    Desde el Ministerio de salud, lamentamos su perdida y ofrecemos unas sinceras condolencias. ¿Para dar cierre al caso nos puede ayudar a completar la siguiente información?
+                                </p>
+                            </div>
+                        </div>
+                    </p-card>
+                </div>
+            </div>
+            <div class="row align-items-center mt-3">
+                <div class="col-12 text-center">
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;">GUARDAR Y NOTIFICAR A INS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+

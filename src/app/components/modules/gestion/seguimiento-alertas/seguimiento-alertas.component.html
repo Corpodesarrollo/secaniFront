@@ -1,12 +1,13 @@
 <div class="row align-items-center mb-2 p-fluid">
     <div class="col-4">
-        <label for="estado" class="fw-bold">Categoria Alerta</label>
+        <label for="categoriaAlerta" class="fw-bold">Categoria Alerta</label>
     </div>
     <div class="col-8 flex-auto">
         <p-dropdown
             [(ngModel)]="selectedCategoriaAlerta"
             [options]="categoriaAlerta"
             [loading]="isLoadingCategoriaAlerta"
+            (onChange)="CargarSubcategorias()"
             optionLabel="nombre"
             [filter]="true"
             filterBy="nombre"
@@ -18,7 +19,7 @@
 </div>
 <div class="row align-items-center mb-2 p-fluid">
     <div class="col-4">
-        <label for="estado" class="fw-bold">Subcategoria Alerta</label>
+        <label for="subcategoriaAlerta" class="fw-bold">Subcategoria Alerta</label>
     </div>
     <div class="col-8">
         <p-dropdown

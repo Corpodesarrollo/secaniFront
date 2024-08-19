@@ -81,8 +81,6 @@ export class SeguimientoDificultadesComponent implements OnInit {
     this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
     this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
     this.isLoadingCategoriaAlerta = false;
-    this.subcategoriaAlerta =  await this.tpp.getSubCategoriaAlerta();
-    this.isLoadingSubcategoriaAlerta = false;
   }
 
   MalaAtencion() {
