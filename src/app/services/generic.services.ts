@@ -82,7 +82,8 @@ export class GenericService {
     return await this.http.post(`${this.url}${modulo}`, parameters);
   }
 
-  public put(modulo: string, parameters: any) {
+  public put(modulo: string, parameters: any, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
     return this.http.put(`${this.url}${modulo}`, parameters);
   }
 

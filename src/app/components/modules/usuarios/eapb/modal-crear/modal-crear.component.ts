@@ -32,11 +32,12 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     });
 
     this.contactForm = this.fb.group({
-      eapb: ['', [Validators.required]],
-      nombreApe: [''],
+      id: [''],
+      entidadId: ['', [Validators.required]],
+      nombres: [''],
       cargo: [''],
-      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      correo: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')]],
+      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
+      email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')]],
       estado: ['Activo']
     });
   }
@@ -44,6 +45,14 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.contactForm.valid) {
       console.log(this.contactForm.value);
+
+      if (this.isEditing){
+        this.dataService.put(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad')
+        console.log(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`);
+      }else{
+        this.dataService.post('api/ContactoEntidad', this.contactForm.value, 'Entidad')
+      }
+      
       this.close();
     }
   }
@@ -61,16 +70,16 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   updateForm(item: any) {
     this.contactForm.patchValue(item);
     if (this.isEditing) {
-      this.contactForm.get('eapb')?.disable(); 
+      this.contactForm.get('entidadId')?.disable(); 
     } else {
-      this.contactForm.get('eapb')?.enable(); 
+      this.contactForm.get('entidadId')?.enable(); 
     }
   }
 
   resetForm() {
     this.contactForm.reset();
     this.contactForm.get('estado')?.setValue('Activo');
-    this.contactForm.get('eapb')?.enable();
+    this.contactForm.get('entidadId')?.enable();
   }
 
   open() {
