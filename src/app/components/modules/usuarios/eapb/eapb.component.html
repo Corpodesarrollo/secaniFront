@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
+    <app-modal-crear [item]="selectedItem" [isEditing]="isEditing" (nuevoEAPB)="agregarNuevaEAPB($event)"></app-modal-crear>
 
     <p-card>
         <div>
@@ -17,13 +17,9 @@
                     <select class="form-select" aria-label="eapb" [(ngModel)]="filtroEAPB" (change)="onFiltroEAPBChange()"
                         [value]="filtroEAPB" id="eapb" name="eapb">
                         <option value="">Todas las EAPB</option>
-                        <option value="EPS Sanitas">EPS Sanitas</option>
-                        <option value="EPS Compensar">EPS Compensar</option>
-                        <option value="EPS Cafam">EPS Cafam</option>
-                        <!-- <option selected value="">Seleccione</option>
-                        <option *ngFor="let agente of filtroEAPB" [value]="agente.id">
-                            {{ agente.fullName }}
-                        </option>-->
+                        <option *ngFor="let eapb of listaEAPB" [value]="eapb.codigo" style="width: 100%; white-space: nowrap; overflow-x: hidden;">
+                            {{ eapb.nombre }}
+                        </option>
                     </select>
                 </div>
                 <div class="col-6">
@@ -63,11 +59,11 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-data>
                     <tr>
-                        <td>{{ data.eapb }}</td>
-                        <td>{{ data.nombreApe }}</td>
+                        <td>{{ buscarNombreEntidadPorId(data.entidadId) }}</td>
+                        <td>{{ data.nombres }}</td>
                         <td>{{ data.cargo }}</td>
-                        <td>{{ data.telefono }}</td>
-                        <td>{{ data.correo }}</td>
+                        <td>{{ data.telefonos }}</td>
+                        <td>{{ data.email }}</td>
                         <td>{{ data.estado }}</td>
                         <td class="table-actions">
                             <button class="btn-round" (click)="onEdit(data)">

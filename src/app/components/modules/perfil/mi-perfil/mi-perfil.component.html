@@ -1,0 +1,66 @@
+<body class="formato-fondo fuente-letra">
+    <div class="header-container">
+        <h1>Mi Perfil</h1>
+        <div class="top-right-buttons">
+            <app-boton-notificacion></app-boton-notificacion>
+        </div>
+    </div>
+
+    <p-card>
+        <div class="card-content">
+            <div class="left-content">
+                <!-- Componentes alineados a la izquierda -->
+                <h2>Nombre entidad territorial</h2>
+                <span>Representante legal</span><br>
+                <span>Nombre Representante legal</span><br>
+                <span>Replegal.com</span>
+            </div>
+            <div class="right-content">
+                <p-card [style]="{ backgroundColor: '#73b7ad48' }">
+                    <span style="margin-right: 150px; font-weight: bold;">Estado</span>
+                    <p-inputSwitch [(ngModel)]="switchState"></p-inputSwitch>
+                </p-card>
+            </div>
+        </div>
+    </p-card>
+
+    <p-card>
+        <div class="header">
+            <button class="btn-crear" (click)="onCreate()">CREAR</button>
+        </div>
+        <br>
+        <div>
+            <p-table [value]="data" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nombres y apellidos</th>
+                        <th>Cargo</th>
+                        <th>Estado</th>
+                        <th>Numero de contacto</th>
+                        <th>Correo electronico</th>
+                        <th>Editar</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data>
+                    <tr>
+                        <td>{{ data.nombreApe }}</td>
+                        <td>{{ data.cargo }}</td>
+                        <td>{{ data.estado }}</td>
+                        <td>{{ data.telefono }}</td>
+                        <td>{{ data.correo }}</td>
+                        <td class="table-actions">
+                            <button class="btn-round" (click)="onEdit(data)">
+                                <i class="pi pi-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </p-card>
+
+    <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
+</body>

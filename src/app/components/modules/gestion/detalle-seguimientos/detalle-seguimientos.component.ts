@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ActivatedRoute } from '@angular/router';
 import { GenericService } from '../../../../services/generic.services';
 import { RouterModule } from '@angular/router';
+import { NNA } from '../../../../models/nna.model';
 
 @Component({
   selector: 'app-detalle-seguimientos',
@@ -18,6 +19,11 @@ import { RouterModule } from '@angular/router';
 export class DetalleSeguimientosComponent implements OnInit{
   seguimientos: any[] = [];
   idSeguimiento: string = "";
+  datosNNA!: NNA;
+
+  fechaInicio!: Date; // Fecha de nacimiento
+  fechaFin: Date = new Date(); // Fecha actual
+  tiempoTranscurrido: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -32,9 +38,39 @@ export class DetalleSeguimientosComponent implements OnInit{
     this.repos.get_withoutParameters(`Seguimiento/GetSeguimientosNNA?idNNA=${this.idSeguimiento}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;
+        this.datosNNA = data[0].nna;
+        this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
+        this.calcularTiempoTranscurrido();
         console.log(this.seguimientos);
+        console.log(this.datosNNA);
       }
     });
+  }
+
+  calcularTiempoTranscurrido() {
+    if (!this.fechaInicio) {
+      return;
+    }
+
+    const fechaInicio = new Date(this.fechaInicio);
+    const fechaFin = new Date(this.fechaFin);
+
+    let anos = fechaFin.getFullYear() - fechaInicio.getFullYear();
+    let meses = fechaFin.getMonth() - fechaInicio.getMonth();
+    let dias = fechaFin.getDate() - fechaInicio.getDate();
+
+    if (dias < 0) {
+      meses--;
+      const diasEnMes = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), 0).getDate();
+      dias += diasEnMes;
+    }
+
+    if (meses < 0) {
+      anos--;
+      meses += 12;
+    }
+
+    this.tiempoTranscurrido = `${anos} años, ${meses} meses, ${dias} días`;
   }
 
   getBadgeColor(estadoAlerta: number): string {

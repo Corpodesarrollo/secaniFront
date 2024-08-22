@@ -1,5 +1,3 @@
-/***************** Estilos titulo y botones cabecera *****************/
-
 .header-container {
     display: flex;
     justify-content: space-between;
@@ -11,45 +9,54 @@
     display: flex;
 }
 
-.btn-general {
-    margin-left: 20px;
-    padding: 10px 30px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 10px;
-    color: white;
-    border: none;
+
+.card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-content {
+    /* Estilos adicionales para el contenido izquierdo si es necesario */
+}
+
+.right-content {
+    align-items: center;
+    text-align: center;
+}
+
+/* Cambiar el color del fondo cuando el interruptor está activado */
+::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: #73B7AD;
+    /* Cambia este color por el que desees */
+}
+
+/* Cambiar el color del fondo cuando el interruptor está desactivado */
+::ng-deep .p-inputswitch-slider {
+    background-color: #ccc;
+    /* Cambia este color por el que desees */
+}
+
+/* Cambiar el color del interruptor (círculo) */
+::ng-deep .p-inputswitch-slider:before {
+    background-color: #ffffff;
+    /* Cambia este color por el que desees */
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    /* Espacio entre el botón y la tabla */
 }
 
 .btn-crear {
     background-color: #FF9801;
-}
-
-.btn-crear:hover {
-    background-color: #ff9901b9;
+    border: none;
     color: white;
-}
-
-.btn-notificacion {
-    background-color: #73B7AD;
-}
-
-.btn-notificacion:hover {
-    background-color: #73b7adc0;
-    color: white;
-}
-
-
-/***************** Estilos rectangulo filtros *****************/
-
-.btn-buscar {
-    background-color: #73B7AD;
-    margin: 0 5px;
-}
-
-.btn-buscar:hover {
-    background-color: #73b7adca;
-    /* Color de fondo al pasar el cursor */
+    padding: 10px 30px;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 /***************** Estilos tabla *****************/
