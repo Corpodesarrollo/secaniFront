@@ -3,11 +3,17 @@ import { GenericService } from '../../../../services/generic.services';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 import { Generico } from '../../../../core/services/generico';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TpParametros } from '../../../../core/services/tpParametros';
+import { DialogModule } from 'primeng/dialog';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dialog-crear-contacto',
+  standalone: true,
+  imports: [DialogModule, CommonModule, ButtonModule,FormsModule,ReactiveFormsModule], 
   templateUrl: './dialog-crear-contacto.component.html',
   styleUrls: ['../general.component.css', './dialog-crear-contacto.component.css'],
   encapsulation: ViewEncapsulation.Emulated // Esto es por defecto
@@ -74,11 +80,11 @@ export class DialogCrearContactoComponent {
   }
 
   guardar() {
-    console.log("dialogo crear contacto guardar", this.formNNAContacto.valid, this.formNNAContacto.value);
+    //console.log("dialogo crear contacto guardar", this.formNNAContacto.valid, this.formNNAContacto.value);
     if (this.formNNAContacto.valid) {
       this.dataToParent.emit(this.formNNAContacto.value); // Ensure this is an EventEmitter
 
-      console.log("guardar contacto", this.formNNAContacto.value);
+      //console.log("guardar contacto", this.formNNAContacto.value);
 
       this.cancelar();
     }

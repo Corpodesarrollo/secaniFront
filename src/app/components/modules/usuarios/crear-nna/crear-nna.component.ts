@@ -19,6 +19,7 @@ export class CrearNnaComponent {
   dataToParent: any;
 
   formNNA: FormGroup;
+  maxDate: string;
 
   //Listados select
   listadoTipoId: any;
@@ -33,10 +34,28 @@ export class CrearNnaComponent {
   listadoEtnia: any;
   listadoGrupoPoblacional: any;
 
-  nnaId:any;
-  listadoContacto:any;
+  nnaId: any;
+  agenteId: any;
+  coordinadorId: any;
+  userId: any;
+  edad: string = "";
+  listadoContacto: any = [];
+
+  nnaFormCrearSinActivar: boolean = true;
+
+  //Dialog
+  visibleDialogRolAgente: boolean = false;
+  visibleDialogRolCoordinador: boolean = false;
+  
+
+  
+
 
   constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, private axios: Generico) {
+
+    // Set the maximum date to today
+    this.maxDate = new Date().toISOString().split('T')[0];
+
     this.formNNA = this.fb.group({
       tipoId: ['', [Validators.required]],
       numeroId: ['', [Validators.required, Validators.maxLength(20)]],
@@ -44,30 +63,22 @@ export class CrearNnaComponent {
       segundoNombre: ['', [Validators.maxLength(30)]],
       primerApellido: ['', [Validators.required, Validators.maxLength(30)]],
       segundoApellido: ['', [Validators.maxLength(30)]],
-      edad: ['', [Validators.maxLength(3)]],
+
       fechaNacimiento: ['', [Validators.required]],
+
       paisNacimiento: ['', [Validators.required]],
       sexo: ['', [Validators.required]],
       departamentoNacimiento: ['', [Validators.required]],
       ciudadNacimiento: ['', [Validators.required]],
       etnia: ['', [Validators.required]],
       grupoPoblacion: ['', []],
-      semanaGestacion: ['', []],
-      validaExistencia: ['', [Validators.required]],
       regimenAfiliacion: ['', [Validators.required]],
       eapb: ['', [Validators.required]],
       estadoIngresoEstrategia: ['', [Validators.required]],
       fechaIngresoEstrategia: ['', [Validators.required]],
       originReporte: ['', [Validators.required]],
-      agenteSeguimiento: ['', [Validators.required, Validators.maxLength(255)]],
-      fecha: ['', [Validators.required]],
+      fecha: ['', []],
       hora: ['', []],
-
-      nombreCompletoCuidador: ['', [Validators.required, Validators.maxLength(255)]],
-      parentescoCuidador: ['', [Validators.required, Validators.maxLength(255)]],
-      correoElectronicoCuidador: ['', [Validators.email, Validators.maxLength(255)]],
-      numeroTelefonoCuidador: ['', [Validators.required, Validators.maxLength(30)]],
-
     });
   }
 
@@ -84,6 +95,39 @@ export class CrearNnaComponent {
 
   }
 
+  generarCalculoEdad() {
+    this.edad = "";
+    const dob = this.formNNA.get('fechaNacimiento')?.value;
+    if (dob) {
+      const birthDate = new Date(dob);
+      const today = new Date();
+      const years = today.getFullYear() - birthDate.getFullYear();
+      const months = today.getMonth() - birthDate.getMonth();
+      const days = today.getDate() - birthDate.getDate();
+
+      let ageString = `${years} años`;
+
+      if (months < 0 || (months === 0 && days < 0)) {
+        ageString = `${years - 1} años`;
+      }
+
+      const actualMonths = ((months + 12) % 12) + (days < 0 ? -1 : 0);
+      const actualDays = (days + (days < 0 ? new Date(today.getFullYear(), today.getMonth(), 0).getDate() : 0)) % 30; // Simplified days
+
+      if (actualMonths > 0) {
+        ageString += `, ${actualMonths} meses`;
+      }
+
+      if (actualDays > 0) {
+        ageString += ` y ${actualDays} días`;
+      }
+
+      this.edad = ageString;
+    } else {
+      this.edad = '';
+    }
+  }
+
   async departamento(pais: any) {
     //console.log("pais", pais.target.value);
     this.listadoDepartamento = await this.tpParametros.getTPDepartamento(pais.target.value);
@@ -95,13 +139,27 @@ export class CrearNnaComponent {
 
   btn_historial_nna() {
     //this.router.navigate(["/usuarios/historico_nna"]);
-  } 
+  }
 
   onSubmit() {
-    if (this.formNNA.valid) {
-      //console.log('Form Data:', this.formNNA.value);
-    } else {
-      //console.log('Form is invalid');
+    // Set default date and time
+    const now = new Date();
+    const defaultDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const defaultTime = now.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
+
+    this.formNNA.patchValue({
+      fecha: defaultDate,
+      hora: defaultTime
+    });
+
+    //Genrar guardado
+    var rolId = sessionStorage.getItem('roleId');
+    if (rolId == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+      this.visibleDialogRolAgente = true;
+    }
+
+    if (rolId == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+      this.visibleDialogRolAgente = true;
     }
   }
 
@@ -116,11 +174,31 @@ export class CrearNnaComponent {
   }
 
   async handleDataValidarExistencia(data: any) {
-    console.log('Data received from child:', data);
+
+
+    if (!data && Object.keys(data).length == 0) {
+      //console.log('**** Data received from child:', 'handleDataValidarExistencia', data);
+      this.nnaFormCrearSinActivar = false;
+    } else {
+      // Handle the case where the response is empty
+      this.nnaFormCrearSinActivar = true;
+    }
   }
 
   async handleDataContacto(data: any) {
-    console.log('Data received from child handleDataContacto:','Crear nna', data);
-    this.listadoContacto = data;
+    //console.log('Data received from child handleDataContacto:', 'Crear nna', data);
+    this.listadoContacto.push(data);
   }
+
+  cancelar() {
+    this.formNNA.reset();
+  }
+
+  validarDisabledForm() {
+    var r = (this.nnaFormCrearSinActivar == false && this.formNNA.valid && Object.keys(this.listadoContacto).length > 0) == true;
+    //console.log('validarDisabledForm', this.nnaFormCrearSinActivar == false, this.formNNA.valid, Object.keys(this.listadoContacto).length > 0, r);
+    return r;
+  }
+
+
 }

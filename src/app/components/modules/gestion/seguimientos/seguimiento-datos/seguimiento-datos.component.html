@@ -1,0 +1,338 @@
+<body class="formato-fondo fuente-letra pe-4">
+    <div class="row mb-3  align-items-center">
+        <div class="col-12 d-flex justify-content-between">
+            <p-breadcrumb class="" [model]="items">
+                <ng-template pTemplate="item" let-item>
+                    <ng-container *ngIf="item.route; else elseBlock">
+                        <a [routerLink]="item.route" class="p-menuitem-link">
+                            <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                            <span class="text-primary font-semibold">{{ item.label }}</span>
+                        </a>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                        <a [href]="item.url">
+                            <span class="text-color">{{ item.label }}</span>
+                        </a>
+                    </ng-template>
+                </ng-template>
+            </p-breadcrumb>
+            <div>
+                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">&nbsp;</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="0" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p-card>
+                <div class="row">
+                    <div class="col-6 pe-5">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3">Fecha notificación SIVIGILA: </label>
+                                <label>18/08/2024</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3">Identificación de la persona que atiende la llamada</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+                                    <div class="form-group">
+                                        <div class="row align-items-center mb-2">
+                                            <div class="col-4">
+                                                <label for="nombre" class="fw-bold">Nombre</label>
+                                            </div>
+                                            <div class="col-8 p-fluid">
+                                                <input id="nombre" type="text" pInputText formControlName="nombre" [(ngModel)]="nna.nombreContacto">
+                                                <div *ngIf="submitted && contactForm.get('nombre')?.invalid" class="text-danger">
+                                                    Nombre es requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center mb-2 p-fluid">
+                                            <div class="col-4">
+                                                <label for="parentesco" class="fw-bold">Parentesco</label>
+                                            </div>
+                                            <div class="col-8 flex-auto">
+                                                <p-dropdown
+                                                    formControlName="parentesco"
+                                                    [(ngModel)]="selectedParentesco"
+                                                    [options]="parentescos"
+                                                    [loading]="isLoadingParentesco"
+                                                    optionLabel="nombre"
+                                                    [filter]="true"
+                                                    filterBy="nombre"
+                                                    [showClear]="true"
+                                                    placeholder="Seleccione el parentesco" />
+                                            </div>
+                                            <div class="col-8 offset-4">
+                                                <div *ngIf="submitted && contactForm.get('parentesco')?.invalid" class="text-danger">
+                                                    Parentesco es requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center mb-2">
+                                            <div class="col-4">
+                                                <label for="telefono" class="fw-bold">Teléfono de Contacto</label>
+                                            </div>
+                                            <div class="col-8 p-fluid">
+                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="nna.telefono1">
+                                                <div *ngIf="submitted && contactForm.get('telefono1')?.invalid" class="text-danger">
+                                                    Teléfono es requerido y debe contener solo números
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-8 offset-4 p-fluid">
+                                                <input type="text" pInputText formControlName="telefono2" [(ngModel)]="nna.telefono2">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12 text-end">
+                                            <button class="btn  btn-sm text-white rounded-3" type="submit" style="background-color: #73b7ad;">
+                                                <i class="pi pi-plus"></i> Agregar Contacto
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3">Estado de ingreso a la estrategia: </label>
+                                <label>{{nna.estadoIngresoEstrategia}}</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3">Fecha de ingreso a la estrategia: </label>
+                                <label>{{nna.fechaIngresoEstrategia | date:'dd/MM/yyyy'}}</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="telefono" class="fw-bold">Origen del reporte</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedOrigenReporte"
+                                    [options]="origenReporte"
+                                    [loading]="isLoadingOrigenReporte"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    placeholder="Seleccione el origen del reporte" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="telefono" class="fw-bold">Otro</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input type="text" pInputText placeholder="¿Cual?" [(ngModel)]="nna.otro" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 pe-5">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold pe-3 fs-5">Identificación del menor de edad</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="primerNombre" class="fw-bold">Primer nombre</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="primerNombre" type="text" pInputText [(ngModel)]="nna.primerNombre">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="segundoNombre" class="fw-bold">Segundo nombre</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="segundoNombre" type="text" pInputText [(ngModel)]="nna.segundoNombre">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="primerApellido" class="fw-bold">Primer apellido</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="primerApellido" type="text" pInputText [(ngModel)]="nna.primerApellido">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="segundoApellido" class="fw-bold">Segundo apellido</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="segundoApellido" type="text" pInputText [(ngModel)]="nna.segundoApellido">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="tipoDocumento" class="fw-bold">Tipo de ID</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedTipoID"
+                                    [options]="tipoID"
+                                    [loading]="isLoadingTipoID"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="tipoID"
+                                    placeholder="Seleccione el tipo de documento" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="numeroDocumento" class="fw-bold">Número de ID</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="numeroDocumento" type="text" pInputText [(ngModel)]="nna.numeroID">
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="fechaNacimiento" class="fw-bold">Fecha de nacimiento</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaNacimiento" (onSelect)="CalcularEdad()"  />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="paisNacimiento" class="fw-bold">País de nacimiento</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedPaisNacimiento"
+                                    [options]="paisNacimiento"
+                                    [loading]="isLoadingPaisNacimiento"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    placeholder="Seleccione el país de nacimiento" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="edad" class="fw-bold">Edad</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <input id="edad" type="text" pInputText [(ngModel)]="nna.edad" disabled>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+                            <div class="col-4">
+                                <label for="etnia" class="fw-bold">Etnia</label>
+                            </div>
+                            <div class="col-8 flex-auto">
+                                <p-dropdown
+                                    [(ngModel)]="selectedEtnia"
+                                    [options]="etnias"
+                                    [loading]="isLoadingEtnia"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    placeholder="Seleccione la etnia" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 p-fluid">
+                            <div class="col-4">
+                                <label for="grupoPoblacional" class="fw-bold">Grupo poblacional</label>
+                            </div>
+                            <div class="col-8">
+                                <p-dropdown
+                                    [(ngModel)]="selectedGrupoPoblacional"
+                                    [options]="gruposPoblacionales"
+                                    [loading]="isLoadingGrupoPoblacional"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    placeholder="Seleccione el grupo poblacional" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-3">
+                            <div class="col-4">
+                                <label for="sexo" class="fw-bold">Sexo</label>
+                            </div>
+                            <div class="col-8 button-group">
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexo === '1'}" style="width: 150px;" (click)="applySexo('1')">Femenino</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexo === '2'}" style="width: 150px;" (click)="applySexo('2')">Masculino</button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold fs-5 pe-2">Afiliación al SGSSS </label><label>(Información contrastada con ADRES)</label>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="RegimenAfiliación" class="fw-bold">Régimen de afiliación</label>
+                            </div>
+                            <div class="col-8 p-fluid">
+                                <p-dropdown
+                                    [(ngModel)]="selectedRegimenAfiliacion"
+                                    [options]="regimenAfiliacion"
+                                    [loading]="isLoadingRegimenAfiliacion"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    placeholder="Seleccione el régimen de afiliación" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 p-fluid">
+                            <div class="col-4">
+                                <label for="EPBA" class="fw-bold">EPBA</label>
+                            </div>
+                            <div class="col-8">
+                                <p-dropdown
+                                    [(ngModel)]="selectedEAPB"
+                                    [options]="EAPB"
+                                    [loading]="isLoadingEAPB"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    placeholder="Seleccione el EPBA" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+            <div class="row align-items-center mt-3">
+                <div class="col-12 text-center">
+                    <button class="btn text-white rounded-4 btn-lg me-3" type="submit" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
