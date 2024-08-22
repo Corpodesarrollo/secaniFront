@@ -7,6 +7,7 @@ import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notif
 import { CardModule } from 'primeng/card';
 import { EAPB } from '../../../../models/eapb.model';
 import { GenericService } from '../../../../services/generic.services';
+import { CompartirDatosService } from '../../../../services/compartir-datos.service';
 import { ContactoEAPB } from '../../../../models/contactoEapb.model';
 
 declare var bootstrap: any;
@@ -24,15 +25,15 @@ export class EAPBComponent implements OnInit {
   @ViewChild(ModalCrearComponent) modalCrearComponent!: ModalCrearComponent;
 
   data2: ContactoEAPB[] = [
-    {id: '1', entidadId: 'EPS Sanitas', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987514', email: 'luz1@sanitas.com', estado: 'Activo' },
-    {id: '2', entidadId: 'EPS Sanitas', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987515', email: 'luz2@sanitas.com', estado: 'Inactivo' },
-    {id: '3', entidadId: 'EPS Sanitas', nombres: 'Felipe Arias', cargo: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
-    {id: '4', entidadId: 'EPS Sanitas', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
-    {id: '5', entidadId: 'EPS Compensar', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
-    {id: '6', entidadId: 'EPS Compensar', nombres: 'Felipe Arias', cargo: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
-    {id: '7', entidadId: 'EPS Compensar', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
-    {id: '8', entidadId: 'EPS Cafam', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
-    {id: '9', entidadId: 'EPS Cafam', nombres: 'Felipe Arias', cargo: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '1', entidadId: 'EPS Sanitas', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987514', email: 'luz1@sanitas.com', estado: 'Activo' },
+    { id: '2', entidadId: 'EPS Sanitas', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987515', email: 'luz2@sanitas.com', estado: 'Inactivo' },
+    { id: '3', entidadId: 'EPS Sanitas', nombres: 'Felipe Arias', cargo: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '4', entidadId: 'EPS Sanitas', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '5', entidadId: 'EPS Compensar', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '6', entidadId: 'EPS Compensar', nombres: 'Felipe Arias', cargo: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '7', entidadId: 'EPS Compensar', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '8', entidadId: 'EPS Cafam', nombres: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
+    { id: '9', entidadId: 'EPS Cafam', nombres: 'Felipe Arias', cargo: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', estado: 'Activo' },
   ];
 
   data: ContactoEAPB[] = [];
@@ -50,14 +51,17 @@ export class EAPBComponent implements OnInit {
   first = 0;
   rows = 10;
 
-  constructor(private dataService: GenericService) { }
+  constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
   ngOnInit(): void {
     this.dataService.get('TablaParametrica/', 'CodigoEAPByNit', 'TablaParametrica').subscribe({
-      next: (data: any) => this.listaEAPB = data,
+      next: (data: any) => {
+        this.listaEAPB = data
+        this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      },
       error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
       complete: () => console.info('Se lleno la lista de EAPB')
-    });  
+    });
 
     this.dataService.get_withoutParameters('api/ContactoEntidad', 'Entidad').subscribe({
       next: (data: any) => {
@@ -66,6 +70,23 @@ export class EAPBComponent implements OnInit {
       },
       error: (e) => console.error('Se presento un error al llenar la lista de Contactos por EAPB', e),
       complete: () => console.info('Se lleno la lista de Contactos EAPB')
+    });
+
+    this.compartirDatosService.nuevoContactoEAPB$.subscribe({
+      next: (data: any) => {
+        if (this.isEditing) {
+          const index = this.data.findIndex(datanueva => datanueva.id === data.id);
+          if (index !== -1) {
+            this.data[index] = { ...this.data[index], ...data };
+          }
+        } else {
+          this.data.push(data);
+        }
+        this.originalData = this.data;
+        console.log('Array actualizado:', this.data);
+      },
+      error: (e) => console.error('Error al recibir el nuevo dato', e),
+      complete: () => console.info('Actualización del array completada')
     });
   }
 
@@ -78,7 +99,7 @@ export class EAPBComponent implements OnInit {
   }
 
   onCreate() {
-    this.selectedItem = null; 
+    this.selectedItem = null;
     this.isEditing = false; // Modo creación
     this.openModal();
   }
@@ -130,6 +151,10 @@ export class EAPBComponent implements OnInit {
   onFiltroEAPBChange(): void {
     //console.log('Orden cambiado:', event);
     this.buscar(this.filtroBuscar, this.filtroEAPB); // Llama a la función de búsqueda
+  }
+
+  agregarNuevaEAPB(nuevaEAPB: any) {
+    this.listaEAPB.push(nuevaEAPB);
   }
 
   /**Paginador**/

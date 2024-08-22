@@ -38,6 +38,8 @@ export class GenericService {
         return environment.url_MSEntidad;
       case 'TablaParametrica':
         return environment.url_MSTablasParametricas;
+      case 'Permisos':
+        return environment.url_MSPermisos;
       default:
         return environment.url;
     }
@@ -84,7 +86,7 @@ export class GenericService {
 
   public put(modulo: string, parameters: any, api: string = '') {
     const apiUrl = this.getApiUrl(api);
-    return this.http.put(`${this.url}${modulo}`, parameters);
+    return this.http.put(`${apiUrl}${modulo}`, parameters);
   }
 
   public putAxios(modulo: string, data: any): Observable<any> {

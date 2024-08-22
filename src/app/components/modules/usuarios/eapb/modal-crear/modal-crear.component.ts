@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { FormsModule, FormBuilder, FormGroup, Validators  } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EAPB } from '../../../../../models/eapb.model';
 import { GenericService } from '../../../../../services/generic.services';
+import { CompartirDatosService } from '../../../../../services/compartir-datos.service';
 
 declare var bootstrap: any;
 
@@ -22,11 +23,14 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   listaEAPB: EAPB[] = [];
 
-  constructor(private fb: FormBuilder, private dataService: GenericService) {}
+  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {}
 
   ngOnInit(): void {
     this.dataService.get('TablaParametrica/', 'CodigoEAPByNit', 'TablaParametrica').subscribe({
-      next: (data: any) => this.listaEAPB = data,
+      next: (data: any) => {
+        this.listaEAPB = data
+        this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      },
       error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
       complete: () => console.info('Se lleno la lista de EAPB')
     });
@@ -45,12 +49,22 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.contactForm.valid) {
       console.log(this.contactForm.value);
+      console.log(this.isEditing);
 
       if (this.isEditing){
-        this.dataService.put(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad')
+        this.contactForm.get('entidadId')?.enable();
+        this.dataService.put(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad').subscribe({
+          next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
+          error: (e) => console.error('Se presento un error al actualizar el EAPB', e),
+          complete: () => console.info('Se actualizo el EAPB')
+        });
         console.log(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`);
       }else{
-        this.dataService.post('api/ContactoEntidad', this.contactForm.value, 'Entidad')
+        this.dataService.post('api/ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
+          next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
+          error: (e) => console.error('Se presento un error al crear un EAPB', e),
+          complete: () => console.info('Se creo el nuevo EAPB')
+        });
       }
       
       this.close();

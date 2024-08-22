@@ -1,11 +1,10 @@
 <body class="formato-fondo fuente-letra">
     <div class="header-container">
         <div class="header-left">
-            <a  [routerLink]="['/gestion/seguimiento']">Historico NNA</a> > Ana Ruiz
+            <a  [routerLink]="['/gestion/seguimiento']">Historico NNA</a> > {{datosNNA.nombreCompleto}}
         </div>
         <div class="header-right">
-            Estado: <span class="badge w-30" [ngStyle]="{'background-color': '#73b7ad', 'color': '#ffffff'}">Diagnóstico
-                descartado</span>
+            Estado: <span class="badge w-30" [ngStyle]="{'background-color': '#73b7ad', 'color': '#ffffff'}"> {{datosNNA.diagnostico}}</span>
         </div>
     </div>
     <div class="title">
@@ -20,12 +19,12 @@
                         Nombre:<br>
                         Edad:<br>
                         Diagnostico:<br>
-                        Fecha inicio Seguimiento:<br>
+                        Fecha Inicio Seguimiento:<br>
                     </div>
                     <div class="col">
-                        Ana Ruiz<br>
-                        8 años, 3 meses y 1 dia<br>
-                        Leucemia Mieloide Aguda<br>
+                        {{datosNNA.nombreCompleto}}<br>
+                        {{tiempoTranscurrido}}<br>
+                        {{datosNNA.diagnostico}}<br>
                         25/04/2024<br>
                     </div>
                 </div>
