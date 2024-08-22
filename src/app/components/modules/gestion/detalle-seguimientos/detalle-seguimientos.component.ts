@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ActivatedRoute } from '@angular/router';
 import { GenericService } from '../../../../services/generic.services';
 import { RouterModule } from '@angular/router';
-import { NNA } from '../../../../models/nna.model';
+import { NNAInfoDiagnostico } from '../../../../models/nnaInfoDiagnostico.model';
 
 @Component({
   selector: 'app-detalle-seguimientos',
@@ -19,7 +19,7 @@ import { NNA } from '../../../../models/nna.model';
 export class DetalleSeguimientosComponent implements OnInit{
   seguimientos: any[] = [];
   idSeguimiento: string = "";
-  datosNNA!: NNA;
+  datosNNA!: NNAInfoDiagnostico;
 
   fechaInicio!: Date; // Fecha de nacimiento
   fechaFin: Date = new Date(); // Fecha actual

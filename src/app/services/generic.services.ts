@@ -40,8 +40,6 @@ export class GenericService {
         return environment.url_MSTablasParametricas;
       case 'Permisos':
         return environment.url_MSPermisos;
-      case 'Parametricas':
-        return environment.url_MSParametricas;
       case 'Permisos':
         return environment.url_MSPermisos;
       case 'NNA':
