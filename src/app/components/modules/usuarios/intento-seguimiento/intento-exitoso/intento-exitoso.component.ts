@@ -139,8 +139,8 @@ export class IntentoExitosoComponent implements OnInit {
         ContactoNNAId: this.ContactoNNA.id,
         Email: this.ContactoNNA.email,
         Telefono: this.ContactoNNA.telefonos,
-        TipoResultadoIntentoId: 2,
-        TipoFallaIntentoId: 1,
+        TipoResultadoIntentoId: 1,
+        TipoFallaIntentoId: 0,
         CreatedByUserId: this.id_usuario
       }
       await this.servicio.PostIntento(data);

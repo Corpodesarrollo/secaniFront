@@ -12,6 +12,8 @@ export class Generico {
   private headers: any = '';
   private headersWithoutToken: any = '';
 
+  private BASE_URL_PARAMETRICAS = environment.url_Parametricas;
+
   constructor() {
     const token = localStorage.getItem("access_token");
     this.headers = {
@@ -111,6 +113,15 @@ export class Generico {
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
     const request = axios.post(url, data, { headers });
+    return this.handleRequest(request);
+  }
+
+
+  async retorno_get_parametrica(urltemp: string, baseUrl:string = this.BASE_URL_PARAMETRICAS): Promise<any> {
+
+    const headers = await this.headersWithToken();
+    const url = `${baseUrl}${urltemp}`;
+    const request = axios.get(url, { headers });
     return this.handleRequest(request);
   }
 }

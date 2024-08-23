@@ -5,9 +5,11 @@
 export const environment = {
   production: false,
   url: 'https://localhost:7084/',
-  url_MsAuthention: 'https://localhost:7084/', 
+  url_MsAuthention: 'https://localhost:7084/',
   url_MsNna: 'https://localhost:7291/',
   url_MSSeguimiento: 'https://localhost:7085/',
   url_MSEntidad: 'https://localhost:7174',
-  url_MSPermisos: 'https://localhost:7020'
+  url_MSPermisos: 'https://localhost:7020',
+
+  url_Parametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
 };

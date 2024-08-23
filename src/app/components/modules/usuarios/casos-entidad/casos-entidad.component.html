@@ -21,12 +21,17 @@
   </ng-template>
   <ng-template pTemplate="body" let-casos>
       <tr class="custom-row-border">
-          <td>{{ casos.idCaso }}</td>
-          <td>{{ casos.fechaNotificacion }}</td>
-          <td>{{ casos.nombreNNA }}</td>
-          <td><p-tag [value]="casos.alerta"   styleClass="custom-tag"/></td>
-          <td>{{ casos.observaciones }}</td>
-          <td><p-tag [value]="casos.estado"   styleClass="custom-tag"/></td>
+          <td>{{ casos.nnaId }}</td>
+          <td>{{ casos.fechaNotificacionSIVIGILA }}</td>
+          <td>{{ casos.nombre }}</td>
+          <td>
+            <span *ngFor="let alerta of valores(casos.estadoAlertasIds)" [ngClass]="getBadgeColor(alerta)" class="badge text-white me-1">
+              {{ alerta }}
+              </span>
+
+          </td>
+          <td>{{ casos.observacionesSolicitante }}</td>
+          <td><p-tag [value]="obtenerNombreEstadoSeguimiento(casos.estadoSeguimientoId)"   styleClass="custom-tag"/></td>
           <td><a (click) = "verRespuesta()"><img src="iconos/ojo.svg" alt="ojo"/></a></td>
       </tr>
   </ng-template>
