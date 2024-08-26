@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
+    "prod": "ng build --configuration production",
+    "qa": "ng build --configuration qa",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -35,6 +37,7 @@
     "primeng": "^17.18.5",
     "rxjs": "~7.8.0",
     "schedule": "^0.5.0",
+    "secani-front": "file:",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

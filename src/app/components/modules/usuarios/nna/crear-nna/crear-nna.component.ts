@@ -2,14 +2,14 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngleUpIcon } from 'primeng/icons/angleup';
-import { TpParametros } from '../../../../core/services/tpParametros';
-import { environment } from '../../../../../environments/environment';
-import { Generico } from '../../../../core/services/generico';
+import { TpParametros } from '../../../../../core/services/tpParametros';
+import { environment } from '../../../../../../environments/environment';
+import { Generico } from '../../../../../core/services/generico';
 
 @Component({
   selector: 'app-crear-nna',
   templateUrl: './crear-nna.component.html',
-  styleUrls: ['../general.component.css', './crear-nna.component.css'],
+  styleUrls: ['../../general.component.css', './crear-nna.component.css'],
   encapsulation: ViewEncapsulation.Emulated // Esto es por defecto
 })
 export class CrearNnaComponent {
@@ -22,7 +22,7 @@ export class CrearNnaComponent {
   maxDate: string;
 
   //Listados select
-  listadoTipoId: any;
+  listadoTipoIdentificacion: any;
   listadoRegimenAfiliacion: any;
   listadoEAPB: any;
   listadoEstadoIngresoEstrategia: any;
@@ -38,6 +38,7 @@ export class CrearNnaComponent {
   agenteId: any;
   coordinadorId: any;
   userId: any;
+  ContactoNNAId: any;
   edad: string = "";
   listadoContacto: any = [];
 
@@ -46,9 +47,9 @@ export class CrearNnaComponent {
   //Dialog
   visibleDialogRolAgente: boolean = false;
   visibleDialogRolCoordinador: boolean = false;
-  
 
-  
+
+
 
 
   constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, private axios: Generico) {
@@ -83,7 +84,7 @@ export class CrearNnaComponent {
   }
 
   async ngOnInit() {
-    this.listadoTipoId = await this.tpParametros.getTpTipoId();
+    this.listadoTipoIdentificacion = await this.tpParametros.getTPTipoIdentificacion();
     this.listadoRegimenAfiliacion = await this.tpParametros.getTPRegimenAfiliacion();
     this.listadoEAPB = await this.tpParametros.getTPEAPB();
     this.listadoEstadoIngresoEstrategia = await this.tpParametros.getTPEstadoIngresoEstrategia();
@@ -92,6 +93,22 @@ export class CrearNnaComponent {
     this.listadoParentesco = await this.tpParametros.getTPParentesco();
     this.listadoEtnia = await this.tpParametros.getTPEtnia();
     this.listadoGrupoPoblacional = await this.tpParametros.getGrupoPoblacional();
+
+    //Inicializando form
+    this.nnaId = "";
+    this.agenteId = "";
+    this.coordinadorId = "";
+    this.userId = sessionStorage.getItem('userId');
+
+    var rolId = sessionStorage.getItem('roleId');
+    if (rolId == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+      this.agenteId = this.userId;
+    }
+    sessionStorage.setItem('roleId', '311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
+
+    if (rolId == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+      this.coordinadorId = this.userId;
+    }
 
   }
 
@@ -141,7 +158,8 @@ export class CrearNnaComponent {
     //this.router.navigate(["/usuarios/historico_nna"]);
   }
 
-  onSubmit() {
+  //Guardar formulario
+  async onSubmit() {
     // Set default date and time
     const now = new Date();
     const defaultDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
@@ -152,14 +170,96 @@ export class CrearNnaComponent {
       hora: defaultTime
     });
 
+    const cuidadorEncontrado = this.listadoContacto.find((cuidador: any) => cuidador.cuidadorCuidador === "1");
+    var cuidadorJson = {
+      "cuidadorNombres": "",
+      "cuidadorParentescoId": 0,
+      "cuidadorEmail": "",
+      "cuidadorTelefono": ""
+    };
+    if (cuidadorEncontrado) {
+      console.log('Cuidador encontrado:', cuidadorEncontrado);
+      cuidadorJson = {
+        "cuidadorNombres": cuidadorEncontrado.nombreCompletoCuidador,
+        "cuidadorParentescoId": cuidadorEncontrado.parentescoCuidador,
+        "cuidadorEmail": cuidadorEncontrado.correoElectronicoCuidador,
+        "cuidadorTelefono": cuidadorEncontrado.numeroTelefonoCuidador
+      };
+    } else {
+      console.log('No se encontró ningún cuidador con cuidadorCuidador = 1');
+    }
+
+
+    //Setear NNid
+    var urlbase: string = environment.url_MsNna;
+    var url_path = "NNA/Crear";
+    var datosNna = {
+      "id": 0,
+      "estadoId": 15,
+      "primerNombre": this.formNNA.get("primerNombre")?.value,
+      "segundoNombre": this.formNNA.get("segundoNombre")?.value,
+      "primerApellido": this.formNNA.get("primerApellido")?.value,
+      "segundoApellido": this.formNNA.get("segundoApellido")?.value,
+      "tipoIdentificacionId": this.formNNA.get('tipoId')?.value,
+      "numeroIdentificacion": this.formNNA.get("numeroId")?.value,
+      "fechaNacimiento": this.formNNA.get("fechaNacimiento")?.value,
+      "municipioNacimientoId": this.formNNA.get("ciudadNacimiento")?.value,
+      "sexoId": this.formNNA.get("sexo")?.value,
+      "eapbId": this.formNNA.get("eapb0")?.value,
+      "grupoPoblacionId": this.formNNA.get("grupoPoblacion")?.value,
+      "etniaId": this.formNNA.get("etnia")?.value,
+      "estadoIngresoEstrategiaId": this.formNNA.get('estadoIngresoEstrategia')?.value,
+      "fechaIngresoEstrategia": this.formNNA.get('fechaIngresoEstrategia')?.value,
+      "origenReporteId": this.formNNA.get('originReporte')?.value,
+      "tipoRegimenSSId": this.formNNA.get("regimenAfiliacion")?.value,
+      "departamentoTratamientoId": this.formNNA.get('departamentoNacimiento')?.value,
+      "CreatedByUserId": this.userId,
+      "dateCreated": now,
+      "isDeleted": false,
+      "paisId": this.formNNA.get("paisNacimiento")?.value,
+      "cuidadorNombres": cuidadorJson.cuidadorNombres,
+      "cuidadorParentescoId": cuidadorJson.cuidadorParentescoId,
+      "cuidadorEmail": cuidadorJson.cuidadorEmail,
+      "cuidadorTelefono": cuidadorJson.cuidadorTelefono,
+    };
+    var nna = await this.axios.retorno_post(url_path, datosNna, true, urlbase);
+    console.log("Crear Nna Guardar", nna, "form", this.formNNA.value, " this.listadoContacto ::", this.listadoContacto);
+
+    this.nnaId = nna.datos[0].id;
+
+    //Guardado de lista de contactos
+    this.listadoContacto.forEach(async (cuidador: any) => {
+      var contactoDatosNna = {
+        "id": 0,
+        "dateCreated": now,
+        "createdByUserId": this.userId,
+        "isDeleted": false,
+        "nnaId": this.nnaId,
+        "nombres": cuidador.nombreCompletoCuidador,
+        "parentescoId": cuidador.parentescoCuidador,
+        "email": cuidador.correoElectronicoCuidador,
+        "telefonos": cuidador.numeroTelefonoCuidador,
+        "telefnosInactivos": "",
+        "cuidador": cuidador.cuidadorCuidador == 1 ? true : false
+      };
+      var urlbase: string = environment.url_MsNna;
+      var url_path = "ContactoNNAs/Crear";
+      var data = await this.axios.retorno_post(url_path, contactoDatosNna, true, urlbase);
+      this.ContactoNNAId = data.datos[0].id;
+    });
+
+
+
     //Genrar guardado
     var rolId = sessionStorage.getItem('roleId');
     if (rolId == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
       this.visibleDialogRolAgente = true;
+      this.agenteId = this.userId;
     }
 
     if (rolId == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
-      this.visibleDialogRolAgente = true;
+      this.visibleDialogRolCoordinador = true;
+      this.agenteId = this.coordinadorId;
     }
   }
 
@@ -186,8 +286,8 @@ export class CrearNnaComponent {
   }
 
   async handleDataContacto(data: any) {
-    //console.log('Data received from child handleDataContacto:', 'Crear nna', data);
-    this.listadoContacto.push(data);
+    this.listadoContacto = data;
+    console.log('Data received from child handleDataContacto:', 'Crear nna contacto', data, this.listadoContacto);
   }
 
   cancelar() {

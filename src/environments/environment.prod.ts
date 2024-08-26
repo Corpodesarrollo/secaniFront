@@ -5,11 +5,11 @@
 export const environment = {
   production: false,
   url: 'https://localhost:7084/',
-  url_MsAuthention: 'http://localhost:15200/',
+  url_MsAuthention: 'https://localhost:7084/',
   url_MSEntidad: 'https://localhost:7174/',
   url_MSPermisos: 'https://localhost:7020/',
   url_MSTablasParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
-  url_MsNna: 'http://127.0.0.1:15300/',
-  url_MSSeguimiento: 'http://localhost:15500/',
+  url_MsNna: 'https://msnna-bjdgg4h5b0duh0gz.eastus-01.azurewebsites.net/',
+  url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
   url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
 };

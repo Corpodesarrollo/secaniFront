@@ -4,16 +4,16 @@ import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { Generico } from '../../../../../../core/services/generico';
-import { environment } from '../../../../../../../environments/environment';
-import { GenericService } from '../../../../../../services/generic.services';
+import { Generico } from '../../../../../../../core/services/generico';
+import { environment } from '../../../../../../../../environments/environment';
+import { GenericService } from '../../../../../../../services/generic.services';
 
 @Component({
   selector: 'app-dialog-validar-existencia',
   standalone: true,
-  imports: [DialogModule, CommonModule, ButtonModule,FormsModule], 
+  imports: [DialogModule, CommonModule, ButtonModule,FormsModule],
   templateUrl: './dialog-validar-existencia.component.html',
-  styleUrls: ['../../../general.component.css', './dialog-validar-existencia.component.css'],
+  styleUrls: ['../../../../general.component.css', './dialog-validar-existencia.component.css'],
   encapsulation: ViewEncapsulation.None // Por defecto
 })
 export class DialogValidarExistenciaComponent {
@@ -37,21 +37,21 @@ export class DialogValidarExistenciaComponent {
   async validarExistencia() {
     const baseUrl = environment.url_MsNna;
     const url = `NNA/ConsultarNNAsByTipoIdNumeroId/${this.tipoId}/${this.numeroId}`;
-    
+
     try {
       const response: any = await this.axios.retorno_get(url, baseUrl);
-      
+
       //console.log("validarExistencia :: ", response, url);
-  
+
       if (response && Object.keys(response).length > 0) {
         this.showDialog();
       } else {
         // Handle the case where the response is empty
         //console.log('Response is empty or invalid');
       }
-  
+
       this.dataToParentValidarExistencia.emit(response); // Ensure this is an EventEmitter
-  
+
       return response;
     } catch (error) {
       //console.error('Error in validarExistencia:', error);
