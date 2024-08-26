@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
@@ -6,20 +6,24 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TpParametros } from '../../../core/services/tpParametros';
 import { Generico } from '../../../core/services/generico';
+import { DatePipe } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-dialog-nna-msg-seguimiento',
   standalone: true,
-  imports: [DialogModule, CommonModule, ButtonModule,FormsModule], 
+  imports: [DialogModule, CommonModule, ButtonModule, FormsModule],
   templateUrl: './dialog-nna-msg-seguimiento.component.html',
   styleUrls: ['./dialog-nna-msg-seguimiento.component.css'],
   encapsulation: ViewEncapsulation.Emulated // Esto es por defecto
 })
 export class DialogNnaMsgSeguimientoComponent {
   @Input() visible: boolean = false; // Recibir datos del padre
-  @Input() nnaId: any; // Recibir datos del padre 
+  @Input() nnaId: any; // Recibir datos del padre
   @Input() agenteId: any;
   @Input() coordinadorId: any;
+  @Input() contactoNNAId: any;
+  @Output() dataToParent: any = new EventEmitter<any>();
 
   rolId = sessionStorage.getItem('roleId');
   formAgenteSeguimiento: any;
@@ -34,10 +38,17 @@ export class DialogNnaMsgSeguimientoComponent {
   buttonManana: any = 'fondo-color-cancelar';
 
   msg: any = '';
+  userId = '';
 
   public agenteAsignadoListado: any;
 
-  constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, public axios: Generico) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private tpParametros: TpParametros,
+    public axios: Generico,
+    private datePipe: DatePipe
+  ) {
 
   }
 
@@ -45,7 +56,11 @@ export class DialogNnaMsgSeguimientoComponent {
     this.agenteAsignadoListado = await this.tpParametros.getAgentesExistentesAsignados() ?? [];
     //console.log("this.agenteAsignadoListado ::", this.agenteAsignadoListado);
 
-    this.formAgenteSeguimiento = this.agenteId;
+    this.formAgenteSeguimiento = this.agenteId > 0 ? this.agenteId : this.coordinadorId;
+
+    sessionStorage.setItem('roleId', '311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
+    this.formAgenteSeguimiento = sessionStorage.getItem('userId');
+
   }
 
   cargarHoy() {
@@ -76,6 +91,7 @@ export class DialogNnaMsgSeguimientoComponent {
 
     this.buttonHoy = 'fondo-color-principal';
     this.buttonManana = 'fondo-color-cancelar';
+    this.msg = "";
   }
 
   cargarManana() {
@@ -105,9 +121,11 @@ export class DialogNnaMsgSeguimientoComponent {
 
     this.buttonHoy = 'fondo-color-cancelar';
     this.buttonManana = 'fondo-color-principal';
+    this.msg = "";
   }
 
   cargarAmPM(ampm: any) {
+    this.msg = "";
     this.formAmPm = ampm;
     if (ampm == "AM") {
       this.buttonAm = 'fondo-color-principal';
@@ -118,12 +136,52 @@ export class DialogNnaMsgSeguimientoComponent {
     }
   }
 
+  convertirFormato12a24(fecha: string, hora: number, minutos: number, amPm: string): string {
+    // Combinar fecha y hora
+    let hours = hora;
+    if (amPm === 'PM' && hours < 12) {
+      hours += 12; // Convertir a 24 horas
+    } else if (amPm === 'AM' && hours === 12) {
+      hours = 0; // Convertir medianoche a 00 horas
+    }
+
+    // Formatear horas y minutos con ceros a la izquierda si es necesario
+    const hoursFormatted = hours.toString().padStart(2, '0');
+    const minutesFormatted = minutos.toString().padStart(2, '0');
+
+    // Devolver la fecha y hora en formato 24 horas
+    return `${fecha}T${hoursFormatted}:${minutesFormatted}`;
+  }
+
   async guardar() {
-    if (this.axios.isEmpty(this.formFecha) && this.axios.isEmpty(this.formAgenteSeguimiento) && this.axios.isEmpty(this.formHora) && this.axios.isEmpty(this.formMinuto)) {
+    console.log(this.formFecha, this.formHora, this.formMinuto, this.formAmPm, this.axios.isEmpty(this.formFecha) || this.axios.isEmpty(this.formAgenteSeguimiento) || Object.keys(this.formHora).length > 0 || Object.keys(this.formMinuto).length > 0 || this.axios.isEmpty(this.formAmPm));
+    const now = new Date();
+
+
+    if (this.axios.isEmpty(this.formFecha) || this.axios.isEmpty(this.formAgenteSeguimiento) || Object.keys(this.formHora).length > 0 || Object.keys(this.formMinuto).length > 0 || this.axios.isEmpty(this.formAmPm)) {
       this.msg = "Campos requeridos.";
     } else {
       this.msg = "";
       //Proceso de guardado
+      var fechaSeguimiento = this.convertirFormato12a24(this.formFecha, this.formHora, this.formMinuto, this.formAmPm);
+      console.log("fechaSeguimiento:", fechaSeguimiento);
+      var dataRow = {
+        "idNNA": 1,
+        "fechaSeguimiento": fechaSeguimiento,
+        "idEstado": 1,
+        "idContactoNNA": this.contactoNNAId,
+        "telefono": " ",
+        "idUsuario": this.userId,
+        "idSolicitante": this.formAgenteSeguimiento,
+        "observacionSolicitante": "Agendamiento inicial",
+        "idUsuarioCreacion":this.userId
+      };
+      var urlbase: string = environment.url_MSSeguimiento;
+      var url_path = "Seguimiento/SetSeguimiento";
+      var data = await this.axios.retorno_post(url_path, dataRow, true, urlbase);
+      this.dataToParent.emit(dataRow);
+      alert(data);
+      this.router.navigate(["/usuarios/historico_nna"]);
     }
   }
 }

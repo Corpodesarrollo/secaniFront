@@ -11,17 +11,18 @@ RUN wget https://nodejs.org/dist/v18.19.1/node-v18.19.1-linux-x64.tar.gz && cp n
 RUN cd /usr/local && tar --strip-components 1 -xzf /tmp/node.tar.gz
 
 # Crea el directorio de trabajo y establece los permisos adecuados
-RUN mkdir /app 
+RUN mkdir /app
 WORKDIR /app
 
 #Copy package.json and package-lock.json to the working directory
 COPY package.json /app/
+COPY tsconfig.json /app/
+COPY angular.json /app/
 
 # Install dependencies
+RUN npm install
 RUN npm install -g npm@10.7.0
 RUN npm install -g @angular/cli@18.1.0
-# Install nodemon globally
-RUN npm install
 
 #VOLUME /mnt/d/workspaces/angular/esap/carnetdigital/carnetdigitalfrom/ /app
 

@@ -36,9 +36,9 @@
                 <div class="col-sm-9">
                     <select class="form-select" formControlName="parentescoCuidador">
                         <option value="">Seleccione</option>
-                        <option *ngFor="let parentescoCuidador of listadoParentesco" [value]="parentescoCuidador.id"
+                        <option *ngFor="let parentescoCuidador of listadoParentesco" [value]="parentescoCuidador.codigo"
                             [disabled]="nnaFormCrearSinActivar">
-                            {{ parentescoCuidador.name }}
+                            {{ parentescoCuidador.nombre }}
                         </option>
                     </select>
                 </div>
