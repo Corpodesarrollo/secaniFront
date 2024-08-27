@@ -18,8 +18,7 @@ import { BotonNotificacionComponent } from '../boton-notificacion/boton-notifica
 
 
 @NgModule({
-  declarations: [
-    ConsultarSeguimientosComponent],
+  declarations: [],
   imports: [
     TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent,
     CommonModule,
