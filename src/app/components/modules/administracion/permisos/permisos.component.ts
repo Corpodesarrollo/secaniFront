@@ -5,11 +5,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { GenericService } from '../../../../services/generic.services';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })
@@ -29,13 +30,16 @@ export class PermisosComponent {
   constructor(private dataService: GenericService) { }
 
   ngOnInit(): void {
-    this.dataService.get_withoutParametersAxios("lista_roles").subscribe({
-      next: (data) => this.selectRoles = data,
+    this.dataService.get_withoutParameters('api/Modulos','Permisos').subscribe({
+      next: (data) => {
+        this.selectRoles = data
+        console.log(data)
+      },
       error: (e) => console.error('Se presento un error al llenar la lista de roles', e),
       complete: () => console.info('Se lleno la lista de roles')
     });
 
-    this.dataService.get_withoutParametersAxios("lista_modulos").subscribe({
+    this.dataService.get_withoutParameters('api/Modulos','Permisos').subscribe({
       next: (data) => this.selectModulos = data,
       error: (e) => console.error('Se presento un error al llenar la lista de modulos', e),
       complete: () => console.info('Se lleno la lista de modulos')

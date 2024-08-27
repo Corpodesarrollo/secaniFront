@@ -1,0 +1,126 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.top-right-buttons {
+    display: flex;
+}
+
+
+.card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-content {
+    /* Estilos adicionales para el contenido izquierdo si es necesario */
+}
+
+.right-content {
+    align-items: center;
+    text-align: center;
+}
+
+/* Cambiar el color del fondo cuando el interruptor está activado */
+::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: #73B7AD;
+    /* Cambia este color por el que desees */
+}
+
+/* Cambiar el color del fondo cuando el interruptor está desactivado */
+::ng-deep .p-inputswitch-slider {
+    background-color: #ccc;
+    /* Cambia este color por el que desees */
+}
+
+/* Cambiar el color del interruptor (círculo) */
+::ng-deep .p-inputswitch-slider:before {
+    background-color: #ffffff;
+    /* Cambia este color por el que desees */
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    /* Espacio entre el botón y la tabla */
+}
+
+.btn-crear {
+    background-color: #FF9801;
+    border: none;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/***************** Estilos tabla *****************/
+
+.btn-round {
+    width: 35px;
+    /* Ajusta el tamaño según sea necesario */
+    height: 35px;
+    /* Ajusta el tamaño según sea necesario */
+    border-radius: 50%;
+    /* Hace que el botón sea redondo */
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: #73B7AD;
+    /* Color de fondo */
+    color: white;
+    /* Color del icono */
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-round .pi {
+    font-size: 15px;
+    /* Ajusta el tamaño del icono */
+}
+
+.btn-round:hover {
+    background-color: #73b7adca;
+    /* Color de fondo al pasar el cursor */
+}
+
+.table-actions {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.no-records {
+    text-align: center;
+    font-weight: bold;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.btn-principal {
+    text-align: center;
+    background: #73B7AD;
+    color: #FFFFFF;
+    width: Fixed (129px)px;
+    height: Fixed (23.52px)px;
+    top: 296.75px;
+    left: 1224px;
+    padding: 4px 12px 4px 12px;
+    gap: 10px;
+    border-radius: 4px 4px 4px 4px;
+    opacity: 0px;
+    border: 0px;
+}
+
+.btn-principal span {
+    margin-left: 10px;    
+}

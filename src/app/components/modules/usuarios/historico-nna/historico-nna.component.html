@@ -1,7 +1,7 @@
 <div class="row container-fluid d-flex">
     <div class="col-12 hnna-titulo-menu text-end">
         <button class="btn btn-crear" *ngIf="permisos_nna.canAdd==true" (click)="btn_crear_nna()">CREAR NNA</button>
-    </div>
+        <app-boton-notificacion></app-boton-notificacion>
     <div class="col-12 hnna-titulo-content">
         <span class="hnna-titulo">Histórico NNA</span>
     </div>
@@ -18,7 +18,7 @@
                                         (change)="buscar()" id="Estado" name="Estado">
                                         <option selected value="0">Seleccione</option>
                                         <option *ngFor="let estado of estadosNNA" [value]="estado.id">
-                                            {{ estado.estadoNNA }}
+                                            {{ estado.nombre }}
                                         </option>
                                     </select>
                                 </div>

@@ -1,0 +1,66 @@
+<div class="row align-items-center mb-2 p-fluid">
+    <div class="col-4">
+        <label for="categoriaAlerta" class="fw-bold">Categoria Alerta</label>
+    </div>
+    <div class="col-8 flex-auto">
+        <p-dropdown
+            [(ngModel)]="selectedCategoriaAlerta"
+            [options]="categoriaAlerta"
+            [loading]="isLoadingCategoriaAlerta"
+            (onChange)="CargarSubcategorias()"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            name="categoriaAlerta"
+            id="categoriaAlerta"
+            placeholder="Seleccione" />
+    </div>
+</div>
+<div class="row align-items-center mb-2 p-fluid">
+    <div class="col-4">
+        <label for="subcategoriaAlerta" class="fw-bold">Subcategoria Alerta</label>
+    </div>
+    <div class="col-8">
+        <p-dropdown
+            [(ngModel)]="selectedSubcategoriaAlerta"
+            [options]="subcategoriaAlerta"
+            [loading]="isLoadingSubcategoriaAlerta"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            name="subcategoriaAlerta"
+            id="subcategoriaAlerta"
+            placeholder="Seleccione" />
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col-12 text-end">
+        <button class="btn  btn-sm text-white rounded-3" type="submit" style="background-color: #73b7ad;" (click)="AgregarAlerta()">
+            <i class="pi pi-plus"></i> Agregar Alerta
+        </button>
+    </div>
+</div>
+<div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="alertas.length > 0">
+    <div class="col-12">
+        <p-table [value]="alertas" [paginator]="true" [rows]="10" [responsive]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="header-th">Categoria</th>
+                    <th class="header-th">Subcategoria</th>
+                    <th class="header-th" [width]="50"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-alerta>
+                <tr>
+                    <td>{{ alerta.categoriaAlerta }}</td>
+                    <td>{{ alerta.subcategoriaAlerta }}</td>
+                    <td>
+                        <i class="bi bi-trash" style="color: #73b7ad;" (click)="BorrarAlerta(alerta.activeIndex)"></i>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

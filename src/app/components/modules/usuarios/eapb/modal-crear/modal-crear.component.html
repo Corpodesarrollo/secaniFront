@@ -8,15 +8,19 @@
             <div class="modal-body">
                 <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
                     <div class="mb-3 row">
-                        <label for="eapb" class="col-sm-4 col-form-label">Entidad *</label>
+                        <label for="entidadId" class="col-sm-4 col-form-label">Entidad *</label>
                         <div class="col-sm-8">
-                            <input type="text" id="eapb" class="form-control" formControlName="eapb">
+                            <select class="form-select" aria-label="entidadId" formControlName="entidadId" id="entidadId" name="entidadId">
+                                <option *ngFor="let eapb of listaEAPB" [value]="eapb.codigo">
+                                    {{ eapb.nombre }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="nombreApe" class="col-sm-4 col-form-label">Nombres y apellidos</label>
+                        <label for="nombres" class="col-sm-4 col-form-label">Nombres y apellidos</label>
                         <div class="col-sm-8">
-                            <input type="text" id="nombreApe" class="form-control" formControlName="nombreApe">
+                            <input type="text" id="nombres" class="form-control" formControlName="nombres">
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -26,23 +30,26 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="telefono" class="col-sm-4 col-form-label">Teléfono</label>
+                        <label for="telefonos" class="col-sm-4 col-form-label">Teléfono</label>
                         <div class="col-sm-8">
-                            <input type="tel" id="telefono" class="form-control" formControlName="telefono"
-                                   pattern="[0-9]*" maxlength="10" minlength="10">
-                            <div *ngIf="contactForm.get('telefono')!.hasError('pattern') && contactForm.get('telefono')!.touched" class="text-danger">
+                            <input type="tel" id="telefonos" class="form-control" formControlName="telefonos"
+                                pattern="[0-9]*" maxlength="10" minlength="10">
+                            <div *ngIf="contactForm.get('telefonos')!.hasError('pattern') && contactForm.get('telefonos')!.touched"
+                                class="text-danger">
                                 Solo se permiten números
                             </div>
-                            <div *ngIf="contactForm.get('telefono')!.hasError('minlength') && contactForm.get('telefono')!.touched" class="text-danger">
+                            <div *ngIf="contactForm.get('telefonos')!.hasError('minlength') && contactForm.get('telefonos')!.touched"
+                                class="text-danger">
                                 El teléfono debe ser de 10 dígitos
                             </div>
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="correo" class="col-sm-4 col-form-label">Correo *</label>
+                        <label for="email" class="col-sm-4 col-form-label">Correo *</label>
                         <div class="col-sm-8">
-                            <input type="correo" id="correo" class="form-control" formControlName="correo">
-                            <div *ngIf="contactForm.get('correo')!.hasError('pattern') && contactForm.get('correo')!.touched" class="text-danger">
+                            <input type="email" id="email" class="form-control" formControlName="email">
+                            <div *ngIf="contactForm.get('email')!.hasError('pattern') && contactForm.get('email')!.touched"
+                                class="text-danger">
                                 Correo no válido
                             </div>
                         </div>
@@ -58,7 +65,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" [disabled]="contactForm.invalid" class="btn btn-guardar">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+                        <button type="submit" [disabled]="contactForm.invalid" class="btn btn-guardar">{{ isEditing ?
+                            'Actualizar' : 'Guardar' }}</button>
                     </div>
                 </form>
             </div>

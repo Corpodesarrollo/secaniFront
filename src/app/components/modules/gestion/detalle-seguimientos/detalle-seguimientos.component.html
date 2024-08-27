@@ -1,0 +1,105 @@
+<body class="formato-fondo fuente-letra">
+    <div class="header-container">
+        <div class="header-left">
+            <a  [routerLink]="['/gestion/seguimiento']">Historico NNA</a> > {{datosNNA.nombreCompleto}}
+        </div>
+        <div class="header-right">
+            Estado: <span class="badge w-30" [ngStyle]="{'background-color': '#73b7ad', 'color': '#ffffff'}"> {{datosNNA.diagnostico}}</span>
+        </div>
+    </div>
+    <div class="title">
+        <h1>Detalle Seguimiento</h1>
+    </div>
+
+    <div class="row align-items-center">
+        <div class="col">
+            <p-card>
+                <div class="row">
+                    <div class="col" style="font-weight: bold;">
+                        Nombre:<br>
+                        Edad:<br>
+                        Diagnostico:<br>
+                        Fecha Inicio Seguimiento:<br>
+                    </div>
+                    <div class="col">
+                        {{datosNNA.nombreCompleto}}<br>
+                        {{tiempoTranscurrido}}<br>
+                        {{datosNNA.diagnostico}}<br>
+                        25/04/2024<br>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col">
+            <p-card>
+                <div class="row" style="font-weight: bold;">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col" style="text-align: center;">
+                                <i class="pi pi-stopwatch" style="font-size: 4rem; color: #73b7ad;"></i>
+                            </div>
+                            <div class="col">
+                                Tiempo Transcurrido<br>
+                                3d:2h:44min
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col" style="text-align: center;">
+                                <h1>{{ seguimientos.length }}</h1>
+                            </div>
+                            <div class="col">
+                                Seguimientos realizados
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+
+    <p-card>
+        <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="header-th">Fecha Seguimiento</th>
+                    <th class="header-th">Asunto</th>
+                    <th class="header-th">Alerta</th>
+                    <th class="header-th">Observaciones</th>
+                    <th class="header-th">Entidad sobre la que se genera la alerta</th>
+                    <th class="header-th">Fecha Notificacion</th>
+                    <th class="header-th">Respuesta de la entidad</th>
+                    <th class="header-th">Fecha de Respuesta</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-seguimiento>
+                <tr>
+                    <td>{{ seguimiento.fechaSeguimiento | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ seguimiento.asunto }}</td>
+                    <td>
+                        <span *ngFor="let alerta of seguimiento.alertasSeguimientos" [ngClass]="getBadgeColor(alerta.estadoId)"
+                            class="badge text-white me-1">
+                            {{ alerta.estadoId }}
+                        </span>
+                    </td>
+                    <td>{{ seguimiento.observacion }}</td>
+                    <td>{{ seguimiento.nombreEntidad }}</td>
+                    <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
+                    <td style="text-align: center;">
+                        <i class="bi bi-eye-fill" style="color: #73b7ad;"></i>
+                    </td>
+                    <td>{{ seguimiento.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
+        <div>
+            <button class="btn btn-detalle-seguimiento"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EXPORTAR SEGUIMIENTO</button>
+            <button class="btn btn-detalle-seguimiento"><i class="bi bi-telephone-outbound-fill me-2"></i>GENERAR CONTACTO</button>
+        </div>
+    </div>
+
+</body>

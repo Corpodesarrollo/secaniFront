@@ -7,6 +7,10 @@
 
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+:root {
+    --color-base: #73b7ad; /* Reemplaza este valor por tu color */
+}
+
 body,
 html {
     height: 100%;
@@ -14,11 +18,11 @@ html {
     background-color: #F8FBFB;
 }
 
-button{
+button {
     cursor: pointer;
 }
 
-h1{
+h1 {
     font-weight: bold;
 }
 
@@ -30,7 +34,7 @@ h1{
     padding: 15px;
 }
 
-.formato-menu{
+.formato-menu {
     background: #d9d9d981;
 }
 
@@ -39,8 +43,8 @@ h1{
 }
 
 .color-fondo_gris {
-  background-color: #D9D9D980;
-  color:black;
+    background-color: #D9D9D980;
+    color: black;
 }
 
 .fuente-letra {
@@ -67,30 +71,37 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
     border-radius: 0px;
     width: 100% !important;
 }
-.menu-rq00-hu00 .p-menu .p-submenu-header{
-    background:none;
+
+.menu-rq00-hu00 .p-menu .p-submenu-header {
+    background: none;
     padding: 0;
 }
+
 .menu-rq00-hu00 .p-menu .p-menuitem-link {
     text-decoration: none !important;
 }
 
-.sinSubMenus .p-menuitem-icon{
+.sinSubMenus .p-menuitem-icon {
     margin-left: -20px !important;
 }
 
-.sinSubMenus span{
+.sinSubMenus span {
     font-weight: bold;
 }
+
+.p-card {
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
 /**
 Fin estilos menú
 SECÁNI-RQ00-HU00- Menú y Perfiles
 */
 
-.main-fondo{
+.main-fondo {
     background: #73B7AD0D;
     margin-top: 0px;
     margin-left: 0px !important;
     font-family: 'Montserrat', sans-serif;
 }
-

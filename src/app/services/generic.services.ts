@@ -34,6 +34,16 @@ export class GenericService {
         return environment.url_MSSeguimiento;
       case 'Authentication':
         return environment.url_MsAuthention;
+      case 'Entidad':
+        return environment.url_MSEntidad;
+      case 'TablaParametrica':
+        return environment.url_MSTablasParametricas;
+      case 'Permisos':
+        return environment.url_MSPermisos;
+      case 'Permisos':
+        return environment.url_MSPermisos;
+      case 'NNA':
+        return environment.url_MsNna;
       default:
         return environment.url;
     }
@@ -44,8 +54,9 @@ export class GenericService {
     return this.http.get(`${apiUrl}${modulo}${parameters}`);
   }
 
-  public get_withoutParameters(modulo: string) {
-    return this.http.get<any[]>(`${this.url}${modulo}`);
+  public get_withoutParameters(modulo: string, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    return this.http.get<any[]>(`${apiUrl}${modulo}`);
   }
 
   public get_withoutParametersAxios(modulo: string): Observable<any[]> {
@@ -69,7 +80,7 @@ export class GenericService {
     return this.http.post(`${apiUrl}${modulo}`, parameters);
   }
 
-  public async postAsync(url: string = this.url,modulo: string, parameters: any) {
+  public async postAsync(url: string = this.url, modulo: string, parameters: any) {
     return await this.http.post(`${url}${modulo}`, parameters).toPromise();
   }
 
@@ -77,8 +88,9 @@ export class GenericService {
     return await this.http.post(`${this.url}${modulo}`, parameters);
   }
 
-  public put(modulo: string, parameters: any) {
-    return this.http.put(`${this.url}${modulo}`, parameters);
+  public put(modulo: string, parameters: any, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    return this.http.put(`${apiUrl}${modulo}`, parameters);
   }
 
   public putAxios(modulo: string, data: any): Observable<any> {

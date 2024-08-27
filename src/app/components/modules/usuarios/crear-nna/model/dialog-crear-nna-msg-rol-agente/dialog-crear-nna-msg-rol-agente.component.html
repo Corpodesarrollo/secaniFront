@@ -1,0 +1,18 @@
+<app-dialog-nna-msg-seguimiento [visible]="visibleDialogSeguimiento" [nnaId]="nnaId" [agenteId]="agenteId" [coordinadorId]="coordinadorId"></app-dialog-nna-msg-seguimiento>
+
+<p-dialog header="" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <div class="text-center">
+        <div class="row">
+            <div class="col-sm-12">
+                <label>¿Desea realizar seguimiento inicial al NNA para completar los datos de tratamiento del menor?</label>
+                <button class="btn text-color-blanco fondo-color-cancelar" (click)="onSeguimiento()">
+                    <span>NO, agendar seguimiento</span>
+                </button> &nbsp;
+                <button class="btn text-color-blanco fondo-color-principal" (click)="onIniciarSeguimiento()">
+                    <span>SI, iniciar seguimiento</span>
+                </button>                
+            </div>
+        </div>
+    </div>
+</p-dialog> 

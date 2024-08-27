@@ -124,4 +124,8 @@ export class Generico {
     const request = axios.get(url, { headers });
     return this.handleRequest(request);
   }
+  // Método para verificar si un campo está vacío
+  isEmpty(value: any): boolean {
+    return value === null || value === undefined || value.trim() === '';
+  }
 }

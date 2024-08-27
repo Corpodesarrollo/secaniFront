@@ -52,47 +52,7 @@
     /* Color de fondo al pasar el cursor */
 }
 
-/***************** Estilos rectangulo con tabla *****************/
-
-.rectangle {
-    margin-top: 20px;
-    padding: 20px;
-    width: 100%;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    position: relative;
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.data-table th {
-    text-align: center;
-    padding: 8px;
-    font-weight: bold;
-    border-bottom: 1px solid #ddd;
-    color: #B5B7C0;
-}
-
-.data-table td {
-    border-bottom: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-.data-table td {
-    text-align: center;
-    /* Centra el texto en las celdas de datos */
-}
-
-.data-table th:first-child,
-.data-table td:first-child {
-    text-align: left;
-    /* Alinea la primera columna a la izquierda */
-}
+/***************** Estilos tabla *****************/
 
 .btn-round {
     width: 35px;
