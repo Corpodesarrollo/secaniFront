@@ -30,8 +30,8 @@ export class PermisosComponent {
   constructor(private dataService: GenericService) { }
 
   ngOnInit(): void {
-    this.dataService.get_withoutParameters('api/Modulos','Permisos').subscribe({
-      next: (data) => {
+    this.dataService.get_withoutParameters('Role/GetAll','UsuariosRoles').subscribe({
+      next: (data: any) => {
         this.selectRoles = data
         console.log(data)
       },
@@ -39,8 +39,8 @@ export class PermisosComponent {
       complete: () => console.info('Se lleno la lista de roles')
     });
 
-    this.dataService.get_withoutParameters('api/Modulos','Permisos').subscribe({
-      next: (data) => this.selectModulos = data,
+    this.dataService.get_withoutParameters('Modulos','Permisos').subscribe({
+      next: (data: any) => this.selectModulos = data,
       error: (e) => console.error('Se presento un error al llenar la lista de modulos', e),
       complete: () => console.info('Se lleno la lista de modulos')
     });
@@ -75,6 +75,15 @@ export class PermisosComponent {
       error: (e) => console.error('Se presento un error al llenar la tabla de permisos', e),
       complete: () => console.info('Se lleno la tabla de permisos')
     });
+
+    /*this.dataService.get('TablaParametrica/', 'CodigoEAPByNit', 'Permisos').subscribe({
+      next: (data: any) => {
+        this.listaEAPB = data
+        this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      },
+      error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
+      complete: () => console.info('Se lleno la lista de EAPB')
+    });*/
   }
 
   onSaveClick(): void {

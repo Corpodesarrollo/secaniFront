@@ -27,7 +27,7 @@
                 <label for="dropdown2">Modulo*</label>
                 <select id="dropdown2" (change)="onSelectChangeModulo($event)">
                     <option *ngFor="let option of selectModulos" [value]="option.id">
-                        {{ option.name }}
+                        {{ option.nombre }}
                     </option>
                 </select>
             </div>
