@@ -12,10 +12,13 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InfoDificultad } from '../../../../../models/infoDificultad.model';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../../models/parametricas.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimiento-alertas.component";
+import { NNA } from '../../../../../models/nna.model';
+import { GenericService } from '../../../../../services/generic.services';
+import { NNAService } from '../../../../../core/services/nnaService';
 
 @Component({
   selector: 'app-seguimiento-dificultades',
@@ -26,7 +29,9 @@ import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimien
   styleUrl: './seguimiento-dificultades.component.css'
 })
 export class SeguimientoDificultadesComponent implements OnInit {
-
+  nna: NNA = new NNA();
+  id: string | undefined;
+  
   dificultades: InfoDificultad = {
     autorizacionMedicamentos: true,
     entregaMedicamentosLAP: false,
@@ -51,6 +56,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
   selectedTipoRecurso: Parametricas | undefined;
   selectedCategoriaAlerta: Parametricas | undefined;
   selectedSubcategoriaAlerta: Parametricas | undefined;
+  selectedIPSCual: Parametricas | undefined;
 
   isLoadingTipoRecurso: boolean = true;
   isLoadingCategoriaAlerta: boolean = true;
@@ -68,18 +74,26 @@ export class SeguimientoDificultadesComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, 
+    private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.id = this.routeAct.snapshot.paramMap.get('id')!;
+    this.nna = await this.tpp.getNNA(this.id);
+
     this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
-      { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
+      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
+      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
     ];
 
     //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
     this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
+    this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
+
+
     this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
+    this.selectedCategoriaAlerta = this.categoriaAlerta.find(x => x.id == this.nna.ipsId);
     this.isLoadingCategoriaAlerta = false;
   }
 
@@ -125,26 +139,26 @@ export class SeguimientoDificultadesComponent implements OnInit {
 
   HaSidoTrasladado(value:boolean) {
     if (!value) {
-      this.dificultades.numeroTraslados = 0;
+      this.nna.trasladosNumerodeTraslados = 0;
     }
     else {
-      this.dificultades.numeroTraslados = 1;
+      this.nna.trasladosNumerodeTraslados = 1;
     }
 
-    if (this.dificultades.haSidoTrasladado != value){
-      this.dificultades.haSidoTrasladado = value;
+    if (this.nna.trasladosHaSidoTrasladadodeInstitucion != value){
+      this.nna.trasladosHaSidoTrasladadodeInstitucion = value;
       this.actualizarTrasladosArray();
     }
   }
 
   AccionesLegales(value:boolean) {
-    if (this.dificultades.haRecurridoAccionLegalAtencion != value){
-      this.dificultades.haRecurridoAccionLegalAtencion = value;
+    if (this.nna.trasladosHaRecurridoAccionLegal != value){
+      this.nna.trasladosHaRecurridoAccionLegal = value;
     }
 
     if (!value) {
-      this.dificultades.motivo = '';
-      this.dificultades.idTipoRecurso = 0;
+      this.nna.trasladosMotivoAccionLegal = '';
+      this.nna.trasladosTipoAccionLegalId = '';
       this.selectedTipoRecurso = undefined;
     }
   }
@@ -170,9 +184,14 @@ export class SeguimientoDificultadesComponent implements OnInit {
     }
   }
 
-  Siguiente() {
-    this.router.navigate(['/gestion/seguimiento/adherencia-seguimiento']).then(() => {
-      window.scrollTo(0, 0);
-    });
+  async Siguiente() {
+    await this.Actualizar();
+      this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`]).then(() => {
+        window.scrollTo(0, 0);
+      });
+  }
+
+  async Actualizar() {
+    await this.nnaService.putNNA(this.nna);
   }
 }
