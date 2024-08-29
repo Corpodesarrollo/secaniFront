@@ -53,6 +53,10 @@
                                     name="estado"
                                     id="estado"
                                     placeholder="Seleccione" />
+
+                                <div *ngIf="submitted2 && (!nna.estadoId || nna.estadoId === 0)" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoEnTratamiento">
@@ -78,7 +82,7 @@
                                 <label for="fechaNacimiento" class="fw-bold">Fecha de consulta</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="diagnostico.fechaConsulta"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaConsultaDiagnostico"  />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoEnTratamiento">
@@ -86,7 +90,7 @@
                                 <label for="fechaNacimiento" class="fw-bold">Fecha de diagnóstico</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="diagnostico.fechaDiagnostico"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaDiagnostico"  />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoEnTratamiento">
@@ -94,7 +98,7 @@
                                 <label for="fechaNacimiento" class="fw-bold">Fecha de inicio de tratamiento</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="diagnostico.fechaInicioTratamiento"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaInicioTratamiento"  />
                             </div>
                         </div>
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="estadoEnTratamiento">
@@ -119,9 +123,9 @@
                                 <label for="fechaNacimiento" class="fw-bold">Recaídas</label>
                             </div>
                             <div class="col-8 button-group d-inline-flex align-items-center p-fluid">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': diagnostico.recaidas === 1}" style="width: 70px;" (click)="applyRecaida(1)">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': diagnostico.recaidas === 0}" style="width: 70px;" (click)="applyRecaida(0)">NO</button>
-                                <input type="number" min="0" pInputText style="width: 100%;" [(ngModel)]="diagnostico.numeroRecaidas" [disabled]="diagnostico.recaidas === 0" />
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.recaida}" style="width: 70px;" (click)="applyRecaida(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.recaida === false}" style="width: 70px;" (click)="applyRecaida(false)">NO</button>
+                                <input type="number" min="0" pInputText style="width: 100%;" [(ngModel)]="nna.cantidadRecaidas" [disabled]="nna.recaida === false" />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoEnTratamiento">
@@ -129,7 +133,7 @@
                                 <label for="fechaUltimaRecaida" class="fw-bold">Fecha última recaída</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="diagnostico.fechaUltimaRecaida"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaUltimaRecaida"  />
                             </div>
                         </div>
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
@@ -138,14 +142,15 @@
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
-                                    [(ngModel)]="selectedIPS"
-                                    [options]="IPS"
+                                    [(ngModel)]="selectedRazonSinDiagnostico"
+                                    [options]="razonesSinDiagnostico"
+                                    [loading]="isLoadingRazonesSinDiagnostico"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="razonesSinDiagnostico"
+                                    id="razonesSinDiagnostico"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -168,7 +173,7 @@
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
                             <div class="col-8 offset-4">
-                                <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="diagnostico.otrasRazones">
+                                <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="nna.motivoNoDiagnosticoOtro">
                             </div>
                         </div>
                         <app-seguimiento-alertas (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
@@ -201,8 +206,8 @@
             </div>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg me-3" type="submit" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" ><i *ngIf="saving" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>SIGUIENTE</button>
                 </div>
             </div>
         </div>

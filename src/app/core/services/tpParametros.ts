@@ -9,23 +9,34 @@ import { Generico } from './generico';
 })
 export class TpParametros {
   constructor(private axios: Generico) {
+  }
 
+  async getNNA(id:string) {
+    var urlbase: string = environment.url_MsNna;
+    var url = `NNA/${id}`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getEstadoIngresoEstrategia(id: number) {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `EstadoIngresoEstrategia/${id}`;
+    return await this.axios.retorno_get(url, urlbase);
   }
 
   async getTpEstadosNNA() {
-    var urlbase: string = environment.url_MSParametricas
+    var urlbase: string = environment.url_MSParametricas;
     var url = "EstadoNNA";
     return await this.axios.retorno_get(url, urlbase);
   }
 
   async getTPTipoIdentificacion() {
-    var urlbase: string = environment.url_MSTablasParametricas;
+    var urlbase: string = environment.url_MSParametricas;
     var url = "TablaParametrica/APSTipoIdentificacion";
     return await this.axios.retorno_get(url, urlbase);
   }
 
   async getTPRegimenAfiliacion() {
-    var urlbase: string = environment.url_MSTablasParametricas;
+    var urlbase: string = environment.url_MSParametricas;
     var url = "TablaParametrica/APSRegimenAfiliacion";
     return await this.axios.retorno_get(url, urlbase);
   }
@@ -108,4 +119,9 @@ export class TpParametros {
     return await this.axios.retorno_get(url, urlbase);
   }
 
+  async getRazonesSinDiagnostico() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = "RazonesSinDiagnostico";
+    return await this.axios.retorno_get(url, urlbase);
+  }
 }

@@ -41,19 +41,19 @@
                                 <label for="estado" class="fw-bold">¿Ha dejado de aistir al tratamiento?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.haInasistidoTratamiento}" style="width: 70px;" (click)="HaInasistidoTratamiento(true)">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.haInasistidoTratamiento}" style="width: 70px;" (click)="HaInasistidoTratamiento(false)">NO</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoHaDejadodeAsistir}" style="width: 70px;" (click)="HaInasistidoTratamiento(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !nna.tratamientoHaDejadodeAsistir}" style="width: 70px;" (click)="HaInasistidoTratamiento(false)">NO</button>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="adherencia.haInasistidoTratamiento">
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="nna.tratamientoHaDejadodeAsistir">
                             <div class="col-8">
                                 <label for="estado" class="fw-bold">¿Por cuánto tiempo ha dejado de aistir?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="adherencia.tiempoInasistencia">
+                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="nna.tratamientoCuantoTiemposinAsistir">
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 p-fluid" *ngIf="adherencia.haInasistidoTratamiento">
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="nna.tratamientoHaDejadodeAsistir">
                             <div class="col-8">
                                 <label for="unidadesTiempo" class="fw-bold">Unidad de medida del tiempo</label>
                             </div>
@@ -71,7 +71,7 @@
                                     placeholder="Seleccione" />
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 p-fluid" *ngIf="adherencia.haInasistidoTratamiento">
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="nna.tratamientoHaDejadodeAsistir">
                             <div class="col-8">
                                 <label for="estado" class="fw-bold">Causas de Inasistencia</label>
                             </div>
@@ -89,9 +89,9 @@
                                     placeholder="Seleccione" />
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2" *ngIf="adherencia.haInasistidoTratamiento">
+                        <div class="row align-items-center mb-2" *ngIf="nna.tratamientoHaDejadodeAsistir">
                             <div class="col-12 p-fluid">
-                                <input id="malaAtencionIPSCual" type="text" pInputText [(ngModel)]="adherencia.causaInasistenciaOtra" placeholder="Otra ¿Cuál?">
+                                <input id="malaAtencionIPSCual" type="text" pInputText [(ngModel)]="nna.tratamientoCausasInasistenciaOtra" placeholder="Otra ¿Cuál?">
                             </div>
                         </div>
                     </div>
@@ -106,8 +106,8 @@
                                 <label for="estado" class="fw-bold">¿Está estudiando actualmente?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.estudiandoActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(true)">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.estudiandoActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(false)">NO</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoEstudiaActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !nna.tratamientoEstudiaActualmente}" style="width: 70px;" (click)="EstudiandoActualmente(false)">NO</button>
                             </div>
                         </div>
                         <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
@@ -115,19 +115,19 @@
                                 <label for="estado" class="fw-bold">¿En algún momento ha dejado de asistir al colegio?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.haInasistidoEstudio}" style="width: 70px;" (click)="HaInasistidoEstudio(true)">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.haInasistidoEstudio}" style="width: 70px;" (click)="HaInasistidoEstudio(false)">NO</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoHaDejadodeAsistirColegio}" style="width: 70px;" (click)="HaInasistidoEstudio(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !nna.tratamientoHaDejadodeAsistirColegio}" style="width: 70px;" (click)="HaInasistidoEstudio(false)">NO</button>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="adherencia.haInasistidoEstudio && adherencia.estudiandoActualmente">
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="nna.tratamientoHaDejadodeAsistirColegio && nna.tratamientoEstudiaActualmente">
                             <div class="col-8">
                                 <label for="estado" class="fw-bold">¿Por cuánto tiempo ha dejado de aistir?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="adherencia.tiempoInasistenciaEstudio">
+                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="nna.tratamientoTiempoInasistenciaColegio">
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 p-fluid" *ngIf="adherencia.haInasistidoEstudio && adherencia.estudiandoActualmente">
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="nna.tratamientoHaDejadodeAsistirColegio && nna.tratamientoEstudiaActualmente">
                             <div class="col-8">
                                 <label for="unidadesTiempo" class="fw-bold">Unidad de medida del tiempo</label>
                             </div>
@@ -150,14 +150,14 @@
                                 <label for="hanInformadoDiagnosticos" class="fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': adherencia.hanInformadoDiagnosticos}" style="width: 70px;" (click)="adherencia.hanInformadoDiagnosticos = true">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !adherencia.hanInformadoDiagnosticos}" style="width: 70px;" (click)="adherencia.hanInformadoDiagnosticos = false">NO</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoHaSidoInformadoClaramente}" style="width: 70px;" (click)="nna.tratamientoHaSidoInformadoClaramente = true">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !nna.tratamientoHaSidoInformadoClaramente}" style="width: 70px;" (click)="nna.tratamientoHaSidoInformadoClaramente = false">NO</button>
                             </div>
                         </div>
                         <div class="row align-items-center p-fluid">
                             <div class="col-12">
                                 <label for="observacion" class="fw-bold mb-2">Observación ¿Por qué?</label>
-                                <textarea id="observacion" pInputText rows="2" [(ngModel)]="adherencia.observacion" placeholder="Escriba aquí"></textarea>
+                                <textarea id="observacion" pInputText rows="2" [(ngModel)]="nna.tratamientoObservaciones" placeholder="Escriba aquí"></textarea>
                             </div>
                         </div>
                     </div>

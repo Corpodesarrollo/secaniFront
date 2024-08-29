@@ -11,8 +11,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../../models/parametricas.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InfoAdherencia } from '../../../../../models/infoAdherencia.model';
+import { NNA } from '../../../../../models/nna.model';
+import { TpParametros } from '../../../../../core/services/tpParametros';
+import { NNAService } from '../../../../../core/services/nnaService';
 
 @Component({
   selector: 'app-seguimiento-adherencia',
@@ -24,6 +27,9 @@ import { InfoAdherencia } from '../../../../../models/infoAdherencia.model';
 })
 
 export class SeguimientoAdherenciaComponent implements OnInit {
+  nna: NNA = new NNA();
+  id: string | undefined;
+  
   adherencia: InfoAdherencia ={
     id: 0,
     haInasistidoTratamiento: false,
@@ -51,13 +57,16 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
-  constructor(private tp: TablasParametricas, private router: Router) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.id = this.routeAct.snapshot.paramMap.get('id')!;
+    this.nna = await this.tpp.getNNA(this.id);
+
     this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
-      { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
+      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
+      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
     ];
 
     this.unidadesTiempo =  await this.tp.getTP('UnidadesTiempo');
@@ -92,8 +101,15 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   }
 
   Siguiente() {
-    this.router.navigate(['/gestion/seguimiento/dificultades-seguimiento']).then(() => {
-      window.scrollTo(0, 0);
-    });
+    // this.router.navigate(['/gestion/seguimiento/dificultades-seguimiento']).then(() => {
+    //   window.scrollTo(0, 0);
+    // });
+  }
+
+  async Actualizar() {
+    this.nna.tratamientoUnidadMedidaIdTiempoId = this.selectedUnidadTiempo?.codigo ?? '';
+    this.nna.tratamientoTiempoInasistenciaUnidadMedidaId = this.selectedUnidadTiempo2?.codigo ?? '';
+    this.nna.tratamientoCausasInasistenciaId = this.selectedCausaInasistencia?.codigo  ?? '';
+    await this.nnaService.putNNA(this.nna);
   }
 }
