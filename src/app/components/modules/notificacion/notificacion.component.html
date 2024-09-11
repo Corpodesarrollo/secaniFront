@@ -1,0 +1,114 @@
+<p-dialog header="Notificación" [(visible)]="showDialog" [modal]="true" [style]="{width: '700px'}">
+    <div *ngIf="isLoading" class="spinner">
+      <p class="{{colorMensaje}}">{{mensajeCarga}}</p>
+    </div>
+    <div class="px-3" *ngIf="!isLoading">
+        <div class="row align-items-center mb-2 p-fluid">
+            <div class="col-3">
+                <label for="entidades" class="fw-bold">Entidad</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <p-dropdown
+                    [(ngModel)]="selectedEntidad"
+                    [options]="entidades"
+                    [loading]="isLoadingEntidades"
+                    optionLabel="nombre"
+                    [filter]="true"
+                    filterBy="nombre"
+                    [showClear]="true"
+                    placeholder="Seleccione" />
+                <div *ngIf="submitted && (!notificacion.idEntidad || notificacion.idEntidad === 0)" class="text-danger">
+                    Campo requerido
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center mb-2 p-fluid">
+            <div class="col-3">
+                <label for="para" class="fw-bold">Para</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <p-chips [(ngModel)]="notificacion.para" (onAdd)="validarEmail($event)" />
+            </div>
+        </div>
+        <div class="row align-items-center mb-2 p-fluid">
+            <div class="col-3">
+                <label for="para" class="fw-bold">Con copia</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <p-chips [(ngModel)]="notificacion.conCopia" (onAdd)="validarEmail($event)" />
+            </div>
+        </div>
+        <div class="row align-items-center mb-2 p-fluid">
+            <div class="col-3">
+                <label for="entidades" class="fw-bold">Plantilla</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <p-dropdown
+                    [(ngModel)]="selectedEntidad"
+                    [options]="entidades"
+                    [loading]="isLoadingEntidades"
+                    optionLabel="nombre"
+                    [filter]="true"
+                    filterBy="nombre"
+                    [showClear]="true"
+                    placeholder="Seleccione" />
+            </div>
+        </div>
+        <div class="row align-items-center mb-2 p-fluid">
+            <div class="col-3">
+                <label for="Asunto" class="fw-bold">Asunto</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <input type="text" placeholder="Asunto" pInputText [(ngModel)]="notificacion.asunto">
+            </div>
+        </div>
+        <div class="row mb-2 p-fluid">
+            <div class="col-3">
+                <label for="Mensaje" class="fw-bold">Mensaje</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <textarea pInputText rows="2" [(ngModel)]="notificacion.mensaje"></textarea>
+            </div>
+        </div>
+        <div class="row mb-2 p-fluid">
+            <div class="col-9 offset-3 flex-auto">
+                <p-checkbox 
+                    [(ngModel)]="notificacion.agregarComentario"
+                    [binary]="true"
+                    label="Desea agregar comentario"
+                    name="agregarComentario" />
+            </div>
+        </div>
+        <div class="row mb-2 p-fluid">
+            <div class="col-3">
+                <label for="Comentario" class="fw-bold">Comentario</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <p-editor [(ngModel)]="notificacion.comentario" [style]="{ height: '80px' }" />
+            </div>
+        </div>
+        <div class="row mb-2 p-fluid">
+            <div class="col-3">
+                <label for="Adjuntar" class="fw-bold">Adjuntar</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <i class="bi bi-paperclip" style="color: #73b7ad; font-size: 1.5rem"></i>
+            </div>
+        </div>
+        <div class="row mb-3 p-fluid">
+            <div class="col-3">
+                <label for="Firma" class="fw-bold">Firma</label>
+            </div>
+            <div class="col-9 flex-auto">
+                <textarea pInputText rows="2" [(ngModel)]="notificacion.firma"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;">ENVIAR</button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<p-toast  [life]="10000" />

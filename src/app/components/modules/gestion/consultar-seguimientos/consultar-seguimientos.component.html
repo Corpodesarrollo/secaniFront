@@ -91,7 +91,7 @@
                             </td>
                             <td>
                                 <i class="bi bi-telephone-outbound-fill me-2" style="color: #73b7ad;"></i>
-                                <i class="bi bi-eye-fill" style="color: #73b7ad;"></i>
+                                <i *ngIf="seguimiento.asuntoUltimaActuacion.toLowerCase() == 'solicitado por cuidador'" class="bi bi-eye-fill" style="color: #73b7ad;" (click)="solicitudCuidador(seguimiento.noCaso)"></i>
                             </td>
                         </tr>
                     </ng-template>
@@ -100,3 +100,102 @@
         </div>
     </div>    
 </body>
+
+<p-dialog [(visible)]="showDialog" [modal]="true" [style]="{width: '600px'}">
+    <div *ngIf="isLoading" class="spinner">
+      <p class="{{colorMensaje}}">{{mensajeCarga}}</p>
+      <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
+    </div>
+    <div class="px-3" *ngIf="!isLoading">
+        <div class="row mb-3">
+            <div class="col-12 text-center">
+                <span class="fw-bold">Solicitud de seguimiento</span>
+            </div>
+            <div class="col-12 text-center">
+                <span class="fw-bold">No. CASO: {{nna.id}}</span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="usuario">
+                    <i class="bi bi-person-circle foto-perfil"></i>
+                    <div class="datos-usuario">
+                        <p><strong>{{nna.primerNombre}} {{nna.primerApellido}}</strong></p>
+                        <p *ngIf="nna.sexoId == '2'">Femenino</p>
+                        <p *ngIf="nna.sexoId == '1'">Masculino</p>
+                        <p>{{nna.edad}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="detalles-seguimiento">
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <span class="fw-bold">Nombre Solicitante:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{ nna.cuidadorNombres }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <span class="fw-bold">Parentesco:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{ parentesco?.nombre }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <span class="fw-bold">Correo:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{ nna.cuidadorEmail }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <span class="fw-bold">Teléfono:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{ nna.cuidadorTelefono }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <span class="fw-bold">Diagnóstico:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{ diagnostico?.nombre }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <span class="fw-bold">Fecha diagnóstico:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{ nna.fechaDiagnostico | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <span class="fw-bold">Observación:</span>
+                        </div>
+                        <div class="col-8">
+                            <div class="observacion">
+                                <span>{{ nna.tratamientoObservaciones }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-8 offset-4">
+                            <a href="ruta/a/anexo.pdf" class="anexo-link">Anexo-Diagnóstico Francy.pdf</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>
