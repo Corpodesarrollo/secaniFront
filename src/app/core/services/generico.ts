@@ -58,12 +58,12 @@ export class Generico {
 
 
 
-  async retorno_post(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
+  async retorno_post(urltemp: string, data: any, withToken: boolean = true,baseUrl:string = this.BASE_URL): Promise<any> {
 
 
 
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
-    const url = `${this.BASE_URL}${urltemp}`;
+    const url = `${baseUrl}${urltemp}`;
     const request = axios.post(url, data, { headers });
     return this.handleRequest(request);
   }

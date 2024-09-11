@@ -12,16 +12,15 @@ import { SeguimientoFallecidoComponent } from './seguimientos/seguimiento-fallec
 import { DetalleSeguimientosComponent } from './detalle-seguimientos/detalle-seguimientos.component';
 
 const routes: Routes = [
-  { path: 'seguimiento', component: ConsultarSeguimientosComponent },
-  { path: 'seguimiento/datos-seguimiento', component: SeguimientoDatosComponent },
-  { path: 'seguimiento/estado-seguimiento', component: SeguimientoEstadoComponent },
-  { path: 'seguimiento/traslado-seguimiento', component: SeguimientoTrasladoComponent },
-  { path: 'seguimiento/dificultades-seguimiento', component: SeguimientoDificultadesComponent },
-  { path: 'seguimiento/adherencia-seguimiento', component: SeguimientoAdherenciaComponent },
-  { path: 'seguimiento/sin-diagnostico-seguimiento', component: SeguimientoSinDiagnosticoComponent },
-  { path: 'seguimiento/sin-tratamiento-seguimiento', component: SeguimientoSinTratamientoComponent },
-  { path: 'seguimiento/fallecido-seguimiento', component: SeguimientoFallecidoComponent },
-  { path: 'seguimiento', component: ConsultarSeguimientosComponent },
+  { path: 'seguimientos', component: ConsultarSeguimientosComponent },
+  { path: 'seguimientos/datos-seguimiento/:id', component: SeguimientoDatosComponent },
+  { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent },
+  { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent },
+  { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent },
+  { path: 'seguimientos/adherencia-seguimiento/:id', component: SeguimientoAdherenciaComponent },
+  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent },
+  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent },
+  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent },
   { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
 ];
 
@@ -29,6 +28,6 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class GestionRoutingModule { 
-  
+export class GestionRoutingModule {
+
 }

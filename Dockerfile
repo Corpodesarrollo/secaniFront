@@ -4,7 +4,6 @@ FROM ubuntu:latest
 # Actualizar el sistema y instalar herramientas necesarias
 RUN apt-get update && apt-get install -y curl openssl wget
 
-
 RUN wget https://nodejs.org/dist/v18.19.1/node-v18.19.1-linux-x64.tar.gz && cp node-v18.19.1-linux-x64.tar.gz /tmp/node.tar.gz
 
 # Descomprimir e instalar Node.js
@@ -14,16 +13,13 @@ RUN cd /usr/local && tar --strip-components 1 -xzf /tmp/node.tar.gz
 RUN mkdir /app 
 WORKDIR /app
 
-#Copy package.json and package-lock.json to the working directory
-COPY package.json /app/
+# Copiar todos los archivos del proyecto Angular al directorio de trabajo
+COPY . /app/
 
-# Install dependencies
+# Instalar las dependencias
 RUN npm install -g npm@10.7.0
 RUN npm install -g @angular/cli@18.1.0
-# Install nodemon globally
 RUN npm install
-
-#VOLUME /mnt/d/workspaces/angular/esap/carnetdigital/carnetdigitalfrom/ /app
 
 # Expone el puerto 4200 para el servidor de desarrollo de Angular
 EXPOSE 4200

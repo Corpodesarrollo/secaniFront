@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import estadosNNA from './json/estadosNNA.json';
-import { GenericService } from '../../../../services/generic.services';
-import { environment } from '../../../../../environments/environment';
+import { GenericService } from '../../../../../services/generic.services';
+import { environment } from '../../../../../../environments/environment';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Route, Router } from '@angular/router';
+import { TpParametros } from '../../../../../core/services/tpParametros';
 
 @Component({
   selector: 'app-historico-nna',
   templateUrl: './historico-nna.component.html',
-  styleUrls: ['../general.component.css','./historico-nna.component.css']
+  styleUrls: ['../../general.component.css', './historico-nna.component.css']
 })
 
 export class HistoricoNnaComponent {
@@ -27,19 +28,18 @@ export class HistoricoNnaComponent {
   first = 0;
   rows = 10;
 
-  permisos_nna:any={
-    canAdd:true,
-    canDel:false,
-    canView:false,
-    CanEdit:false
+  permisos_nna: any = {
+    canAdd: true,
+    canDel: false,
+    canView: false,
+    CanEdit: false
   }
 
-  constructor(private service: GenericService, private router: Router) { }
+  constructor(private service: GenericService, private router: Router, private tpParametro: TpParametros) { }
 
   async ngOnInit() {
-    var url = environment.url_MsNna;
-    this.estadosNNA = await this.service.getAsync(url, 'NNA/TpEstadosNNA', '') ?? [];
-    this.agenteAsignado = await this.service.getAsync(url, 'NNA/VwAgentesAsignados', '') ?? [];
+    this.estadosNNA = await this.tpParametro.getTpEstadosNNA() ?? [];
+    this.agenteAsignado = await this.tpParametro.getAgentesExistentesAsignados() ?? [];
     this.buscar();
   }
 
@@ -113,7 +113,7 @@ export class HistoricoNnaComponent {
     return this.visualizars ? this.first === 0 : true;
   }
 
-  btn_crear_nna(){
+  btn_crear_nna() {
     this.router.navigate(["/usuarios/crear_nna"]);
   }
 

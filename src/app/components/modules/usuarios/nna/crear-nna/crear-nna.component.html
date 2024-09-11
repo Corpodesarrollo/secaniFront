@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-2 contenido">
         <div class="fondo-color-principal text-color-blanco rondear text-center">Información <br /> NNA
         </div>
@@ -27,8 +27,8 @@
                         <div class="col-sm-9">
                             <select class="form-select" formControlName="tipoId">
                                 <option selected value="">Seleccione</option>
-                                <option *ngFor="let tipoId of listadoTipoId" [value]="tipoId.id">
-                                    {{ tipoId.name }}
+                                <option *ngFor="let tipoId of listadoTipoIdentificacion" [value]="tipoId.codigo">
+                                    {{ tipoId.nombre }}
                                 </option>
                             </select>
                         </div>
@@ -108,9 +108,9 @@
                         <div class="col-sm-9">
                             <select class="form-select" formControlName="regimenAfiliacion">
                                 <option value="">Seleccione</option>
-                                <option *ngFor="let regimen of listadoRegimenAfiliacion" [value]="regimen.id"
+                                <option *ngFor="let regimen of listadoRegimenAfiliacion" [value]="regimen.codigo"
                                     [disabled]="nnaFormCrearSinActivar">
-                                    {{ regimen.name }}
+                                    {{ regimen.nombre }}
                                 </option>
                             </select>
                         </div>
@@ -146,9 +146,9 @@
                         <div class="col-sm-9">
                             <select class="form-select" formControlName="eapb">
                                 <option value="">Seleccione</option>
-                                <option *ngFor="let eapb of listadoEAPB" [value]="eapb.id"
+                                <option *ngFor="let eapb of listadoEAPB" [value]="eapb.codigo"
                                     [disabled]="nnaFormCrearSinActivar">
-                                    {{ eapb.name }}
+                                    {{ eapb.nombre }}
                                 </option>
                             </select>
                         </div>
@@ -213,7 +213,7 @@
                                 <option value="">Seleccione</option>
                                 <option *ngFor="let estado of listadoEstadoIngresoEstrategia" [value]="estado.id"
                                     [disabled]="nnaFormCrearSinActivar">
-                                    {{ estado.name }}
+                                    {{ estado.nombre }}
                                 </option>
                             </select>
                         </div>
@@ -321,7 +321,7 @@
                                 <option value="">Seleccione</option>
                                 <option *ngFor="let origen of listadoOrigenReporte" [value]="origen.id"
                                     [disabled]="nnaFormCrearSinActivar">
-                                    {{ origen.name }}
+                                    {{ origen.nombre }}
                                 </option>
                             </select>
                         </div>
@@ -346,9 +346,9 @@
                                 <select class="form-select" formControlName="paisNacimiento"
                                     (change)="departamento($event)">
                                     <option value="">Seleccione</option>
-                                    <option *ngFor="let pais of listadoPais" [value]="pais.id"
+                                    <option *ngFor="let pais of listadoPais" [value]="pais.codigo"
                                         [disabled]="nnaFormCrearSinActivar">
-                                        {{ pais.name }}
+                                        {{ pais.nombre }}
                                     </option>
                                 </select>
                             </div>
@@ -370,9 +370,9 @@
                                 <select class="form-select" formControlName="departamentoNacimiento"
                                     (change)="ciudad($event)">
                                     <option value="">Seleccione</option>
-                                    <option *ngFor="let depa of listadoDepartamento" [value]="depa.id"
+                                    <option *ngFor="let depa of listadoDepartamento" [value]="depa.codigo"
                                         [disabled]="nnaFormCrearSinActivar">
-                                        {{ depa.name }}
+                                        {{ depa.nombre }}
                                     </option>
                                 </select>
                             </div>
@@ -393,9 +393,9 @@
                             <div class="col-sm-9">
                                 <select class="form-select" formControlName="ciudadNacimiento">
                                     <option value="">Seleccione</option>
-                                    <option *ngFor="let ciudad of listadoCiudad" [value]="ciudad.id"
+                                    <option *ngFor="let ciudad of listadoCiudad" [value]="ciudad.codigo"
                                         [disabled]="nnaFormCrearSinActivar">
-                                        {{ ciudad.name }}
+                                        {{ ciudad.nombre }}
                                     </option>
                                 </select>
                             </div>
@@ -415,9 +415,9 @@
                             <div class="col-sm-9">
                                 <select class="form-select" formControlName="etnia">
                                     <option value="">Seleccione</option>
-                                    <option *ngFor="let etnia of listadoEtnia" [value]="etnia.id"
+                                    <option *ngFor="let etnia of listadoEtnia" [value]="etnia.codigo"
                                         [disabled]="nnaFormCrearSinActivar">
-                                        {{ etnia.name }}
+                                        {{ etnia.nombre }}
                                     </option>
                                 </select>
                             </div>
@@ -437,8 +437,8 @@
                                 <select class="form-select" formControlName="grupoPoblacion">
                                     <option value="">Seleccione</option>
                                     <option *ngFor="let grupoPoblacion of listadoGrupoPoblacional"
-                                        [disabled]="nnaFormCrearSinActivar" [value]="grupoPoblacion.id">
-                                        {{ grupoPoblacion.name }}
+                                        [disabled]="nnaFormCrearSinActivar" [value]="grupoPoblacion.codigo">
+                                        {{ grupoPoblacion.nombre }}
                                     </option>
                                 </select>
                             </div>
@@ -459,9 +459,11 @@
 
     <div class="col-sm-12 text-center">
         <app-dialog-crear-nna-msg-rol-agente [visible]="visibleDialogRolAgente" [nnaId]="nnaId" [agenteId]="agenteId"
-            [coordinadorId]="coordinadorId"></app-dialog-crear-nna-msg-rol-agente>
+            [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"></app-dialog-crear-nna-msg-rol-agente>
+
         <app-dialog-crear-nna-msg-rol-coordinador [visible]="visibleDialogRolCoordinador"
-            [nnaId]="nnaId"></app-dialog-crear-nna-msg-rol-coordinador>
+            [nnaId]="nnaId" [agenteId]="agenteId"
+            [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"> </app-dialog-crear-nna-msg-rol-coordinador>
 
         <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" [disabled]="!validarDisabledForm()"
             (click)="onSubmit()">Guardar</button>

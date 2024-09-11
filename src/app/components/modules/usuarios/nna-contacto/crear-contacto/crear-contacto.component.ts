@@ -1,16 +1,22 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AngleUpIcon } from 'primeng/icons/angleup';
-import { TpParametros } from '../../../../core/services/tpParametros';
-import { environment } from '../../../../../environments/environment';
-import { Generico } from '../../../../core/services/generico';
+import { TpParametros } from '../../../../../core/services/tpParametros';
+import { environment } from '../../../../../../environments/environment';
+import { Generico } from '../../../../../core/services/generico';
+import { DialogModule } from 'primeng/dialog';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { DialogCrearContactoComponent } from '../dialog-crear-contacto/dialog-crear-contacto.component';
+import { TableModule } from 'primeng/table';
 
 
 
 @Component({
   selector: 'app-crear-contacto',
-  standalone: false,
+  standalone: true,
+  imports: [DialogModule, CommonModule, ButtonModule,FormsModule,ReactiveFormsModule,TableModule,DialogCrearContactoComponent],
   templateUrl: './crear-contacto.component.html',
   styleUrl: './crear-contacto.component.css'
 })

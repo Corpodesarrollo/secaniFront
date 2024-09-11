@@ -2,14 +2,14 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angu
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngleUpIcon } from 'primeng/icons/angleup';
-import { TpParametros } from '../../../../core/services/tpParametros';
-import { environment } from '../../../../../environments/environment';
-import { Generico } from '../../../../core/services/generico';
+import { TpParametros } from '../../../../../core/services/tpParametros';
+import { environment } from '../../../../../../environments/environment';
+import { Generico } from '../../../../../core/services/generico';
 
 @Component({
   selector: 'app-crear-nna-agregar-contacto',
   templateUrl: './crear-nna-agregar-contacto.component.html',
-  styleUrls: ['../general.component.css', './crear-nna-agregar-contacto.component.css'],
+  styleUrls: ['../../general.component.css', './crear-nna-agregar-contacto.component.css'],
 })
 export class CrearNnaAgregarContactoComponent {
   @Input() nnaFormCrearSinActivar: any; // Recibir datos del padre
@@ -65,7 +65,7 @@ export class CrearNnaAgregarContactoComponent {
   guardar() {
     //console.log("dialogo crear contacto guardar", this.formNNA.valid, this.formNNA.value);
 
-    
+
     if (this.formNNA.valid) {
 
       this.agregarNuevoTelefonoContacto();
@@ -74,7 +74,7 @@ export class CrearNnaAgregarContactoComponent {
       this.formNNA.patchValue({ 'numeroTelefonoCuidador': telefonosString });
 
       this.listadoContacto.push(this.formNNA.value);
-      this.dataToParent.emit(this.formNNA.value); // Ensure this is an EventEmitter
+      this.dataToParent.emit(this.listadoContacto); // Ensure this is an EventEmitter
 
       //console.log("guardar contacto", this.formNNA.value);
 
@@ -82,7 +82,7 @@ export class CrearNnaAgregarContactoComponent {
 
       //limpiar lista telefonosAcumulados
       this.telefonosAcumulados = [];
-      
+
     }
   }
 
