@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -15,16 +15,21 @@ import { Parametricas } from '../../../../../models/parametricas.model';
 import { SeguimientoAlertasComponent } from '../../seguimiento-alertas/seguimiento-alertas.component';
 import { SeguimientoStepsComponent } from '../seguimiento-steps/seguimiento-steps.component';
 import { CalendarModule } from 'primeng/calendar';
+import { NNA } from '../../../../../models/nna.model';
+import { NotificacionComponent } from "../../../notificacion/notificacion.component";
 
 @Component({
   selector: 'app-seguimiento-fallecido',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent],
   templateUrl: './seguimiento-fallecido.component.html',
   styleUrl: './seguimiento-fallecido.component.css'
 })
 export class SeguimientoFallecidoComponent  implements OnInit {
   estado:string = 'Fallecido';
+  id: string | undefined;
+  nna: NNA = new NNA();
+
   items: MenuItem[] = [];
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];
@@ -44,18 +49,20 @@ export class SeguimientoFallecidoComponent  implements OnInit {
   estadoSinDiagnostico: boolean = false;
   concatenatedAlertas: string = '';
 
+  @ViewChild('notificacionModal') modal!: NotificacionComponent;
+
   diagnostico: InfoDiagnostico = {
     id: 0,
     idSeguimiento: 0,
     idEstado: 0,
     tipoDiagnostico: 0,
-    fechaConsulta: new Date(),
+    fechaConsulta: new Date(2024,1,1),
     IPSActual: 0,
     recaidas: 0,
     numeroRecaidas: 0,
     otrasRazones: "",
     observaciones: "",
-    fechaDefuncion: new Date(),
+    fechaDefuncion: new Date(2024,1,1),
     causaMuerte: "",
     alertas: []
   };
@@ -64,41 +71,33 @@ export class SeguimientoFallecidoComponent  implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.router.paramMap.subscribe(() => {
-      this.diagnostico = history.state.diagnostico;
-    });
+    // this.router.paramMap.subscribe(() => {
+    //   this.diagnostico = history.state.diagnostico;
+    // });
 
     if (this.diagnostico) {
       if (this.diagnostico.alertas) {
        this.concatenatedAlertas = this.diagnostico.alertas.map(alerta => alerta.categoriaAlerta).join(', ');
       }
-    } else {
-      console.error('El objeto diagnostico no fue pasado correctamente.');
-      // Opcional: inicializar con un objeto vacío o redirigir
-      this.diagnostico = {
-        id: 0,
-        idSeguimiento: 0,
-        idEstado: 0,
-        tipoDiagnostico: 0,
-        fechaConsulta: new Date(),
-        IPSActual: 0,
-        recaidas: 0,
-        numeroRecaidas: 0,
-        otrasRazones: "",
-        alertas: [],
-        observaciones: "" // Asegúrate de incluir todas las propiedades necesarias
-      };
-      this.concatenatedAlertas = '';
     }
 
+    this.id = this.router.snapshot.paramMap.get('id')!;
+    this.nna = await this.tpp.getNNA(this.id);
+
     this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
-      { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
+      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
+      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
     ];
 
     this.estados = await this.tpp.getTpEstadosNNA();
     this.isLoadingEstados = false;
     this.diagnosticos =  await this.tpp.getDiagnosticos();
     this.isLoadingDiagnostico = false;
+  }
+
+  Guardar(){
+    this.modal.id = this.nna.id;
+    this.modal.openModal();
+
   }
 }
