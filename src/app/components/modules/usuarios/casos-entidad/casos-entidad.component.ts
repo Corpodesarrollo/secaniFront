@@ -38,54 +38,6 @@ export class CasosEntidadComponent implements OnInit {
     this.casos = await this.servicio.GetListaCasos(this.eapbID, this.epsID);
     console.log("casos ", this.casos);
 
-    /*this.casos = [
-      {
-          "idCaso": 1,
-          "fechaNotificacion": "2023-07-01",
-          "nombreNNA": "Juan Pérez",
-          "alerta": "Alta",
-          "observaciones": "Caso de emergencia",
-          "estado": "Abierto",
-          "respuesta": "En proceso"
-      },
-      {
-          "idCaso": 2,
-          "fechaNotificacion": "2023-07-02",
-          "nombreNNA": "María López",
-          "alerta": "Media",
-          "observaciones": "Necesita seguimiento",
-          "estado": "Pendiente",
-          "respuesta": "Asignado"
-      },
-      {
-          "idCaso": 3,
-          "fechaNotificacion": "2023-07-03",
-          "nombreNNA": "Carlos García",
-          "alerta": "Baja",
-          "observaciones": "Requiere evaluación",
-          "estado": "Cerrado",
-          "respuesta": "Finalizado"
-      },
-      {
-          "idCaso": 4,
-          "fechaNotificacion": "2023-07-04",
-          "nombreNNA": "Ana Torres",
-          "alerta": "Alta",
-          "observaciones": "Caso urgente",
-          "estado": "En progreso",
-          "respuesta": "En análisis"
-      },
-      {
-          "idCaso": 5,
-          "fechaNotificacion": "2023-07-05",
-          "nombreNNA": "Luis Martínez",
-          "alerta": "Media",
-          "observaciones": "Consulta médica requerida",
-          "estado": "Pendiente",
-          "respuesta": "Esperando confirmación"
-      }
-  ]
- */
 
   }
 
@@ -115,9 +67,13 @@ export class CasosEntidadComponent implements OnInit {
     }
   }
 
-  valores(cadena: any){
-    let arrayValores: string[] = cadena.split(',');
-    return arrayValores;
+  valores(input: string | string[]): string[] {
+    // Convert to array if the input is a string or empty string
+    if (typeof input === 'string') {
+      return input === '' ? [] : [input];
+    }
+    // Return the input directly if it's already an array
+    return input;
   }
 
 }

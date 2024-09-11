@@ -13,6 +13,7 @@
           <th id="a1">ID Caso</th>
           <th id="a2">Fecha notificación</th>
           <th id="a3">Nombre NNA</th>
+          <th id="a3">Nombre EAPB</th>
           <th id="a4">Alertas</th>
           <th id="a5">Observaciones</th>
           <th id="a6">Estado</th>
@@ -24,8 +25,9 @@
           <td>{{ casos.nnaId }}</td>
           <td>{{ casos.fechaNotificacionSIVIGILA }}</td>
           <td>{{ casos.nombre }}</td>
+          <td>ENTIDAD_17</td>
           <td>
-            <span *ngFor="let alerta of valores(casos.estadoAlertasIds)" [ngClass]="getBadgeColor(alerta)" class="badge text-white me-1">
+            <span *ngFor="let alerta of valores(casos.estadoAlertasIds) || []" [ngClass]="getBadgeColor(alerta)" class="badge text-white me-1">
               {{ alerta }}
               </span>
 
