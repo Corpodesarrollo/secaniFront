@@ -128,13 +128,35 @@ html {
 }
 
 .left {
-    content: url(colombiaPotenciaVida.png);
-    max-width: 80px;
-    text-align: left;
+  content: url(colombiaPotenciaVida.png);
+  max-width: 80px;
+  text-align: left;
 }
 
 .right {
-    content: url(minSalud.png);
-    max-width: 80px;
-    text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.right-logo {
+  content: url(minSalud.png);
+  max-width: 80px;
+}
+
+.btn-secondary {
+  display: none;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+@media (max-width: 991px) {
+  .btn-secondary {
+      display: block;
+  }
 }

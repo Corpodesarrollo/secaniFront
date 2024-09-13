@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-content',
@@ -6,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrl: './content.component.css'
 })
 export class ContentComponent {
+
+  isMenuCollapsed = true;
+
+  constructor(private menuService: MenuService) {}
+
+  ngOnInit() {
+    this.menuService.currentMenuState.subscribe(isCollapsed => {
+      this.isMenuCollapsed = isCollapsed;
+    });
+  }
 
 }
