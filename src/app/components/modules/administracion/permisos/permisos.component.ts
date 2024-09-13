@@ -94,7 +94,7 @@ export class PermisosComponent implements OnInit{
       this.dataService.put(`Permisos/${permiso.id}`, permiso, 'Permisos').subscribe({
         next: (data: any) => {
           console.log(data)
-          console.log('Todo salio perfecto')
+          alert('¡Se guardo de forma exitosa!')
         },
         error: (e) => console.error('Se presento un error al actualizar los permisos', e),
         complete: () => console.info('Se actualizaron los permisos')
