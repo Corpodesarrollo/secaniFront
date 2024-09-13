@@ -134,7 +134,8 @@ html {
 }
 
 .right {
-    content: url(minSalud.png);
-    max-width: 80px;
+    content: url(MinSaludVertical.png);
+    max-width: 50px;
+    max-height: 50px;
     text-align: right;
 }
