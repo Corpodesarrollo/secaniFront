@@ -19,7 +19,7 @@
                 <label for="dropdown1">Rol*</label>
                 <select id="dropdown1" (change)="onSelectChangeRol($event)">
                     <option *ngFor="let option of selectRoles" [value]="option.id">
-                        {{ option.name }}
+                        {{ option.roleName }}
                     </option>
                 </select>
             </div>
@@ -40,7 +40,7 @@
 
     <p-card>
         <div class="header">
-            <button class="top-right-button">GUARDAR</button>
+            <button class="top-right-button" (click)="onGuardarClick()">GUARDAR</button>
         </div>
         <br>
         <div>
@@ -60,11 +60,11 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-tableData>
                     <tr>
-                        <td>{{ tableData.column1 }}</td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.column2"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.column3"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.column4"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.column5"></p-checkbox></td>
+                        <td>{{ tableData.funcionalidad.descripcion }}</td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canAdd" (onChange)="onCheckboxChange($event, tableData, 'canAdd')"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canView" (onChange)="onCheckboxChange($event, tableData, 'canView')"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canEdit" (onChange)="onCheckboxChange($event, tableData, 'canEdit')"></p-checkbox></td>
+                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canDele" (onChange)="onCheckboxChange($event, tableData, 'canDele')"></p-checkbox></td>
                     </tr>
                 </ng-template>
             </p-table>
