@@ -100,11 +100,6 @@ html {
   justify-content: flex-end;
   gap: 10px;
 }
-/*.right {
-  max-width: 50px;
-  max-height: 50px;
-  text-align: right;
-}*/
 
 .right-logo {
   display: none;
