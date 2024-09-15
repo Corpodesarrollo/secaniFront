@@ -62,17 +62,6 @@ html {
     color: #FFFFFF;
 }
 
-@media (max-width: 991px) {
-    .barra-superior-govco {
-        justify-content: center;
-        padding: 0;
-    }
-
-    .barra-superior-govco .idioma-icon-barra-superior-govco {
-        right: 1rem;
-    }
-}
-
 .barra-superior-secani {
     display: flex;
     justify-content: space-between;
@@ -80,6 +69,7 @@ html {
     align-items: center;
     /* Centra verticalmente */
     padding: 1rem;
+    padding-left: 7rem;
     background-color: #D9D9D9;
     color: 4D4D4D;
     position: relative;
@@ -95,36 +85,6 @@ html {
     /* Centra el texto dentro del div */
     display: flex;
     align-items: center;
-}
-
-.center .title {
-    font-size: 1.5em;
-    /* Tamaño de letra para "SECANI" */
-    font-weight: bold;
-}
-
-.center .separator {
-    margin: 0 10px;
-    /* Espacio alrededor del separador */
-}
-
-.center .subtitle {
-    font-size: 0.55em;
-    /* Tamaño de letra para el subtítulo */
-    max-width: 200px;
-    /* Ancho máximo del texto para evitar que se extienda demasiado */
-    overflow: hidden;
-    /* Oculta el texto que se desborda */
-    text-overflow: ellipsis;
-    /* Agrega puntos suspensivos al texto desbordado */
-    white-space: normal;
-    /* Permite saltos de línea */
-    text-align: left;
-}
-
-.left,
-.right {
-    flex: 1;
 }
 
 .left {
