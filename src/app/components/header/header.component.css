@@ -88,8 +88,9 @@ html {
 }
 
 .left {
-  content: url(colombiaPotenciaVida.png);
-  max-width: 80px;
+  content: url(MinSaludVertical.png);
+  max-width: 50px;
+  max-height: 50px;
   text-align: left;
 }
 
@@ -99,10 +100,14 @@ html {
   justify-content: flex-end;
   gap: 10px;
 }
+/*.right {
+  max-width: 50px;
+  max-height: 50px;
+  text-align: right;
+}*/
 
 .right-logo {
-  content: url(minSalud.png);
-  max-width: 80px;
+  display: none;
 }
 
 .btn-secondary {
@@ -118,5 +123,28 @@ html {
 @media (max-width: 991px) {
   .btn-secondary {
       display: block;
+  }
+
+  .barra-superior-govco {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .barra-superior-govco .idioma-icon-barra-superior-govco {
+      right: 1rem;
+  }
+
+  .barra-superior-secani {
+      padding-left: 2rem;
+  }
+
+  .center {
+      display: none;
+  }
+
+  .right-logo {
+      display: block;
+      content: url(secaniGris.png);
+      max-width: 340px;
   }
 }
