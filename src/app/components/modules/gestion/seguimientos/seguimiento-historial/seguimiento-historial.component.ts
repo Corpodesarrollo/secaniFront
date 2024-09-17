@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
-import { Seguimiento } from '../../../../../models/seguimiento.model';
 import { GenericService } from '../../../../../services/generic.services';
+import { SeguimientoHistorial } from '../../../../../models/seguimientoHistorial.model';
 
 @Component({
   selector: 'app-seguimiento-historial',
@@ -16,14 +16,19 @@ import { GenericService } from '../../../../../services/generic.services';
   styleUrl: './seguimiento-historial.component.css'
 })
 export class SeguimientoHistorialComponent {
-  seguimientos: Seguimiento[] = [];
+  @Input() id!: number;
+  seguimientos: SeguimientoHistorial[] = [];
 
   constructor(
     private repos: GenericService
   ) { }
 
-  CargarDatos(filter: string) {
-    this.repos.get('Seguimiento/GetAllByIdUser/', `${this.idUsuario}/${filter}`, 'Seguimiento').subscribe({
+  onSubmit() {
+    this.CargarDatos();
+  }
+
+  CargarDatos() {
+    this.repos.get('Seguimiento/GetSeguimientosNNA/', `${this.id}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;
       }

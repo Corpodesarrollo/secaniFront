@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CardModule } from 'primeng/card';
@@ -14,16 +13,19 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Parametricas } from '../../../../../models/parametricas.model';
+import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimiento-historial.component";
+import { CommonModule } from '@angular/common';
+import { InfoSeguimientoNnaComponent } from "../info-seguimiento-nna/info-seguimiento-nna.component";
 
 @Component({
-  selector: 'app-seguimiento-sin-tratamiento',
+  selector: 'app-seguimiento-gestionar',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
-  templateUrl: './seguimiento-sin-tratamiento.component.html',
-  styleUrl: './seguimiento-sin-tratamiento.component.css'
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent],
+  templateUrl: './seguimiento-gestionar.component.html',
+  styleUrl: './seguimiento-gestionar.component.css'
 })
-export class SeguimientoSinTratamientoComponent  implements OnInit {
-  estado:string = 'Sin Tratamiento';
+export class SeguimientoGestionarComponent {
+  estado:string = 'Sin Diagnóstico';
   items: MenuItem[] = [];
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];
@@ -54,13 +56,12 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
     numeroRecaidas: 0,
     otrasRazones: "",
     observaciones: "",
-    alertasPendientes: [],
     alertas: []
   };
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute) {
   }
-
+  
   async ngOnInit(): Promise<void> {
     this.router.paramMap.subscribe(() => {
       this.diagnostico = history.state.diagnostico;
@@ -72,7 +73,6 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
       }
     } else {
       console.error('El objeto diagnostico no fue pasado correctamente.');
-      // Opcional: inicializar con un objeto vacío o redirigir
       this.diagnostico = {
         id: 0,
         idSeguimiento: 0,
@@ -83,8 +83,9 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
         recaidas: 0,
         numeroRecaidas: 0,
         otrasRazones: "",
-        alertas: [],
-        observaciones: "" // Asegúrate de incluir todas las propiedades necesarias
+        alertasPendientes: [{id: 0, idCategoriaAlerta: 0, categoriaAlerta: '', idSubcategoriaAlerta: 0, subcategoriaAlerta: '', resuelta: false}],
+        alertas: [{id: 0, idCategoriaAlerta: 0, categoriaAlerta: 'xxxx', idSubcategoriaAlerta: 0, subcategoriaAlerta: 'xxxx', resuelta: false}],
+        observaciones: ""
       };
       this.concatenatedAlertas = '';
     }

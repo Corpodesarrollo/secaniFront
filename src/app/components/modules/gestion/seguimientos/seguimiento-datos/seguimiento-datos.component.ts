@@ -15,11 +15,13 @@ import { NNA } from '../../../../../models/nna.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimiento-historial.component";
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, 
+  DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })

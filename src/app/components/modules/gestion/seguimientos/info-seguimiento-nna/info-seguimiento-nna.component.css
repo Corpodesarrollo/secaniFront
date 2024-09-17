@@ -1,0 +1,8 @@
+::ng-deep .pi.pi-eye {
+    font-size: 1.5em; /* Ajusta este valor según el tamaño que desees */
+  }
+
+::ng-deep .p-card-content {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}

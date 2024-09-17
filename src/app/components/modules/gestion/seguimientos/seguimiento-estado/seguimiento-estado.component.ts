@@ -119,7 +119,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
     await this.validarEstado();
 
     this.diagnosticos =  await this.tpp.getDiagnosticos();
-    this.selectedDiagnostico = this.diagnosticos.find(x => x.codigo == this.nna.diagnosticoId);
+    this.selectedDiagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);
     this.isLoadingDiagnostico = false;
 
     this.razonesSinDiagnostico = await this.tpp.getRazonesSinDiagnostico();
@@ -226,7 +226,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
   }
 
   async Actualizar() {
-    this.nna.diagnosticoId = this.selectedDiagnostico?.codigo ?? '';
+    this.nna.diagnosticoId = this.selectedDiagnostico?.id ?? 0;
     this.nna.ipsId = this.selectedIPS?.id ?? 0;
 
     await this.nnaService.putNNA(this.nna);
