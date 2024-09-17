@@ -12,6 +12,7 @@ import { IntentoComponent } from './intento/intento.component';
 import { IntentoSeguimientoService } from './intento-seguimiento.services';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
+import { InfoSeguimientoNnaComponent } from '../../gestion/seguimientos/info-seguimiento-nna/info-seguimiento-nna.component';
 
 @Component({
   selector: 'app-intento-seguimiento',
@@ -19,7 +20,7 @@ import { TableModule } from 'primeng/table';
   styleUrls: ['./intento-seguimiento.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule,]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule,InfoSeguimientoNnaComponent]
 })
 export class IntentoSeguimientoComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
@@ -33,7 +34,7 @@ export class IntentoSeguimientoComponent implements OnInit {
 
   async ngOnInit() {
     let id_seguimiento = history.state.id_seguimiento;
-    id_seguimiento = 5;
+    //id_seguimiento = 5;
     //TODO: operar con el id_seguimiento recibido
     this.seguimiento = await this.servicios.GetSeguimientoById(id_seguimiento);
     this.NNaCargado = await this.servicios.GetNNaById(this.seguimiento.nnaId);
