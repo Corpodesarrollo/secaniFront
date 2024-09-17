@@ -47,7 +47,7 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'mi-semana',
+    path: 'gestion/mi_semana',
     loadComponent: () =>
       import('./components/modules/usuarios/mi-semana/mi-semana.component').then((c) => c.MiSemanaComponent),
   },
@@ -95,4 +95,30 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/modules/usuarios/casos-entidad/casos-entidad.component').then((c) => c.CasosEntidadComponent),
   },
+
+  {
+    path: 'dashboard-agente-seguimiento',
+    loadComponent: () =>
+      import('./components/modules/gestion/dashboard-agente-seguimiento/dashboard-agente-seguimiento.component').then((c) => c.DashboardAgenteSeguimientoComponent),
+  },
+
+  {
+    path: 'dashboard-coordinador',
+    loadComponent: () =>
+      import('./components/modules/gestion/dashboard-coordinador/dashboard-coordinador.component').then((c) => c.DashboardCoordinadorComponent),
+  },
+
+  {
+    path: 'dashboard-eapb',
+    loadComponent: () =>
+      import('./components/modules/gestion/dashboard-eapb/dashboard-eapb.component').then((c) => c.DashboardEapbComponent),
+  },
+
+/*
+  {
+    path: 'crear-contacto',
+    loadComponent: () =>
+      import('./components/modules/usuarios/nna-contacto/crear-nna-agregar-contacto/crear-nna-agregar-contacto.component').then((c) => c.CrearNnaAgregarContactoComponent),
+  },
+  */
 ];

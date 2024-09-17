@@ -1,0 +1,81 @@
+<br>
+<div class="container-fluid">
+  <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
+
+
+  <div class="card" style=" display: grid; place-items: center;">
+
+    <div class="row">
+      <div class="col-4">
+        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+      </div>
+      <div class="col-4">
+        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+      </div>
+      <div class="col-4">
+        <app-tarjetaKPI [data] = "data_3"></app-tarjetaKPI>
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <br>
+  <div class="row">
+    <div class="col-6">
+
+      <div class="card" style="padding:20px">
+        <div class="chart">
+          <h4>Alertas</h4>
+          <p-chart type="pie" [data]="alertasData" [options]="alertasOptions" width="552" height="283"></p-chart>
+
+        </div>
+      </div>
+      <br>
+      <div class="card" style="padding:20px">
+        <div class="chart">
+          <h4>Casos Activos</h4>
+          <p-chart type="pie" [data]="alertasData2" [options]="alertasOptions2" width="552" height="283"></p-chart>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="col-6">
+
+      <div class="card" style="padding:20px">
+        <div class="critical-cases">
+          <h4>ALERTAS PENDIENTES DE GESTIÓN</h4>
+          <div *ngFor="let alerta of alertas" class="caso-critico">
+
+
+            <table class="table">
+              <tr>
+                <td>
+                  <div style="background: {{alerta.color}}; width: 10px; height: 100px" >
+
+                  </div>
+                </td>
+                <td>
+
+                  <strong>{{ alerta.nombre }}</strong>
+                  <strong>{{ alerta.tiempo }}</strong><br>
+
+                  <span class="enfermedad">{{alerta.enfermedad}}</span>
+
+                    <p style="color: {{alerta.color}}">{{ alerta.sinRespuesta }} días sin respuesta</p>
+
+                </td>
+              </tr>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
