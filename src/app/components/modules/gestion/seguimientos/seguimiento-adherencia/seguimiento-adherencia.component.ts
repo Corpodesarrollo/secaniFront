@@ -77,26 +77,26 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   }
 
   HaInasistidoTratamiento(value: boolean) {
-    this.adherencia.haInasistidoTratamiento = value;
+    this.nna.tratamientoHaDejadodeAsistir = value;
     if (value) {
-      this.adherencia.tiempoInasistencia = 1;
+      this.nna.tratamientoCuantoTiemposinAsistir = 1;
     }
   }
 
   EstudiandoActualmente(value: boolean) {
-    this.adherencia.estudiandoActualmente = value;
+    this.nna.tratamientoEstudiaActualmente = value;
     if (!value) {
-      this.adherencia.haInasistidoEstudio = false;
-      this.adherencia.tiempoInasistenciaEstudio = 0;
-      this.adherencia.idUnidadTiempoEstudio = 0;
+      this.nna.tratamientoHaDejadodeAsistirColegio = false;
+      this.nna.tratamientoTiempoInasistenciaColegio = 0;
+      this.nna.tratamientoCausasInasistenciaId = '';
       this.selectedUnidadTiempo2 = undefined;
     }
   }
 
   HaInasistidoEstudio(value: boolean) {
-    this.adherencia.haInasistidoEstudio = value;
+    this.nna.tratamientoHaDejadodeAsistirColegio = value;
     if (value) {
-      this.adherencia.tiempoInasistenciaEstudio = 1;
+      this.nna.tratamientoTiempoInasistenciaColegio = 1;
     }
   }
 

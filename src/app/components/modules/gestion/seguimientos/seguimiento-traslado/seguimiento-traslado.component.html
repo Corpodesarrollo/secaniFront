@@ -35,10 +35,10 @@
                     </div>
                 </div>
                 <div class="row align-items-center mb-2 pe-5">
-                    <div class="col-4">
-                        <label for="fechaNacimiento" class="fw-bold">Requirió trasladarse de ciudad para acceder al tratamiento</label>
+                    <div class="col-6 col-md-4">
+                        <label for="tratamientoRequirioCambiodeCiudad" class="fw-bold">Requirió trasladarse de ciudad para acceder al tratamiento</label>
                     </div>
-                    <div class="col-2 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                    <div class="col-6 col-md-2 button-group d-inline-flex align-items-center d-flex justify-content-end">
                         <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoRequirioCambiodeCiudad }" style="width: 70px;" (click)="nna.tratamientoRequirioCambiodeCiudad = true">SÍ</button>
                         <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': !nna.tratamientoRequirioCambiodeCiudad }" style="width: 70px;" (click)="nna.tratamientoRequirioCambiodeCiudad = false">NO</button>
                     </div>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6 pe-5">
+                    <div class="col-12 col-md-6 pe-5">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold mb-3">Residencia de procedencia</label>
@@ -169,7 +169,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 pe-5" *ngIf="traslado.requirioTraslado">
+                    <div class="col-12 col-md-6 pe-5" *ngIf="nna.tratamientoRequirioCambiodeCiudad">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold mb-3">Residencia de actual</label>
@@ -273,12 +273,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row align-items-center mb-2" *ngIf="traslado.requirioTraslado">
+                <div class="row align-items-center mb-2" *ngIf="nna.tratamientoRequirioCambiodeCiudad">
                     <div class="col-12">
                         <hr>
                     </div>
                 </div>
-                <div class="row" *ngIf="traslado.requirioTraslado">
+                <div class="row" *ngIf="nna.tratamientoRequirioCambiodeCiudad">
                     <div class="col-6 pe-5">
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-8">

@@ -37,11 +37,13 @@ export class GenericService {
       case 'Entidad':
         return environment.url_MSEntidad;
       case 'TablaParametrica':
-        return environment.url_MSParametricas;
+        return environment.url_MSTablasParametricas;
       case 'Permisos':
         return environment.url_MSPermisos;
       case 'NNA':
         return environment.url_MsNna;
+      case 'UsuariosRoles':
+        return environment.url_MSUsuarioyRoles;
       default:
         return environment.url;
     }
