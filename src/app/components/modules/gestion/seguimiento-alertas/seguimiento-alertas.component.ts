@@ -62,7 +62,8 @@ export class SeguimientoAlertasComponent implements OnInit {
       idCategoriaAlerta: this.selectedCategoriaAlerta?.id || 0,
       categoriaAlerta: this.selectedCategoriaAlerta?.nombre || '',
       idSubcategoriaAlerta: this.selectedSubcategoriaAlerta?.id || 0,
-      subcategoriaAlerta: this.selectedSubcategoriaAlerta?.subCategoriaAlerta || ''
+      subcategoriaAlerta: this.selectedSubcategoriaAlerta?.subCategoriaAlerta || '',
+      resuelta: false
     };
 
     this.alertas.push(alerta);

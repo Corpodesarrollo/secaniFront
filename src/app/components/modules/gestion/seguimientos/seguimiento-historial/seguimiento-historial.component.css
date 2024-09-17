@@ -1,0 +1,107 @@
+.header-th {
+    color: gray;
+    font-weight: normal;
+    font-size: 14px;
+    background-color: white;
+}
+
+/* Aplicar la fuente a todos los textos del componente */
+app-consultar-seguimientos {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.p-card .p-card-content {
+    padding-top: 0px !important;
+}
+
+/* Estilos de tabla */
+.p-datatable table {
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.p-datatable th, .p-datatable td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: middle;
+  color: #333;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6; /* Solo muestra la línea inferior */
+}
+
+.button-group button {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.button-group button.active {
+  background-color: #73b7ad !important;
+  color: white;
+}
+
+/* Estilos de HU06*/
+
+.usuario {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.foto-perfil {
+  font-size: 42px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.datos-usuario p {
+  margin: 2px 0;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.datos-usuario p:first-child {
+  font-weight: bold;
+}
+
+.detalles-seguimiento {
+  font-size: 14px;
+}
+
+.detalles-seguimiento p {
+  margin: 5px 0;
+}
+
+.observacion {
+  padding: 10px;
+  border: 1px solid #e1e1e1;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.anexo-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.anexo-link:hover {
+  text-decoration: underline;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner p {
+  font-size: 16px;
+  font-weight: bold;
+}

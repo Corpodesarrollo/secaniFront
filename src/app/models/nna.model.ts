@@ -46,7 +46,7 @@ export class NNA {
     cantidadRecaidas!: number;
     fechaUltimaRecaida!: Date;
     tipoDiagnosticoId!: string;
-    diagnosticoId!: string;
+    diagnosticoId!: number;
     fechaDiagnostico!: Date;
     motivoNoDiagnosticoId!: string;
     motivoNoDiagnosticoOtro!: string;

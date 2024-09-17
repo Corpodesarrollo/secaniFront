@@ -86,7 +86,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
       this.parentesco = this.parentescos.find(x => x.codigo == this.nna.cuidadorParentescoId);
 
       if (this.diagnosticos && Array.isArray(this.diagnosticos)) {
-        this.diagnostico = this.diagnosticos.find(x => x.codigo == this.nna.diagnosticoId);
+        this.diagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);
       }
       
       this.CalcularEdad();
