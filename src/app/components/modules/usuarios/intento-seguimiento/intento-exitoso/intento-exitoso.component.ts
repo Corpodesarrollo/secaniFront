@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -12,13 +12,17 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { IntentoExitosoService } from './intento-exitoso.service';
 import { Router } from '@angular/router';
 
+import { UsuariosModule } from '../../usuarios.module';
+
+
 @Component({
   selector: 'app-intento-exitoso',
   templateUrl: './intento-exitoso.component.html',
   styleUrls: ['./intento-exitoso.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule]
+    CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class IntentoExitosoComponent implements OnInit {
 
@@ -32,6 +36,8 @@ export class IntentoExitosoComponent implements OnInit {
   opcion_2 = false;
   opcion_3 = false;
   opcion_4 = false;
+
+  displayModalContacto: boolean = false;
 
   //formularios
 
@@ -174,5 +180,21 @@ export class IntentoExitosoComponent implements OnInit {
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
+
+
+  nuevoContacto(){
+    this.displayModalContacto = true;
+  }
+
+  nnaFormCrearSinActivar = false;
+  async handleDataContacto(data: any) {
+    //this.listadoContacto = data;
+    console.log('Data received from child handleDataContacto:', 'Crear nna contacto', data);
+  }
+
+  onModalHide(){
+
+  }
+
 
 }
