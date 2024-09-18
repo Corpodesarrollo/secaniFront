@@ -34,17 +34,19 @@ export class IntentoSeguimientoComponent implements OnInit {
   displayModalContacto: boolean = false;
 
   parentesco: any;
+  nnaId = 0;
 
   constructor(public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
 
 
   async ngOnInit() {
-    let id_seguimiento = history.state.id_seguimiento;
+    let id_seguimiento = history.state.id;
     console.log('id_seguimiento ', id_seguimiento, history);
 
     //id_seguimiento = 5;
     //TODO: operar con el id_seguimiento recibido
     this.seguimiento = await this.servicios.GetSeguimientoById(id_seguimiento);
+    this.nnaId = this.seguimiento.nnaId;
     this.NNaCargado = await this.servicios.GetNNaById(this.seguimiento.nnaId);
 
     this.parentesco = await this.TpParametros.getTPParentesco();
@@ -55,7 +57,7 @@ export class IntentoSeguimientoComponent implements OnInit {
     this.intentos = this.intentos.sort((a: any, b: any) => {
       return new Date(b.fechaIntento).getTime() - new Date(a.fechaIntento).getTime();
     });
-
+    console.log("seguimiento", this.seguimiento)
     console.log("intentos", this.intentos)
   }
 
