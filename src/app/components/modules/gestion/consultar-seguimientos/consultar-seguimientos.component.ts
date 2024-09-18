@@ -26,7 +26,7 @@ import { Parametricas } from '../../../../models/parametricas.model';
 export class ConsultarSeguimientosComponent implements OnInit {
 
   nna: NNA = new NNA();
-  idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
+  idUsuario: string = "12413";
   cntFiltros: SeguimientoCntFiltros = {
     hoy: 0,
     conAlerta: 0,
