@@ -7,6 +7,7 @@ import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
 import { NNA } from '../../../../models/nna.model';
 import { NNAInfoDiagnostico } from '../../../../models/nnaInfoDiagnostico.model';
 import { SeguimientoCntFiltros } from '../../../../models/seguimientoCntFiltros.model';
@@ -19,7 +20,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
   providers: [MessageService]
@@ -170,7 +171,7 @@ export class ConsultarAlertasComponent implements OnInit {
             'idNotificacion': 1,
             'entidad': 'Sanitas EPS',
             'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificaion':'Notificando todo.',
+            'asuntoNotificacion':'Notificando todo.',
             'notificacion':'notificacion.pdf',
             'respuesta':'respuesta.pdf',
             'fechaRespuesta':'2014-02-21T06:50:39.6556624'
@@ -179,7 +180,7 @@ export class ConsultarAlertasComponent implements OnInit {
             'idNotificacion': 2,
             'entidad': 'Sanitas EPS',
             'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificaion':'Notificando todo.',
+            'asuntoNotificacion':'Notificando todo.',
             'notificacion':'notificacion.pdf',
             'respuesta':'respuesta.pdf',
             'fechaRespuesta':'2014-02-21T06:50:39.6556624'
@@ -200,7 +201,7 @@ export class ConsultarAlertasComponent implements OnInit {
             'idNotificacion': 1,
             'entidad': 'Sanitas EPS',
             'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificaion':'Notificando todo.',
+            'asuntoNotificacion':'Notificando todo.',
             'notificacion':'notificacion.pdf',
             'respuesta':'respuesta.pdf',
             'fechaRespuesta':'2014-02-21T06:50:39.6556624'
@@ -209,7 +210,7 @@ export class ConsultarAlertasComponent implements OnInit {
             'idNotificacion': 2,
             'entidad': 'Sanitas EPS',
             'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificaion':'Notificando todo.',
+            'asuntoNotificacion':'Notificando todo.',
             'notificacion':'notificacion.pdf',
             'respuesta':'respuesta.pdf',
             'fechaRespuesta':'2014-02-21T06:50:39.6556624'
