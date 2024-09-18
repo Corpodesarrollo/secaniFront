@@ -94,6 +94,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
   async ngOnInit(): Promise<void> {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
+    console.log(this.nna);    
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -126,8 +127,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.codigo == this.nna.motivoNoDiagnosticoId);
     this.isLoadingRazonesSinDiagnostico = false;
 
-    this.IPS = await this.tp.getTP('IPSCodHabilitacion');
-    this.selectedIPS = this.IPS.find(x => x.id == this.nna.ipsId);
+    //this.IPS = await this.tp.getTP('IPSCodHabilitacion');
+    //this.selectedIPS = this.IPS.find(x => x.id == this.nna.ipsId);
     this.isLoadingIPS = false;
   }
 
@@ -179,6 +180,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
   }
 
   validarCamposRequeridos(): boolean {
+    this.nna.diagnosticoId = this.selectedDiagnostico?.id ?? 0;
     this.nna.estadoId = this.selectedEstado?.id ?? 0;
 
     const camposAValidar = [
@@ -226,9 +228,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
   }
 
   async Actualizar() {
-    this.nna.diagnosticoId = this.selectedDiagnostico?.id ?? 0;
-    this.nna.ipsId = this.selectedIPS?.id ?? 0;
-
+    console.log(this.nna);
     await this.nnaService.putNNA(this.nna);
   }
 }

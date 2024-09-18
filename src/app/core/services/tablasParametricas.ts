@@ -14,7 +14,7 @@ export class TablasParametricas {
 
     public async getTP(tabla: string): Promise<Parametricas[]> {
         return new Promise((resolve, reject) => {
-            this.repos.get('TablaParametrica/', `${tabla}`, 'Parametricas').subscribe({
+            this.repos.get('TablaParametrica/', `${tabla}`, 'TablaParametrica').subscribe({
                 next: (data: any) => {
                     this.tabla = data;
                     resolve(this.tabla);
