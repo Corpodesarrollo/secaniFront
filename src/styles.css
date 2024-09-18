@@ -54,6 +54,11 @@ h1 {
     font-family: 'Montserrat', sans-serif;
 }
 
+.p-card {
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
 /**
 Estilos menú
 SECÁNI-RQ00-HU00- Menú y Perfiles

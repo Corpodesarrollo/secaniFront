@@ -4,13 +4,18 @@
             <a  [routerLink]="['/gestion/seguimiento']">Historico NNA</a> > {{datosNNA.nombreCompleto}}
         </div>
         <div class="header-right">
-            Estado: <span class="badge w-30" [ngStyle]="{'background-color': '#73b7ad', 'color': '#ffffff'}"> {{datosNNA.diagnostico}}</span>
+            <app-boton-notificacion></app-boton-notificacion>
         </div>
     </div>
     <div class="title">
         <h1>Detalle Seguimiento</h1>
     </div>
 
+    <app-info-seguimiento-nna [idNNA]="idNNA" />
+
+    <br/>
+
+    <!--
     <div class="row align-items-center">
         <div class="col">
             <p-card>
@@ -58,6 +63,7 @@
             </p-card>
         </div>
     </div>
+    -->
 
     <p-card>
         <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
