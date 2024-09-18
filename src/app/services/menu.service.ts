@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class MenuService {
-  private menuCollapsedSource = new BehaviorSubject<boolean>(true);
+  private menuCollapsedSource = new BehaviorSubject<boolean>(false);
   currentMenuState = this.menuCollapsedSource.asObservable();
 
   toggleMenu() {
