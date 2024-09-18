@@ -1,0 +1,110 @@
+<br>
+<div class="container-fluid">
+
+  <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
+
+
+
+  <div class="card" style=" display: grid; place-items: center;">
+
+    <div class="row" >
+      <div class="col-3" >
+        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+      </div>
+      <div class="col-3">
+        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+      </div>
+      <div class="col-3">
+        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+      </div>
+      <div class="col-3">
+        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="filters">
+        <label for="fechaInicio">Fecha inicio</label>
+        &nbsp;
+        <input id="fechaInicio" type="date">
+        &nbsp;
+        <label for="fechaFin">Fecha fin</label>
+        &nbsp;
+        <input id="fechaFin" type="date">
+        &nbsp;
+        <img src="iconos/aplicar.svg" />
+      </div>
+      <br>
+      <div class="card" style="padding:20px">
+        <div class="chart">
+          <h4>Seguimientos</h4>
+          <p-chart type="doughnut" [data]="seguimientosData" [options]="seguimientosOptions" width="552" height="283"></p-chart>
+
+        </div>
+
+      </div>
+      <br>
+
+      <div class="card" style="padding:20px">
+        <div class="chart" >
+          <h4>NNA</h4>
+          <p-chart type="bar" [data]="nnaData" [options]="nnaOptions" ></p-chart>
+
+
+        </div>
+
+      </div>
+
+      <br>
+
+      <div class="card" style="padding:20px">
+        <div class="chart">
+          <h4>Alertas</h4>
+          <p-chart type="pie" [data]="alertasData" [options]="alertasOptions" width="552" height="283"></p-chart>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="col-6">
+      <div class="card" style="padding:20px">
+        <div class="critical-cases">
+          <h4>CASOS CRÍTICOS</h4>
+          <div *ngFor="let caso of casosCriticos" class="caso-critico">
+            <app-tarjeta-caso-critico [caso] = caso ></app-tarjeta-caso-critico>
+          </div>
+        </div>
+      </div>
+
+      <br>
+
+      <div class="card" style="padding:20px">
+        <div class="chart">
+          <h4>Llamadas</h4>
+          <p-chart type="bar" [data]="llamadasData" [options]="llamadasOptions"></p-chart>
+
+        </div>
+      </div>
+
+      <br>
+
+      <div class="card" style="padding:20px">
+        <div class="chart">
+          <h4>Mis Asignaciones</h4>
+          <p-chart type="line" [data]="asignacionesData" [options]="asignacionesOptions"></p-chart>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+</div>
+<br>

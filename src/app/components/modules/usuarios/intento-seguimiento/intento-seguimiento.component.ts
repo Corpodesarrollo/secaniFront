@@ -12,6 +12,10 @@ import { IntentoComponent } from './intento/intento.component';
 import { IntentoSeguimientoService } from './intento-seguimiento.services';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
+import { InfoSeguimientoNnaComponent } from '../../gestion/seguimientos/info-seguimiento-nna/info-seguimiento-nna.component';
+
+import { UsuariosModule } from '../usuarios.module';
+import { TpParametros } from '../../../../core/services/tpParametros';
 
 @Component({
   selector: 'app-intento-seguimiento',
@@ -19,7 +23,7 @@ import { TableModule } from 'primeng/table';
   styleUrls: ['./intento-seguimiento.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule,]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule,InfoSeguimientoNnaComponent, UsuariosModule]
 })
 export class IntentoSeguimientoComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
@@ -27,9 +31,12 @@ export class IntentoSeguimientoComponent implements OnInit {
   contactos!: any;
   intentos!: any;
 
+  displayModalContacto: boolean = false;
 
+  parentesco: any;
 
-  constructor(public servicios: IntentoSeguimientoService) { }
+  constructor(public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
+
 
   async ngOnInit() {
     let id_seguimiento = history.state.id_seguimiento;
@@ -43,6 +50,8 @@ export class IntentoSeguimientoComponent implements OnInit {
     this.contactos = await this.servicios.GetIntentoContactoAgrupado(this.seguimiento.nnaId);
     this.intentos = await this.servicios.GetIntentosContactoNNA(this.seguimiento.nnaId);
 
+    this.parentesco = await this.TpParametros.getTPParentesco();
+    //console.log("parentes", this.parentesco)
   }
 
 
@@ -58,7 +67,7 @@ export class IntentoSeguimientoComponent implements OnInit {
 
     this.ContactoNNA = item;
 
-    console.log( this.ContactoNNA)
+    //console.log( this.ContactoNNA)
   }
 
   recargarHistorial(){
@@ -109,5 +118,23 @@ export class IntentoSeguimientoComponent implements OnInit {
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+
+  nnaFormCrearSinActivar = false;
+  async handleDataContacto(data: any) {
+    //this.listadoContacto = data;
+    console.log('Data received from child handleDataContacto:', 'Crear nna contacto', data);
+  }
+
+  nuevoContacto(){
+    this.displayModalContacto = true;
+  }
+
+
+  getNombreParentesco(parentescoId: string): string {
+
+    const parentesco = this.parentesco.find((item: any) => item.codigo == parentescoId);
+    return parentesco ? parentesco.nombre : '';
   }
 }

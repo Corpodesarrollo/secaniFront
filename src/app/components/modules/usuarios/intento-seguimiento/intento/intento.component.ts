@@ -86,7 +86,7 @@ export class IntentoComponent implements OnInit {
         ContactoNNAId: this.ContactoNNA.id,
         Email: this.ContactoNNA.email,
         Telefono: this.ContactoNNA.telefonos,
-        TipoResultadoIntentoId: 2,
+        TipoResultadoIntentoId: 1,
         TipoFallaIntentoId: this.formFallido.value.TipoFallaIntentoId,
         CreatedByUserId: '73325'
       }

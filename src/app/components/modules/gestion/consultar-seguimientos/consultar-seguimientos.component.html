@@ -90,8 +90,8 @@
                                 </span>
                             </td>
                             <td>
-                                <i class="bi bi-telephone-outbound-fill me-2" style="color: #73b7ad;"></i>
-                                <i *ngIf="seguimiento.asuntoUltimaActuacion.toLowerCase() == 'solicitado por cuidador'" class="bi bi-eye-fill" style="color: #73b7ad;" (click)="solicitudCuidador(seguimiento.noCaso)"></i>
+                                <i class="bi bi-telephone-outbound-fill me-2" style="color: #73b7ad; cursor: pointer;" (click)="intentosLlamada(seguimiento.id)"></i>
+                                <i *ngIf="seguimiento.asuntoUltimaActuacion.toLowerCase() == 'solicitado por cuidador'" class="bi bi-eye-fill" style="color: #73b7ad; cursor: pointer;" (click)="solicitudCuidador(seguimiento.noCaso)"></i>
                             </td>
                         </tr>
                     </ng-template>

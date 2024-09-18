@@ -1,0 +1,31 @@
+
+
+<table class="table" style="width: 70%; ">
+  <tr >
+    <td nowrap>
+      <img src="iconos/barra_{{data.imagen}}.svg"/>
+    </td>
+    <td nowrap>
+      <table class="table">
+        <tr>
+          <th style="text-align: center;">
+            <div class="titulo">{{ data.titulo }}</div>
+          </th>
+        </tr>
+        <tr>
+          <td style="text-align: center;">
+            <span class="valor" style="padding-top:10px">{{ data.valor }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="porcentaje" *ngIf="data.porcentaje > 0">{{ data.porcentaje }}% esta semana</span>
+          </td>
+        </tr>
+      </table>
+
+
+
+    </td>
+  </tr>
+</table>

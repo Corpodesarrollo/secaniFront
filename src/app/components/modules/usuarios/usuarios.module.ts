@@ -54,5 +54,6 @@ import { RadioButtonModule } from 'primeng/radiobutton';
   providers: [
     DatePipe // <-- Agrega DatePipe aquí
   ],
+  exports: [CrearNnaAgregarContactoComponent],
 })
 export class UsuariosModule { }
