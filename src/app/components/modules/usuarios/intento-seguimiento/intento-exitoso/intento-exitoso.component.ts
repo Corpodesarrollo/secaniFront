@@ -31,6 +31,8 @@ export class IntentoExitosoComponent implements OnInit {
   id_usuario: any;
   NNA: any;
 
+  fechaHoy: any;
+
   //TODO: cambiar a false
   opcion_1 = true;
   opcion_2 = false;
@@ -60,7 +62,7 @@ export class IntentoExitosoComponent implements OnInit {
   }
 
   async ngOnInit() {
-
+    this.fechaHoy = new Date();
     console.log('history.state ', history.state)
 
     this.seguimiento = history.state.seguimiento;
@@ -98,7 +100,8 @@ export class IntentoExitosoComponent implements OnInit {
   }
 
   cargarHoy(form: FormGroup){
-    const fechaHoy = new Date();
+    this.fechaHoy = new Date();
+    let fechaHoy = this.fechaHoy;
 
     // Establece la hora actual en fechaHoy
     fechaHoy.setHours(fechaHoy.getHours(), fechaHoy.getMinutes(), fechaHoy.getSeconds(), fechaHoy.getMilliseconds());

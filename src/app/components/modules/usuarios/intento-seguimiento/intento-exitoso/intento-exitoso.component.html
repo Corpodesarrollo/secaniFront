@@ -99,7 +99,8 @@
               formControlName = "FechaIntento"
               [showTime]="true"
               dateFormat="yy-mm-dd"
-              hourFormat="12" />
+              hourFormat="12"
+              [minDate]="fechaHoy" />
           </div>
           <div class="col-4">
 
@@ -174,7 +175,9 @@
                formControlName = "FechaIntento"
 
               [showTime]="true"
-              hourFormat="12" />
+              hourFormat="12"
+              [minDate]="fechaHoy"
+              />
           </div>
           <div class="col-4">
 
