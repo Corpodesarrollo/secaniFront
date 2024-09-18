@@ -23,10 +23,10 @@
       </div>
       <hr>
       <div class="row" >
-        <div class="col-7">
+        <div class="col-5">
           <b>¿Se encuentra?</b>
         </div>
-        <div class="col-5">
+        <div class="col-7">
           <div class="row" style="padding-bottom:10px">
             <div class="col-3">
               <a (click) = operarOpcion2()><img src="iconos/intento-exitoso-opc1.svg" alt="opcion" /></a>
@@ -75,7 +75,10 @@
         <div class="row">
           <div class="col-4">
             <img src="iconos/cruz.png" alt="cruz" style="position:absolute"/>
-            <a><img src="iconos/intento_exitoso_nuevo_contacto.svg" alt="dia"></a>
+            <a><img src="iconos/intento_exitoso_nuevo_contacto.svg" alt="dia" (click)="nuevoContacto()"></a>
+
+
+
 
           </div>
           <div class="col-4">
@@ -96,7 +99,8 @@
               formControlName = "FechaIntento"
               [showTime]="true"
               dateFormat="yy-mm-dd"
-              hourFormat="12" />
+              hourFormat="12"
+              [minDate]="fechaHoy" />
           </div>
           <div class="col-4">
 
@@ -171,7 +175,9 @@
                formControlName = "FechaIntento"
 
               [showTime]="true"
-              hourFormat="12" />
+              hourFormat="12"
+              [minDate]="fechaHoy"
+              />
           </div>
           <div class="col-4">
 
@@ -290,3 +296,11 @@
   </div>
 
   </form>
+
+
+
+  <p-dialog  [(visible)]="displayModalContacto" [modal]="true"  (onHide)="onModalHide()">
+
+      <app-crear-nna-agregar-contacto [nnaFormCrearSinActivar]="nnaFormCrearSinActivar"
+                        (dataToParent)="handleDataContacto($event)"></app-crear-nna-agregar-contacto>
+  </p-dialog>

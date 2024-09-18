@@ -7,11 +7,13 @@ import { ActivatedRoute } from '@angular/router';
 import { GenericService } from '../../../../services/generic.services';
 import { RouterModule } from '@angular/router';
 import { NNAInfoDiagnostico } from '../../../../models/nnaInfoDiagnostico.model';
+import { InfoSeguimientoNnaComponent } from "../seguimientos/info-seguimiento-nna/info-seguimiento-nna.component";
+import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 
 @Component({
   selector: 'app-detalle-seguimientos',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, InfoSeguimientoNnaComponent, BotonNotificacionComponent],
   templateUrl: './detalle-seguimientos.component.html',
   styleUrl: './detalle-seguimientos.component.css'
 })
@@ -19,6 +21,7 @@ import { NNAInfoDiagnostico } from '../../../../models/nnaInfoDiagnostico.model'
 export class DetalleSeguimientosComponent implements OnInit{
   seguimientos: any[] = [];
   idSeguimiento: string = "";
+  idNNA: number = 0;
   datosNNA!: NNAInfoDiagnostico;
 
   fechaInicio!: Date; // Fecha de nacimiento
@@ -33,9 +36,10 @@ export class DetalleSeguimientosComponent implements OnInit{
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.idSeguimiento = params.get('idSeguimiento') || ''; // Recupera el valor del parámetro
+      this.idNNA = Number(this.idSeguimiento);
     });
-    console.log(this.idSeguimiento);
-    this.repos.get_withoutParameters(`Seguimiento/GetSeguimientosNNA?idNNA=${this.idSeguimiento}`, 'Seguimiento').subscribe({
+    console.log(this.idNNA);
+    this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idSeguimiento, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;
         this.datosNNA = data[0].nna;

@@ -54,6 +54,7 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
     numeroRecaidas: 0,
     otrasRazones: "",
     observaciones: "",
+    alertasPendientes: [],
     alertas: []
   };
 

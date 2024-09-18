@@ -1,0 +1,33 @@
+
+  <table class="table">
+    <tr>
+      <td>
+        <div style="background: {{color}}; width: 10px; height: 230px" >
+
+        </div>
+      </td>
+      <td class="text-align:left">
+
+
+
+          <span class="badge text-bg-{{badge}}"><strong>{{ caso.estado }}</strong></span>
+
+          <br><br>
+        <strong>{{ caso.nombre }}</strong><br>
+        <strong>{{ caso.tiempo }}</strong><br>
+
+        <span class="enfermedad">{{caso.enfermedad}}</span>
+        <br>
+        <span class="inferior" style="color: {{color}}; text-align:left">
+          Ubicación: {{ caso.ubicacion }}<br>
+          &nbsp;&nbsp;Fecha de notificación: {{ caso.fecha }}<br>
+          &nbsp;&nbsp;Entidades: {{ caso.entidades }}<br>
+
+          <span *ngIf="caso.agente != ''">&nbsp;&nbsp;<strong>Agente de seguimiento: {{caso.agente}}</strong></span>
+        </span>
+
+      </td>
+    </tr>
+  </table>
+
+
