@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
+import { MenuService } from './services/menu.service';
 
 
 @Component({
@@ -9,7 +10,8 @@ import { PrimeNGConfig } from 'primeng/api';
 })
 export class AppComponent {
   title = 'SecaniFront';
-  constructor(private primengConfig: PrimeNGConfig) {}
+  isMenuCollapsed = true;
+  constructor(private primengConfig: PrimeNGConfig, private menuService: MenuService) {}
 
     ngOnInit() {
         this.primengConfig.setTranslation({
@@ -137,6 +139,10 @@ export class AppComponent {
                 browseFiles: 'Examinar archivos',
                 maximizeLabel: 'Maximizar'
             }
+        });
+
+        this.menuService.currentMenuState.subscribe(isCollapsed => {
+          this.isMenuCollapsed = isCollapsed;
         });
     }
 }
