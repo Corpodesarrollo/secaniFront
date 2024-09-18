@@ -76,7 +76,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
   }
 
   intentosLlamada(id: number) {
-    this.router.navigate(['/intento-seguimiento'], { state: { id} });
+    this.router.navigate(['/intento-seguimiento'], { state: { id_seguimiento : id} });
   }
 
   async solicitudCuidador(caso: number) {
@@ -132,7 +132,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
   getBadgeColor(estadoAlerta: number): string {
     switch (estadoAlerta) {
       case 4: // Resuelta
-        return ' '; // Verde
+        return 'bg-success'; // Verde
       case 1 || 2:
         return 'bg-warning'; // Amarillo
       case 3:

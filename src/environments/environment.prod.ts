@@ -4,11 +4,14 @@
 
 export const environment = {
   production: false,
-  url: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
-  url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/', 
+  url: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/swagger/index.html',
+  url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
+  url_MSEntidad: 'https://msentidad-bhh8bufwd4gngead.eastus2-01.azurewebsites.net/',
+  url_MSPermisos: 'https://mspermisos-arbtcacfbcb2akes.eastus2-01.azurewebsites.net/api/',
+  url_Parametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
+  url_MSTablasParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
   url_MsNna: 'https://msnna-bjdgg4h5b0duh0gz.eastus-01.azurewebsites.net/',
   url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
-  url_MSEntidad: 'https://msentidad-bhh8bufwd4gngead.eastus2-01.azurewebsites.net/api/',
-  url_MSPermisos: 'https://mspermisos-arbtcacfbcb2akes.eastus2-01.azurewebsites.net/api/',
   url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
+  url_MSUsuarioyRoles: 'https://msusuariosyroles-dcb4d2cqbkccgxaf.eastus2-01.azurewebsites.net/api/',
 };
