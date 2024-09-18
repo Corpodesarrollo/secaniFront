@@ -18,6 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 
 import { IntentoComponent } from '../intento-seguimiento/intento/intento.component';
+import { TpParametros } from '../../../../core/services/tpParametros';
 
 @Component({
   selector: 'app-mi-semana',
@@ -57,9 +58,12 @@ export class MiSemanaComponent {
 
   form!: FormGroup;
   agentes: any;
+
+
   //agenteSeleccionado: any;
 
-  constructor(public servicios: MiSemanaService,  private fb: FormBuilder, private router: Router) {
+  constructor(public servicios: MiSemanaService,  private fb: FormBuilder, private router: Router, private TpParametros: TpParametros) {
+
 
 
     this.esLocale = {
@@ -89,7 +93,7 @@ export class MiSemanaComponent {
       slotMaxTime: '18:00:00',
       hiddenDays: [0, 6],   // Ocultar el sabado y domingo
       allDaySlot: false,
-      height: 1320, // Establece la altura del calendario
+      height: 1750, // Establece la altura del calendario
       editable: true, // Permite arrastrar y soltar
       droppable: true, // Permite soltar eventos externos
       eventConstraint: 'businessHours',
@@ -131,7 +135,6 @@ export class MiSemanaComponent {
     this.diasLimite(this.currentDate);
     await this.horarioLaboral();
     await this.eventos();
-
 
 
   }
@@ -238,42 +241,44 @@ export class MiSemanaComponent {
     this.calendarOptions.events = this.events;
   }
 
-
+  control = 2;
   handlePrev() {
+    if(this.control > 1){
+      const currentDate = new Date(this.currentDate);
+      const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() - 7));
+      this.currentDate = this.adjustToWeekStart(oneWeekAhead);
 
-    const currentDate = new Date(this.currentDate);
-    const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() - 7));
-    this.currentDate = this.adjustToWeekStart(oneWeekAhead);
-
-    if (this.calendarComponent) {
-      const calendarApi = this.calendarComponent.getApi();
-      calendarApi.gotoDate(this.currentDate);
-    } else {
-      console.error('Calendar component is not initialized');
+      if (this.calendarComponent) {
+        const calendarApi = this.calendarComponent.getApi();
+        calendarApi.gotoDate(this.currentDate);
+      } else {
+        console.error('Calendar component is not initialized');
+      }
+      this.diasLimite(this.currentDate);
+      this.horarioLaboral();
+      this.eventos();
+      this.control--;
     }
-    this.diasLimite(this.currentDate);
-    this.horarioLaboral();
-    this.eventos();
-    //console.log(this.currentDate);
-
   }
 
   handleNext() {
-    const currentDate = new Date(this.currentDate);
-    const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() + 7));
-    this.currentDate = this.adjustToWeekStart(oneWeekAhead);
+    if(this.control < 3){
+      const currentDate = new Date(this.currentDate);
+      const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() + 7));
+      this.currentDate = this.adjustToWeekStart(oneWeekAhead);
 
-    if (this.calendarComponent) {
-      const calendarApi = this.calendarComponent.getApi();
-      calendarApi.gotoDate(this.currentDate);
-    } else {
-      console.error('Calendar component is not initialized');
-    }
-    this.diasLimite(this.currentDate);
-    this.horarioLaboral();
-    this.eventos();
+      if (this.calendarComponent) {
+        const calendarApi = this.calendarComponent.getApi();
+        calendarApi.gotoDate(this.currentDate);
+      } else {
+        console.error('Calendar component is not initialized');
+      }
+      this.diasLimite(this.currentDate);
+      this.horarioLaboral();
+      this.eventos();
+      this.control++;
     //console.log(this.currentDate);
-
+    }
 
   }
 
@@ -366,6 +371,7 @@ export class MiSemanaComponent {
     this.bodyDialog2 = "<p>"+this.infoEvent.title+"<br>Seguimiento No. "+this.infoEvent.id;
     this.displayModal = false;
     this.displayModal2 = true;
+    this.form.reset();
     console.log(this.infoEvent)
 
 
@@ -388,6 +394,9 @@ export class MiSemanaComponent {
       if( respuesta == 1 ){
         this.displayModal2 = false;
         this.displayModal3 = true;
+
+        this.form.reset();
+
         this.ngOnInit();
       }
       else {
