@@ -11,6 +11,7 @@ export class HeaderComponent {
   constructor(private menuService: MenuService) {}
 
   toggleMenu() {
+    console.log('Que esta pasando');
     this.menuService.toggleMenu();
   }
 

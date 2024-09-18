@@ -7,39 +7,39 @@
     <div class="col-md-6 mb-3 mb-md-0">
         <p-card [style]="{ 'height': '100%' }">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="fs-3 fw-bold">Menor de edad</span>
+                <h3>Menor de edad</h3>
                 <p-button label="Ver detalle NNA" icon="pi pi-eye" size="small" severity="success" [style]="{ 'background-color': '#73b7ad', 'color': 'white', 'border-radius': '8px', 'border-color': 'transparent' }" />
             </div>
             <div class="row">
                 <div class="col-5 col-md-5">
-                    <span class="fw-bold fs-5">Nombre:</span>
+                    <p class="fw-bold mb-0">Nombre:</p>
                 </div>
                 <div class="col-7 col-md-7">
-                    <span class="fs-5">{{NNA.nombreCompleto}}</span>
+                    <p class="mb-0">{{NNA.nombreCompleto}}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-5 col-md-5">
-                    <span class="fw-bold fs-5">Edad:</span>
+                    <p class="fw-bold mb-0">Edad:</p>
                 </div>
                 <div class="col-7 col-md-7">
-                    <span class="fs-5">{{NNA.edad}}</span>
+                    <p class="mb-0">{{NNA.edad}}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-5 col-md-5">
-                    <span class="fw-bold fs-5">Diagnóstico:</span>
+                    <span class="fw-bold mb-0">Diagnóstico:</span>
                 </div>
                 <div class="col-7 col-md-7">
-                    <span class="fs-5">{{NNA.diagnostico}}</span>
+                    <span class="mb-0">{{NNA.diagnostico}}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-5 col-md-5">
-                    <span class="fw-bold fs-5">Fecha inicio seguimiento:</span>
+                    <span class="fw-bold mb-0">Fecha inicio seguimiento:</span>
                 </div>
                 <div class="col-7 col-md-7">
-                    <span class="fs-5">{{NNA.fechaInicioSeguimiento | date:'dd/MM/yyyy' }}</span>
+                    <span class="mb-0">{{NNA.fechaInicioSeguimiento | date:'dd/MM/yyyy' }}</span>
                 </div>
             </div>
         </p-card>
@@ -53,21 +53,21 @@
                 <div class="col-6">
                     <div class="row align-items-center">
                         <div class="col-3">
-                            <i class="bi bi-stopwatch-fill" style="font-size: 4rem; color: #73b7ad;"></i>
+                            <i class="bi bi-stopwatch-fill" style="font-size: 3.5rem; color: #73b7ad;"></i>
                         </div>
                         <div class="col-9">
-                            <h6 class="d-inline-block fw-bold fs-5">Tiempo transcurrido</h6>
-                            <p class="fs-4">{{NNA.tiempoTranscurrido}}</p>
+                            <p class="d-inline-block fw-bold mb-0">Tiempo transcurrido</p>
+                            <p class="mb-0">{{NNA.tiempoTranscurrido}}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="row align-items-center">
                         <div class="col-3">
-                            <span class="fw-bold text-center" style="font-size: 3.5rem;">{{NNA.seguimientosRealizados}}</span>
+                            <span class="fw-bold text-center" style="font-size: 3rem;">{{NNA.seguimientosRealizados}}</span>
                         </div>
                         <div class="col-9">
-                            <span class="fs-4 fw-bold" style="line-height: 1;">Seguimientos realizados</span>
+                            <span class="fw-bold" style="line-height: 1;">Seguimientos realizados</span>
                         </div>
                     </div>
                 </div>
