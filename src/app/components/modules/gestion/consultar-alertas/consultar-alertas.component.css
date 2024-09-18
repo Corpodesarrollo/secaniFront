@@ -1,0 +1,56 @@
+.button-group button {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.button-group button.active {
+  background-color: #73b7ad !important;
+  color: white;
+}
+
+.observacion-column {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 200px;
+  overflow-wrap: break-word;
+}
+
+.subcategoria-column{
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 200px;
+  overflow-wrap: break-word;
+}
+
+.bg-dark{
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 160px;
+  overflow-wrap: break-word;
+}
+
+.icon-container {
+  display: flex;
+  gap: 10px; /* Espacio entre los íconos */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;
+}
+
+.icon-style {
+  background-color: #8CC4C0; /* Color de fondo como el de la imagen */
+  color: white; /* Color del ícono */
+  padding: 10px; /* Espaciado interno */
+  border-radius: 50%; /* Hacer el ícono circular */
+  width: 40px; /* Ancho del círculo */
+  height: 40px; /* Altura del círculo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px; /* Tamaño del ícono */
+}

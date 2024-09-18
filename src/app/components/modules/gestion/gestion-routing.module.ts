@@ -10,6 +10,7 @@ import { SeguimientoSinDiagnosticoComponent } from './seguimientos/seguimiento-s
 import { SeguimientoSinTratamientoComponent } from './seguimientos/seguimiento-sin-tratamiento/seguimiento-sin-tratamiento.component';
 import { SeguimientoFallecidoComponent } from './seguimientos/seguimiento-fallecido/seguimiento-fallecido.component';
 import { DetalleSeguimientosComponent } from './detalle-seguimientos/detalle-seguimientos.component';
+import { ConsultarAlertasComponent } from './consultar-alertas/consultar-alertas.component';
 
 const routes: Routes = [
   { path: 'seguimientos', component: ConsultarSeguimientosComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent },
   { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent },
   { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
+  { path: 'consultar-alertas/:id', component: ConsultarAlertasComponent },
 ];
 
 @NgModule({

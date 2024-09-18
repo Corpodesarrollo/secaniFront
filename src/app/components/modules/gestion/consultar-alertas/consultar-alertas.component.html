@@ -1,0 +1,228 @@
+<body class="formato-fondo fuente-letra">
+  <div class="title">
+      <h1>Alertas</h1>
+  </div>
+
+  <div class="row align-items-center">
+
+      <div class="col">
+          <p-card>
+            <div class="row">
+              <div class="title">
+                <h2>Menor de edad</h2>
+              </div>
+            </div>
+              <div class="row">
+                  <div class="col">
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Diagnóstico<br></div>
+                      <div class="col">{{datosBasicosNNA.diagnostico}}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Nombre<br></div>
+                      <div class="col">{{datosBasicosNNA.nombreCompleto}}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Edad<br></div>
+                      <div class="col">{{tiempoTranscurrido}}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Fecha ingreso a la estrategia<br></div>
+                      <div class="col">{{datosNNA.fechaIngresoEstrategia | date:'dd/MM/yyyy' }}<br><br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Régimen de afiliación<br></div>
+                      <div class="col">{{datosNNA.tipoRegimenSSId}}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">EAPB<br></div>
+                      <div class="col">{{datosNNA.eapbId}}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">IPS<br></div>
+                      <div class="col">{{datosNNA.ipsId}}<br></div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Residencia de procedencia/ocurrencia<br></div>
+                      <div class="col"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Departamento<br></div>
+                      <div class="col">{{ nombreDeptoOrigen }}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Municipio<br></div>
+                      <div class="col">{{ nombreMuniOrigen }}<br></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Residencia actual<br></div>
+                      <div class="col"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Departamento<br></div>
+                      <div class="col">{{nombreDeptoActual}}<br></div>
+                    </div>
+                    <div class="row">
+                      <div class="col" style="font-weight: bold;">Municipio<br></div>
+                      <div class="col">{{nombreMuniActual}}<br></div>
+                    </div>
+                  </div>
+              </div>
+          </p-card>
+      </div>
+  </div>
+
+  <div class="row mb-3" style="margin-top: 10px;">
+    <div class="col-12 d-flex justify-content-between align-items-stretch">
+      <div class="button-group d-flex flex-wrap">
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': activeFilter === '0'}"
+                style="width: 150px;"
+                (click)="applyFilter('0')">
+          Todas
+        </button>
+
+        <button class="btn rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': activeFilter === '1'}"
+                style="width: 150px;"
+                (click)="applyFilter('1')">
+          Identificadas
+        </button>
+
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': activeFilter === '2'}"
+                style="width: 150px;"
+                (click)="applyFilter('2')">
+          En trámite
+        </button>
+
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': activeFilter === '3'}"
+                style="width: 240px;"
+                (click)="applyFilter('3')">
+          Sin resolver
+        </button>
+
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': activeFilter === '4'}"
+                style="width: 240px;"
+                (click)="applyFilter('4')">
+          Resultas
+        </button>
+
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': activeFilter === '5'}"
+                style="width: 240px;"
+                (click)="applyFilter('5')">
+          Cerradas por causas externas
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <p-card>
+      <p-table
+      [value]="alertas"
+      dataKey="idAlerta"
+      selectionMode="single"
+      [(selection)]="alertaSeleccionada"
+      [paginator]="true"
+      [rows]="10"
+      [responsive]="true"
+      [expandedRowKeys]="expandedRows"
+      (onRowExpand)="onRowExpand($event)"
+      (onRowCollapse)="onRowCollapse($event)">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th class="header-th">Fecha Seguimiento</th>
+                  <th class="header-th">Categoría</th>
+                  <th class="header-th">Subcategoría</th>
+                  <th class="header-th">Observación</th>
+                  <th class="header-th">Estado</th>
+                  <th class="header-th">Acción</th>
+                  <th style="width: 5rem"></th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-alerta let-expanded="expanded">
+              <tr>
+                  <td>{{ alerta.ultimaFechaSeguimiento | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ alerta.descripcionCategoria }}</td>
+                  <td class="subcategoria-column">{{ alerta.descripcionSubcategoria }}</td>
+                  <td class="observacion-column">{{ alerta.observaciones }}</td>
+                  <td>
+                    <span [ngClass]="getBadgeColor(alerta.estadoAlertaId)"
+                          class="badge text-white me-1">
+                          {{ getDescripcionEstado(alerta.estadoAlertaId) }}
+                      </span>
+                  </td>
+                  <td>
+                    <div class="icon-container">
+                      <i class="pi pi-file-pdf icon-style"></i>
+                      <i class="pi pi-envelope icon-style"></i>
+                    </div>
+                  </td>
+                  <td>
+                    <p-button type="button" pRipple [pRowToggler]="alerta" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-alerta>
+            <tr>
+                <td colspan="7">
+                    <div class="p-3">
+                        <p-table [value]="alerta.notificaciones" dataKey="idNotificacion">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Entidad notificada</th>
+                                    <th>Fecha de notificación</th>
+                                    <th>Asunto notificación</th>
+                                    <th>Notifiación</th>
+                                    <th>Respuesta</th>
+                                    <th>Fecha de respuesta</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-notificaciones>
+                                <tr>
+                                    <td>{{ notificaciones.entidad }}</td>
+                                    <td>{{ notificaciones.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
+                                    <td>{{ notificaciones.asuntoNotificaion }}</td>
+                                    <td>
+                                      <div class="icon-container">
+                                        <i class="pi pi-eye icon-style"></i>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div class="icon-container">
+                                        <i class="pi pi-eye icon-style"></i>
+                                      </div>
+                                    </td>
+                                    <td>{{ notificaciones.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="6">No registra notificaciones.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+      </p-table>
+  </p-card>
+
+  <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
+      <div>
+          <button class="btn btn-detalle-seguimiento"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EXPORTAR SEGUIMIENTO</button>
+          <button class="btn btn-detalle-seguimiento"><i class="bi bi-telephone-outbound-fill me-2"></i>GENERAR CONTACTO</button>
+      </div>
+  </div>
+
+</body>
