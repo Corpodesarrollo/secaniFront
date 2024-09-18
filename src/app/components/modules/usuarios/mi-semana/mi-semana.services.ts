@@ -15,13 +15,13 @@ export class MiSemanaService {
     return await  this.comun.retorno_get(url);
   }
 
-  GetFestivos = async (FechaInicial: Date, FechaFinal: Date) => {
-    let url = `${'Seguimiento/GetSeguimientoFestivos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
+  GetFestivos = async (FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
+    let url = `${'Seguimiento/GetSeguimientoFestivos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
     return await  this.comun.retorno_get(url);
   }
 
-  GetHorarioLaboral = async (UsuarioId: string, FechaInicial: Date, FechaFinal: Date) => {
-    let url = `${'Seguimiento/GetSeguimientoHorarioAgente?UsuarioId='+UsuarioId+'&FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
+  GetHorarioLaboral = async (UsuarioId: string) => {
+    let url = `${'Seguimiento/GetSeguimientoHorarioAgente?UsuarioId='+UsuarioId}`;
     return await  this.comun.retorno_get(url);
   }
 
