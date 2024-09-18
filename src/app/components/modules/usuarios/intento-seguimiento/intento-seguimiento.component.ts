@@ -40,18 +40,23 @@ export class IntentoSeguimientoComponent implements OnInit {
 
   async ngOnInit() {
     let id_seguimiento = history.state.id_seguimiento;
-    id_seguimiento = 5;
+    console.log('id_seguimiento ', id_seguimiento, history);
+
+    //id_seguimiento = 5;
     //TODO: operar con el id_seguimiento recibido
     this.seguimiento = await this.servicios.GetSeguimientoById(id_seguimiento);
     this.NNaCargado = await this.servicios.GetNNaById(this.seguimiento.nnaId);
 
-
+    this.parentesco = await this.TpParametros.getTPParentesco();
     //Obtenemos valores para las 2 grillas de datos
     this.contactos = await this.servicios.GetIntentoContactoAgrupado(this.seguimiento.nnaId);
     this.intentos = await this.servicios.GetIntentosContactoNNA(this.seguimiento.nnaId);
 
-    this.parentesco = await this.TpParametros.getTPParentesco();
-    //console.log("parentes", this.parentesco)
+    this.intentos = this.intentos.sort((a: any, b: any) => {
+      return new Date(b.fechaIntento).getTime() - new Date(a.fechaIntento).getTime();
+    });
+
+    console.log("intentos", this.intentos)
   }
 
 
@@ -87,7 +92,8 @@ export class IntentoSeguimientoComponent implements OnInit {
   }
 
   valor_tipoIntento(valor: any){
-    if(valor == 1){
+
+    if(valor == 0){
       return "EXITOSO";
     }
     else{
