@@ -13,6 +13,7 @@ import { IntentoExitosoService } from './intento-exitoso.service';
 import { Router } from '@angular/router';
 
 import { UsuariosModule } from '../../usuarios.module';
+import { TpParametros } from '../../../../../core/services/tpParametros';
 
 
 @Component({
@@ -47,7 +48,9 @@ export class IntentoExitosoComponent implements OnInit {
   formGroup3: FormGroup;
   formGroup4: FormGroup;
 
-  constructor(private fb: FormBuilder, public servicio: IntentoExitosoService, public router: Router) {
+  parentesco: any;
+
+  constructor(private fb: FormBuilder, public servicio: IntentoExitosoService, public router: Router, public TpParametros: TpParametros) {
 
     this.formGroup2 = this.fb.group({
       FechaIntento: [null, Validators.required],
@@ -73,6 +76,8 @@ export class IntentoExitosoComponent implements OnInit {
 
     //TODO: OBTENER EL ID DEL USUARIO
     this.id_usuario = '73325';
+
+    this.parentesco = await this.TpParametros.getTPParentesco();
   }
 
   operarOpcion2(){
@@ -81,6 +86,8 @@ export class IntentoExitosoComponent implements OnInit {
     this.opcion_1 = false;
     this.opcion_3 = false;
     this.opcion_4 = false;
+
+
   }
 
   operarOpcion3(){
@@ -144,15 +151,7 @@ export class IntentoExitosoComponent implements OnInit {
 
       //TODO: AJUSTAR PARA ENVIAR EL ID DEL USUARIO
 
-      let data = {
-        ContactoNNAId: this.ContactoNNA.id,
-        Email: this.ContactoNNA.email,
-        Telefono: this.ContactoNNA.telefonos,
-        TipoResultadoIntentoId: 1,
-        TipoFallaIntentoId: 0,
-        CreatedByUserId: this.id_usuario
-      }
-      await this.servicio.PostIntento(data);
+      await this.guardarIntentoExitoso();
 
       //Procedemos a actualizar la fecha de seguimiento
       let data2 = {
@@ -169,6 +168,17 @@ export class IntentoExitosoComponent implements OnInit {
     }
   }
 
+  async guardarIntentoExitoso(){
+    let data = {
+      ContactoNNAId: this.ContactoNNA.id,
+      Email: this.ContactoNNA.email,
+      Telefono: this.ContactoNNA.telefonos,
+      TipoResultadoIntentoId: 2,
+      //TipoFallaIntentoId: 0,
+      CreatedByUserId: this.id_usuario
+    }
+    await this.servicio.PostIntento(data);
+  }
 
   formatDateTimeForSQLServer(dateString: string): string {
     const date = new Date(dateString);
@@ -199,5 +209,16 @@ export class IntentoExitosoComponent implements OnInit {
 
   }
 
+
+  async iniciarSeguimiento(){
+    await this.guardarIntentoExitoso();
+    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.ContactoNNA.nnaId]);
+  }
+
+  getNombreParentesco(parentescoId: string): string {
+
+    const parentesco = this.parentesco.find((item: any) => item.codigo == parentescoId);
+    return parentesco ? parentesco.nombre : '';
+  }
 
 }

@@ -18,7 +18,7 @@
           <b>Parentesco: </b>
         </div>
         <div class="col-6">
-          {{ContactoNNA.parentescoId}}
+          {{getNombreParentesco(ContactoNNA.parentescoId)}}
         </div>
       </div>
       <hr>
@@ -28,11 +28,11 @@
         </div>
         <div class="col-7">
           <div class="row" style="padding-bottom:10px">
-            <div class="col-3">
+            <div class="col-2">
               <a (click) = operarOpcion2()><img src="iconos/intento-exitoso-opc1.svg" alt="opcion" /></a>
             </div>
-            <div class="col-9">
-              <a><img src="iconos/intento-exitoso-opc2.svg" alt="opcion"  /></a>
+            <div class="col-10" style="text-align: left; padding-left: 20px">
+              <a (click) = iniciarSeguimiento()><img src="iconos/intento-exitoso-opc2.svg" alt="opcion"  /></a>
             </div>
           </div>
 
