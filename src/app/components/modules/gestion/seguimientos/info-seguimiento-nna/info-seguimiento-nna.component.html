@@ -1,5 +1,8 @@
-
-  <div class="row mb-3">
+<div *ngIf="isLoading" class="d-flex align-items-center justify-content-center mb-3">
+    <div class="custom-spinner me-2" *ngIf="!error"></div>
+    <p class="{{colorMensaje}} mb-0 fw-bold">{{mensajeCarga}}</p>
+</div>
+<div class="row mb-3" *ngIf="!isLoading">
     <!-- Sección de información del menor de edad -->
     <div class="col-md-6 mb-3 mb-md-0">
         <p-card [style]="{ 'height': '100%' }">

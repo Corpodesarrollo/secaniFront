@@ -15,6 +15,11 @@ import { CommonModule } from '@angular/common';
 export class InfoSeguimientoNnaComponent {
   @Input() idNNA: number = 0;
 
+  isLoading: boolean = false;
+  error: boolean = false;
+  mensajeCarga: string = 'Cargando datos...';
+  colorMensaje: string = 'text-primary';
+
   NNA: DatosBasicosNNA = {
     idNNA: 0,
     nombreCompleto: '',
@@ -31,16 +36,22 @@ export class InfoSeguimientoNnaComponent {
     private repos: GenericService,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.CargarDatos();
   }
 
-  CargarDatos() {
+  async CargarDatos() {
+    this.isLoading = true;
     this.repos.get('Seguimiento/SeguimientoNNA/', `${this.idNNA}`, 'Seguimiento').subscribe({
       next: (data: any) => {
-        console.log(data);
         this.NNA = data;
-      }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = true;
+        this.colorMensaje = 'text-danger';
+        this.mensajeCarga = 'Error al cargar los datos del NNA';
+      },
     });
   }
 }

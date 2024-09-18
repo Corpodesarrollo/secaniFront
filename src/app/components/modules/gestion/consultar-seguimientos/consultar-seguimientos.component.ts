@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { GenericService } from '../../../../services/generic.services';
 import { SeguimientoCntFiltros } from '../../../../models/seguimientoCntFiltros.model';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { NNA } from '../../../../models/nna.model';
 import { DialogModule } from 'primeng/dialog';
@@ -24,6 +24,7 @@ import { Parametricas } from '../../../../models/parametricas.model';
 })
 
 export class ConsultarSeguimientosComponent implements OnInit {
+
   nna: NNA = new NNA();
   idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
   cntFiltros: SeguimientoCntFiltros = {
@@ -45,6 +46,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
   diagnosticos: Parametricas[] = [];
 
   constructor(
+    private router: Router,
     private repos: GenericService,
     private tp: TablasParametricas,
     private tpp: TpParametros
@@ -71,6 +73,10 @@ export class ConsultarSeguimientosComponent implements OnInit {
         this.seguimientos = data;
       }
     });
+  }
+
+  intentosLlamada(id: number) {
+    this.router.navigate(['/intento-seguimiento'], { state: { id} });
   }
 
   async solicitudCuidador(caso: number) {
