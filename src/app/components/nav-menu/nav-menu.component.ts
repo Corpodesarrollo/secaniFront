@@ -5,6 +5,7 @@ import { GenericService } from '../../services/generic.services';
 import { environment } from '../../../environments/environment';
 import { MenuModel } from '../../models/MenuModel';
 import { Router } from '@angular/router';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 export class NavMenuComponent implements OnInit {
   items: MenuItem[] | undefined;
 
-  constructor(private service: GenericService, private router: Router) {
+  constructor(private service: GenericService, private router: Router, private menuService: MenuService) {
 
   }
 
@@ -56,6 +57,7 @@ export class NavMenuComponent implements OnInit {
               icon: subMenu.menuIcon,
               command: () => {
                 this.router.navigate(['/' + menu.menuPath + '/' + subMenu.menuPath]);
+                this.menuService.toggleMenu();
               }
             };
             menuMap.get(menu.menuNombre)?.items.push(subI);
@@ -72,6 +74,7 @@ export class NavMenuComponent implements OnInit {
           route: '/' + menu.menuPath,
           command: () => {
             this.router.navigate(['/' + menu.menuPath]);
+            this.menuService.toggleMenu();
           },
           styleClass:"sinSubMenus"
         };
