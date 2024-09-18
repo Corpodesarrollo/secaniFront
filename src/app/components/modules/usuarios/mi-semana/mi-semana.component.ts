@@ -167,32 +167,28 @@ export class MiSemanaComponent {
 
     this.calendarOptions.businessHours = '';
 
-    let festivos = await this.servicios.GetFestivos(this.fechaInicial, this.fechaFinal);
+    let festivos = await this.servicios.GetFestivos(this.fechaInicial, this.fechaFinal, this.usuarioId);
+    //console.log("==> ",festivos)
     //console.log("festivos", festivos)
-    let horarioLaboral = await this.servicios.GetHorarioLaboral(this.usuarioId, this.fechaInicial, this.fechaFinal);
+    let horarioLaboral = await this.servicios.GetHorarioLaboral(this.usuarioId);
 
-
-    const getDayOfWeek = (dateString: string): number => {
-      const date = new Date(dateString);
-      // Los días en JavaScript van de 0 (domingo) a 6 (sábado)
-      const day = date.getDay();
-      // Ajustamos para que el lunes sea 1, martes 2, etc.
-      return day === 0 ? 7 : day;
-    };
+    const listaDias = this.generarDiasSemana(this.fechaInicial, this.fechaFinal);
 
     // Convertir las fechas festivas a un conjunto para una búsqueda rápida
-    const festivosSet = new Set(festivos.map((festivo: { festivo: string }) => festivo.festivo));
+    const festivosSet = new Set((festivos ?? []).map((festivo: { festivo: string }) => festivo.festivo));
+
 
     // Transformación de la respuesta
-    let horario = horarioLaboral.map((item: { fecha: string; horaEntrada: string; horaSalida: string }) => {
-      const dayOfWeek = getDayOfWeek(item.fecha);
+    let horario = horarioLaboral.map((item: { dia: any; horaEntrada: string; horaSalida: string }) => {
 
+      let isFestivo: any
       // Verificar si la fecha es festiva
-      const isFestivo = festivosSet.has(item.fecha);
+      if(festivos != null)
+         isFestivo = festivosSet.has(listaDias[item.dia]);
 
       // Ajustar startTime y endTime si es festivo
       return {
-        daysOfWeek: [dayOfWeek],
+        daysOfWeek: [item.dia],
         startTime: isFestivo ? '07:00:00' : item.horaEntrada,
         endTime: isFestivo ? '07:00:00' : item.horaSalida
       };
@@ -201,6 +197,27 @@ export class MiSemanaComponent {
 
     this.calendarOptions.businessHours = horario;
   }
+
+
+  generarDiasSemana(fechaInicial: Date, fechaFinal: Date): { [key: number]: Date } {
+    const diasSemana: { [key: number]: Date } = {}; // Objeto donde el índice es el día de la semana
+
+    // Iterar desde la fecha inicial hasta la fecha final
+    let fechaActual = new Date(fechaInicial);
+
+    while (fechaActual <= fechaFinal) {
+      const diaSemana = fechaActual.getDay() === 0 ? 7 : fechaActual.getDay(); // Lunes = 1, Domingo = 7
+
+      // Asignar la fecha al día de la semana correspondiente
+      diasSemana[diaSemana] = new Date(fechaActual);
+
+      // Avanzar al siguiente día
+      fechaActual.setDate(fechaActual.getDate() + 1);
+    }
+
+    return diasSemana;
+  }
+
 
   async eventos(){
     let eventosBD = await this.servicios.GetSeguimientoUsuario(this.usuarioId, this.fechaInicial, this.fechaFinal);
@@ -345,7 +362,7 @@ export class MiSemanaComponent {
     this.headerDialog = "Seguimiento "+this.formatDate(event.start);
     let fechaTemp = event.extendedProps.fechaNotificacionSIVIGILA.slice(0, 23) + 'Z';
     let fechaSivigila = this.formatDate(new Date(fechaTemp));
-    console.log(fechaSivigila, event.extendedProps.fechaNotificacionSIVIGILA)
+    //console.log(fechaSivigila, event.extendedProps.fechaNotificacionSIVIGILA)
     this.bodyDialog = "<p>"+event.title+"<br>Seguimiento No. "+event.id+"<br>Alertas Detectadas: "+event.extendedProps.cantidadAlertas+"<br>Reportado por SIVIGILA el "+fechaSivigila+"</p>"
 
   }
@@ -366,13 +383,13 @@ export class MiSemanaComponent {
   async reasignar(){
 
     this.agentes = await this.servicios.GetSeguimientoAgentes(this.usuarioId);
-    console.log(this.agentes);
+    //console.log(this.agentes);
 
     this.bodyDialog2 = "<p>"+this.infoEvent.title+"<br>Seguimiento No. "+this.infoEvent.id;
     this.displayModal = false;
     this.displayModal2 = true;
     this.form.reset();
-    console.log(this.infoEvent)
+    //console.log(this.infoEvent)
 
 
 
