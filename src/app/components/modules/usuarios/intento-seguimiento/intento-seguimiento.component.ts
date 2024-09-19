@@ -40,7 +40,7 @@ export class IntentoSeguimientoComponent implements OnInit {
 
 
   async ngOnInit() {
-    let id_seguimiento = history.state.id;
+    let id_seguimiento = history.state.id_seguimiento;
     console.log('id_seguimiento ', id_seguimiento, history);
 
     //id_seguimiento = 5;
@@ -57,7 +57,7 @@ export class IntentoSeguimientoComponent implements OnInit {
     this.intentos = this.intentos.sort((a: any, b: any) => {
       return new Date(b.fechaIntento).getTime() - new Date(a.fechaIntento).getTime();
     });
-    console.log("seguimiento", this.seguimiento)
+    console.log("data", this.seguimiento, this.contactos)
     console.log("intentos", this.intentos)
   }
 

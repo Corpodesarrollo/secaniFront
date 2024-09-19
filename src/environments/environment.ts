@@ -14,6 +14,8 @@ export const environment = {
   url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
   url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
   url_MSUsuarioyRoles: 'https://msusuariosyroles-dcb4d2cqbkccgxaf.eastus2-01.azurewebsites.net/api/',
+
+  //url_MSSeguimiento: 'https://localhost:7085/',
 };
 
 

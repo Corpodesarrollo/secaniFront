@@ -23,4 +23,9 @@ export class IntentoExitosoService {
     let url = `${'Seguimiento/NNA/'+Id}`;
     return await  this.comun.retorno_get(url);
   }
+
+  PutActualizarSeguimientoRechazo= async (data: any) => {
+    let url = `${'Seguimiento/PutSeguimientoRechazo'}`;
+    return await  this.comun.retorno_put(url, data);
+  }
 }
