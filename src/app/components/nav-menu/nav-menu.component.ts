@@ -21,10 +21,10 @@ export class NavMenuComponent implements OnInit {
   async ngOnInit() {
     var url = environment.url_MsAuthention;
     //Cordinador
-    sessionStorage.setItem('roleId','311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
+    //sessionStorage.setItem('roleId','311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
     sessionStorage.setItem('userId','12413');
     //Agente seguimiento
-    //sessionStorage.setItem('roleId','14CDDEA5-FA06-4331-8359-036E101C5046');
+    sessionStorage.setItem('roleId','14CDDEA5-FA06-4331-8359-036E101C5046');
 
     //Parametro ejemplo agente de seguimiento
     var parameters = {
