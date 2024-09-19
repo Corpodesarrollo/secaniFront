@@ -20,7 +20,7 @@ import { DialogCrearContactoComponent } from './nna-contacto/dialog-crear-contac
 import { BrowserModule } from '@angular/platform-browser';
 import { CrearNnaAgregarContactoComponent } from './nna-contacto/crear-nna-agregar-contacto/crear-nna-agregar-contacto.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
-
+import { CalendarModule } from 'primeng/calendar';
 
 
 @NgModule({
@@ -42,6 +42,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     ButtonModule,
     DialogModule,
     RadioButtonModule,
+    CalendarModule,
 
     /**Component standalone */
     BotonNotificacionComponent,

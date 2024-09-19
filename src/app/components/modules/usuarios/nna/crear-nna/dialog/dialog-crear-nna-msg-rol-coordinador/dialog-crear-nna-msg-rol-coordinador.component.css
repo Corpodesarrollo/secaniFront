@@ -1,0 +1,15 @@
+
+.circulo_check {
+  display: inline-block;
+  width: 50px; /* Ajusta el tamaño */
+  height: 50px; /* Ajusta el tamaño */
+  line-height: 60px; /* Alinea verticalmente el icono */
+  border-radius: 50%; /* Asegura que sea un círculo */
+  text-align: center; /* Centra el icono horizontalmente */
+  color: var(--text-color-blanco); /* Color del texto/icono */
+}
+
+.circulo_check i {
+  font-size: 24px; /* Tamaño del icono */
+  color: white;
+}

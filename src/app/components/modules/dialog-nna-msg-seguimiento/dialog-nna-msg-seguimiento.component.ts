@@ -166,7 +166,7 @@ export class DialogNnaMsgSeguimientoComponent {
       var fechaSeguimiento = this.convertirFormato12a24(this.formFecha, this.formHora, this.formMinuto, this.formAmPm);
       console.log("fechaSeguimiento:", fechaSeguimiento);
       var dataRow = {
-        "idNNA": 1,
+        "idNNA": this.nnaId,
         "fechaSeguimiento": fechaSeguimiento,
         "idEstado": 1,
         "idContactoNNA": this.contactoNNAId,

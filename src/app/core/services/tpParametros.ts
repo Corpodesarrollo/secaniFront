@@ -24,7 +24,7 @@ export class TpParametros {
   }
 
   async getTpEstadosNNA() {
-    var urlbase: string = environment.url_MSParametricas;
+    var urlbase: string = environment.url_MSTablasParametricas
     var url = "EstadoNNA";
     return await this.axios.retorno_get(url, urlbase);
   }

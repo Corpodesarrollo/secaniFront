@@ -19,7 +19,7 @@ export class CrearNnaComponent {
   dataToParent: any;
 
   formNNA: FormGroup;
-  maxDate: string;
+  maxDate: Date;
 
   //Listados select
   listadoTipoIdentificacion: any;
@@ -43,19 +43,23 @@ export class CrearNnaComponent {
   listadoContacto: any = [];
 
   nnaFormCrearSinActivar: boolean = true;
+  nnaFormCrearSinActivarDepartamento: boolean = true;
 
   //Dialog
   visibleDialogRolAgente: boolean = false;
   visibleDialogRolCoordinador: boolean = false;
 
 
+  paiscolombia = 170;
+  departamentoSeleccion: any;
+  ciudadSeleccion: any;
 
 
 
   constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, private axios: Generico) {
 
     // Set the maximum date to today
-    this.maxDate = new Date().toISOString().split('T')[0];
+    this.maxDate = new Date();
 
     this.formNNA = this.fb.group({
       tipoId: ['', [Validators.required]],
@@ -93,6 +97,8 @@ export class CrearNnaComponent {
     this.listadoParentesco = await this.tpParametros.getTPParentesco();
     this.listadoEtnia = await this.tpParametros.getTPEtnia();
     this.listadoGrupoPoblacional = await this.tpParametros.getGrupoPoblacional();
+
+    this.departamentoTs(this.paiscolombia);
 
     //Inicializando form
     this.nnaId = "";
@@ -146,8 +152,35 @@ export class CrearNnaComponent {
   }
 
   async departamento(pais: any) {
-    //console.log("pais", pais.target.value);
-    this.listadoDepartamento = await this.tpParametros.getTPDepartamento(pais.target.value);
+    this.departamentoSeleccion = null;
+    this.ciudadSeleccion = null;
+    if (pais.target.value == 170) {//Colombia
+      //console.log("pais", pais.target.value);
+      this.listadoDepartamento = await this.tpParametros.getTPDepartamento(pais.target.value);
+      this.nnaFormCrearSinActivarDepartamento = false;
+      this.formNNA.get('departamentoNacimiento')?.setValidators([Validators.required]); // Eliminar validaciones
+      this.formNNA.get('departamentoNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
+      this.formNNA.get('ciudadNacimiento')?.setValidators([Validators.required]);  // Eliminar validaciones
+      this.formNNA.get('ciudadNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
+    } else {//Diferente a colombia
+      this.listadoDepartamento = [];
+      this.listadoCiudad = [];
+      this.nnaFormCrearSinActivarDepartamento = true;
+      this.formNNA.get('departamentoNacimiento')?.clearValidators();  // Eliminar validaciones
+      this.formNNA.get('departamentoNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
+      this.formNNA.get('ciudadNacimiento')?.clearValidators();  // Eliminar validaciones
+      this.formNNA.get('ciudadNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
+    }
+  }
+
+  async departamentoTs(pais: any) {
+    if (pais == 170) {//Colombia
+      //console.log("pais", pais.target.value);
+      this.listadoDepartamento = await this.tpParametros.getTPDepartamento(pais);
+      this.nnaFormCrearSinActivarDepartamento = false;
+    } else {//Diferente a colombia
+      this.nnaFormCrearSinActivarDepartamento = true;
+    }
   }
 
   async ciudad(departamento: any) {
@@ -225,7 +258,7 @@ export class CrearNnaComponent {
     var nna = await this.axios.retorno_post(url_path, datosNna, true, urlbase);
     console.log("Crear Nna Guardar", nna, "form", this.formNNA.value, " this.listadoContacto ::", this.listadoContacto);
 
-    this.nnaId = nna.datos[0].id;
+    this.nnaId = nna.datos[0].Id;
 
     //Guardado de lista de contactos
     this.listadoContacto.forEach(async (cuidador: any) => {
@@ -279,9 +312,11 @@ export class CrearNnaComponent {
     if (!data && Object.keys(data).length == 0) {
       //console.log('**** Data received from child:', 'handleDataValidarExistencia', data);
       this.nnaFormCrearSinActivar = false;
+      this.nnaFormCrearSinActivarDepartamento = false;
     } else {
       // Handle the case where the response is empty
       this.nnaFormCrearSinActivar = true;
+      this.nnaFormCrearSinActivarDepartamento = true;
     }
   }
 
