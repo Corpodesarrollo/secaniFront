@@ -61,6 +61,9 @@ export class IntentoExitosoComponent implements OnInit {
     });
 
     this.formGroup4 = this.fb.group({
+      nombreRechazo: [null, Validators.required],
+      parentescoRechazo: [null, Validators.required],
+      razonesRechazo: [null, Validators.required],
     });
   }
 
@@ -219,6 +222,35 @@ export class IntentoExitosoComponent implements OnInit {
 
     const parentesco = this.parentesco.find((item: any) => item.codigo == parentescoId);
     return parentesco ? parentesco.nombre : '';
+  }
+
+
+  async guardarRechazo(){
+
+    let form = this.formGroup4;
+    if (form.valid) {
+      console.log(form.value);
+
+      //TODO: AJUSTAR PARA ENVIAR EL ID DEL USUARIO
+
+      await this.guardarIntentoExitoso();
+
+      //Procedemos a actualizar la fecha de seguimiento
+      let data2 = {
+        "Id": this.seguimiento.id,
+        "NombreRechazo": form.get('nombreRechazo')?.value,
+        "ParentescoRechazo": form.get('parentescoRechazo')?.value,
+        "RazonesRechazo": form.get('razonesRechazo')?.value,
+      }
+
+      console.log("data2", data2)
+      await this.servicio.PutActualizarSeguimientoRechazo(data2);
+      alert("Almacenamiento correcto");
+      this.router.navigate(['intento-seguimiento'], { state: { id_seguimiento: this.seguimiento.id } });
+    }
+    else {
+      alert("Debe Ingresar la fecha");
+    }
   }
 
 }
