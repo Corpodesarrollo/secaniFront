@@ -7,7 +7,7 @@
 }
 
 :host ::ng-deep .fc-timegrid-slot {
-  height: 55px !important; /* Ajusta la altura según tus necesidades */
+  height: 75px !important; /* Ajusta la altura según tus necesidades */
 }
 
 :host ::ng-deep .fc-non-business {

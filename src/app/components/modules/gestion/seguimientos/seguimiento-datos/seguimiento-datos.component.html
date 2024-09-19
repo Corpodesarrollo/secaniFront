@@ -30,11 +30,11 @@
         <div class="col-12">
             <p-card>
                 <div class="row">
-                    <div class="col-6 pe-5">
+                    <div class="col-12 col-md-6 pe-5">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold pe-3">Fecha notificación SIVIGILA: </label>
-                                <label>18/08/2024</label>
+                                <label>{{nna.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy'}}</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -48,10 +48,10 @@
                                     <div class="form-group">
                                         <div class="row align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="nombre" class="fw-bold">Nombre</label>
+                                                <label for="cuidadorNombres" class="fw-bold">Nombre*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input id="nombre" type="text" pInputText formControlName="nombre" [(ngModel)]="nna.nombreContacto">
+                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombre" [(ngModel)]="nna.cuidadorNombres">
                                                 <div *ngIf="submitted && contactForm.get('nombre')?.invalid" class="text-danger">
                                                     Nombre es requerido
                                                 </div>
@@ -62,7 +62,7 @@
                                     <div class="form-group">
                                         <div class="row align-items-center mb-2 p-fluid">
                                             <div class="col-4">
-                                                <label for="parentesco" class="fw-bold">Parentesco</label>
+                                                <label for="parentesco" class="fw-bold">Parentesco*</label>
                                             </div>
                                             <div class="col-8 flex-auto">
                                                 <p-dropdown
@@ -87,18 +87,18 @@
                                     <div class="form-group">
                                         <div class="row align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="telefono" class="fw-bold">Teléfono de Contacto</label>
+                                                <label for="telefono" class="fw-bold">Teléfono de Contacto*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="nna.telefono1">
+                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="nna.cuidadorTelefono">
                                                 <div *ngIf="submitted && contactForm.get('telefono1')?.invalid" class="text-danger">
-                                                    Teléfono es requerido y debe contener solo números
+                                                    Teléfono es requerido
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="col-8 offset-4 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono2" [(ngModel)]="nna.telefono2">
+                                                <input type="text" pInputText formControlName="telefono2" [(ngModel)]="nna.cuidadorTelefono2">
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@
                         <div class="row mb-2">
                             <div class="col-12">
                                 <label class="fw-bold pe-3">Estado de ingreso a la estrategia: </label>
-                                <label>{{nna.estadoIngresoEstrategia}}</label>
+                                <label>{{estadoIngreso}}</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -128,7 +128,7 @@
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-4">
-                                <label for="telefono" class="fw-bold">Origen del reporte</label>
+                                <label for="telefono" class="fw-bold">Origen del reporte*</label>
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
@@ -140,6 +140,9 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione el origen del reporte" />
+                                <div *ngIf="submitted2 && (!nna.origenReporteId || nna.origenReporteId.toString().trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -147,11 +150,11 @@
                                 <label for="telefono" class="fw-bold">Otro</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <input type="text" pInputText placeholder="¿Cual?" [(ngModel)]="nna.otro" >
+                                <input type="text" pInputText placeholder="¿Cual?" [(ngModel)]="nna.origenReporteOtro" >
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 pe-5">
+                    <div class="col-12 col-md-6 pe-5">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold pe-3 fs-5">Identificación del menor de edad</label>
@@ -159,10 +162,13 @@
                         </div>
                         <div class="row align-items-center mb-2">
                             <div class="col-4">
-                                <label for="primerNombre" class="fw-bold">Primer nombre</label>
+                                <label for="primerNombre" class="fw-bold">Primer nombre*</label>
                             </div>
                             <div class="col-8 p-fluid">
                                 <input id="primerNombre" type="text" pInputText [(ngModel)]="nna.primerNombre">
+                                <div *ngIf="submitted2 && (!nna.primerNombre || nna.primerNombre.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -175,10 +181,13 @@
                         </div>
                         <div class="row align-items-center mb-2">
                             <div class="col-4">
-                                <label for="primerApellido" class="fw-bold">Primer apellido</label>
+                                <label for="primerApellido" class="fw-bold">Primer apellido*</label>
                             </div>
                             <div class="col-8 p-fluid">
                                 <input id="primerApellido" type="text" pInputText [(ngModel)]="nna.primerApellido">
+                                <div *ngIf="submitted2 && (!nna.primerApellido || nna.primerApellido.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -191,7 +200,7 @@
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-4">
-                                <label for="tipoDocumento" class="fw-bold">Tipo de ID</label>
+                                <label for="tipoDocumento" class="fw-bold">Tipo de ID*</label>
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
@@ -204,27 +213,36 @@
                                     [showClear]="true"
                                     name="tipoID"
                                     placeholder="Seleccione el tipo de documento" />
+                                <div *ngIf="submitted2 && (!nna.tipoIdentificacionId || nna.tipoIdentificacionId.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
                             <div class="col-4">
-                                <label for="numeroDocumento" class="fw-bold">Número de ID</label>
+                                <label for="numeroDocumento" class="fw-bold">Número de ID*</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <input id="numeroDocumento" type="text" pInputText [(ngModel)]="nna.numeroID">
+                                <input id="numeroDocumento" type="text" pInputText [(ngModel)]="nna.numeroIdentificacion">
+                                <div *ngIf="submitted2 && (!nna.numeroIdentificacion || nna.numeroIdentificacion.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-4">
-                                <label for="fechaNacimiento" class="fw-bold">Fecha de nacimiento</label>
+                                <label for="fechaNacimiento" class="fw-bold">Fecha de nacimiento*</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaNacimiento" (onSelect)="CalcularEdad()"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaNacimiento" [maxDate]="fechaMaxima" (onSelect)="CalcularEdad()"  />
+                                <div *ngIf="submitted2 && (!nna.fechaNacimiento || nna.fechaNacimiento.toString().trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-4">
-                                <label for="paisNacimiento" class="fw-bold">País de nacimiento</label>
+                                <label for="paisNacimiento" class="fw-bold">País de nacimiento*</label>
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
@@ -236,6 +254,9 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione el país de nacimiento" />
+                                <div *ngIf="submitted2 && (!nna.paisId || nna.paisId.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -248,7 +269,7 @@
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-4">
-                                <label for="etnia" class="fw-bold">Etnia</label>
+                                <label for="etnia" class="fw-bold">Etnia*</label>
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
@@ -260,6 +281,9 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione la etnia" />
+                                <div *ngIf="submitted2 && (!nna.etniaId || nna.etniaId.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 p-fluid">
@@ -280,21 +304,21 @@
                         </div>
                         <div class="row align-items-center mb-3">
                             <div class="col-4">
-                                <label for="sexo" class="fw-bold">Sexo</label>
+                                <label for="sexo" class="fw-bold">Sexo*</label>
                             </div>
                             <div class="col-8 button-group">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexo === '1'}" style="width: 150px;" (click)="applySexo('1')">Femenino</button>
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexo === '2'}" style="width: 150px;" (click)="applySexo('2')">Masculino</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexoId === '2'}" style="width: 150px;" (click)="applySexo('2')">Femenino</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexoId === '1'}" style="width: 150px;" (click)="applySexo('1')">Masculino</button>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label class="fw-bold fs-5 pe-2">Afiliación al SGSSS </label><label>(Información contrastada con ADRES)</label>
+                                <label class="fw-bold fs-5 pe-2">Afiliación al SGSSS </label>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
                             <div class="col-4">
-                                <label for="RegimenAfiliación" class="fw-bold">Régimen de afiliación</label>
+                                <label for="RegimenAfiliación" class="fw-bold">Régimen de afiliación*</label>
                             </div>
                             <div class="col-8 p-fluid">
                                 <p-dropdown
@@ -306,11 +330,14 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione el régimen de afiliación" />
+                                <div *ngIf="submitted2 && (!nna.tipoRegimenSSId || nna.tipoRegimenSSId.trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 p-fluid">
                             <div class="col-4">
-                                <label for="EPBA" class="fw-bold">EPBA</label>
+                                <label for="EPBA" class="fw-bold">EAPB*</label>
                             </div>
                             <div class="col-8">
                                 <p-dropdown
@@ -322,6 +349,9 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione el EPBA" />
+                                <div *ngIf="submitted2 && (!nna.eapbId || nna.eapbId.toString().trim() === '')" class="text-danger">
+                                    Campo requerido
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -329,10 +359,10 @@
             </p-card>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg me-3" type="submit" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 </body>

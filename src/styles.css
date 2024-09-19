@@ -5,6 +5,9 @@
 @import "primeicons/primeicons.css";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 :root {
@@ -16,6 +19,7 @@ html {
     height: 100%;
     font-family: 'Montserrat', sans-serif;
     background-color: #F8FBFB;
+    font-size: 14px;
 }
 
 button {
@@ -87,11 +91,6 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
 
 .sinSubMenus span {
     font-weight: bold;
-}
-
-.p-card {
-    margin-top: 20px;
-    margin-right: 10px;
 }
 
 /**

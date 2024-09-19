@@ -5,6 +5,7 @@ import { GenericService } from '../../services/generic.services';
 import { environment } from '../../../environments/environment';
 import { MenuModel } from '../../models/MenuModel';
 import { Router } from '@angular/router';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 export class NavMenuComponent implements OnInit {
   items: MenuItem[] | undefined;
 
-  constructor(private service: GenericService, private router: Router) {
+  constructor(private service: GenericService, private router: Router, private menuService: MenuService) {
 
   }
 
@@ -22,7 +23,7 @@ export class NavMenuComponent implements OnInit {
     var url = environment.url_MsAuthention;
     //Cordinador
     //sessionStorage.setItem('roleId','311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
-    sessionStorage.setItem('userId','12413');
+    //sessionStorage.setItem('userId','12413');
     //Agente seguimiento
     sessionStorage.setItem('roleId','14CDDEA5-FA06-4331-8359-036E101C5046');
 
@@ -56,6 +57,7 @@ export class NavMenuComponent implements OnInit {
               icon: subMenu.menuIcon,
               command: () => {
                 this.router.navigate(['/' + menu.menuPath + '/' + subMenu.menuPath]);
+                this.menuService.toggleMenu();
               }
             };
             menuMap.get(menu.menuNombre)?.items.push(subI);
@@ -72,6 +74,7 @@ export class NavMenuComponent implements OnInit {
           route: '/' + menu.menuPath,
           command: () => {
             this.router.navigate(['/' + menu.menuPath]);
+            this.menuService.toggleMenu();
           },
           styleClass:"sinSubMenus"
         };

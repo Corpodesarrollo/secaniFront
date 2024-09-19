@@ -15,7 +15,12 @@
   </div>
 </p-dialog>
 
-
+<app-info-seguimiento-nna [idNNA]="nnaId"  />
+<br>
+<div style="text-align:right">
+  <img src="iconos/agregarContacto.svg" (click)="nuevoContacto()"/>
+</div>
+<br>
 
 <p-table [value]="contactos" [tableStyle]="{ 'min-width': '50rem' }"
 [paginator]="true"
@@ -38,12 +43,12 @@
   <ng-template pTemplate="body" let-contactos>
       <tr class="custom-row-border">
           <td>{{ contactos.nombres }}</td>
-          <td>{{ contactos.parentescoId }}</td>
+          <td>{{ getNombreParentesco(contactos.parentescoId) }}</td>
           <td>{{ valor_cuidador(contactos.cuidador) }}</td>
           <td>{{ contactos.email }}</td>
           <td>{{ contactos.telefonos }}</td>
-          <td>{{ contactos.tipoResultadoIntento2 }}</td>
           <td>{{ contactos.tipoResultadoIntento1 }}</td>
+          <td>{{ contactos.tipoResultadoIntento2 }}</td>
           <td><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo"/></a></td>
       </tr>
   </ng-template>
@@ -71,7 +76,7 @@
   <ng-template pTemplate="body" let-intentos>
       <tr class="custom-row-border">
           <td>{{ intentos.nombres }}</td>
-          <td>{{ intentos.parentescoId }}</td>
+          <td>{{ getNombreParentesco(intentos.parentescoId) }}</td>
           <td>{{ intentos.email }}</td>
           <td>{{ intentos.telefonos }}</td>
           <td>{{ intentos.fechaIntento | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
@@ -81,3 +86,11 @@
       </tr>
   </ng-template>
 </p-table>
+
+
+
+<p-dialog  [(visible)]="displayModalContacto" [modal]="true"  (onHide)="onModalHide()">
+
+  <app-crear-nna-agregar-contacto [nnaFormCrearSinActivar]="nnaFormCrearSinActivar"
+                    (dataToParent)="handleDataContacto($event)"></app-crear-nna-agregar-contacto>
+</p-dialog>

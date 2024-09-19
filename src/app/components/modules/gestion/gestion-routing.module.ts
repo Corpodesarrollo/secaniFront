@@ -10,18 +10,19 @@ import { SeguimientoSinDiagnosticoComponent } from './seguimientos/seguimiento-s
 import { SeguimientoSinTratamientoComponent } from './seguimientos/seguimiento-sin-tratamiento/seguimiento-sin-tratamiento.component';
 import { SeguimientoFallecidoComponent } from './seguimientos/seguimiento-fallecido/seguimiento-fallecido.component';
 import { DetalleSeguimientosComponent } from './detalle-seguimientos/detalle-seguimientos.component';
+import { SeguimientoGestionarComponent } from './seguimientos/seguimiento-gestionar/seguimiento-gestionar.component';
 
 const routes: Routes = [
   { path: 'seguimientos', component: ConsultarSeguimientosComponent },
-  { path: 'seguimientos/datos-seguimiento', component: SeguimientoDatosComponent },
-  { path: 'seguimientos/estado-seguimiento', component: SeguimientoEstadoComponent },
-  { path: 'seguimientos/traslado-seguimiento', component: SeguimientoTrasladoComponent },
-  { path: 'seguimientos/dificultades-seguimiento', component: SeguimientoDificultadesComponent },
-  { path: 'seguimientos/adherencia-seguimiento', component: SeguimientoAdherenciaComponent },
-  { path: 'seguimientos/sin-diagnostico-seguimiento', component: SeguimientoSinDiagnosticoComponent },
-  { path: 'seguimientos/sin-tratamiento-seguimiento', component: SeguimientoSinTratamientoComponent },
-  { path: 'seguimientos/fallecido-seguimiento', component: SeguimientoFallecidoComponent },
-  { path: 'seguimientos', component: ConsultarSeguimientosComponent },
+  { path: 'seguimientos/datos-seguimiento/:id', component: SeguimientoDatosComponent },
+  { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent },
+  { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent },
+  { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent },
+  { path: 'seguimientos/adherencia-seguimiento/:id', component: SeguimientoAdherenciaComponent },
+  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent },
+  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent },
+  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent },
+  { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent },
   { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
 ];
 

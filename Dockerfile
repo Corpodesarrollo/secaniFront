@@ -20,17 +20,13 @@ RUN cd /usr/local && tar --strip-components 1 -xzf /tmp/node.tar.gz
 RUN mkdir /app
 WORKDIR /app
 
-#Copy package.json and package-lock.json to the working directory
-COPY package.json /app/
-COPY tsconfig.json /app/
-COPY angular.json /app/
+# Copiar todos los archivos del proyecto Angular al directorio de trabajo
+COPY . /app/
 
-# Install dependencies
-RUN npm install
+# Instalar las dependencias
 RUN npm install -g npm@10.7.0
 RUN npm install -g @angular/cli@18.1.0
-
-#VOLUME /mnt/d/workspaces/angular/esap/carnetdigital/carnetdigitalfrom/ /app
+RUN npm install
 
 # Expone el puerto 4200 para el servidor de desarrollo de Angular
 EXPOSE 4200

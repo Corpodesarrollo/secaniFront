@@ -30,7 +30,7 @@
         <div class="col-12">
             <p-card>
                 <div class="row">
-                    <div class="col-6 pe-5">
+                    <div class="col-12 col-md-6 pe-5">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold pe-3 fs-5">¿Ha presentado dificultades en los siguientes procesos?</label>
@@ -40,7 +40,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.autorizacionMedicamentos"
+                                        [(ngModel)]="nna.difAutorizaciondeMedicamentos"
                                         [binary]="true"
                                         label="Autorización de medicamentos"
                                         name="autorizacionMedicamentos" />
@@ -51,7 +51,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.entregaMedicamentosLAP"
+                                        [(ngModel)]="nna.difEntregaMedicamentosLAP"
                                         [binary]="true"
                                         label="Entrega de medicamentos LAP"
                                         name="entregaMedicamentosLAP" />
@@ -62,7 +62,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.entregaMedicamentosNoLAP"
+                                        [(ngModel)]="nna.difEntregaMedicamentosNoLAP"
                                         [binary]="true"
                                         label="Entrega de medicamentos no LAP"
                                         name="entregaMedicamentosNoLAP" />
@@ -73,7 +73,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.asignacionCitas"
+                                        [(ngModel)]="nna.difAsignaciondeCitas"
                                         [binary]="true"
                                         label="Asignación de citas"
                                         name="asignacionCitas" />
@@ -84,7 +84,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.leHanCobradoCopagosCuotas"
+                                        [(ngModel)]="nna.difHanCobradoCuotasoCopagos"
                                         [binary]="true"
                                         label="Le han cobrado copagos o cuotas moderadoras"
                                         name="leHanCobradoCopagosCuotas" />
@@ -95,7 +95,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.autoriacionProcedimientos"
+                                        [(ngModel)]="nna.difAutorizacionProcedimientos"
                                         [binary]="true"
                                         label="Autorización de procedimientos"
                                         name="autoriacionProcedimientos" />
@@ -106,7 +106,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.remisionInstitucionesEspecializadas"
+                                        [(ngModel)]="nna.difRemisionInstitucionesEspecializadas"
                                         [binary]="true"
                                         label="Remisión a instituciones especializadas"
                                         name="leHanCobradoCopagosCuotas" />
@@ -117,7 +117,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.malaAtencionIPS"
+                                        [(ngModel)]="nna.difMalaAtencionIPS"
                                         [binary]="true"
                                         label="Mala atención en la IPS"
                                         name="malaAtencionIPS"
@@ -125,16 +125,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="dificultades.malaAtencionIPS">
+                        <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="nna.difMalaAtencionIPS">
                             <div class="col-8 flex-auto" style="padding-left: 40px;">
-                                <input id="malaAtencionIPSCual" type="text" pInputText [(ngModel)]="dificultades.malaAtencionIPSCual" placeholder="¿Cuál?" [disabled]="!dificultades.malaAtencionIPS">
+                                <p-dropdown
+                                    [(ngModel)]="selectedIPS"
+                                    [options]="IPS"
+                                    optionLabel="nombre"
+                                    [filter]="true"
+                                    filterBy="nombre"
+                                    [showClear]="true"
+                                    name="estado"
+                                    id="estado"
+                                    [disabled]="!nna.difMalaAtencionIPS"
+                                    placeholder="¿Cuál?" />
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="nna.difMalaAtencionIPS">
+                            <div class="col-8 flex-auto" style="padding-left: 40px;">
+                                <input id="malaAtencionIPSCual" type="text" pInputText [(ngModel)]="nna.difMalaAtencionNombreIPSId" placeholder="¿Cuál?" [disabled]="!dificultades.malaAtencionIPS">
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.fallasMIPRES"
+                                        [(ngModel)]="nna.difFallasenMIPRES"
                                         [binary]="true"
                                         label="Fallas en MIPRES"
                                         name="fallasMIPRES" />
@@ -145,7 +160,7 @@
                             <div class="col-12">
                                 <div class="flex align-items-center">
                                     <p-checkbox 
-                                        [(ngModel)]="dificultades.fallaConventioEAPBeIPS"
+                                        [(ngModel)]="nna.difFallaConvenioEAPBeIPSTratante"
                                         [binary]="true"
                                         label="Falla en el convenio entre la EAPB e IPS tratante"
                                         name="fallaConventioEAPBeIPS" />
@@ -154,7 +169,7 @@
                         </div>
                         <app-seguimiento-alertas />
                     </div>
-                    <div class="col-6 pe-5">
+                    <div class="col-12 col-md-6  pe-5">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold pe-3 fs-5">Información de traslados</label>
@@ -165,16 +180,16 @@
                                 <label for="estado" class="fw-bold">¿Ha sido trasladado de institución?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': dificultades.haSidoTrasladado}" style="width: 70px;" (click)="HaSidoTrasladado(true)">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !dificultades.haSidoTrasladado}" style="width: 70px;" (click)="HaSidoTrasladado(false)">NO</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.trasladosHaSidoTrasladadodeInstitucion}" style="width: 70px;" (click)="HaSidoTrasladado(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !nna.trasladosHaSidoTrasladadodeInstitucion}" style="width: 70px;" (click)="HaSidoTrasladado(false)">NO</button>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2" *ngIf="dificultades.haSidoTrasladado">
+                        <div class="row align-items-center mb-2" *ngIf="nna.trasladosHaSidoTrasladadodeInstitucion">
                             <div class="col-4">
                                 <label for="numeroTraslados" class="fw-bold">Número de traslados</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="dificultades.numeroTraslados" (change)="NumeroTraslados()">
+                                <input id="numeroTraslados" type="number" min="1" pInputText [(ngModel)]="nna.trasladosNumerodeTraslados" (change)="NumeroTraslados()">
                             </div>
                         </div>
                         <div *ngFor="let traslado of trasladosArray; let i = index" class="row align-items-center mb-2 flex flex-wrap p-fluid">
@@ -199,19 +214,19 @@
                                 <label for="estado" class="fw-bold">¿Ha tenido que recurrir a algún tipo de acción legal para acceder a la atención?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': dificultades.haRecurridoAccionLegalAtencion}" style="width: 70px;" (click)="AccionesLegales(true)">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !dificultades.haRecurridoAccionLegalAtencion}" style="width: 70px;" (click)="AccionesLegales(false)">NO</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.trasladosHaRecurridoAccionLegal}" style="width: 70px;" (click)="AccionesLegales(true)">SÍ</button>
+                                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': !nna.trasladosHaRecurridoAccionLegal}" style="width: 70px;" (click)="AccionesLegales(false)">NO</button>
                             </div>
                         </div>
-                        <div class="row mb-2 p-fluid" *ngIf="dificultades.haRecurridoAccionLegalAtencion">
+                        <div class="row mb-2 p-fluid" *ngIf="nna.trasladosHaRecurridoAccionLegal">
                             <div class="col-4">
                                 <label for="motivo" class="fw-bold">Motivo</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <textarea id="motivo" pInputText rows="4" [(ngModel)]="dificultades.motivo" placeholder="Escriba aquí"></textarea>
+                                <textarea id="motivo" pInputText rows="4" [(ngModel)]="nna.trasladosMotivoAccionLegal" placeholder="Escriba aquí"></textarea>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-2 p-fluid" *ngIf="dificultades.haRecurridoAccionLegalAtencion">
+                        <div class="row align-items-center mb-2 p-fluid" *ngIf="nna.trasladosHaRecurridoAccionLegal">
                             <div class="col-4">
                                 <label for="estado" class="fw-bold">Tipo de recurso</label>
                             </div>
@@ -233,8 +248,8 @@
             </p-card>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg me-3" type="submit" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
                 </div>
             </div>
         </div>

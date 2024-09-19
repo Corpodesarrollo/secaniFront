@@ -1,0 +1,77 @@
+<div *ngIf="isLoading" class="d-flex align-items-center justify-content-center mb-3">
+    <div class="custom-spinner me-2" *ngIf="!error"></div>
+    <p class="{{colorMensaje}} mb-0 fw-bold">{{mensajeCarga}}</p>
+</div>
+<div class="row mb-3" *ngIf="!isLoading">
+    <!-- Sección de información del menor de edad -->
+    <div class="col-md-6 mb-3 mb-md-0">
+        <p-card [style]="{ 'height': '100%' }">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Menor de edad</h3>
+                <p-button label="Ver detalle NNA" icon="pi pi-eye" size="small" severity="success" [style]="{ 'background-color': '#73b7ad', 'color': 'white', 'border-radius': '8px', 'border-color': 'transparent' }" />
+            </div>
+            <div class="row">
+                <div class="col-5 col-md-5">
+                    <p class="fw-bold mb-0">Nombre:</p>
+                </div>
+                <div class="col-7 col-md-7">
+                    <p class="mb-0">{{NNA.nombreCompleto}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5 col-md-5">
+                    <p class="fw-bold mb-0">Edad:</p>
+                </div>
+                <div class="col-7 col-md-7">
+                    <p class="mb-0">{{NNA.edad}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5 col-md-5">
+                    <span class="fw-bold mb-0">Diagnóstico:</span>
+                </div>
+                <div class="col-7 col-md-7">
+                    <span class="mb-0">{{NNA.diagnostico}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5 col-md-5">
+                    <span class="fw-bold mb-0">Fecha inicio seguimiento:</span>
+                </div>
+                <div class="col-7 col-md-7">
+                    <span class="mb-0">{{NNA.fechaInicioSeguimiento | date:'dd/MM/yyyy' }}</span>
+                </div>
+            </div>
+        </p-card>
+    </div>
+    <div class="col-md-6">
+        <p-card [style]="{ 'height': '100%' }">
+            <div class="d-flex mb-3">
+                <p-button label="Seguimiento en proceso" size="small" class="ms-auto" severity="danger" [style]="{ 'background-color': '#ff9801', 'color': 'white', 'border-radius': '8px', 'border-color': 'transparent' }" />
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="row align-items-center">
+                        <div class="col-3">
+                            <i class="bi bi-stopwatch-fill" style="font-size: 3.5rem; color: #73b7ad;"></i>
+                        </div>
+                        <div class="col-9">
+                            <p class="d-inline-block fw-bold mb-0">Tiempo transcurrido</p>
+                            <p class="mb-0">{{NNA.tiempoTranscurrido}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row align-items-center">
+                        <div class="col-3">
+                            <span class="fw-bold text-center" style="font-size: 3rem;">{{NNA.seguimientosRealizados}}</span>
+                        </div>
+                        <div class="col-9">
+                            <span class="fw-bold" style="line-height: 1;">Seguimientos realizados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+    </div>
+  </div>

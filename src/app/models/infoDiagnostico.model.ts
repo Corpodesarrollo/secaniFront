@@ -16,5 +16,6 @@ export interface InfoDiagnostico {
     observaciones?: string;
     fechaDefuncion?: Date;
     causaMuerte?: string;
+    alertasPendientes?: AlertasTratamiento[];
     alertas?: AlertasTratamiento[];
 }

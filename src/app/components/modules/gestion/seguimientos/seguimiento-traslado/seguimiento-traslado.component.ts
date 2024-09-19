@@ -9,9 +9,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../../models/parametricas.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoTraslado } from '../../../../../models/infoTraslado.model';
+import { NNA } from '../../../../../models/nna.model';
+import { GenericService } from '../../../../../services/generic.services';
 
 @Component({
   selector: 'app-seguimiento-traslado',
@@ -21,6 +23,10 @@ import { InfoTraslado } from '../../../../../models/infoTraslado.model';
   styleUrl: './seguimiento-traslado.component.css'
 })
 export class SeguimientoTrasladoComponent implements OnInit {
+  nna: NNA = new NNA();
+  id: string | undefined;
+  saving: boolean = false;
+  
   traslado: InfoTraslado = {
     id: 0,
     idSeguimiento: 0,
@@ -77,28 +83,36 @@ export class SeguimientoTrasladoComponent implements OnInit {
   areas: Parametricas[] = [];
   tiposRecidencia: Parametricas[] = [];
   
+  submitted2: boolean = false;
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private repos: GenericService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.id = this.routeAct.snapshot.paramMap.get('id')!;
+    this.nna = await this.tpp.getNNA(this.id);
+
     this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
-      { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
+      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
+      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
     ];
 
     this.departamentos = await this.tp.getTP('Departamento');
+    this.selectedDepartamentoProcedencia = this.departamentos.find(x => x.codigo == this.nna.residenciaOrigenCategoriaId);
     this.isLoadingDepartamentoProcedencia = false;
 
     this.areas = await this.tp.getTP('ZonaTerritorial');
+    this.selectedAreaProcedencia = this.areas.find(x => x.codigo == this.nna.residenciaOrigenAreaId);
     this.isLoadingAreaProcedencia = false;
 
     this.estratos = await this.tp.getTP('EstratoSocioeconomico');
+    this.selectedEstratoProcedencia = this.estratos.find(x => x.codigo == this.nna.residenciaOrigenEstratoId);
     this.isLoadingEstratoProcedencia = false;
 
     this.tiposRecidencia = await this.tp.getTP('RIBATipoVivienda');
+    this.selectedTipoRecidenciaActual = this.tiposRecidencia.find(x => x.codigo == this.nna.trasladosPropietarioResidenciaActualId );
     this.isLoadingTipoRecidenciaActual = false;
   }
 
@@ -109,6 +123,7 @@ export class SeguimientoTrasladoComponent implements OnInit {
       if (this.selectedDepartamentoProcedencia) {
         this.municipiosProcedencia = await this.tpp.getTPCiudad(this.selectedDepartamentoProcedencia.codigo);
       }
+      this.selectedMunicipioProcedencia = this.municipiosProcedencia.find(x => x.codigo == this.nna.residenciaOrigenMunicipioId);
       this.isLoadingMunicipioProcedencia = false;
     } else {
       this.isLoadingMunicipioActual = true;
@@ -116,6 +131,7 @@ export class SeguimientoTrasladoComponent implements OnInit {
       if (this.selectedDepartamentoActual) {
         this.municipiosActual = await this.tpp.getTPCiudad(this.selectedDepartamentoActual.codigo);
       }
+      this.selectedMunicipioActual = this.municipiosActual.find(x => x.codigo == this.nna.residenciaActualMunicipioId);
       this.isLoadingMunicipioActual = false;
     }
   }
@@ -128,9 +144,60 @@ export class SeguimientoTrasladoComponent implements OnInit {
     }
   }
 
-  Siguiente() {
-    this.router.navigate(['/gestion/seguimiento/dificultades-seguimiento']).then(() => {
-      window.scrollTo(0, 0);
+  async Siguiente() {
+    this.submitted2 = true;
+    if (this.validarCamposRequeridos()){
+      this.saving = true;
+      await this.Actualizar();
+      this.router.navigate([`/gestion/seguimientos/dificultades-seguimiento/${this.id}`]).then(() => {
+        window.scrollTo(0, 0);
+      });
+    }
+    this.saving = false;
+  }
+
+  validarCamposRequeridos(): boolean {
+    this.nna.residenciaOrigenCategoriaId = this.selectedDepartamentoProcedencia?.codigo ?? '';
+    this.nna.residenciaOrigenMunicipioId = this.selectedMunicipioProcedencia?.codigo ?? '';
+    this.nna.residenciaOrigenAreaId = this.selectedAreaProcedencia?.codigo ?? '';
+    this.nna.residenciaOrigenEstratoId = this.selectedEstratoProcedencia?.codigo ?? '';
+
+    const camposAValidar = [
+      this.nna.residenciaOrigenCategoriaId,
+      this.nna.residenciaOrigenMunicipioId,
+      this.nna.residenciaOrigenBarrio,
+      this.nna.residenciaOrigenAreaId,
+      this.nna.residenciaOrigenDireccion,
+      this.nna.residenciaOrigenEstratoId,
+    ];
+
+    // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    for (const campo of camposAValidar) {
+      if (!campo || campo.toString().trim() === '') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  async Actualizar() {
+    this.nna.residenciaActualCategoriaId = this.selectedDepartamentoActual?.codigo ?? '';
+    this.nna.residenciaActualMunicipioId = this.selectedMunicipioActual?.codigo ?? '';
+    this.nna.residenciaActualAreaId = this.selectedAreaActual?.codigo ?? '';
+    this.nna.residenciaActualEstratoId = this.selectedEstratoActual?.codigo ?? '';
+    this.nna.trasladosPropietarioResidenciaActualId = this.selectedTipoRecidenciaActual?.codigo ?? '';
+
+    return new Promise((resolve, reject) => {
+      this.repos.put('NNA/Actualizar', this.nna, 'NNA').subscribe({
+        next: (data: any) => {
+          resolve(data);
+        },
+        error: (err) => {
+          console.error(err);
+          reject(err);
+        }
+      });
     });
   }
 }
