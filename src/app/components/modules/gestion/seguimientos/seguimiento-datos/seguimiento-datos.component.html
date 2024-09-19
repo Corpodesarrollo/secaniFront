@@ -234,7 +234,7 @@
                                 <label for="fechaNacimiento" class="fw-bold">Fecha de nacimiento*</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaNacimiento" (onSelect)="CalcularEdad()"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaNacimiento" [maxDate]="fechaMaxima" (onSelect)="CalcularEdad()"  />
                                 <div *ngIf="submitted2 && (!nna.fechaNacimiento || nna.fechaNacimiento.toString().trim() === '')" class="text-danger">
                                     Campo requerido
                                 </div>
@@ -313,7 +313,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label class="fw-bold fs-5 pe-2">Afiliación al SGSSS </label><label>(Información contrastada con ADRES)</label>
+                                <label class="fw-bold fs-5 pe-2">Afiliación al SGSSS </label>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -337,7 +337,7 @@
                         </div>
                         <div class="row align-items-center mb-2 p-fluid">
                             <div class="col-4">
-                                <label for="EPBA" class="fw-bold">EPBA*</label>
+                                <label for="EPBA" class="fw-bold">EAPB*</label>
                             </div>
                             <div class="col-8">
                                 <p-dropdown

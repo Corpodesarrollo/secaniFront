@@ -87,16 +87,13 @@ export class ConsultarSeguimientosComponent implements OnInit {
 
     try {
       this.nna = await this.tpp.getNNA(caso.toString());
+      this.CalcularEdad();
 
       this.parentescos = await this.tp.getTP('RLCPDParentesco');
       this.parentesco = this.parentescos.find(x => x.codigo == this.nna.cuidadorParentescoId);
 
-      if (this.diagnosticos && Array.isArray(this.diagnosticos)) {
-        this.diagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);
-      }
-      
-      this.CalcularEdad();
-      
+      this.diagnosticos =  await this.tpp.getDiagnosticos();
+      this.diagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);
     } catch (error) {
       console.error("Error al cargar los datos", error);
       this.colorMensaje = 'text-danger';

@@ -29,7 +29,7 @@ import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimie
 export class SeguimientoDatosComponent implements OnInit {
   nna: NNA = new NNA();
   id: string | undefined;
-
+  fechaMaxima: Date;
   estadoIngreso: string = '';
 
   selectedTipoID: Parametricas | undefined;
@@ -72,6 +72,7 @@ export class SeguimientoDatosComponent implements OnInit {
       telefono1: ['', [Validators.required]],
       telefono2: ['', [Validators.required]]
     });
+    this.fechaMaxima = new Date();
   }
 
   onSubmit() {
