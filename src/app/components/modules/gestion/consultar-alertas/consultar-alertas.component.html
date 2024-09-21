@@ -33,7 +33,7 @@
                     </div>
                     <div class="row">
                       <div class="col" style="font-weight: bold;">Régimen de afiliación<br></div>
-                      <div class="col">{{datosNNA.tipoRegimenSSId}}<br></div>
+                      <div class="col">{{ regimenAfiliacion }}<br></div>
                     </div>
                     <div class="row">
                       <div class="col" style="font-weight: bold;">EAPB<br></div>
@@ -131,60 +131,62 @@
     <div class="table-contenedor">
       <p-table
         [value]="alertas"
-        dataKey="idAlerta"
+        dataKey="alertaId"
         selectionMode="single"
-        [(selection)]="alertaSeleccionada"
         [paginator]="true"
         [rows]="10"
         [responsive]="true"
-        [expandedRowKeys]="expandedRows"
+        [expandedRowKeys]="expandedRowKeys"
         (onRowExpand)="onRowExpand($event)"
         (onRowCollapse)="onRowCollapse($event)">
+
         <ng-template pTemplate="header">
-            <tr>
-                <th class="header-th">Fecha Seguimiento</th>
-                <th class="header-th">Categoría</th>
-                <th class="header-th">Subcategoría</th>
-                <th class="header-th">Observación</th>
-                <th class="header-th">Estado</th>
-                <th class="header-th">Acción</th>
-                <th style="width: 5rem"></th>
-            </tr>
+          <tr>
+            <th class="header-th">Fecha Seguimiento</th>
+            <th class="header-th">Categoría</th>
+            <th class="header-th">Subcategoría</th>
+            <th class="header-th">Observación</th>
+            <th class="header-th">Estado</th>
+            <th class="header-th">Acción</th>
+            <th style="width: 5rem"></th>
+          </tr>
         </ng-template>
+
         <ng-template pTemplate="body" let-alerta let-expanded="expanded">
-            <tr>
-                <td>{{ alerta.ultimaFechaSeguimiento | date:'dd/MM/yyyy' }}</td>
-                <td>{{ alerta.descripcionCategoria }}</td>
-                <td class="subcategoria-column">{{ alerta.descripcionSubcategoria }}</td>
-                <td class="observacion-column">{{ alerta.observaciones }}</td>
-                <td>
-                  <span [ngClass]="[getBadgeColor(alerta.estadoAlertaId), 'fixed-width-badge']"
-                        class="badge text-white me-1">
-                        {{ getDescripcionEstado(alerta.estadoAlertaId) }}
-                    </span>
-                </td>
-                <td>
-                  <div class="icon-container">
-                    <i class="pi pi-file-pdf icon-style"></i>
-                    <i class="pi pi-envelope icon-style"></i>
-                  </div>
-                </td>
-                <td>
-                  <p-button type="button" pRipple [pRowToggler]="alerta" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
-                </td>
-            </tr>
+          <tr>
+            <td>{{ alerta.ultimaFechaSeguimiento | date:'dd/MM/yyyy' }}</td>
+            <td>{{ alerta.descripcionCategoria }}</td>
+            <td class="subcategoria-column">{{ alerta.descripcionSubcategoria }}</td>
+            <td class="observacion-column">{{ alerta.observaciones }}</td>
+            <td>
+              <span [ngClass]="[getBadgeColor(alerta.estadoId), 'fixed-width-badge']" class="badge text-white me-1">
+                {{ getDescripcionEstado(alerta.estadoId) }}
+              </span>
+            </td>
+            <td>
+              <div class="icon-container">
+                <i class="pi pi-file-pdf icon-style"></i>
+                <i class="pi pi-envelope icon-style"></i>
+              </div>
+            </td>
+            <td>
+              <p-button type="button" pRipple [pRowToggler]="alerta" [text]="true" [rounded]="true"
+                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"  (onClick)="consultarNotificaciones(alerta.alertaId)" />
+            </td>
+          </tr>
         </ng-template>
+
         <ng-template pTemplate="rowexpansion" let-alerta>
           <tr>
             <td colspan="7">
               <div class="p-table-container expanded-table-container">
                 <p-table
-                  [value]="alerta.notificaciones"
-                  dataKey="idNotificacion"
+                  [value]="notificacionesAlerta"
+                  dataKey="entidadNotificada"
                   class="p-table expanded-table"
                   [tableStyle]="{ 'min-width': '50rem' }"
-                  [styleClass]="'p-datatable-sm'"
-                  >
+                  [styleClass]="'p-datatable-sm'">
+
                   <ng-template pTemplate="header">
                     <tr>
                       <th>Entidad notificada</th>
@@ -195,9 +197,10 @@
                       <th>Fecha de respuesta</th>
                     </tr>
                   </ng-template>
+
                   <ng-template pTemplate="body" let-notificaciones>
                     <tr>
-                      <td>{{ notificaciones.entidad }}</td>
+                      <td>{{ notificaciones.entidadNotificada }}</td>
                       <td>{{ notificaciones.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
                       <td>{{ notificaciones.asuntoNotificacion }}</td>
                       <td>
@@ -213,6 +216,7 @@
                       <td>{{ notificaciones.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
                     </tr>
                   </ng-template>
+
                   <ng-template pTemplate="emptymessage">
                     <tr>
                       <td colspan="6">No registra notificaciones.</td>

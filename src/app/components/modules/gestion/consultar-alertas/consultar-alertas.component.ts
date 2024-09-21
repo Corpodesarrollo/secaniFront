@@ -54,12 +54,20 @@ export class ConsultarAlertasComponent implements OnInit {
     solicitadosPorCuidador: 0
   };
 
+  todasAlertas: any[] = [];
   alertas: any[] = [];
   categoriasAlerta: any;
   subcategoriasAlerta: any;
   alertaSeleccionada!: any;
 
-  expandedRows = {};
+  notificacionesAlerta: any[] = [];
+
+  listadoRegimenAfiliacion: any;
+  regimenAfiliacion: any = '';
+
+  listadoEAPB: any;
+
+  expandedRowKeys: { [key: string]: boolean } = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -70,41 +78,79 @@ export class ConsultarAlertasComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.idSeguimiento = params.get('id') || ''; // Recupera el valor del parámetro
-    });
-
-    this.repos.get_withoutParameters(`Seguimiento/${this.idSeguimiento}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.seguimiento = data;
-        this.idNna = this.seguimiento.nnaId;
-        this.repos.get_withoutParameters(`/NNA/${this.idNna}`, 'NNA').subscribe({
-          next: (data: any) => {
-            this.datosNNA = data;
-            this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
-            this.calcularTiempoTranscurrido();
-            this.getNombreDepto(this.datosNNA.residenciaOrigenMunicipioId).then(nombreDepto => {
-              this.nombreDeptoOrigen = nombreDepto;
-            });
-            this.getNombreMuni(this.datosNNA.residenciaOrigenMunicipioId).then(nombreDepto => {
-              this.nombreMuniOrigen = nombreDepto;
-            });
-            this.getNombreDepto(this.datosNNA.residenciaOrigenMunicipioId).then(nombreDepto => {
-              this.nombreDeptoActual = nombreDepto;
-            });
-            this.getNombreMuni(this.datosNNA.residenciaOrigenMunicipioId).then(nombreDepto => {
-              this.nombreMuniActual = nombreDepto;
-            });
-          }
-        });
-        this.repos.get_withoutParameters(`/NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
-          next: (data: any) => {
-            this.datosBasicosNNA = data;
-            this.applyFilter('0');
-          }
-        });
-      }
+      this.idSeguimiento = params.get('id') || '';
+      this.loadSeguimientoData();
     });
   }
+
+  loadSeguimientoData() {
+    this.repos.get_withoutParameters(`Seguimiento/${this.idSeguimiento}`, 'Seguimiento').subscribe({
+      next: (seguimientoData: any) => {
+        this.seguimiento = seguimientoData;
+        this.idNna = this.seguimiento.nnaId;
+        this.loadNNAData();
+        this.loadDatosBasicosNNA();
+        this.loadSeguimientoAlertas();
+      },
+      error: (err: any) => console.error('Error al cargar seguimiento', err)
+    });
+  }
+
+  loadNNAData() {
+    this.repos.get_withoutParameters(`/NNA/${this.idNna}`, 'NNA').subscribe({
+      next: async (nnaData: any) => {
+        this.datosNNA = nnaData;
+        this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
+        this.calcularTiempoTranscurrido();
+
+        try {
+          const [regimenAfiliacion, nombreDeptoOrigen, nombreMuniOrigen, nombreDeptoActual, nombreMuniActual] = await Promise.all([
+            this.getNombreTipoAfiliacion(this.datosNNA.tipoRegimenSSId),
+            this.getNombreDepto(this.datosNNA.residenciaOrigenMunicipioId),
+            this.getNombreMuni(this.datosNNA.residenciaOrigenMunicipioId),
+            this.getNombreDepto(this.datosNNA.residenciaActualMunicipioId),
+            this.getNombreMuni(this.datosNNA.residenciaActualMunicipioId)
+          ]);
+
+          this.regimenAfiliacion = regimenAfiliacion;
+          this.nombreDeptoOrigen = nombreDeptoOrigen;
+          this.nombreMuniOrigen = nombreMuniOrigen;
+          this.nombreDeptoActual = nombreDeptoActual;
+          this.nombreMuniActual = nombreMuniActual;
+        } catch (error) {
+          console.error('Error al cargar datos de NNA', error);
+        }
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadDatosBasicosNNA() {
+    this.repos.get_withoutParameters(`/NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
+      next: (datosBasicosData: any) => {
+        this.datosBasicosNNA = datosBasicosData;
+        this.applyFilter('0');
+      },
+      error: (err: any) => console.error('Error al cargar datos básicos del NNA', err)
+    });
+  }
+
+  loadSeguimientoAlertas() {
+    this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
+      next: async (data: any) => {
+
+        const filtradoPorIdSeguimiento = data.filter((item: any) => item.idSeguimiento === Number(this.idSeguimiento));
+
+        if (filtradoPorIdSeguimiento.length > 0 && filtradoPorIdSeguimiento[0].alertasSeguimientos) {
+          this.todasAlertas = filtradoPorIdSeguimiento[0].alertasSeguimientos;
+        } else {
+          console.warn('No se encontró el seguimiento o no hay alertas para el seguimiento');
+        }
+      },
+      error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
+    });
+  }
+
 
   calcularTiempoTranscurrido() {
     if (!this.fechaInicio) {
@@ -132,7 +178,21 @@ export class ConsultarAlertasComponent implements OnInit {
     this.tiempoTranscurrido = `${anos} años, ${meses} meses, ${dias} días`;
   }
 
+  async getNombreTipoAfiliacion(id: string): Promise<string> {
+    let cod = id;
+    let tipos: any[] = await this.tpp.getTPRegimenAfiliacion();
+
+    let filtrado = tipos.filter(objeto => objeto.codigo === cod);
+
+    return filtrado.length > 0 ? filtrado[0].nombre : 'No encontrado';
+  }
+
   async getNombreDepto(codigo: string): Promise<string> {
+
+    if (!codigo) {
+      return 'No encontrado';
+    }
+
     let cod = codigo.substring(0, 2);
     let deptos: any[] = await this.tpp.getTPDepartamento(cod);
 
@@ -142,6 +202,11 @@ export class ConsultarAlertasComponent implements OnInit {
   }
 
   async getNombreMuni(codigo: string): Promise<string> {
+
+    if (!codigo) {
+      return 'No encontrado';
+    }
+
     let deptos: any[] = await this.tpp.getTPCiudad(codigo);
 
     let filtrado = deptos.filter(objeto => objeto.codigo === codigo);
@@ -153,131 +218,12 @@ export class ConsultarAlertasComponent implements OnInit {
     this.activeFilter = filter;
     this.CargarDatos(filter);
   }
-
-  //////////////IMPORTANTE ESTO ES temporal
   CargarDatos(filter: string) {
-    let arreglo = [
-      {
-        'idAlerta':'1',
-        'ultimaFechaSeguimiento':'2014-01-21T06:50:39.6556624',
-        'idCategoria':'1',
-        'descripcionCategoria':'1. Pertinencia',
-        'idSubcategoria':'4',
-        'descripcionSubcategoria':'D. No contar con mecanismos para la recepción de peticiones específicas, quejas y reclamos acerca de la atención de los niños y menores de edad con cáncer.',
-        'observaciones':'Observación de prueba.',
-        'estadoAlertaId':'1',
-        'notificaciones':[
-          {
-            'idNotificacion': 1,
-            'entidad': 'Sanitas EPS',
-            'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificacion':'Notificando todo.',
-            'notificacion':'notificacion.pdf',
-            'respuesta':'respuesta.pdf',
-            'fechaRespuesta':'2014-02-21T06:50:39.6556624'
-          },
-          {
-            'idNotificacion': 2,
-            'entidad': 'Sanitas EPS',
-            'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificacion':'Notificando todo.',
-            'notificacion':'notificacion.pdf',
-            'respuesta':'respuesta.pdf',
-            'fechaRespuesta':'2014-02-21T06:50:39.6556624'
-          }
-        ]
-      },
-      {
-        'idAlerta':'2',
-        'ultimaFechaSeguimiento':'2014-01-21T06:50:39.6556624',
-        'idCategoria':'1',
-        'descripcionCategoria':'1. Pertinencia',
-        'idSubcategoria':'4',
-        'descripcionSubcategoria':'D. No contar con mecanismos para la recepción de peticiones específicas, quejas y reclamos acerca de la atención de los niños y menores de edad con cáncer.',
-        'observaciones':'Observación de prueba.',
-        'estadoAlertaId':'2',
-        'notificaciones':[
-          {
-            'idNotificacion': 1,
-            'entidad': 'Sanitas EPS',
-            'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificacion':'Notificando todo.',
-            'notificacion':'notificacion.pdf',
-            'respuesta':'respuesta.pdf',
-            'fechaRespuesta':'2014-02-21T06:50:39.6556624'
-          },
-          {
-            'idNotificacion': 2,
-            'entidad': 'Sanitas EPS',
-            'fechaNotificacion':'2014-02-21T06:50:39.6556624',
-            'asuntoNotificacion':'Notificando todo.',
-            'notificacion':'notificacion.pdf',
-            'respuesta':'respuesta.pdf',
-            'fechaRespuesta':'2014-02-21T06:50:39.6556624'
-          }
-        ]
-      },
-      {
-        'idAlerta':'3',
-        'ultimaFechaSeguimiento':'2014-01-21T06:50:39.6556624',
-        'idCategoria':'1',
-        'descripcionCategoria':'1. Pertinencia',
-        'idSubcategoria':'4',
-        'descripcionSubcategoria':'D. No contar con mecanismos para la recepción de peticiones específicas, quejas y reclamos acerca de la atención de los niños y menores de edad con cáncer.',
-        'observaciones':'Observación de prueba.kwbrñgqrng{lqknrwekjgbñqjdbñgljbñdslbgñlajsbdljgbñALJBSDÑGLJBAÑSJLDFBGALJBÑJAGBJjljbsñgjbsdñfljbgslndfñblnsldfnbñlnsdfñlbndlfnblnsdfñlbnñsdlnjfbñjsndñfjn',
-        'estadoAlertaId':'3',
-        'notificaciones':[
-        ]
-      },
-      {
-        'idAlerta':'4',
-        'ultimaFechaSeguimiento':'2014-01-21T06:50:39.6556624',
-        'idCategoria':'1',
-        'descripcionCategoria':'1. Pertinencia',
-        'idSubcategoria':'4',
-        'descripcionSubcategoria':'D. No contar con mecanismos para la recepción de peticiones específicas, quejas y reclamos acerca de la atención de los niños y menores de edad con cáncer.',
-        'observaciones':'Observación de prueba.',
-        'estadoAlertaId':'4',
-        'notificaciones':[
-        ]
-      },
-      {
-        'idAlerta':'5',
-        'ultimaFechaSeguimiento':'2014-01-21T06:50:39.6556624',
-        'idCategoria':'1',
-        'descripcionCategoria':'1. Pertinencia',
-        'idSubcategoria':'4',
-        'descripcionSubcategoria':'D. No contar con mecanismos para la recepción de peticiones específicas, quejas y reclamos acerca de la atención de los niños y menores de edad con cáncer.',
-        'observaciones':'Observación de prueba.',
-        'estadoAlertaId':'5',
-        'notificaciones':[
-        ]
-      }
-    ];
-
     if (filter === '0') {
-      this.alertas= arreglo;
+      this.alertas= this.todasAlertas;
     } else {
-      this.alertas = arreglo.filter(item => item.estadoAlertaId === filter);
+      this.alertas = this.todasAlertas.filter(item => item.estadoId === Number(filter));
     }
-
-
-    /*const estadosMap: { [key: string]: number[] } = {
-      '0': [1, 2, 3, 4, 5],
-      '1': [1],
-      '2': [2],
-      '3': [3],
-      '4': [4],
-      '5': [5]
-    };
-
-    const estados = { estados: estadosMap[filter] };
-
-    this.repos.post('Alerta/ConsultarAlertasEstados', estados, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.alertas = data;
-      }
-    });*/
   }
 
   getBadgeColor(estadoAlerta: string): string {
@@ -297,29 +243,44 @@ export class ConsultarAlertasComponent implements OnInit {
     }
   }
 
-  getDescripcionEstado(estadoAlerta: string): string {
-    switch (estadoAlerta) {
-      case '1':
+  getDescripcionEstado(estadoAlerta: any): string {
+    let estado = Number(estadoAlerta);
+    switch (estado) {
+      case 1:
         return 'IDENTIFICADA';
-      case '2':
+      case 2:
         return 'EN TRÁMITE';
-      case '3':
+      case 3:
         return 'SIN RESOLVER';
-      case '4':
+      case 4:
         return 'RESUELTA';
-      case '5':
+      case 5:
         return 'CERRADA POR CAUSAS EXTERNAS';
       default:
         return 'ERROR';
     }
   }
 
-  onRowExpand(event: TableRowExpandEvent) {
-      this.messageService.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
+  onRowExpand(event: any) {
+    for (let key in this.expandedRowKeys) {
+      if (key !== event.data.alertaId) {
+        this.expandedRowKeys[key] = false;
+      }
+    }
+    this.expandedRowKeys[event.data.alertaId] = true;
   }
 
-  onRowCollapse(event: TableRowCollapseEvent) {
-      this.messageService.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
+  onRowCollapse(event: any) {
+    delete this.expandedRowKeys[event.data.alertaId];
+  }
+
+  consultarNotificaciones(alertaId: any){
+
+    this.repos.get('Notificacion/GetNotificationAlerta/', `${alertaId}`, 'Seguimiento').subscribe({
+      next: (data: any) => {
+        this.notificacionesAlerta = data;
+      }
+    });
   }
 
 }
