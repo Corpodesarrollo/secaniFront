@@ -14,8 +14,8 @@
     </app-intento>
   </div>
 </p-dialog>
+<app-info-seguimiento-nna [idNNA]="nnaId"  />
 
-<app-info-seguimiento-nna [idNNA]="seguimiento!.nnaId" />
 <br>
 <div style="text-align:right">
   <img src="iconos/agregarContacto.svg" (click)="nuevoContacto()"/>
@@ -47,8 +47,8 @@
           <td>{{ valor_cuidador(contactos.cuidador) }}</td>
           <td>{{ contactos.email }}</td>
           <td>{{ contactos.telefonos }}</td>
-          <td>{{ contactos.tipoResultadoIntento2 }}</td>
           <td>{{ contactos.tipoResultadoIntento1 }}</td>
+          <td>{{ contactos.tipoResultadoIntento2 }}</td>
           <td><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo"/></a></td>
       </tr>
   </ng-template>

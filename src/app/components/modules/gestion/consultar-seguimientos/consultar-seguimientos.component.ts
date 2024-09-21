@@ -76,7 +76,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
   }
 
   intentosLlamada(id: number) {
-    this.router.navigate(['/intento-seguimiento'], { state: { id} });
+    this.router.navigate(['/intento-seguimiento'], { state: { id_seguimiento : id} });
   }
 
   async solicitudCuidador(caso: number) {
@@ -87,16 +87,13 @@ export class ConsultarSeguimientosComponent implements OnInit {
 
     try {
       this.nna = await this.tpp.getNNA(caso.toString());
+      this.CalcularEdad();
 
       this.parentescos = await this.tp.getTP('RLCPDParentesco');
       this.parentesco = this.parentescos.find(x => x.codigo == this.nna.cuidadorParentescoId);
 
-      if (this.diagnosticos && Array.isArray(this.diagnosticos)) {
-        this.diagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);
-      }
-      
-      this.CalcularEdad();
-      
+      this.diagnosticos =  await this.tpp.getDiagnosticos();
+      this.diagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);
     } catch (error) {
       console.error("Error al cargar los datos", error);
       this.colorMensaje = 'text-danger';
@@ -132,7 +129,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
   getBadgeColor(estadoAlerta: number): string {
     switch (estadoAlerta) {
       case 4: // Resuelta
-        return ' '; // Verde
+        return 'bg-success'; // Verde
       case 1 || 2:
         return 'bg-warning'; // Amarillo
       case 3:

@@ -8,7 +8,7 @@
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <div class="button-group">
-                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '1'}" style="width: 150px;" (click)="applyFilter('1')">
+                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0 " [ngClass]="{'active': activeFilter === '1'}" style="width: 150px;" (click)="applyFilter('1')">
                     <div class="row">
                         <div class="col">
                             Hoy
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                 </button>
-                <button class="btn col-auto rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '2'}" style="width: 150px;" (click)="applyFilter('2')">
+                <button class="btn col-auto  bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '2'}" style="width: 150px;" (click)="applyFilter('2')">
                     <div class="row">
                         <div class="col">
                             Con alerta
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </button>
-                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '3'}" style="width: 150px;" (click)="applyFilter('3')">
+                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '3'}" style="width: 150px;" (click)="applyFilter('3')">
                     <div class="row">
                         <div class="col">
                             Todos
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </button>
-                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0" [ngClass]="{'active': activeFilter === '4'}" style="width: 240px;" (click)="applyFilter('4')">
+                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '4'}" style="width: 240px;" (click)="applyFilter('4')">
                     <div class="row">
                         <div class="col">
                             Solicitados por cuidador
@@ -120,7 +120,7 @@
                 <div class="usuario">
                     <i class="bi bi-person-circle foto-perfil"></i>
                     <div class="datos-usuario">
-                        <p><strong>{{nna.primerNombre}} {{nna.primerApellido}}</strong></p>
+                        <p><strong>{{nna.primerNombre}} {{nna.segundoNombre}} {{nna.primerApellido}} {{nna.segundoApellido}}</strong></p>
                         <p *ngIf="nna.sexoId == '2'">Femenino</p>
                         <p *ngIf="nna.sexoId == '1'">Masculino</p>
                         <p>{{nna.edad}}</p>
@@ -189,11 +189,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-1">
+                    <!-- <div class="row mb-1">
                         <div class="col-8 offset-4">
                             <a href="ruta/a/anexo.pdf" class="anexo-link">Anexo-Diagnóstico Francy.pdf</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
