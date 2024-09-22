@@ -1,15 +1,19 @@
-<p-button styleClass="btn fondo-color-principal text-color-blanco" (onClick)="validarExistencia()" label="VALIDAR EXISTENCIA"  />
-<p-dialog 
-    header="" 
-    [(visible)]="visible" 
-    [modal]="true" 
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
-    [style]="{ width: '50vw' }" 
-    [draggable]="false" 
-    [resizable]="false">
-        <div class="text-center">
-            <span>El menor ya está registrado en SECÁNI</span>
-            <br/><br/>
-            <button (click)="btn_ver_detalle_nna()" class="btn fondo-color-principal text-color-blanco">Ver detalle NNA</button>
-        </div>
+<div class="row">
+  <div class="col-6 text-end">
+    <p-progressSpinner strokeWidth="2" fill="var(--surface-ground)" animationDuration=".5s" *ngIf="mostrar==false" />
+  </div>
+  <div class="col-6">
+    <p-button styleClass="btn fondo-color-principal text-color-blanco" (onClick)="validarExistencia()"
+      label="VALIDAR EXISTENCIA" />
+  </div>
+</div>
+
+
+<p-dialog header="" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <div class="text-center">
+    <span>El menor ya está registrado en SECÁNI</span>
+    <br /><br />
+    <button (click)="btn_ver_detalle_nna()" class="btn fondo-color-principal text-color-blanco">Ver detalle NNA</button>
+  </div>
 </p-dialog>
