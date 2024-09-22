@@ -21,7 +21,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CrearNnaAgregarContactoComponent } from './nna-contacto/crear-nna-agregar-contacto/crear-nna-agregar-contacto.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,11 @@ import { CalendarModule } from 'primeng/calendar';
     DialogModule,
     RadioButtonModule,
     CalendarModule,
+    ProgressSpinnerModule,
+    InputTextModule,
+    FloatLabelModule,
+    IconFieldModule,
+    InputIconModule,
 
     /**Component standalone */
     BotonNotificacionComponent,
