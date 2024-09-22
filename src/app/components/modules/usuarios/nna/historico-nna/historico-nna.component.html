@@ -1,98 +1,112 @@
 <div class="row container-fluid d-flex">
-    <div class="col-12 hnna-titulo-menu text-end">
+  <div class="col-12 hnna-titulo-menu">
+    <div class="row">
+      <div class="col-6">
+        <span class="hnna-titulo">Histórico NNA</span>
+      </div>
+      <div class="col-6 text-end">
         <button class="btn btn-crear" *ngIf="permisos_nna.canAdd==true" (click)="btn_crear_nna()">CREAR NNA</button>
         <app-boton-notificacion></app-boton-notificacion>
-    <div class="col-12 hnna-titulo-content">
-        <span class="hnna-titulo">Histórico NNA</span>
+      </div>
     </div>
-    <div class="card">
-        <div class="row container-fluid">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-12">
-                        <form>
-                            <div class="row">
-                                <div class="col-3">
-                                    <label for="Estado" class="form-label">Estado</label>
-                                    <select class="form-select" aria-label="Estado NNA" [(ngModel)]="filtroEstado"
-                                        (change)="buscar()" id="Estado" name="Estado">
-                                        <option selected value="0">Seleccione</option>
-                                        <option *ngFor="let estado of estadosNNA" [value]="estado.id">
-                                            {{ estado.nombre }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label for="Agentes" class="form-label">Agente asignado</label>
-                                    <select class="form-select" aria-label="Agentes asignado" [(ngModel)]="filtroAgente"
-                                        (change)="buscar()" [value]="filtroAgente" id="Agentes" name="Agentes">
-                                        <option selected value="">Seleccione</option>
-                                        <option *ngFor="let agente of agenteAsignado" [value]="agente.id">
-                                            {{ agente.fullName }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label for="buscar" class="form-label">&nbsp; <span
-                                            class="pi pi-search"></span></label>
-                                    <input type="text" class="form-control" id="buscar" name="buscar"
-                                        (change)="buscar()" placeholder="Buscar" [value]="filtroBuscar"
-                                        [(ngModel)]="filtroBuscar">
-                                </div>
-                                <div class="col-3">
-                                    <label for="orden" class="form-label">&nbsp;</label>
-                                    <select class="form-select" aria-label="Orden" [(ngModel)]="filtroOrganizar"
-                                        (change)="buscar()" id="orden" name="orden">
-                                        <option selected value="1">Organizar por: <strong>El más reciente</strong>
-                                        </option>
-                                        <option value="2">Organizar por: <strong>El más antiguo</strong></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 d-flex mt-3">
-                                    <button class="btn-principal ms-auto p-2" (click)="limpiar()">
-                                        <i class="pi pi-trash"></i>
-                                        <span>Limpiar filtros</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-12 mt-3 mb-3">
-                        <p-table [value]="visualizars" [paginator]="true" [rows]="5" [first]="first"
-                            [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
-                            (onPage)="pageChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
-                            currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th>No. caso</th>
-                                    <th>Nombre NNA</th>
-                                    <th>No. documento</th>
-                                    <th>Último segumiento</th>
-                                    <th>Agente asignado</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-visualizar>
-                                <tr>
-                                    <td><button type="button" class="btn btn-link">{{ visualizar.noCaso }}</button></td>
-                                    <td>{{ visualizar.nombreNNA }}</td>
-                                    <td>{{ visualizar.noDocumento }}</td>
-                                    <td>{{ visualizar.ultimaActualizacion }}</td>
-                                    <td>{{ visualizar.agenteAsignado }}</td>
-                                    <td>
-                                        <div class="btn"
-                                            [ngStyle]="{ 'background-color': visualizar.estadoColorBG, 'color': visualizar.estadoColorText }">
-                                            {{ visualizar.estado }}</div>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
+  </div>
+  <div class="card">
+    <div class="row container-fluid">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12 col-lg-12 col-sm-12">
+            <form>
+              <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12 text-left">
+                  <label for="Estado" class="form-label">Estado</label>
+                  <select class="form-select form-select-lg" aria-label="Estado NNA" [(ngModel)]="filtroEstado"
+                    (change)="buscar()" id="Estado" name="Estado">
+                    <option selected value="0">Seleccione</option>
+                    <option *ngFor="let estado of estadosNNA" [value]="estado.id">
+                      {{ estado.nombre }}
+                    </option>
+                  </select>
                 </div>
-            </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12 text-left">
+                  <label for="Agentes" class="form-label">Agente asignado</label>
+                  <select class="form-select form-select-lg" aria-label="Agentes asignado" [(ngModel)]="filtroAgente"
+                    (change)="buscar()" [value]="filtroAgente" id="Agentes" name="Agentes">
+                    <option selected value="">Seleccione</option>
+                    <option *ngFor="let agente of agenteAsignado" [value]="agente.id">
+                      {{ agente.fullName }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12">
+                  <label for="buscar" class="form-label">&nbsp;</label>
+                  <p-iconField iconPosition="left" class="form-input">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input class="col-12 mb-3" type="text" pInputText id="buscar" name="buscar" (change)="buscar()"
+                      (keyup)="buscar()" (keydown)="buscar()" placeholder="Buscar" [value]="filtroBuscar"
+                      [(ngModel)]="filtroBuscar">
+                  </p-iconField>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12">
+                  <label for="orden" class="form-label">&nbsp;</label>
+                  <select class="form-select form-select-lg" aria-label="Orden" [(ngModel)]="filtroOrganizar"
+                    (change)="buscar()" id="orden" name="orden">
+                    <option selected value="1">Organizar por: <strong>El más reciente</strong>
+                    </option>
+                    <option value="2">Organizar por: <strong>El más antiguo</strong></option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 d-flex mt-3">
+                  <button class="btn-principal ms-auto p-2" (click)="limpiar()">
+                    <i class="pi pi-trash"></i>
+                    <span>Limpiar filtros</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-12 mt-3 mb-3 text-left">
+            <p-table [value]="visualizars" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+              [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
+              currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}" *ngIf="mostrar">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>No. caso</th>
+                  <th>Nombre NNA</th>
+                  <th>No. documento</th>
+                  <th>Último segumiento</th>
+                  <th>Agente asignado</th>
+                  <th>Estado</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-visualizar>
+                <tr>
+                  <td><button type="button" class="btn btn-link">{{ visualizar.noCaso }}</button></td>
+                  <td>{{ visualizar.nombreNNA }}</td>
+                  <td>{{ visualizar.noDocumento }}</td>
+                  <td>{{ visualizar.ultimaActualizacion | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ visualizar.agenteAsignado }}</td>
+                  <td>
+                    <div class="filter-estado"
+                      [ngStyle]="{ 'background-color': visualizar.estadoColorBG, 'color': visualizar.estadoColorText }">
+                      {{ visualizar.estado }}</div>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="6" class="text-center">No se ha encontrado ningún registro de NNA</td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+            <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
+              animationDuration=".5s" *ngIf="mostrar==false" />
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
 </div>

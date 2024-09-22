@@ -104,3 +104,15 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
     margin-left: 0px !important;
     font-family: 'Montserrat', sans-serif;
 }
+
+.text-center{
+  text-align: center;
+}
+
+.text-left{
+  text-align: left;
+}
+
+.text-right{
+  text-align: right;
+}
