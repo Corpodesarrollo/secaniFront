@@ -8,11 +8,12 @@ import { TpParametros } from '../../../core/services/tpParametros';
 import { Generico } from '../../../core/services/generico';
 import { DatePipe } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-dialog-nna-msg-seguimiento',
   standalone: true,
-  imports: [DialogModule, CommonModule, ButtonModule, FormsModule],
+  imports: [DialogModule, CommonModule, ButtonModule, FormsModule, CalendarModule],
   templateUrl: './dialog-nna-msg-seguimiento.component.html',
   styleUrls: ['./dialog-nna-msg-seguimiento.component.css'],
   encapsulation: ViewEncapsulation.Emulated // Esto es por defecto
@@ -41,6 +42,10 @@ export class DialogNnaMsgSeguimientoComponent {
   userId = '';
 
   public agenteAsignadoListado: any;
+  rolIdGeneral = sessionStorage.getItem('roleId');
+
+  minDate: Date | undefined;
+
 
   constructor(
     private router: Router,
@@ -53,13 +58,21 @@ export class DialogNnaMsgSeguimientoComponent {
   }
 
   async ngOnInit() {
+    this.minDate = new Date();
     this.agenteAsignadoListado = await this.tpParametros.getAgentesExistentesAsignados() ?? [];
     //console.log("this.agenteAsignadoListado ::", this.agenteAsignadoListado);
 
     this.formAgenteSeguimiento = this.agenteId > 0 ? this.agenteId : this.coordinadorId;
 
-    sessionStorage.setItem('roleId', '311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
-    this.formAgenteSeguimiento = sessionStorage.getItem('userId');
+
+    if (this.rolIdGeneral == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+      this.formAgenteSeguimiento = sessionStorage.getItem('userId');
+    }
+
+    if (this.rolIdGeneral == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+      this.formAgenteSeguimiento = null;
+    }
+
 
   }
 
@@ -74,6 +87,7 @@ export class DialogNnaMsgSeguimientoComponent {
 
     // Format date as YYYY-MM-DD
     this.formFecha = fecha.toISOString().split('T')[0]; // Extract YYYY-MM-DD
+    this.formFecha = fecha; // Extract YYYY-MM-DD
 
     this.formMinuto = fecha.getMinutes();
 
@@ -104,7 +118,11 @@ export class DialogNnaMsgSeguimientoComponent {
     const year = fecha.getFullYear();
 
     // Format date as YYYY-MM-DD
-    this.formFecha = fecha.toISOString().split('T')[0]; // Extract YYYY-MM-DD
+    this.formFecha = fecha.toISOString().split('T')[0]; // Extract YYYY-MM-DD}
+    // Añadir un día (1000 ms * 60 segundos * 60 minutos * 24 horas)
+    this.formFecha = fecha;
+
+    console.log(this.formFecha);
     this.formMinuto = fecha.getMinutes();
 
     // Format time as 12-hour clock
@@ -154,17 +172,32 @@ export class DialogNnaMsgSeguimientoComponent {
   }
 
   async guardar() {
-    console.log(this.formFecha, this.formHora, this.formMinuto, this.formAmPm, this.axios.isEmpty(this.formFecha) || this.axios.isEmpty(this.formAgenteSeguimiento) || Object.keys(this.formHora).length > 0 || Object.keys(this.formMinuto).length > 0 || this.axios.isEmpty(this.formAmPm));
+    console.log(
+      "this.formFecha,", this.formFecha,
+      "this.formHora,", this.formHora,
+      "this.formMinuto,", this.formMinuto,
+      "this.formAmPm", this.formAmPm,
+      "this.formAgenteSeguimiento,", this.formAgenteSeguimiento,
+      "validacion::",
+      this.isEmpty(this.formFecha)
+      || (this.isEmpty(this.formAgenteSeguimiento) || this.formAgenteSeguimiento == null)
+      || this.isEmpty(this.formHora)
+      || this.isEmpty(this.formMinuto)
+      || this.isEmpty(this.formAmPm));
+
     const now = new Date();
 
-
-    if (this.axios.isEmpty(this.formFecha) || this.axios.isEmpty(this.formAgenteSeguimiento) || Object.keys(this.formHora).length > 0 || Object.keys(this.formMinuto).length > 0 || this.axios.isEmpty(this.formAmPm)) {
+    if (this.isEmpty(this.formFecha)
+      || (this.isEmpty(this.formAgenteSeguimiento) || this.formAgenteSeguimiento == null)
+      || this.isEmpty(this.formHora)
+      || this.isEmpty(this.formMinuto)
+      || this.isEmpty(this.formAmPm)) {
       this.msg = "Campos requeridos.";
     } else {
       this.msg = "";
       //Proceso de guardado
-      var fechaSeguimiento = this.convertirFormato12a24(this.formFecha, this.formHora, this.formMinuto, this.formAmPm);
-      console.log("fechaSeguimiento:", fechaSeguimiento);
+      var fechaSeguimiento:any = this.convertirFormato12a24(this.formFecha.toISOString().split('T')[0], this.formHora, this.formMinuto, this.formAmPm);
+      console.log("**** fechaSeguimiento:", fechaSeguimiento);
       var dataRow = {
         "idNNA": this.nnaId,
         "fechaSeguimiento": fechaSeguimiento,
@@ -174,7 +207,7 @@ export class DialogNnaMsgSeguimientoComponent {
         "idUsuario": this.userId,
         "idSolicitante": this.formAgenteSeguimiento,
         "observacionSolicitante": "Agendamiento inicial",
-        "idUsuarioCreacion":this.userId
+        "idUsuarioCreacion": this.userId
       };
       var urlbase: string = environment.url_MSSeguimiento;
       var url_path = "Seguimiento/SetSeguimiento";
@@ -183,5 +216,9 @@ export class DialogNnaMsgSeguimientoComponent {
       alert(data);
       this.router.navigate(["/usuarios/historico_nna"]);
     }
+  }
+
+  isEmpty(value: any): boolean {
+    return value === null || value === undefined || value === '';
   }
 }

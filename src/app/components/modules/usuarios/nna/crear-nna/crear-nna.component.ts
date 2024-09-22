@@ -37,6 +37,7 @@ export class CrearNnaComponent {
   nnaId: any;
   agenteId: any;
   coordinadorId: any;
+  //createdByUserId
   userId: any;
   ContactoNNAId: any;
   edad: string = "";
@@ -54,7 +55,8 @@ export class CrearNnaComponent {
   departamentoSeleccion: any;
   ciudadSeleccion: any;
 
-
+  sexoId: any;
+  rolIdGeneral = sessionStorage.getItem('roleId');
 
   constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, private axios: Generico) {
 
@@ -85,6 +87,9 @@ export class CrearNnaComponent {
       fecha: ['', []],
       hora: ['', []],
     });
+
+    //createdByUserId
+    this.userId = sessionStorage.getItem('userId');
   }
 
   async ngOnInit() {
@@ -106,16 +111,19 @@ export class CrearNnaComponent {
     this.coordinadorId = "";
     this.userId = sessionStorage.getItem('userId');
 
-    var rolId = sessionStorage.getItem('roleId');
-    if (rolId == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+    if (this.rolIdGeneral == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
       this.agenteId = this.userId;
     }
-    sessionStorage.setItem('roleId', '311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
 
-    if (rolId == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+    if (this.rolIdGeneral == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
       this.coordinadorId = this.userId;
     }
 
+  }
+
+  applySexo(sexo: string) {
+    this.sexoId = sexo;
+    this.formNNA.get('sexo')?.setValue(sexo);
   }
 
   generarCalculoEdad() {
@@ -237,7 +245,7 @@ export class CrearNnaComponent {
       "numeroIdentificacion": this.formNNA.get("numeroId")?.value,
       "fechaNacimiento": this.formNNA.get("fechaNacimiento")?.value,
       "municipioNacimientoId": this.formNNA.get("ciudadNacimiento")?.value,
-      "sexoId": this.formNNA.get("sexo")?.value,
+      "sexoId": this.sexoId,
       "eapbId": this.formNNA.get("eapb0")?.value,
       "grupoPoblacionId": this.formNNA.get("grupoPoblacion")?.value,
       "etniaId": this.formNNA.get("etnia")?.value,
@@ -246,10 +254,10 @@ export class CrearNnaComponent {
       "origenReporteId": this.formNNA.get('originReporte')?.value,
       "tipoRegimenSSId": this.formNNA.get("regimenAfiliacion")?.value,
       "departamentoTratamientoId": this.formNNA.get('departamentoNacimiento')?.value,
-      "CreatedByUserId": this.userId,
+      "CreatedByUserId": this.userId || ' ',
       "dateCreated": now,
       "isDeleted": false,
-      "paisId": this.formNNA.get("paisNacimiento")?.value,
+      "paisId": "'"+this.formNNA.get("paisNacimiento")?.value+"'",
       "cuidadorNombres": cuidadorJson.cuidadorNombres,
       "cuidadorParentescoId": cuidadorJson.cuidadorParentescoId,
       "cuidadorEmail": cuidadorJson.cuidadorEmail,
@@ -258,14 +266,14 @@ export class CrearNnaComponent {
     var nna = await this.axios.retorno_post(url_path, datosNna, true, urlbase);
     console.log("Crear Nna Guardar", nna, "form", this.formNNA.value, " this.listadoContacto ::", this.listadoContacto);
 
-    this.nnaId = nna.datos[0].Id;
+    this.nnaId = nna.datos[0].id;
 
     //Guardado de lista de contactos
     this.listadoContacto.forEach(async (cuidador: any) => {
       var contactoDatosNna = {
         "id": 0,
         "dateCreated": now,
-        "createdByUserId": this.userId,
+        "createdByUserId": this.userId || ' ',
         "isDeleted": false,
         "nnaId": this.nnaId,
         "nombres": cuidador.nombreCompletoCuidador,
@@ -284,15 +292,16 @@ export class CrearNnaComponent {
 
 
     //Genrar guardado
-    var rolId = sessionStorage.getItem('roleId');
-    if (rolId == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+    if (this.rolIdGeneral == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+      this.visibleDialogRolAgente = false;
       this.visibleDialogRolAgente = true;
       this.agenteId = this.userId;
     }
 
-    if (rolId == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+    if (this.rolIdGeneral == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+      this.visibleDialogRolCoordinador = false;
       this.visibleDialogRolCoordinador = true;
-      this.agenteId = this.coordinadorId;
+      this.agenteId = null;
     }
   }
 
