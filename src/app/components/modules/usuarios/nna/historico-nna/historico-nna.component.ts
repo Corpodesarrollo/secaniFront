@@ -28,6 +28,8 @@ export class HistoricoNnaComponent {
   first = 0;
   rows = 10;
 
+  mostrar = false;
+
   permisos_nna: any = {
     canAdd: true,
     canDel: false,
@@ -35,7 +37,9 @@ export class HistoricoNnaComponent {
     CanEdit: false
   }
 
-  constructor(private service: GenericService, private router: Router, private tpParametro: TpParametros) { }
+  constructor(private service: GenericService, private router: Router, private tpParametro: TpParametros) {
+    this.limpiar();
+  }
 
   async ngOnInit() {
     this.estadosNNA = await this.tpParametro.getTpEstadosNNA() ?? [];
@@ -52,6 +56,7 @@ export class HistoricoNnaComponent {
   }
 
   async buscar() {
+    this.mostrar = false;
     var url = environment.url_MsNna;
     var parameter: any = {
       estado: this.filtroEstado,
@@ -61,6 +66,7 @@ export class HistoricoNnaComponent {
     };
     this.visualizars = await this.service.postAsync(url, 'NNA/ConsultarNNAFiltro', parameter) ?? [];
     //console.log("HU Visualizar", this.visualizars);
+    this.mostrar = true;
   }
 
 

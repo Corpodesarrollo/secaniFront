@@ -1,0 +1,118 @@
+.button-group button {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.button-group button.active {
+  background-color: #73b7ad !important;
+  color: white;
+}
+
+.observacion-column {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 200px;
+  overflow-wrap: break-word;
+}
+
+.subcategoria-column{
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 200px;
+  overflow-wrap: break-word;
+}
+
+.bg-dark{
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 160px;
+  overflow-wrap: break-word;
+}
+
+.icon-container {
+  display: flex;
+  gap: 10px; /* Espacio entre los íconos */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;
+}
+
+.icon-style {
+  background-color: #8CC4C0;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+.fixed-width-badge {
+  width: 120px;
+  display: inline-block;
+  text-align: center;
+}
+
+.icon-style-eye {
+  color: darkslategrey;
+  padding: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+
+
+
+.table-contenedor {
+  border-radius: 10px; /* Ajusta el valor del radio según prefieras */
+  overflow: hidden; /* Asegura que el borde redondeado se vea correctamente */
+}
+
+.expanded-table-container {
+  border-radius: 10px; /* Ajusta el valor del radio según prefieras */
+  overflow: hidden; /* Asegura que el borde redondeado se vea correctamente */
+}
+
+.expanded-table th {
+  background-color: #fff;
+  color: #9e9e9e;
+  font-weight: normal;
+  padding: 8px;
+  text-align: left;
+}
+
+/*.expanded-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: 50px;
+  background-color: #fff;
+}
+
+
+
+.expanded-table td {
+  padding: 8px;
+}
+
+.expanded-table tbody tr:last-child td {
+  border-bottom: none;
+}*/
+
+.icon-style-eye {
+  font-size: 1.2rem;
+  color: #6c757d;
+}

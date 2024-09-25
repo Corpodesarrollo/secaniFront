@@ -231,7 +231,8 @@
               </label>
             </div>
             <div class="col-sm-9">
-              <p-calendar  [iconDisplay]="'input'" [disabled]="nnaFormCrearSinActivar" formControlName="fechaNacimiento" [showIcon]="true" inputId="icondisplay" [maxDate]="maxDate" (onSelect)="generarCalculoEdad()"  />
+              <p-calendar [iconDisplay]="'input'" [disabled]="nnaFormCrearSinActivar" formControlName="fechaNacimiento"
+                [showIcon]="true" inputId="icondisplay" [maxDate]="maxDate" (onSelect)="generarCalculoEdad()" [readonlyInput]="true" />
             </div>
             <div class="col-sm-12"
               *ngIf="formNNA.get('fechaNacimiento')?.invalid && formNNA.get('fechaNacimiento')?.touched">
@@ -259,7 +260,8 @@
               </label>
             </div>
             <div class="col-sm-9">
-                <p-calendar [iconDisplay]="'input'" [disabled]="nnaFormCrearSinActivar" formControlName="fechaIngresoEstrategia" [showIcon]="true" inputId="icondisplay" />
+              <p-calendar [iconDisplay]="'input'" [disabled]="nnaFormCrearSinActivar"
+                formControlName="fechaIngresoEstrategia" [showIcon]="true" inputId="icondisplay" [readonlyInput]="true"/>
             </div>
             <div class="col-sm-12"
               *ngIf="formNNA.get('fechaIngresoEstrategia')?.invalid && formNNA.get('fechaIngresoEstrategia')?.touched">
@@ -279,27 +281,16 @@
             </div>
             <div class="col-sm-9">
               <div class="row">
-
-                <div class="col-sm-3">
-                  <p-radioButton name="sexo" value="1" formControlName="sexo" inputId="ingredient1"
-                    [attr.disabled]="nnaFormCrearSinActivar" />
-                  <label for="ingredient1" class="ml-2">
-                    Femenino
-                  </label>
+                <div class="col-12 button-group">
+                  <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '2'}"
+                    style="width: 150px;" (click)="applySexo('2')" [disabled]="nnaFormCrearSinActivar">Femenino</button>
+                  <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '1'}"
+                    style="width: 150px;" (click)="applySexo('1')" [disabled]="nnaFormCrearSinActivar">Masculino</button>
                 </div>
-
-                <div class="col-sm-3">
-                  <p-radioButton name="sexo" value="2" formControlName="sexo" inputId="ingredient2"
-                    [attr.disabled]="nnaFormCrearSinActivar" />
-                  <label for="ingredient2" class="ml-2">
-                    Masculino
-                  </label>
-                </div>
-
               </div>
             </div>
-            <div class="col-sm-12" *ngIf="formNNA.get('sexo')?.invalid && formNNA.get('sexo')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('sexo')?.value)">Sexo es requerido.</small>
+            <div class="col-sm-12" *ngIf="isEmpty(sexoId)">
+              <small class="errors" *ngIf="isEmpty(sexoId)">Sexo es requerido.</small>
             </div>
           </div>
         </div>
@@ -360,7 +351,8 @@
                 </label>
               </div>
               <div class="col-sm-9">
-                <select class="form-select" formControlName="departamentoNacimiento" (change)="ciudad($event)" [(ngModel)]="departamentoSeleccion">
+                <select class="form-select" formControlName="departamentoNacimiento" (change)="ciudad($event)"
+                  [(ngModel)]="departamentoSeleccion">
                   <option value="">Seleccione</option>
                   <option *ngFor="let depa of listadoDepartamento" [value]="depa.codigo"
                     [disabled]="nnaFormCrearSinActivar">

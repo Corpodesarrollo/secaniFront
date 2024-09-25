@@ -25,6 +25,12 @@ import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogNnaMsgSeguimientoComponent } from './components/modules/dialog-nna-msg-seguimiento/dialog-nna-msg-seguimiento.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @NgModule({
   declarations: [
@@ -34,7 +40,7 @@ import { DialogNnaMsgSeguimientoComponent } from './components/modules/dialog-nn
     HeaderComponent,
     FooterComponent,
     ContentComponent,
-    
+
   ],
   imports: [
     UsuariosModule,
@@ -53,10 +59,15 @@ import { DialogNnaMsgSeguimientoComponent } from './components/modules/dialog-nn
     RippleModule,
     AvatarModule,
     TableModule,
+    ProgressSpinnerModule,
+    InputTextModule,
+    CalendarModule,
+    IconFieldModule,
+    InputIconModule
 
     /**Component standalone */
-    
-    
+
+
 ],
   providers: [TablasParametricas],
   bootstrap: [AppComponent]
