@@ -1,0 +1,12 @@
+.spinner-indicador-de-carga-govco {
+  display: inline-block;
+  vertical-align: -0.125em;
+  border-radius: 50%;
+  -webkit-animation: .75s linear infinite spinner-border;
+  animation: .75s linear infinite spinner-border;
+  border-color: #73B7AD;
+  border-style: solid;
+  border-right-color: transparent;
+  position: relative;
+  text-align: center;
+}

@@ -19,7 +19,11 @@
         </tr>
         <tr>
           <td>
-            <span class="porcentaje" *ngIf="data.porcentaje > 0">{{ data.porcentaje }}% esta semana</span>
+            <span class="porcentaje" *ngIf="data.porcentaje">
+              <span *ngIf="estilo" class="porcentaje_1">&#8679; {{ data.porcentaje }}% </span>
+              <span *ngIf="!estilo" class="porcentaje_2">&#8681; {{ data.porcentaje }}% </span>
+
+               esta semana</span>
           </td>
         </tr>
       </table>
