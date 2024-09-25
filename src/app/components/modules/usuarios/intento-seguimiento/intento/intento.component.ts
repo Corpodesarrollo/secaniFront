@@ -36,6 +36,8 @@ export class IntentoComponent implements OnInit {
   //Formularios
   formFallido: FormGroup;
 
+  totalSeguimientos:any;
+
   constructor( private fb: FormBuilder, public servicio: IntentoService,private router: Router,) {
     this.formFallido = this.fb.group({
       TipoFallaIntentoId: ['', Validators.required],
@@ -59,8 +61,9 @@ export class IntentoComponent implements OnInit {
 
 
    this.tiposFallas = await this.servicio.GetTipoFallasLlamada();
+   this.totalSeguimientos = await this.servicio.GetSeguimientoNNA(this.seguimiento.nnaId);
 
-
+    console.log(this.totalSeguimientos, this.seguimiento);
     /*this.tiposFallas = [
       {id_tipo_falla: 1, nombre_tipo_falla: 'Falla 1'},
       {id_tipo_falla: 2, nombre_tipo_falla: 'Falla 2'},

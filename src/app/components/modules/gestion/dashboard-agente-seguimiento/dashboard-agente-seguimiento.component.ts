@@ -1,3 +1,4 @@
+import { SpinnerComponent } from './../../shared/spinner/spinner.component';
 import { Component, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { TarjetaKPIComponent } from "../../shared/tarjetaKPI/tarjetaKPI.component";
@@ -9,12 +10,14 @@ import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-
 import { DashboardAgenteSeguimientoService } from './dashboard-agente-seguimiento.services';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+
+
 @Component({
   selector: 'app-dashboard-agente-seguimiento',
   templateUrl: './dashboard-agente-seguimiento.component.html',
   styleUrls: ['./dashboard-agente-seguimiento.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, CommonModule, TarjetaCabeceraComponent, ReactiveFormsModule ],
+  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, CommonModule, TarjetaCabeceraComponent, ReactiveFormsModule, SpinnerComponent ],
 })
 export class DashboardAgenteSeguimientoComponent implements OnInit {
   totalCasos: number = 5423;
@@ -98,7 +101,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
     await this.filtroFechas(this.fechaInicial, this.fechaFinal);
 
 
-    this.cargado = true;
+
   }
 
 
@@ -413,7 +416,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       ]
     };
 
-
+    this.cargado = true;
   }
 
   async onSubmit() {

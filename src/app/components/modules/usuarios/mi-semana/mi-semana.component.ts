@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 
 import { IntentoComponent } from '../intento-seguimiento/intento/intento.component';
 import { TpParametros } from '../../../../core/services/tpParametros';
+import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
 
 @Component({
   selector: 'app-mi-semana',
@@ -26,7 +27,7 @@ import { TpParametros } from '../../../../core/services/tpParametros';
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, BotonNotificacionComponent]
 })
 export class MiSemanaComponent {
   @ViewChild('calendar')
@@ -62,7 +63,7 @@ export class MiSemanaComponent {
 
   //agenteSeleccionado: any;
 
-  constructor(public servicios: MiSemanaService,  private fb: FormBuilder, private router: Router, private TpParametros: TpParametros) {
+  constructor(public servicios: MiSemanaService,  private fb: FormBuilder) {
 
 
 
@@ -230,7 +231,8 @@ export class MiSemanaComponent {
 
     this.events = eventosBD.map((item: { primerNombre: any; segundoNombre: any; primerApellido: any; segundoApellido: any; fechaSeguimiento: string | number | Date; cantidadAlertas: any; fechaNotificacionSIVIGILA: any; id: any; }) => {
       // Concatenar nombres y apellidos
-      let title = `${item.primerNombre} ${item.segundoNombre} ${item.primerApellido} ${item.segundoApellido}`.trim();
+      //let title = `${item.primerNombre} ${item.segundoNombre} ${item.primerApellido} ${item.segundoApellido}`.trim();
+      let title = `${item.primerNombre} ${item.primerApellido}`.trim();
 
       // Fecha de seguimiento como start
       let start = new Date(item.fechaSeguimiento);

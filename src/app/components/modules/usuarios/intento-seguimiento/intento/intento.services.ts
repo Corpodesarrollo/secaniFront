@@ -21,4 +21,12 @@ export class IntentoService {
     return await  this.comun.retorno_get(url);
   }
 
+  GetSeguimientoNNA = async (NNAId: any) => {
+    let url = `${'Seguimiento/SeguimientoNNA/'+NNAId}`;
+    return await  this.comun.retorno_get(url);
+  }
+
+
+
+
 }
