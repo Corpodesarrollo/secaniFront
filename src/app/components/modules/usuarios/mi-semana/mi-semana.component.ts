@@ -131,7 +131,7 @@ export class MiSemanaComponent {
 
     // TODO: Determinar id del usuario
     //let usuarioId = sessionStorage.getItem('usuarioId');
-    this.usuarioId = '1';
+    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
 
     this.diasLimite(this.currentDate);
     await this.horarioLaboral();
@@ -221,8 +221,10 @@ export class MiSemanaComponent {
 
 
   async eventos(){
-    let eventosBD = await this.servicios.GetSeguimientoUsuario(this.usuarioId, this.fechaInicial, this.fechaFinal);
 
+
+    let eventosBD = await this.servicios.GetSeguimientoUsuario(this.usuarioId, this.fechaInicial, this.fechaFinal);
+    console.log("eventosBD", eventosBD, this.usuarioId, this.fechaInicial, this.fechaFinal)
 
     // Función para sumar 30 minutos a una fecha
     let addMinutes = (date: Date, minutes: number): Date => {
