@@ -170,8 +170,15 @@
               </div>
             </td>
             <td>
-              <p-button type="button" pRipple [pRowToggler]="alerta" [text]="true" [rounded]="true"
-                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"  (onClick)="consultarNotificaciones(alerta.alertaId)" />
+              <p-button
+                type="button"
+                pRipple
+                [pRowToggler]="alerta"
+                [text]="true"
+                [rounded]="true"
+                [plain]="true"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                (onClick)="consultarNotificaciones(alerta.alertaId)" />
             </td>
           </tr>
         </ng-template>
