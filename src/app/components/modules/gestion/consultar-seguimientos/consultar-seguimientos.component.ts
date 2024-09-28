@@ -13,6 +13,8 @@ import { NNA } from '../../../../models/nna.model';
 import { DialogModule } from 'primeng/dialog';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../models/parametricas.model';
+import { Injectable } from "@angular/core";
+import { User } from '../../../../core/services/userService';
 
 @Component({
   selector: 'app-consultar-seguimientos',
@@ -24,9 +26,9 @@ import { Parametricas } from '../../../../models/parametricas.model';
 })
 
 export class ConsultarSeguimientosComponent implements OnInit {
-
   nna: NNA = new NNA();
-  idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
+  // idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
+  idUsuario?: string;
   cntFiltros: SeguimientoCntFiltros = {
     hoy: 0,
     conAlerta: 0,
@@ -49,10 +51,14 @@ export class ConsultarSeguimientosComponent implements OnInit {
     private router: Router,
     private repos: GenericService,
     private tp: TablasParametricas,
-    private tpp: TpParametros
+    private tpp: TpParametros,
+    private user: User
   ) { }
 
   ngOnInit(): void {
+    this.idUsuario = this.user.id;
+    console.log("idUsuario", this.idUsuario);
+
     this.CargarDatos('1');
 
     this.repos.get('Seguimiento/GetCntSeguimiento/', `${this.idUsuario}`, 'Seguimiento').subscribe({

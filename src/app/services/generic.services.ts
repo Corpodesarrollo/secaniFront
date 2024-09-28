@@ -49,9 +49,14 @@ export class GenericService {
     }
   }
 
+  public getAuth(modulo: string, parameters: string, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    return this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
+  }
+
   public get(modulo: string, parameters: string, api: string = '') {
     const apiUrl = this.getApiUrl(api);
-    return this.http.get(`${apiUrl}${modulo}${parameters}`);
+    return this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
   }
 
   public get_withoutParameters(modulo: string, api: string = '') {
