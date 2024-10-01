@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  cookie : false,
   production: false,
   url: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
   url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
@@ -15,7 +16,6 @@ export const environment = {
   url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
   url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
   url_MSUsuarioyRoles: 'https://msusuariosyroles-dcb4d2cqbkccgxaf.eastus2-01.azurewebsites.net/api/',
-
   //url_MSSeguimiento: 'https://localhost:7085/',
 };
 
