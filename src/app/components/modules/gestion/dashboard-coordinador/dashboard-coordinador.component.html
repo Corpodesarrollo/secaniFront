@@ -1,4 +1,5 @@
 <br>
+<app-spinner *ngIf="!cargado"></app-spinner>
 <div class="container-fluid" *ngIf="cargado">
   <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
 
@@ -82,6 +83,7 @@
             <app-tarjeta-caso-critico [caso] = caso ></app-tarjeta-caso-critico>
           </div>
         </div>
+
       </div>
 
       <br>

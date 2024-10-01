@@ -56,6 +56,11 @@ export class DashboardAgenteSeguimientoService {
     return await  this.comun.retorno_get(url);
   }
 
+  GetCasosCriticos= async ( FechaInicial: Date, FechaFinal: Date) => {
+    let url = `${'Dashboard/GetCasosCriticos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
+    return await  this.comun.retorno_get(url);
+  }
+
 
 
 
@@ -78,4 +83,17 @@ export class DashboardAgenteSeguimientoService {
     let url = `${'TipoFallaLlamada'}`;
     return await  this.comun.retorno_get_parametrica(url);
   }
+
+  GetTpEstadoAlerta = async () => {
+    let url = `${'EstadoAlerta'}`;
+    return await  this.comun.retorno_get_parametrica(url);
+  }
+
+
+  GetInfoUsuario = async (id: any) => {
+    let url = `${'User/GetUserDetails/'+id}`;
+    return await  this.comun.retorno_get_usuarios(url);
+  }
+
+
 }

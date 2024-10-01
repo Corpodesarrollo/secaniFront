@@ -10,20 +10,20 @@
 
 
 
-          <span class="badge text-bg-{{badge}}"><strong>{{ caso.estado }}</strong></span>
+          <span class="badge text-bg-{{badge}}"><strong>{{ caso.alertaId }} - {{ caso.nombre }}</strong></span>
 
           <br><br>
-        <strong>{{ caso.nombre }}</strong><br>
-        <strong>{{ caso.tiempo }}</strong><br>
+        <strong>{{ caso.primerNombre }}{{ caso.segundoNombre }}{{ caso.primerApellido }}{{ caso.segundoApellido }}</strong><br>
+        <strong>{{ calcularTiempoTranscurrido(caso.fechaNacimiento, hoy) }}</strong><br>
 
-        <span class="enfermedad">{{caso.enfermedad}}</span>
+        <span class="enfermedad">{{caso.diagnostico}}</span>
         <br>
         <span class="inferior" style="color: {{color}}; text-align:left">
-          Ubicación: {{ caso.ubicacion }}<br>
-          &nbsp;&nbsp;Fecha de notificación: {{ caso.fecha }}<br>
-          &nbsp;&nbsp;Entidades: {{ caso.entidades }}<br>
+          Ubicación: {{ caso.DepartamentoActual }}  {{ caso.MunicipioActual }}<br>
+          &nbsp;&nbsp;Fecha de notificación: {{ caso.fechaNotificacionSIVIGILA }}<br>
+          &nbsp;&nbsp;Entidades: {{ caso.entidad }}<br>
 
-          <span *ngIf="caso.agente != ''">&nbsp;&nbsp;<strong>Agente de seguimiento: {{caso.agente}}</strong></span>
+          <span *ngIf="caso.agente != ''">&nbsp;&nbsp;<strong>Agente de seguimiento: {{caso.fullName}}</strong></span>
         </span>
 
       </td>

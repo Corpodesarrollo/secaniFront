@@ -27,8 +27,8 @@ import { User } from '../../../../core/services/userService';
 
 export class ConsultarSeguimientosComponent implements OnInit {
   nna: NNA = new NNA();
-  // idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
-  idUsuario?: string;
+  idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
+  // idUsuario?: string;
   cntFiltros: SeguimientoCntFiltros = {
     hoy: 0,
     conAlerta: 0,
@@ -56,7 +56,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.idUsuario = this.user.id;
+    // this.idUsuario = this.user.id;
     console.log("idUsuario", this.idUsuario);
 
     this.CargarDatos('1');
