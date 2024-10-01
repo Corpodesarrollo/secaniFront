@@ -8,13 +8,14 @@ import { TarjetaCasoCriticoComponent } from '../../shared/tarjeta-caso-critico/t
 import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-cabecera.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DashboardCoordinadorService } from './dashboard-coordinador.services';
+import { SpinnerComponent } from './../../shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-dashboard-coordinador',
   templateUrl: './dashboard-coordinador.component.html',
   styleUrls: ['./dashboard-coordinador.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, ReactiveFormsModule],
+  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, ReactiveFormsModule, SpinnerComponent],
 })
 export class DashboardCoordinadorComponent implements OnInit {
 
@@ -50,48 +51,6 @@ export class DashboardCoordinadorComponent implements OnInit {
     });
 
     Chart.register(ChartDataLabels);
-    this.casosCriticos = [
-      {
-        estado: 'EN TRÁMITE',
-        nombre: 'Ana del Pilar Ruiz Bolaños',
-        tiempo: '3 años, 2 meses y 13 días',
-        enfermedad: 'Leucemia linfoide',
-        ubicacion: 'Apartadó, Antioquía',
-        fecha: '02/09/2024',
-        entidades: 'EPS Sánitas, ET Antioquía',
-        agente: 'Marisol García'
-      },
-      {
-        estado: 'SIN RESOLVER',
-        nombre: 'Jose Luis Vergara Peña',
-        tiempo: '3 años, 2 meses y 13 días',
-        enfermedad: 'Leucemia linfoide',
-        ubicacion: 'Apartadó, Antioquía',
-        fecha: '02/09/2024',
-        entidades: 'EPS Sánitas, ET Antioquía',
-        agente: 'Marisol García'
-      },
-      {
-        estado: 'EN TRÁMITE',
-        nombre: 'Ana del Pilar Ruiz Bolaños',
-        tiempo: '3 años, 2 meses y 13 días',
-        enfermedad: 'Leucemia linfoide',
-        ubicacion: 'Apartadó, Antioquía',
-        fecha: '02/09/2024',
-        entidades: 'EPS Sánitas, ET Antioquía',
-        agente: 'Marisol García'
-      },
-      {
-        estado: 'SIN RESOLVER',
-        nombre: 'Jose Luis Vergara Peña',
-        tiempo: '3 años, 2 meses y 13 días',
-        enfermedad: 'Leucemia linfoide',
-        ubicacion: 'Apartadó, Antioquía',
-        fecha: '02/09/2024',
-        entidades: 'EPS Sánitas, ET Antioquía',
-        agente: 'Marisol García'
-      },
-    ];
 
   }
 
@@ -101,7 +60,7 @@ export class DashboardCoordinadorComponent implements OnInit {
 
     await this.filtroFechas(this.fechaInicial, this.fechaFinal);
 
-    this.cargado = true;
+
 
   }
 
@@ -181,6 +140,8 @@ export class DashboardCoordinadorComponent implements OnInit {
   }
 
   async filtroFechas(fecha_inicial: any, fecha_final: any){
+
+    this.cargado = false;
 
     let datos1 = await this.servicios.GetEntidadCantidad(fecha_inicial, fecha_final);
 
@@ -302,19 +263,27 @@ export class DashboardCoordinadorComponent implements OnInit {
     };
 
     ///////////////////////////////////////////////////////////
-
-    //TODO: AJUSTAR POR QUE EL SERVICIO BASE ESTA DAÑADO
-     //let parametrica4  = await this.servicios.GetEstadoAlerta();
-     let parametrica4  = await this.servicios.GetEstadoSeguimiento();
-
+     let parametrica4  = await this.servicios.GetEstadoAlerta();
      let datos4  = await this.servicios.GetEstadosAlertas(fecha_inicial, fecha_final, '');
+
+     const totalCantidad = datos4.reduce((sum: any, item: { cantidad: any; }) => sum + item.cantidad, 0);
+     console.log('totalCantidad ', totalCantidad);
+
+     datos4 = datos4.map((item: { cantidad: number; }) => {
+      return {
+          ...item,
+          porcentaje: ((item.cantidad / totalCantidad) * 100).toFixed(2) // Porcentaje con 2 decimales
+      };
+    });
+
+     console.log('datos4 ', datos4)
 
      const backgroundColors2 = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
 
      const labels4 = parametrica4.map((p: { nombre: any; }) => p.nombre);
      const data4 = parametrica4.map((p: { id: any; }) => {
        const match = datos4.find((d: { estadoId: any; }) => d.estadoId === p.id);
-       return match ? match.cantidad : 0; // Si no hay match, se pone 0
+       return match ? match.porcentaje : 0; // Si no hay match, se pone 0
      });
 
     this.alertasData = {
@@ -342,6 +311,72 @@ export class DashboardCoordinadorComponent implements OnInit {
       }
     };
 
+    /////////////////////////////////////
+    let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
+console.log("infoCritica", infoCritica);
+
+    let infoAlerta = await this.servicios.GetTpEstadoAlerta();
+
+    let resultado = infoCritica.map((item: { alertaId: any; nombre: any; }) => {
+      // Buscar en json2 el objeto con el id que coincide con el alertaId
+      let coincidencia = infoAlerta.find((alerta: { id: any; }) => alerta.id === item.alertaId);
+
+      // Si hay coincidencia, añadir el campo nombre al objeto de json1
+      if (coincidencia) {
+        item.nombre = coincidencia.nombre;
+      }
+
+      return item;
+    });
+
+
+    this.casosCriticos = resultado.sort((a: { alertaId: any; fechaSeguimiento: Date; }, b: { alertaId: any; fechaSeguimiento: Date; }) => {
+      // Orden de prioridad por alertaId: 3 primero, luego 2, y el resto
+      const prioridadAlertaId = (id: number) => (id === 3 ? 1 : id === 2 ? 2 : 3);
+
+      const prioridadA = prioridadAlertaId(a.alertaId);
+      const prioridadB = prioridadAlertaId(b.alertaId);
+
+      if (prioridadA !== prioridadB) {
+        return prioridadA - prioridadB;  // Primero se compara por la prioridad del alertaId
+      }
+
+      // Si tienen la misma prioridad, se ordenan por fechaSeguimiento (descendente)
+      const fechaA = new Date(a.fechaSeguimiento).getTime();
+      const fechaB = new Date(b.fechaSeguimiento).getTime();
+
+      return fechaB - fechaA; // Orden descendente de fechas
+    }).slice(0, 4);
+
+    await this.agregarFullName();
+     // Asigna los casos actualizados con fullName al array original
+
+
+    this.cargado = true;
+  }
+
+  async agregarFullName() {
+    // Mapeamos sobre el array de casosCriticos para obtener el fullName de cada agente
+    const updatedCasos = await Promise.all(
+      this.casosCriticos.map(async (caso: any) => {
+        try {
+          // Obtener info del usuario usando el AgenteSeguimiento
+          const respuesta = await this.servicios.GetInfoUsuario(caso.agenteSeguimiento);
+
+          // Añadir el campo fullName al objeto de casosCriticos
+          caso.fullName = respuesta.fullName;
+        } catch (error) {
+          console.error(`Error obteniendo el fullName para el AgenteSeguimiento ${caso.AgenteSeguimiento}:`, error);
+          // Puedes manejar el error o dejar el fullName vacío si ocurre un error
+          caso.fullName = 'No disponible';
+        }
+
+        return caso;
+      })
+    );
+    this.casosCriticos = updatedCasos;
+
+    console.log(this.casosCriticos);
 
   }
 

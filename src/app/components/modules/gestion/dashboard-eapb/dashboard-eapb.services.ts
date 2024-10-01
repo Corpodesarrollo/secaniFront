@@ -5,7 +5,7 @@ import { Generico } from '../../../../core/services/generico';
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardCoordinadorService {
+export class DashboardEapbService {
   constructor(private comun: Generico) {}
 
 
@@ -30,23 +30,29 @@ export class DashboardCoordinadorService {
     return await  this.comun.retorno_get(url);
   }
 
-  GetEntidadCantidad= async ( FechaInicial: Date, FechaFinal: Date) => {
-    let url = `${'Dashboard/GetEntidadCantidad?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
-    return await  this.comun.retorno_get(url);
-  }
 
   GetEstadosSeguimientos= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
     let url = `${'Dashboard/GetEstadosSeguimientos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
     return await  this.comun.retorno_get(url);
   }
 
-  GetAgenteCantidad= async ( FechaInicial: Date, FechaFinal: Date) => {
-    let url = `${'Dashboard/GetAgenteCantidad?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
+  GetEstadosNNas= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
+    let url = `${'Dashboard/GetEstadosNNas?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
     return await  this.comun.retorno_get(url);
   }
 
   GetEstadosAlertas= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
     let url = `${'Dashboard/GetEstadosAlertas?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
+    return await  this.comun.retorno_get(url);
+  }
+
+  GetEstadosIntentos= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
+    let url = `${'Dashboard/GetEstadosIntentos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
+    return await  this.comun.retorno_get(url);
+  }
+
+  GetFechasAsignacion= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
+    let url = `${'Dashboard/GetFechasAsignacion?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
     return await  this.comun.retorno_get(url);
   }
 
@@ -56,10 +62,15 @@ export class DashboardCoordinadorService {
   }
 
 
-  // Parametricas
+
 
   GetEstadoSeguimiento = async () => {
     let url = `${'EstadoSeguimiento'}`;
+    return await  this.comun.retorno_get_parametrica(url);
+  }
+
+  GetEstadoNNA = async () => {
+    let url = `${'EstadoNNA'}`;
     return await  this.comun.retorno_get_parametrica(url);
   }
 
@@ -68,13 +79,21 @@ export class DashboardCoordinadorService {
     return await  this.comun.retorno_get_parametrica(url);
   }
 
-  GetInfoUsuario = async (id: any) => {
-    let url = `${'User/GetUserDetails/'+id}`;
-    return await  this.comun.retorno_get_usuarios(url);
+  GetTipoFalla = async () => {
+    let url = `${'TipoFallaLlamada'}`;
+    return await  this.comun.retorno_get_parametrica(url);
   }
 
   GetTpEstadoAlerta = async () => {
     let url = `${'EstadoAlerta'}`;
     return await  this.comun.retorno_get_parametrica(url);
   }
+
+
+  GetInfoUsuario = async (id: any) => {
+    let url = `${'User/GetUserDetails/'+id}`;
+    return await  this.comun.retorno_get_usuarios(url);
+  }
+
+
 }

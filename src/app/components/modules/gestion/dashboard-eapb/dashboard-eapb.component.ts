@@ -6,19 +6,23 @@ import { Chart } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { TarjetaCasoCriticoComponent } from '../../shared/tarjeta-caso-critico/tarjeta-caso-critico.component';
 import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-cabecera.component";
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DashboardEapbService } from './dashboard-eapb.services';
 
 @Component({
   selector: 'app-dashboard-eapb',
   templateUrl: './dashboard-eapb.component.html',
   styleUrls: ['./dashboard-eapb.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule,],
+  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, SpinnerComponent, ReactiveFormsModule],
 })
 export class DashboardEapbComponent implements OnInit {
 
 
   usuario: any = "EPS Sanitas";
   data_1: any = {};
+  data_2: any = {};
   data_3: any = {};
 
   alertasData: any;
@@ -29,7 +33,26 @@ export class DashboardEapbComponent implements OnInit {
   alertas: any;
   badge: any;
 
-  constructor() {
+  cargado = false;
+
+  currentDate: Date = new Date();
+  fechaInicial: any;
+  fechaFinal: any;
+  formFechas: FormGroup;
+
+  usuarioId: any;
+
+  constructor( private fb: FormBuilder, public servicios: DashboardEapbService) {
+
+    //TODO: ACTUALIZAR TEMAS DE USUARIO
+    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
+
+    this.diasLimite(this.currentDate);
+    this.formFechas = this.fb.group({
+      fechaInicio: [this.fechaInicial],
+      fechaFin: [this.fechaFinal]
+    });
+
     Chart.register(ChartDataLabels);
     this.alertas = [
       {
@@ -68,20 +91,77 @@ export class DashboardEapbComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  diasLimite(currentDate: Date) {
+
+
+    const currentWeekday = currentDate.getDay(); // Obtiene el día de la semana actual (0 = domingo, 1 = lunes, ..., 6 = sábado)
+
+    let f1 = new Date(currentDate);
+    let f2 = new Date(currentDate);
+
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0 a 11
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+
+    f1.setDate(currentDate.getDate() - currentWeekday + 1);
+    f2.setDate(currentDate.getDate() - currentWeekday + 5);
+
+    this.fechaInicial = formatDate(f1);
+    this.fechaFinal = formatDate(f2);
+  }
+
+
+  async ngOnInit() {
+
+    await this.dataBarra();
+
+    await this.filtroFechas(this.fechaInicial, this.fechaFinal);
+
+
+
+
+
+
+  }
+
+
+  async dataBarra(){
+    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal, '1');
+    let dataP1 =  ((dataT1.totalCasosActual - dataT1.totalCasosAnterior)/dataT1.totalCasosAnterior)*100;
 
     this.data_1 = {
       imagen:1,
-      titulo: 'Total Casos',
-      valor: '5423',
-      porcentaje: 16
+      titulo: 'Total Casos en Colombia',
+      valor: dataT1.totalCasosActual,
+      porcentaje: dataP1.toFixed(2)
     }
-    this.data_3 = {
-      imagen:1,
-      titulo: 'Alertas',
-      valor: '9',
 
+
+
+    this.data_2 = {
+      imagen:2,
+      titulo: 'Registros propios',
+      valor: dataT1.totalCasosActual,
+      porcentaje: dataP1.toFixed(2)
     }
+
+
+    this.data_3 = {
+      imagen:3,
+      titulo: 'Alertas',
+      valor: dataT1.totalCasosActual,
+      porcentaje: dataP1.toFixed(2)
+    }
+
+
+  }
+
+  async filtroFechas(fecha_inicial: any, fecha_final: any){
+    this.cargado = false;
 
     this.alertasData = {
       labels: ['Importantes', 'Tratamiento', 'Continuidad', 'Autorizaciones'],
@@ -102,6 +182,9 @@ export class DashboardEapbComponent implements OnInit {
         }
       ]
     };
+
+
+    //--------------------------------------
 
     this.alertasOptions = {
       plugins: {
@@ -134,6 +217,7 @@ export class DashboardEapbComponent implements OnInit {
     };
 
 
+    this.cargado = true;
   }
 
 }

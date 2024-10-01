@@ -15,15 +15,18 @@ export class TarjetaCasoCriticoComponent implements OnInit {
   color : any;
   badge: any;
 
+  hoy = new Date();
+
   constructor() { }
 
   ngOnInit() {
 
-    if ( this.caso.estado == 'EN TRÁMITE'){
+
+    if ( this.caso.alertaId == 2){
       this.color = '#FF9801';
       this.badge = 'warning';
     }
-    else {
+    if ( this.caso.alertaId == 3){
       this.color = '#EC2121';
       this.badge = 'danger';
     }
