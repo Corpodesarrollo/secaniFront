@@ -49,14 +49,31 @@ export class GenericService {
     }
   }
 
+  public getAuth(modulo: string, parameters: string, api: string = '') {
+    const apiUrl = this.getApiUrl(api);
+    if (environment.cookie) {
+      return this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
+    } else {
+      return this.http.get(`${apiUrl}${modulo}${parameters}`);
+    }
+  }
+
   public get(modulo: string, parameters: string, api: string = '') {
     const apiUrl = this.getApiUrl(api);
-    return this.http.get(`${apiUrl}${modulo}${parameters}`);
+    if (environment.cookie){
+      return this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
+    } else {
+      return this.http.get(`${apiUrl}${modulo}${parameters}`);
+    }
   }
 
   public get_withoutParameters(modulo: string, api: string = '') {
     const apiUrl = this.getApiUrl(api);
-    return this.http.get<any[]>(`${apiUrl}${modulo}`);
+    if (environment.cookie){
+      return this.http.get(`${apiUrl}${modulo}`, { withCredentials: true });
+    } else {
+      return this.http.get<any[]>(`${apiUrl}${modulo}`);
+    }
   }
 
   public get_withoutParametersAxios(modulo: string): Observable<any[]> {
@@ -89,9 +106,12 @@ export class GenericService {
   }
 
   public put(modulo: string, parameters: any, api: string = '') {
-    console.log('put', modulo, parameters);
     const apiUrl = this.getApiUrl(api);
-    return this.http.put(`${apiUrl}${modulo}`, parameters);
+    if (environment.cookie){
+      return this.http.put(`${apiUrl}${modulo}`, parameters, { withCredentials: true });
+    } else {
+      return this.http.put(`${apiUrl}${modulo}`, parameters);
+    }
   }
 
   public putAxios(modulo: string, data: any): Observable<any> {
