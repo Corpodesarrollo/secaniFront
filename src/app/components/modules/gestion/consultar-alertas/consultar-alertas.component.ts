@@ -135,7 +135,7 @@ export class ConsultarAlertasComponent implements OnInit {
     });
   }
 
-  loadSeguimientoAlertas() {
+  /*loadSeguimientoAlertas() {
     this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
       next: async (data: any) => {
 
@@ -149,7 +149,29 @@ export class ConsultarAlertasComponent implements OnInit {
       },
       error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
     });
-  }
+  }*/
+
+    loadSeguimientoAlertas() {
+      this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
+        next: async (data: any) => {
+
+          this.todasAlertas = data.reduce((alertasAcumuladas: any[], item: any) => {
+            if (item.alertasSeguimientos) {
+              return alertasAcumuladas.concat(item.alertasSeguimientos);
+            }
+            return alertasAcumuladas;
+          }, []);
+
+          if (this.todasAlertas.length > 0) {
+            console.log('Alertas cargadas:', this.todasAlertas);
+          } else {
+            console.warn('No se encontraron alertas en los seguimientos');
+          }
+        },
+        error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
+      });
+    }
+
 
 
   calcularTiempoTranscurrido() {

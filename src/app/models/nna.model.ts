@@ -28,8 +28,11 @@ export class NNA {
     sexoId!: string;
     tipoRegimenSSId!: string;
     eapbId!: string;
+    eapbNombre!: string;
     epsId!: number;
+    epsNombre!: string;
     ipsId!: number;
+    ipsNombre!: string;
     grupoPoblacionId!: string;
     etniaId!: string;
     estadoIngresoEstrategiaId!: number;

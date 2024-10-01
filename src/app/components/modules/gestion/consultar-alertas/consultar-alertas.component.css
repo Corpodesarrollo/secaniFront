@@ -27,7 +27,7 @@
   overflow-wrap: break-word;
 }
 
-.bg-dark{
+.text-wrap{
   word-wrap: break-word;
   word-break: break-all;
   white-space: normal;

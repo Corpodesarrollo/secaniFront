@@ -37,11 +37,11 @@
                     </div>
                     <div class="row">
                       <div class="col" style="font-weight: bold;">EAPB<br></div>
-                      <div class="col">{{datosNNA.eapbId}}<br></div>
+                      <div class="col">{{datosNNA.eapbNombre}}<br></div>
                     </div>
                     <div class="row">
                       <div class="col" style="font-weight: bold;">IPS<br></div>
-                      <div class="col">{{datosNNA.ipsId}}<br></div>
+                      <div class="col">{{datosNNA.epsNombre}}<br></div>
                     </div>
                   </div>
                   <div class="col">
@@ -113,7 +113,7 @@
                 [ngClass]="{'active': activeFilter === '4'}"
                 style="width: 240px; margin-top: 10px;"
                 (click)="applyFilter('4')">
-          Resultas
+          Resueltas
         </button>
 
         <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
@@ -155,11 +155,11 @@
         <ng-template pTemplate="body" let-alerta let-expanded="expanded">
           <tr>
             <td>{{ alerta.ultimaFechaSeguimiento | date:'dd/MM/yyyy' }}</td>
-            <td>{{ alerta.descripcionCategoria }}</td>
-            <td class="subcategoria-column">{{ alerta.descripcionSubcategoria }}</td>
+            <td>{{ alerta.categoriaAlerta }}</td>
+            <td class="subcategoria-column">{{ alerta.subcategoriaAlerta }}</td>
             <td class="observacion-column">{{ alerta.observaciones }}</td>
             <td>
-              <span [ngClass]="[getBadgeColor(alerta.estadoId), 'fixed-width-badge']" class="badge text-white me-1">
+              <span [ngClass]="[getBadgeColor(alerta.estadoId), 'fixed-width-badge', 'text-wrap']" class="badge text-white me-1">
                 {{ getDescripcionEstado(alerta.estadoId) }}
               </span>
             </td>
