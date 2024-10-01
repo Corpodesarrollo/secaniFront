@@ -94,25 +94,19 @@
   text-align: left;
 }
 
-/*.expanded-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-  border-radius: 50px;
-  background-color: #fff;
-}
-
-
-
-.expanded-table td {
-  padding: 8px;
-}
-
-.expanded-table tbody tr:last-child td {
-  border-bottom: none;
-}*/
-
 .icon-style-eye {
   font-size: 1.2rem;
   color: #6c757d;
+}
+
+.btn-detalle-seguimiento{
+  background-color: #FF9801;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.btn-detalle-seguimiento:hover {
+  background-color: #ff9901c3;
+  color: white;
 }
