@@ -9,6 +9,7 @@ import { TarjetaCasoCriticoComponent } from '../../shared/tarjeta-caso-critico/t
 import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-cabecera.component";
 import { DashboardAgenteSeguimientoService } from './dashboard-agente-seguimiento.services';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 
@@ -17,7 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './dashboard-agente-seguimiento.component.html',
   styleUrls: ['./dashboard-agente-seguimiento.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, CommonModule, TarjetaCabeceraComponent, ReactiveFormsModule, SpinnerComponent ],
+  imports: [CommonModule, ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, CommonModule, TarjetaCabeceraComponent, ReactiveFormsModule, SpinnerComponent ],
 })
 export class DashboardAgenteSeguimientoComponent implements OnInit {
   totalCasos: number = 5423;
@@ -54,10 +55,10 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
   cargado = false;
 
 
-  constructor(public servicios: DashboardAgenteSeguimientoService, private fb: FormBuilder) {
+  constructor(public servicios: DashboardAgenteSeguimientoService, private fb: FormBuilder,  public router: Router) {
 
     //TODO: ACTUALIZAR TEMAS DE USUARIO
-    this.usuarioId = 1;
+    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
 
     this.diasLimite(this.currentDate);
     this.formFechas = this.fb.group({
@@ -67,26 +68,10 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
     // Registrar el plugin de DataLabels
     Chart.register(ChartDataLabels);
-    this.casosCriticos = [
-      {
-        estado: 'EN TRÁMITE',
-        nombre: 'Ana del Pilar Ruiz Bolaños',
-        tiempo: '3 años, 2 meses y 13 días',
-        enfermedad: 'Leucemia linfoide',
-        ubicacion: 'Apartadó, Antioquía',
-        fecha: '02/09/2024',
-        entidades: 'EPS Sánitas, ET Antioquía',
-      },
-      {
-        estado: 'SIN RESOLVER',
-        nombre: 'Jose Luis Vergara Peña',
-        tiempo: '3 años, 2 meses y 13 días',
-        enfermedad: 'Leucemia linfoide',
-        ubicacion: 'Apartadó, Antioquía',
-        fecha: '02/09/2024',
-        entidades: 'EPS Sánitas, ET Antioquía',
-      },
-    ];
+
+
+
+
 
 
 
@@ -174,6 +159,8 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
 
   async filtroFechas(fecha_inicial: any, fecha_final: any){
+
+    this.cargado = false;
 
     let parametrica  = await this.servicios.GetEstadoSeguimiento();
     let datos  = await this.servicios.GetEstadosSeguimientos(fecha_inicial, fecha_final, this.usuarioId);
@@ -347,12 +334,12 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
      const totalCantidad = datos4.reduce((sum: any, item: { cantidad: any; }) => sum + item.cantidad, 0);
      console.log('totalCantidad ', totalCantidad)
 
-     datos4 = datos4.map((item: { cantidad: number; }) => {
+    datos4 = datos4.map((item: { cantidad: number; }) => {
       return {
           ...item,
           porcentaje: ((item.cantidad / totalCantidad) * 100).toFixed(2) // Porcentaje con 2 decimales
       };
-  });
+    });
 
      console.log('datos4 ', datos4)
 
@@ -416,7 +403,96 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       ]
     };
 
+
+    /////////////////////////////////////
+    let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
+    let infoAlerta = await this.servicios.GetTpEstadoAlerta();
+
+    let resultado = infoCritica.map((item: { alertaId: any; nombre: any; }) => {
+      // Buscar en json2 el objeto con el id que coincide con el alertaId
+      let coincidencia = infoAlerta.find((alerta: { id: any; }) => alerta.id === item.alertaId);
+
+      // Si hay coincidencia, añadir el campo nombre al objeto de json1
+      if (coincidencia) {
+        item.nombre = coincidencia.nombre;
+      }
+
+      return item;
+    });
+
+
+    this.casosCriticos = resultado.sort((a: { alertaId: any; fechaSeguimiento: Date; }, b: { alertaId: any; fechaSeguimiento: Date; }) => {
+      // Orden de prioridad por alertaId: 3 primero, luego 2, y el resto
+      const prioridadAlertaId = (id: number) => (id === 3 ? 1 : id === 2 ? 2 : 3);
+
+      const prioridadA = prioridadAlertaId(a.alertaId);
+      const prioridadB = prioridadAlertaId(b.alertaId);
+
+      if (prioridadA !== prioridadB) {
+        return prioridadA - prioridadB;  // Primero se compara por la prioridad del alertaId
+      }
+
+      // Si tienen la misma prioridad, se ordenan por fechaSeguimiento (descendente)
+      const fechaA = new Date(a.fechaSeguimiento).getTime();
+      const fechaB = new Date(b.fechaSeguimiento).getTime();
+
+      return fechaB - fechaA; // Orden descendente de fechas
+    }).slice(0, 2);
+
+    await this.agregarFullName();
+
+
+
+
+    /*this.casosCriticos = [
+      {
+        estado: 'EN TRÁMITE',
+        nombre: 'Ana del Pilar Ruiz Bolaños',
+        tiempo: '3 años, 2 meses y 13 días',
+        enfermedad: 'Leucemia linfoide',
+        ubicacion: 'Apartadó, Antioquía',
+        fecha: '02/09/2024',
+        entidades: 'EPS Sánitas, ET Antioquía',
+      },
+      {
+        estado: 'SIN RESOLVER',
+        nombre: 'Jose Luis Vergara Peña',
+        tiempo: '3 años, 2 meses y 13 días',
+        enfermedad: 'Leucemia linfoide',
+        ubicacion: 'Apartadó, Antioquía',
+        fecha: '02/09/2024',
+        entidades: 'EPS Sánitas, ET Antioquía',
+      },
+    ];*/
+
+
     this.cargado = true;
+  }
+
+  async agregarFullName() {
+    // Mapeamos sobre el array de casosCriticos para obtener el fullName de cada agente
+    const updatedCasos = await Promise.all(
+      this.casosCriticos.map(async (caso: any) => {
+        try {
+          // Obtener info del usuario usando el AgenteSeguimiento
+          const respuesta = await this.servicios.GetInfoUsuario(caso.agenteSeguimiento);
+
+          // Añadir el campo fullName al objeto de casosCriticos
+          caso.fullName = respuesta.fullName;
+        } catch (error) {
+          console.error(`Error obteniendo el fullName para el AgenteSeguimiento ${caso.AgenteSeguimiento}:`, error);
+          // Puedes manejar el error o dejar el fullName vacío si ocurre un error
+          caso.fullName = 'No disponible';
+        }
+
+        return caso;
+      })
+    );
+
+    // Asigna los casos actualizados con fullName al array original
+    this.casosCriticos = updatedCasos;
+
+    console.log(this.casosCriticos); // Verificar que ahora tienen el fullName
   }
 
   async onSubmit() {
@@ -424,5 +500,22 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
     const fechaFin = this.formFechas.value.fechaFin;
 
     this.filtroFechas(fechaInicio, fechaFin);
+  }
+
+
+  redireccion(opc: number){
+    const fechaInicio = this.formFechas.value.fechaInicio;
+    const fechaFin = this.formFechas.value.fechaFin;
+
+
+    if(opc == 2){
+      this.router.navigate(['reportes/nna'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+    }
+    if(opc == 3){
+      this.router.navigate(['reportes/alertas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+    }
+    if(opc == 4){
+      this.router.navigate(['reportes/llamadas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+    }
   }
 }

@@ -47,8 +47,8 @@
         </div>
       </form>
       <br>
-      <div class="card" style="padding:20px">
-        <div class="chart">
+      <div class="card" style="padding:20px" >
+        <div class="chart" >
           <h4>Seguimientos</h4>
           <p-chart type="doughnut" [data]="seguimientosData" [options]="seguimientosOptions" width="552" height="283"></p-chart>
 
@@ -57,7 +57,7 @@
       </div>
       <br>
 
-      <div class="card" style="padding:20px">
+      <div class="card" style="padding:20px" (click)="redireccion(2)">
         <div class="chart" >
           <h4>NNA</h4>
           <p-chart type="bar" [data]="nnaData" [options]="nnaOptions" height="800px" ></p-chart>
@@ -69,7 +69,7 @@
 
       <br>
 
-      <div class="card" style="padding:20px">
+      <div class="card" style="padding:20px" (click)="redireccion(3)">
         <div class="chart">
           <h4>Alertas</h4>
           <p-chart type="pie" [data]="alertasData" [options]="alertasOptions" width="552" height="283"></p-chart>
@@ -80,7 +80,7 @@
     </div>
     <div class="col-6">
       <div class="card" style="padding:20px">
-        <div class="critical-cases">
+       <div class="critical-cases">
           <h4>CASOS CRÍTICOS</h4>
           <div *ngFor="let caso of casosCriticos" class="caso-critico">
             <app-tarjeta-caso-critico [caso] = caso ></app-tarjeta-caso-critico>
@@ -90,7 +90,7 @@
 
       <br>
 
-      <div class="card" style="padding:20px">
+      <div class="card" style="padding:20px" (click)="redireccion(4)">
         <div class="chart">
           <h4>Llamadas</h4>
           <p-chart type="bar" [data]="llamadasData" [options]="llamadasOptions"></p-chart>
@@ -100,7 +100,7 @@
 
       <br>
 
-      <div class="card" style="padding:20px">
+      <div class="card" style="padding:20px" >
         <div class="chart">
           <h4>Mis Asignaciones</h4>
           <p-chart type="line" [data]="asignacionesData" [options]="asignacionesOptions"></p-chart>

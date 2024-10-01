@@ -2,11 +2,13 @@ import { Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
 import { ContentComponent } from './components/content/content.component';
+import { ContenthomeComponent } from './components/contenthome/contenthome.component';
+
 
 export const routes: Routes = [
 
-  { path: '', component: ContentComponent },
-  { path: 'home', component: ContentComponent },
+  { path: '', component: ContenthomeComponent },
+  { path: 'home', component: ContenthomeComponent },
   { path: 'login', component: LoginComponent },
 
   {
