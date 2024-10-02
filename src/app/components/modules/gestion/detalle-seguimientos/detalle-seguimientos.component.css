@@ -31,7 +31,7 @@
 
 /*Estilos de lso botones inferiores*/
 
-.btn-detalle-seguimiento{
+.btn-detalle-seguimiento {
     background-color: #FF9801;
     color: white;
     cursor: pointer;
@@ -41,4 +41,11 @@
 .btn-detalle-seguimiento:hover {
     background-color: #ff9901c3;
     color: white;
+}
+
+.header-th {
+    text-align: center;
+    /* Centramos el texto */
+    vertical-align: middle;
+    /* Centrar verticalmente en caso de que haya altura adicional */
 }
