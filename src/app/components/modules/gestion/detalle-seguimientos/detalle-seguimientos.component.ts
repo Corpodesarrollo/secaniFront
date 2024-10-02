@@ -18,7 +18,7 @@ import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notif
   styleUrl: './detalle-seguimientos.component.css'
 })
 
-export class DetalleSeguimientosComponent implements OnInit{
+export class DetalleSeguimientosComponent implements OnInit {
   seguimientos: any[] = [];
   idSeguimiento: string = "";
   idNNA: number = 0;
@@ -90,5 +90,9 @@ export class DetalleSeguimientosComponent implements OnInit{
       default:
         return 'bg-secondary'; // Por defecto
     }
+  }
+
+  respuestaEntidad() {
+    throw new Error('Method not implemented.');
   }
 }

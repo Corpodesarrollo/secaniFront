@@ -4,7 +4,7 @@
             <a  [routerLink]="['/gestion/seguimientos']">Seguimientos</a> > {{datosNNA.nombreCompleto}}
         </div>
         <div class="header-right">
-            <app-boton-notificacion></app-boton-notificacion>
+            Estado: <span class="badge w-30" [ngStyle]="{'background-color': '#73b7ad', 'color': '#ffffff'}"> {{datosNNA.diagnostico}}</span>
         </div>
     </div>
     <div class="title">
@@ -15,56 +15,6 @@
 
     <br/>
 
-    <!--
-    <div class="row align-items-center">
-        <div class="col">
-            <p-card>
-                <div class="row">
-                    <div class="col" style="font-weight: bold;">
-                        Nombre:<br>
-                        Edad:<br>
-                        Diagnostico:<br>
-                        Fecha Inicio Seguimiento:<br>
-                    </div>
-                    <div class="col">
-                        {{datosNNA.nombreCompleto}}<br>
-                        {{tiempoTranscurrido}}<br>
-                        {{datosNNA.diagnostico}}<br>
-                        25/04/2024<br>
-                    </div>
-                </div>
-            </p-card>
-        </div>
-        <div class="col">
-            <p-card>
-                <div class="row" style="font-weight: bold;">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col" style="text-align: center;">
-                                <i class="pi pi-stopwatch" style="font-size: 4rem; color: #73b7ad;"></i>
-                            </div>
-                            <div class="col">
-                                Tiempo Transcurrido<br>
-                                3d:2h:44min
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col" style="text-align: center;">
-                                <h1>{{ seguimientos.length }}</h1>
-                            </div>
-                            <div class="col">
-                                Seguimientos realizados
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </p-card>
-        </div>
-    </div>
-    -->
-
     <p-card>
         <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
             <ng-template pTemplate="header">
@@ -72,9 +22,9 @@
                     <th class="header-th">Fecha Seguimiento</th>
                     <th class="header-th">Asunto</th>
                     <th class="header-th">Alerta</th>
-                    <th class="header-th">Observaciones</th>
+                    <th class="header-th">Observación</th>
                     <th class="header-th">Entidad sobre la que se genera la alerta</th>
-                    <th class="header-th">Fecha Notificacion</th>
+                    <th class="header-th">Fecha Notificación</th>
                     <th class="header-th">Respuesta de la entidad</th>
                     <th class="header-th">Fecha de Respuesta</th>
                 </tr>
@@ -93,7 +43,9 @@
                     <td>{{ seguimiento.nombreEntidad }}</td>
                     <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
                     <td style="text-align: center;">
-                        <i class="bi bi-eye-fill" style="color: #73b7ad;"></i>
+                        <button (click)="respuestaEntidad()" class="btn" aria-label="Ver">
+                            <i class="bi bi-eye-fill" style="color: #73b7ad;"></i>
+                        </button>
                     </td>
                     <td>{{ seguimiento.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
                 </tr>

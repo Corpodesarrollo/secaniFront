@@ -90,6 +90,7 @@ select {
 .limpiar-button:hover {
     background-color: #4d4d4d36;
 }
+
 /***************** Estilos rectangulo con tabla *****************/
 
 .header {
@@ -157,4 +158,24 @@ select {
 .p-checkbox {
     background-color: #73B7AD;
     /* Cambia el color de fondo aquí */
+}
+
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column;
+        /* Los elementos estarán en columna en móviles */
+    }
+
+    .buttons-container {
+        display: flex;
+        flex-direction: column;
+        /* Colocar los botones en línea vertical (salto de línea) */
+        width: 100%;
+        /* Los botones ocuparán todo el ancho del contenedor */
+    }
+
+    .buttons-container button {
+        width: 100%;
+        /* Cada botón ocupará el 100% de ancho */
+    }
 }

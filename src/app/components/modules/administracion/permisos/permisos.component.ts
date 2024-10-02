@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { GenericService } from '../../../../services/generic.services';
 import { CardModule } from 'primeng/card';
+import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule, BotonNotificacionComponent],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })
@@ -30,7 +31,7 @@ export class PermisosComponent implements OnInit{
   constructor(private dataService: GenericService) { }
 
   ngOnInit(): void {
-    this.dataService.get_withoutParameters('Role/GetAll','UsuariosRoles').subscribe({
+    this.dataService.get_withoutParameters('Role/GetAll','Authentication').subscribe({
       next: (data: any) => {
         this.selectRoles = data
         console.log(data)
