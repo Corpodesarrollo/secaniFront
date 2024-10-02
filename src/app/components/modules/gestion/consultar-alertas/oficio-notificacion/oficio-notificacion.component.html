@@ -20,9 +20,9 @@
           <div class="row">
             <div class="col-2" style="font-weight: bold;">Entidad*</div>
             <div class="col">
-              <select class="form-select" aria-label="entidadId" id="entidadId" name="entidadId">
+              <select class="form-select" aria-label="entidadId" id="entidadId" name="entidadId" [(ngModel)]="nombreEntidad">
                 <option [value]=""></option>
-                <option *ngFor="let entidad of listaEndidades" [value]="entidad.codigo">
+                <option *ngFor="let entidad of listaEndidades" [value]="entidad.nombre">
                     {{ entidad.nombre }}
                 </option>
               </select>
@@ -88,15 +88,15 @@
           <div class="row">
             <div class="col-2" style="font-weight: bold;">Firma*</div>
             <div class="col" id="elementToCapture">
-              <!--p-editor [(ngModel)]="firma" [style]="{ height: '320px' }" /-->
-              <textarea class="form-control" rows="3" placeholder="" [(ngModel)]="firma"></textarea>
-              <div class="left"></div>
+              <p-editor [(ngModel)]="firma" [style]="{ height: '320px' }" />
             </div>
           </div>
         </div>
       <!--/form-->
-      <button (click)="generarPDF()" class="btn btn-primary">Generar PDF</button>
-      <button (click)="generarPDF2()" class="btn btn-primary">Generar PDF 2</button>
+      <div class="text-center">
+        <button (click)="verificarCampos()" class="btn btn-primary">GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
+      </div>
+
     </p-card>
   </div>
 
