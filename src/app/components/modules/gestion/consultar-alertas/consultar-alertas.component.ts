@@ -16,11 +16,16 @@ import { SubcategoriaAlerta } from '../../../../models/subcategoriaAlerta.model'
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { from, map, Observable } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { OficioNotificacionComponent } from './oficio-notificacion/oficio-notificacion.component';
+
 
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule,
+    OficioNotificacionComponent
+  ],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
   providers: [MessageService]
@@ -303,6 +308,18 @@ export class ConsultarAlertasComponent implements OnInit {
         this.notificacionesAlerta = data;
       }
     });
+  }
+
+
+
+
+
+
+  visible: boolean = false;
+  showDialog(alerta:any) {
+
+    this.alertaSeleccionada = alerta;
+    this.visible = true;
   }
 
 }

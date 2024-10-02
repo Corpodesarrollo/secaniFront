@@ -166,7 +166,9 @@
             <td>
               <div class="icon-container">
                 <i class="pi pi-file-pdf icon-style"></i>
-                <i class="pi pi-envelope icon-style"></i>
+                <button class="icon-button" (click)="showDialog(alerta)">
+                  <i class="pi pi-envelope"></i>
+                </button>
               </div>
             </td>
             <td>
@@ -244,5 +246,22 @@
           <button class="btn btn-detalle-seguimiento"><i class="bi bi-telephone-outbound-fill me-2"></i>GENERAR CONTACTO</button>
       </div>
   </div>
+
+
+
+
+
+
+  <p-dialog
+    header="Oficio de notificación"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [maximizable]="true">
+
+    <app-oficio-notificacion [alerta]="alertaSeleccionada" [NNAdatos]="datosNNA"  [nombreNNA]="datosBasicosNNA.nombreCompleto" [edadNNA]="tiempoTranscurrido" [diagnosticoNNA]="datosBasicosNNA.diagnostico"></app-oficio-notificacion>
+
+  </p-dialog>
 
 </body>
