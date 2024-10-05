@@ -122,5 +122,43 @@
 }
 
 .btn-principal span {
-    margin-left: 10px;    
+    margin-left: 10px;
+}
+
+/* Ajustes opcionales para el espaciado */
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.col-6 {
+    flex: 0 0 48%;
+    /* Ocupa aproximadamente la mitad del espacio */
+    margin: 1%;
+    /* Espacio entre las columnas */
+}
+
+/* Cambia el color de fondo del checkbox cuando está marcado */
+.p-checkbox.p-highlight {
+    background-color: #73B7AD;
+    /* Cambia el color de fondo aquí */
+}
+
+/* Cambia el color de fondo del checkbox cuando no está marcado */
+.p-checkbox {
+    background-color: #73B7AD;
+    /* Cambia el color de fondo aquí */
+}
+
+@media (max-width: 868px) {
+    .card-content {
+        flex-direction: column;
+        margin: 20px 0px;
+        /* Los elementos estarán en columna en móviles */
+    }
+
+    .row {
+        flex-direction: column;
+        margin: 20px 0px;
+    }
 }

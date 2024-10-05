@@ -63,10 +63,11 @@ export class EAPBComponent implements OnInit {
       complete: () => console.info('Se lleno la lista de EAPB')
     });
 
-    this.dataService.get_withoutParameters('api/ContactoEntidad', 'Entidad').subscribe({
+    this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad').subscribe({
       next: (data: any) => {
         this.data = data;
         this.originalData = data;
+        console.log(data)
       },
       error: (e) => console.error('Se presento un error al llenar la lista de Contactos por EAPB', e),
       complete: () => console.info('Se lleno la lista de Contactos EAPB')

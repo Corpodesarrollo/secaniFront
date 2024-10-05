@@ -1,4 +1,4 @@
-<body class="formato-fondo fuente-letra">
+<body *ngIf="vistaPerfil === 'vistaEntidadEAPB'" class="formato-fondo fuente-letra">
     <div class="header-container">
         <h1>Mi Perfil</h1>
         <div class="top-right-buttons">
@@ -6,23 +6,28 @@
         </div>
     </div>
 
+    <br>
+
     <p-card>
         <div class="card-content">
             <div class="left-content">
                 <!-- Componentes alineados a la izquierda -->
                 <h2>Nombre entidad territorial</h2>
-                <span>Representante legal</span><br>
-                <span>Nombre Representante legal</span><br>
-                <span>Replegal.com</span>
+                <span style="font-weight: bold;">Representante Legal: </span>
+                <span>{{ usuario.fullName }}</span><br>
+                <span style="font-weight: bold;">Correo: </span>
+                <span>{{ usuario.email }}</span>
             </div>
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="switchState"></p-inputSwitch>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario"></p-inputSwitch>
                 </p-card>
             </div>
         </div>
     </p-card>
+
+    <br>
 
     <p-card>
         <div class="header">
@@ -63,4 +68,119 @@
     </p-card>
 
     <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
+</body>
+
+<body *ngIf="vistaPerfil === 'vistaUsuario'" class="formato-fondo fuente-letra">
+    <div class="header-container">
+        <h1>Mi Perfil</h1>
+        <div class="top-right-buttons">
+            <app-boton-notificacion></app-boton-notificacion>
+        </div>
+    </div>
+
+    <br>
+
+    <p-card>
+        <div class="card-content">
+            <div class="left-content">
+                <span>{{ usuario.fullName }}</span><br>
+                <span>{{ usuario.email }}</span><br>
+                <span style="font-weight: bold;">Rol: </span>
+                <span>{{ usuario.roles?.join(', ') || 'Ninguno' }}</span>
+            </div>
+            <br>
+            <div class="right-content">
+                <label>Telefono de Contacto</label>
+                <input type="text" id="exampleInput" class="form-control" style="text-align: center;"
+                    value="{{ usuario.telefonos }}" disabled>
+            </div>
+            <br>
+            <div class="right-content">
+                <p-card [style]="{ backgroundColor: '#73b7ad48' }">
+                    <span style="margin-right: 150px; font-weight: bold;">Estado</span>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario"></p-inputSwitch>
+                </p-card>
+            </div>
+        </div>
+    </p-card>
+
+    <br>
+
+    <p-card>
+        <div class="row">
+            <!-- Primera tabla a la izquierda -->
+            <div class="col-12 col-md-6">
+                <h5>Días laborales y horario de trabajo</h5><br>
+                <p-table [value]="datosHorarioAgente">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th></th>
+                            <th>Dia</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Editar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato>
+                        <tr>
+                            <td>
+                                <p-checkbox [binary]="true" [(ngModel)]="dato.diaActivo"></p-checkbox>
+                            </td>
+                            <td>{{ dato.dia }}</td>
+                            <td>{{ dato.horaInicio }}</td>
+                            <td>{{ dato.horaFin }}</td>
+                            <td class="table-actions">
+                                <button class="btn-round" (click)="onEdit(data)">
+                                    <i class="pi pi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <br>
+            <br>
+
+            <!-- Segunda tabla a la derecha -->
+            <div class="col-12 col-md-6">
+                <h5>Fechas de ausencia</h5><br>
+
+                <div class="d-flex" style="gap: 10px;"> <!-- Utiliza d-flex para un diseño flexible -->
+                    <input type="date" 
+                           id="fechaInput" 
+                           class="form-control" 
+                           [(ngModel)]="fecha"
+                           placeholder="Selecciona una fecha" 
+                           style="margin-bottom: 10px;"/>
+                    
+                    <button class="btn-round" (click)="onEdit(data)">
+                        <i class="pi pi-plus"></i>
+                    </button>
+                </div>
+
+                <p-table [value]="datosAusenciasAgente">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Motivo</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato>
+                        <tr>
+                            <td>{{ dato.fecha }}</td>
+                            <td>{{ dato.motivo }}</td>
+                            <td class="table-actions">
+                                <button class="btn-round" (click)="onEdit(data)">
+                                    <i class="pi pi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </p-card>
+
 </body>
