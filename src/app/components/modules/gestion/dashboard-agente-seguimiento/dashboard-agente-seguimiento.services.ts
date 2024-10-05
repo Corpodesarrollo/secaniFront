@@ -10,8 +10,8 @@ export class DashboardAgenteSeguimientoService {
 
 
 
-  GetTotalCasos = async ( FechaInicial: Date, FechaFinal: Date, EntidadId: string) => {
-    let url = `${'Dashboard/GetTotalCasos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&EntidadId='+EntidadId}`;
+  GetTotalCasos = async ( FechaInicial: Date, FechaFinal: Date) => {
+    let url = `${'Dashboard/GetTotalCasos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 

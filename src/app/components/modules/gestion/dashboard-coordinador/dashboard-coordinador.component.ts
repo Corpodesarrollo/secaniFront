@@ -90,18 +90,18 @@ export class DashboardCoordinadorComponent implements OnInit {
 
   async dataBarra(){
 
-    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal, '');
-    let dataP1 =  ((dataT1.totalCasosActual - dataT1.totalCasosAnterior)/dataT1.totalCasosAnterior)*100;
+    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal);
+    let dataP1 =  this.calculoPorcentaje(dataT1);
 
     this.data_1 = {
       imagen:1,
       titulo: 'Total Casos',
-      valor: dataT1.totalCasosActual,
+      valor: dataT1.totalCasosGeneral,
       porcentaje: dataP1.toFixed(2)
     }
 
-    let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, '1');
-    let dataP2 =  ((dataT2.totalCasosActual - dataT2.totalCasosAnterior)/dataT2.totalCasosAnterior)*100;
+    let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, '');
+    let dataP2 =  this.calculoPorcentaje(dataT2);
 
     this.data_2 = {
       imagen:2,
@@ -110,25 +110,36 @@ export class DashboardCoordinadorComponent implements OnInit {
       porcentaje: dataP2.toFixed(2)
     }
 
-    let dataT3 = await this.servicios.GetTotalMisCasos(this.fechaInicial, this.fechaFinal, '1');
-    let dataP3 =  ((dataT3.totalCasosActual - dataT3.totalCasosAnterior)/dataT3.totalCasosAnterior)*100;
+    let dataT3 = await this.servicios.GetTotalSeguimientosCuidador(this.fechaInicial, this.fechaFinal);
+    let dataP3 =  this.calculoPorcentaje(dataT3);
 
     this.data_3 = {
       imagen:3,
-      titulo: 'Mis Casos',
-      valor: dataT3.totalCasosActual,
+      titulo: 'Solicitudes de Seguimiento',
+      valor: dataT3.totalCasosGeneral,
       porcentaje: dataP3.toFixed(2)
     }
 
     let dataT4 = await this.servicios.GetTotalAlertas(this.fechaInicial, this.fechaFinal, '1');
-    let dataP4 =  ((dataT4.totalCasosActual - dataT4.totalCasosAnterior)/dataT4.totalCasosAnterior)*100;
+    let dataP4 =  this.calculoPorcentaje(dataT4);
 
     this.data_4 = {
       imagen:4,
       titulo: 'Alertas',
-      valor: dataT4.totalCasosActual,
+      valor: dataT4.totalCasosGeneral,
       porcentaje: dataP4.toFixed(2)
     }
+  }
+
+  calculoPorcentaje(data: any){
+    let totalCasosActual = Number(data?.totalCasosActual) || 0;
+    let totalCasosAnterior = Number(data?.totalCasosAnterior) || 0;
+
+    let dataP = totalCasosAnterior > 0
+      ? ((totalCasosActual - totalCasosAnterior) / totalCasosAnterior) * 100
+      : 0;
+
+    return dataP;
   }
 
 
@@ -313,7 +324,7 @@ export class DashboardCoordinadorComponent implements OnInit {
 
     /////////////////////////////////////
     let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
-console.log("infoCritica", infoCritica);
+    //console.log("infoCritica", infoCritica);
 
     let infoAlerta = await this.servicios.GetTpEstadoAlerta();
 
