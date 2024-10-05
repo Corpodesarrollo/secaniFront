@@ -60,12 +60,12 @@
                 </td>
                 <td>
 
-                  <strong>{{ alerta.nombre }}</strong>
-                  <strong>{{ alerta.tiempo }}</strong><br>
+                  <strong>{{ alerta.primerNombre }} {{ alerta.segundoNombre }} {{ alerta.primerApellido }} {{ alerta.segundoApellido }}</strong>
+                  <strong>{{ calcularTiempoTranscurrido(alerta.fechaNacimiento, hoy) }}</strong><br>
 
-                  <span class="enfermedad">{{alerta.enfermedad}}</span>
+                  <span class="enfermedad">{{alerta.diagnostico}}</span>
 
-                    <p style="color: {{alerta.color}}">{{ alerta.sinRespuesta }} días sin respuesta</p>
+                    <p style="color: {{alerta.color}}">{{ calcularTiempoTranscurrido(alerta.fechaSeguimiento, hoy) }} sin respuesta</p>
 
                 </td>
               </tr>

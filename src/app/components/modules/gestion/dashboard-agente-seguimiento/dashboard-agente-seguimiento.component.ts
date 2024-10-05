@@ -116,18 +116,18 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
   async dataBarra(){
 
-    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal, '1');
-    let dataP1 =  ((dataT1.totalCasosActual - dataT1.totalCasosAnterior)/dataT1.totalCasosAnterior)*100;
+    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal);
+    let dataP1 =  this.calculoPorcentaje(dataT1);
 
     this.data_1 = {
       imagen:1,
       titulo: 'Total Casos',
-      valor: dataT1.totalCasosActual,
+      valor: dataT1.totalCasosGeneral,
       porcentaje: dataP1.toFixed(2)
     }
 
     let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, '1');
-    let dataP2 =  ((dataT2.totalCasosActual - dataT2.totalCasosAnterior)/dataT2.totalCasosAnterior)*100;
+    let dataP2 =  this.calculoPorcentaje(dataT2);
 
     this.data_2 = {
       imagen:2,
@@ -137,24 +137,35 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
     }
 
     let dataT3 = await this.servicios.GetTotalMisCasos(this.fechaInicial, this.fechaFinal, '1');
-    let dataP3 =  ((dataT3.totalCasosActual - dataT3.totalCasosAnterior)/dataT3.totalCasosAnterior)*100;
+    let dataP3 =  this.calculoPorcentaje(dataT3);
 
     this.data_3 = {
       imagen:3,
       titulo: 'Mis Casos',
-      valor: dataT3.totalCasosActual,
+      valor: dataT3.totalCasosGeneral,
       porcentaje: dataP3.toFixed(2)
     }
 
     let dataT4 = await this.servicios.GetTotalAlertas(this.fechaInicial, this.fechaFinal, '1');
-    let dataP4 =  ((dataT4.totalCasosActual - dataT4.totalCasosAnterior)/dataT4.totalCasosAnterior)*100;
+    let dataP4 =  this.calculoPorcentaje(dataT4);
 
     this.data_4 = {
       imagen:4,
       titulo: 'Alertas',
-      valor: dataT4.totalCasosActual,
+      valor: dataT4.totalCasosGeneral,
       porcentaje: dataP4.toFixed(2)
     }
+  }
+
+  calculoPorcentaje(data: any){
+    let totalCasosActual = Number(data?.totalCasosActual) || 0;
+    let totalCasosAnterior = Number(data?.totalCasosAnterior) || 0;
+
+    let dataP = totalCasosAnterior > 0
+      ? ((totalCasosActual - totalCasosAnterior) / totalCasosAnterior) * 100
+      : 0;
+
+    return dataP;
   }
 
 
@@ -332,7 +343,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
      let datos4  = await this.servicios.GetEstadosAlertas(fecha_inicial, fecha_final, this.usuarioId);
 
      const totalCantidad = datos4.reduce((sum: any, item: { cantidad: any; }) => sum + item.cantidad, 0);
-     console.log('totalCantidad ', totalCantidad)
+     //console.log('totalCantidad ', totalCantidad)
 
     datos4 = datos4.map((item: { cantidad: number; }) => {
       return {
@@ -341,7 +352,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       };
     });
 
-     console.log('datos4 ', datos4)
+     //console.log('datos4 ', datos4)
 
      const backgroundColors2 = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
 
@@ -405,7 +416,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
 
     /////////////////////////////////////
-    let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
+    let infoCritica = await this.servicios.GetCasosCriticos(fecha_inicial, fecha_final, this.usuarioId);
     let infoAlerta = await this.servicios.GetTpEstadoAlerta();
 
     let resultado = infoCritica.map((item: { alertaId: any; nombre: any; }) => {
@@ -439,6 +450,8 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       return fechaB - fechaA; // Orden descendente de fechas
     }).slice(0, 2);
 
+    //console.log("los casos criticos", this.casosCriticos)
+
     await this.agregarFullName();
 
 
@@ -464,6 +477,8 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
         entidades: 'EPS Sánitas, ET Antioquía',
       },
     ];*/
+
+
 
 
     this.cargado = true;
@@ -492,7 +507,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
     // Asigna los casos actualizados con fullName al array original
     this.casosCriticos = updatedCasos;
 
-    console.log(this.casosCriticos); // Verificar que ahora tienen el fullName
+    //console.log(this.casosCriticos); // Verificar que ahora tienen el fullName
   }
 
   async onSubmit() {
@@ -509,13 +524,20 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
 
     if(opc == 2){
-      this.router.navigate(['reportes/nna'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+      this.router.navigate(['/reportes/nna'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
     }
     if(opc == 3){
-      this.router.navigate(['reportes/alertas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+      this.router.navigate(['/reportes/alertas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
     }
     if(opc == 4){
-      this.router.navigate(['reportes/llamadas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+      this.router.navigate(['/reportes/llamadas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
     }
+  }
+
+
+  verTodosCasosCriticos(){
+    const fechaInicio = this.formFechas.value.fechaInicio;
+    const fechaFin = this.formFechas.value.fechaFin;
+    this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
   }
 }
