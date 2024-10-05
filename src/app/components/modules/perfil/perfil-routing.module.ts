@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 
 const routes: Routes = [
-  { path: 'miperfil', component: MiPerfilComponent }
+  { path: '', component: MiPerfilComponent }
 ];
 
 @NgModule({

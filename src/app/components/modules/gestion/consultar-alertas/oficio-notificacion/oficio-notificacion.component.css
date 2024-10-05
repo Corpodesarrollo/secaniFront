@@ -1,0 +1,10 @@
+.row{
+  margin-bottom: 10px;
+}
+
+.left {
+  content: url(colombiapotenciadelavida.png);
+  max-width: 800px;
+  max-height: 100px;
+  text-align: left;
+}
