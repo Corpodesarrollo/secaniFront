@@ -56,8 +56,8 @@ export class DashboardAgenteSeguimientoService {
     return await  this.comun.retorno_get(url);
   }
 
-  GetCasosCriticos= async ( FechaInicial: Date, FechaFinal: Date) => {
-    let url = `${'Dashboard/GetCasosCriticos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
+  GetCasosCriticos= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
+    let url = `${'Dashboard/GetCasosCriticos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
     return await  this.comun.retorno_get(url);
   }
 

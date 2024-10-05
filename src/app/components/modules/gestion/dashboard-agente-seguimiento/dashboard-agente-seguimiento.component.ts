@@ -343,7 +343,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
      let datos4  = await this.servicios.GetEstadosAlertas(fecha_inicial, fecha_final, this.usuarioId);
 
      const totalCantidad = datos4.reduce((sum: any, item: { cantidad: any; }) => sum + item.cantidad, 0);
-     console.log('totalCantidad ', totalCantidad)
+     //console.log('totalCantidad ', totalCantidad)
 
     datos4 = datos4.map((item: { cantidad: number; }) => {
       return {
@@ -352,7 +352,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       };
     });
 
-     console.log('datos4 ', datos4)
+     //console.log('datos4 ', datos4)
 
      const backgroundColors2 = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
 
@@ -416,7 +416,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
 
     /////////////////////////////////////
-    let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
+    let infoCritica = await this.servicios.GetCasosCriticos(fecha_inicial, fecha_final, this.usuarioId);
     let infoAlerta = await this.servicios.GetTpEstadoAlerta();
 
     let resultado = infoCritica.map((item: { alertaId: any; nombre: any; }) => {
@@ -450,6 +450,8 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       return fechaB - fechaA; // Orden descendente de fechas
     }).slice(0, 2);
 
+    //console.log("los casos criticos", this.casosCriticos)
+
     await this.agregarFullName();
 
 
@@ -475,6 +477,8 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
         entidades: 'EPS Sánitas, ET Antioquía',
       },
     ];*/
+
+
 
 
     this.cargado = true;
@@ -503,7 +507,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
     // Asigna los casos actualizados con fullName al array original
     this.casosCriticos = updatedCasos;
 
-    console.log(this.casosCriticos); // Verificar que ahora tienen el fullName
+    //console.log(this.casosCriticos); // Verificar que ahora tienen el fullName
   }
 
   async onSubmit() {
@@ -520,13 +524,20 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
 
     if(opc == 2){
-      this.router.navigate(['reportes/nna'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+      this.router.navigate(['/reportes/nna'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
     }
     if(opc == 3){
-      this.router.navigate(['reportes/alertas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+      this.router.navigate(['/reportes/alertas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
     }
     if(opc == 4){
-      this.router.navigate(['reportes/llamadas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
+      this.router.navigate(['/reportes/llamadas'], { state: { fechaInicio : fechaInicio, fechaFin: fechaFin } });
     }
+  }
+
+
+  verTodosCasosCriticos(){
+    const fechaInicio = this.formFechas.value.fechaInicio;
+    const fechaFin = this.formFechas.value.fechaFin;
+    this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
   }
 }

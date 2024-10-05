@@ -9,6 +9,7 @@ import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DashboardCoordinadorService } from './dashboard-coordinador.services';
 import { SpinnerComponent } from './../../shared/spinner/spinner.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-coordinador',
@@ -42,7 +43,7 @@ export class DashboardCoordinadorComponent implements OnInit {
 
   cargado = false;
 
-  constructor(public servicios: DashboardCoordinadorService, private fb: FormBuilder) {
+  constructor(public servicios: DashboardCoordinadorService, private fb: FormBuilder,  public router: Router) {
 
     this.diasLimite(this.currentDate);
     this.formFechas = this.fb.group({
@@ -323,7 +324,7 @@ export class DashboardCoordinadorComponent implements OnInit {
     };
 
     /////////////////////////////////////
-    let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
+    let infoCritica = await this.servicios.GetCasosCriticos(fecha_inicial, fecha_final);
     //console.log("infoCritica", infoCritica);
 
     let infoAlerta = await this.servicios.GetTpEstadoAlerta();
@@ -389,6 +390,13 @@ export class DashboardCoordinadorComponent implements OnInit {
 
     console.log(this.casosCriticos);
 
+  }
+
+
+  verTodosCasosCriticos(){
+    const fechaInicio = this.formFechas.value.fechaInicio;
+    const fechaFin = this.formFechas.value.fechaFin;
+    this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
   }
 
 }
