@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <h1 class="mt-5 mb-4">Histórico</h1>
+
+  <div class="card border border-0 pt-2">
+    <div class="card-body">
+      <p-table [value]="historicos" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="fechaCreacion">
+              <div class="d-flex align-items-center justify-content-between">
+                Fecha
+                <p-sortIcon field="fechaCreacion" />
+                <p-columnFilter type="date" field="fechaCreacion" display="menu" class="ms-auto"/>
+              </div>
+            </th>
+            <th pSortableColumn="transaccion">
+              <div class="d-flex align-items-center justify-content-between">
+                Transacción
+                <p-sortIcon field="transaccion" />
+                <p-columnFilter type="date" field="transaccion" display="menu" class="ms-auto"/>
+              </div>
+            </th>
+            <th pSortableColumn="usuarioOrigen">
+              <div class="d-flex align-items-center justify-content-between">
+                Usuarios Origen
+                <p-sortIcon field="usuarioOrigen" />
+                <p-columnFilter type="text" field="usuarioOrigen" display="menu" class="ms-auto"/>
+              </div>
+            </th>
+            <th pSortableColumn="usuarioRol">
+              <div class="d-flex align-items-center justify-content-between">
+                Rol
+                <p-sortIcon field="usuarioRol" />
+                <p-columnFilter type="text" field="usuarioRol" display="menu" class="ms-auto"/>
+              </div>
+            </th>
+            <th pSortableColumn="comentario">
+              <div class="d-flex align-items-center justify-content-between">
+                Comentario
+                <p-sortIcon field="comentario" />
+                <p-columnFilter type="text" field="comentario" display="menu" class="ms-auto"/>
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-historico>
+          <tr>
+            <td>{{ historico.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ historico.transaccion }}</td>
+            <td>{{ historico.usuarioOrigen }}</td>
+            <td>{{ historico.usuarioRol }}</td>
+            <td>{{ historico.comentario }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center">Items de la Lista parametrica no encotrados.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

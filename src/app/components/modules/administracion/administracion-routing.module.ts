@@ -7,6 +7,9 @@ import { ListaParametricaComponent } from './lista-parametrica/lista-parametrica
 import { ListaParametricaHistoricoComponent } from './lista-parametrica-historico/lista-parametrica-historico.component';
 import { ListaParametricaItemsComponent } from './lista-parametrica-items/lista-parametrica-items.component';
 
+import { PlantillasCorreoComponent } from './plantillas-correo/plantillas-correo.component';
+import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/plantilla-correo-historico.component';
+
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
@@ -18,6 +21,13 @@ const routes: Routes = [
       { path: ':id/items', component: ListaParametricaItemsComponent },
     ]
   },
+  {
+    path: 'plantillas-correo',
+    children: [
+      { path: '', component: PlantillasCorreoComponent },
+      { path: ':id/historico', component: PlantillaCorreoHistoricoComponent }
+    ]
+  }
 ];
 
 @NgModule({
