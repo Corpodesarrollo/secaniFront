@@ -4,6 +4,8 @@ import { PermisosComponent } from '../administracion/permisos/permisos.component
 
 import { ListasParametricasComponent } from './listas-parametricas/listas-parametricas.component';
 import { ListaParametricaComponent } from './lista-parametrica/lista-parametrica.component';
+import { ListaParametricaHistoricoComponent } from './lista-parametrica-historico/lista-parametrica-historico.component';
+import { ListaParametricaItemsComponent } from './lista-parametrica-items/lista-parametrica-items.component';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
@@ -11,7 +13,9 @@ const routes: Routes = [
     path: 'listas-parametricas',
     children: [
       { path: '', component: ListasParametricasComponent },
-      { path: ':id', component: ListaParametricaComponent }
+      { path: ':id', component: ListaParametricaComponent },
+      { path: ':id/historico', component: ListaParametricaHistoricoComponent },
+      { path: ':id/items', component: ListaParametricaItemsComponent },
     ]
   },
 ];
