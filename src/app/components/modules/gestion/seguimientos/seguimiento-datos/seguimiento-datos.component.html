@@ -34,7 +34,7 @@
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold pe-3">Fecha notificación SIVIGILA: </label>
-                                <label>{{nna.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy'}}</label>
+                                <label>{{ nna ? (nna.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy') : 'No disponible' }}</label>
                             </div>
                         </div>
                         <div class="row mb-3">

@@ -88,6 +88,9 @@ export class SeguimientoDatosComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
+    if (!this.nna){
+      this.nna = new NNA();
+    }
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
