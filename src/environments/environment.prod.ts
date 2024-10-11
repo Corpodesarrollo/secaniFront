@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  cookie : false,
   production: false,
   url: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
   url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',

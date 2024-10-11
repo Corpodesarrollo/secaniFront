@@ -27,7 +27,7 @@
   overflow-wrap: break-word;
 }
 
-.bg-dark{
+.text-wrap{
   word-wrap: break-word;
   word-break: break-all;
   white-space: normal;
@@ -94,25 +94,49 @@
   text-align: left;
 }
 
-/*.expanded-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-  border-radius: 50px;
-  background-color: #fff;
-}
-
-
-
-.expanded-table td {
-  padding: 8px;
-}
-
-.expanded-table tbody tr:last-child td {
-  border-bottom: none;
-}*/
-
 .icon-style-eye {
   font-size: 1.2rem;
   color: #6c757d;
+}
+
+.btn-detalle-seguimiento{
+  background-color: #FF9801;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.btn-detalle-seguimiento:hover {
+  background-color: #ff9901c3;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+.icon-button {
+  background-color: #8CC4C0;   /* Color de fondo del botón */
+  border: none;                /* Sin bordes */
+  color: white;                /* Color del ícono */
+  padding: 10px;               /* Espacio alrededor del ícono */
+  border-radius: 50%;          /* Hace el botón circular */
+  width: 40px;                 /* Ancho del botón */
+  height: 40px;                /* Altura del botón */
+  display: flex;               /* Flexbox para centrar el contenido */
+  justify-content: center;     /* Centra horizontalmente */
+  align-items: center;         /* Centra verticalmente */
+  cursor: pointer;             /* Cambia el cursor al pasar sobre el botón */
+}
+
+.icon-button i {
+  font-size: 20px;             /* Tamaño del ícono */
+}
+
+.icon-button:hover {
+  background-color: #77b0ab;   /* Cambia el color al pasar el mouse */
 }

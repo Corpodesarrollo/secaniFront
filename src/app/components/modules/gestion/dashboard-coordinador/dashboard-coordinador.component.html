@@ -1,4 +1,5 @@
 <br>
+<app-spinner *ngIf="!cargado"></app-spinner>
 <div class="container-fluid" *ngIf="cargado">
   <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
 
@@ -77,11 +78,15 @@
     <div class="col-6">
       <div class="card" style="padding:20px">
         <div class="critical-cases">
-          <h4>CASOS CRÍTICOS</h4>
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>CASOS CRÍTICOS</h4>
+            <a  (click)="verTodosCasosCriticos()">Ver todos ></a>
+          </div>
           <div *ngFor="let caso of casosCriticos" class="caso-critico">
             <app-tarjeta-caso-critico [caso] = caso ></app-tarjeta-caso-critico>
           </div>
         </div>
+
       </div>
 
       <br>
