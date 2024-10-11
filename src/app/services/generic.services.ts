@@ -94,11 +94,21 @@ export class GenericService {
 
   public post(modulo: string, parameters: any, api: string = '') {
     const apiUrl = this.getApiUrl(api);
-    return this.http.post(`${apiUrl}${modulo}`, parameters);
+    if (environment.cookie){
+      return this.http.post(`${apiUrl}${modulo}`, parameters, { withCredentials: true });
+    } else {
+      return this.http.post(`${apiUrl}${modulo}`, parameters);
+    }
   }
 
   public async postAsync(url: string = this.url, modulo: string, parameters: any) {
-    return await this.http.post(`${url}${modulo}`, parameters).toPromise();
+    if (environment.cookie){
+      console.log('cookie', environment.cookie);
+      return this.http.post(`${url}${modulo}`, parameters, { withCredentials: true });
+    } else {
+      console.log('cookie', environment.cookie);
+      return this.http.post(`${url}${modulo}`, parameters);
+    }
   }
 
   public async postAsyncX(modulo: string, parameters: any) {
