@@ -9,6 +9,7 @@ import { ListaParametricaItemsComponent } from './lista-parametrica-items/lista-
 
 import { PlantillasCorreoComponent } from './plantillas-correo/plantillas-correo.component';
 import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/plantilla-correo-historico.component';
+import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-plantilla-correo.component';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
@@ -25,7 +26,9 @@ const routes: Routes = [
     path: 'plantillas-correo',
     children: [
       { path: '', component: PlantillasCorreoComponent },
-      { path: ':id/historico', component: PlantillaCorreoHistoricoComponent }
+      { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
+      { path: 'nueva', component: NuevaPlantillaCorreoComponent },
+      { path: ':id/editar', component: NuevaPlantillaCorreoComponent },
     ]
   }
 ];
