@@ -16,7 +16,7 @@ import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
-    path: 'listas-parametricas',
+    path: 'listas_parametricas',
     children: [
       { path: '', component: ListasParametricasComponent },
       { path: ':id', component: ListaParametricaComponent },
