@@ -23,7 +23,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'plantillas-correo',
+    path: 'plantilla_de_correo',
     children: [
       { path: '', component: PlantillasCorreoComponent },
       { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
