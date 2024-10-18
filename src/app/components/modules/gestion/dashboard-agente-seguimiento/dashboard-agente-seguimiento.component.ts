@@ -174,40 +174,42 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
     this.cargado = false;
 
     let parametrica  = await this.servicios.GetEstadoSeguimiento();
-    let datos  = await this.servicios.GetEstadosSeguimientos(fecha_inicial, fecha_final, this.usuarioId);
+    if(parametrica != null){
+      let datos  = await this.servicios.GetEstadosSeguimientos(fecha_inicial, fecha_final, this.usuarioId);
 
-    const backgroundColors = ['#73B7AD', '#FF9801', '#F42F63'];
+      const backgroundColors = ['#73B7AD', '#FF9801', '#F42F63'];
 
-    const labels = parametrica.map((p: { nombre: any; }) => p.nombre);
-    const data = parametrica.map((p: { id: any; }) => {
-      const match = datos.find((d: { estadoId: any; }) => d.estadoId === p.id);
-      return match ? match.cantidad : 0; // Si no hay match, se pone 0
-    });
+      const labels = parametrica.map((p: { nombre: any; }) => p.nombre);
+      const data = parametrica.map((p: { id: any; }) => {
+        const match = datos.find((d: { estadoId: any; }) => d.estadoId === p.id);
+        return match ? match.cantidad : 0; // Si no hay match, se pone 0
+      });
 
-    this.seguimientosData = {
-      labels: labels,
-      datasets: [
-        {
-          data: data,
-          backgroundColor: backgroundColors,
-        }
-      ]
-    };
+      this.seguimientosData = {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: backgroundColors,
+          }
+        ]
+      };
 
-    this.seguimientosOptions = {
-      plugins: {
-        datalabels: {
-          color: 'gray',
-          font: {
-            weight: 'bold',
-            size: 16
-          },
-          formatter: (value: any, context: any) => {
-            return value;  // Mostrando solo el valor
+      this.seguimientosOptions = {
+        plugins: {
+          datalabels: {
+            color: 'gray',
+            font: {
+              weight: 'bold',
+              size: 16
+            },
+            formatter: (value: any, context: any) => {
+              return value;  // Mostrando solo el valor
+            }
           }
         }
+      };
       }
-    };
 
     /////////////////////////////////////////////////////////////
 

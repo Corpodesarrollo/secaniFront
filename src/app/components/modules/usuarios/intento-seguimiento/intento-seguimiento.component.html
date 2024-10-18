@@ -15,7 +15,7 @@
   </div>
 </p-dialog>
 
-<app-info-seguimiento-nna [idNNA]="nnaId"  />
+<app-info-seguimiento-nna [idNNA]="nnaId" *ngIf="nnaId > 0" />
 
 <br>
 <div style="text-align:right">

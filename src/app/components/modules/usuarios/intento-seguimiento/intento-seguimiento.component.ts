@@ -34,7 +34,7 @@ export class IntentoSeguimientoComponent implements OnInit {
   displayModalContacto: boolean = false;
 
   parentesco: any;
-  nnaId = 0;
+  nnaId: number = 0;
 
   constructor(public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
 
