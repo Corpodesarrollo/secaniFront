@@ -14,7 +14,7 @@ import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-pl
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
-    path: 'listas-parametricas',
+    path: 'listas_parametricas',
     children: [
       { path: '', component: ListasParametricasComponent },
       { path: ':id', component: ListaParametricaComponent },
@@ -23,7 +23,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'plantillas-correo',
+    path: 'plantilla_de_correo',
     children: [
       { path: '', component: PlantillasCorreoComponent },
       { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
