@@ -10,6 +10,7 @@ import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-
 import { DashboardAgenteSeguimientoService } from './dashboard-agente-seguimiento.services';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 
 
@@ -18,7 +19,7 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard-agente-seguimiento.component.html',
   styleUrls: ['./dashboard-agente-seguimiento.component.css'],
   standalone: true,
-  imports: [CommonModule, ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, CommonModule, TarjetaCabeceraComponent, ReactiveFormsModule, SpinnerComponent ],
+  imports: [CommonModule, CalendarModule, ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, CommonModule, TarjetaCabeceraComponent, ReactiveFormsModule, SpinnerComponent ],
 })
 export class DashboardAgenteSeguimientoComponent implements OnInit {
   totalCasos: number = 5423;
@@ -513,10 +514,23 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
   }
 
   async onSubmit() {
-    const fechaInicio = this.formFechas.value.fechaInicio;
-    const fechaFin = this.formFechas.value.fechaFin;
+    const fechaInicio: Date = this.formFechas.get('fechaInicio')?.value;
 
-    this.filtroFechas(fechaInicio, fechaFin);
+
+    const year = fechaInicio.getFullYear();
+    const month = ('0' + (fechaInicio.getMonth() + 1)).slice(-2); // Añadir 1 al mes ya que empieza desde 0
+    const day = ('0' + fechaInicio.getDate()).slice(-2);
+
+    const fechaInicioForma = `${year}-${month}-${day}`;
+
+    const fechaFin: Date = this.formFechas.get('fechaFin')?.value;
+    const year2 = fechaFin.getFullYear();
+    const month2 = ('0' + (fechaFin.getMonth() + 1)).slice(-2); // Añadir 1 al mes ya que empieza desde 0
+    const day2 = ('0' + fechaFin.getDate()).slice(-2);
+
+    const fechaFinForma = `${year2}-${month2}-${day2}`;
+
+    this.filtroFechas(fechaInicioForma, fechaFinForma);
   }
 
 

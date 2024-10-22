@@ -35,11 +35,22 @@
         <div class="filters">
           <label for="fechaInicio">Fecha inicio</label>
           &nbsp;
-          <input id="fechaInicio" type="date" formControlName="fechaInicio">
+
+          <p-calendar
+              inputId="icondisplay"
+              formControlName = "fechaInicio"
+              dateFormat="yy-mm-dd"
+               />
+
           &nbsp;
           <label for="fechaFin">Fecha fin</label>
           &nbsp;
-          <input id="fechaFin" type="date" formControlName="fechaFin">
+          <p-calendar
+              inputId="icondisplay"
+              formControlName = "fechaFin"
+              dateFormat="yy-mm-dd"
+               />
+
           &nbsp;
           <button type="submit" style="border: none;">
             <img src="iconos/aplicar.svg" />
