@@ -120,7 +120,7 @@ export class MiSemanaComponent {
   async  ngOnInit(){
     this.form = this.fb.group({
       agenteSeleccionado: [null, Validators.required],
-      motivo: ['', Validators.required],
+      motivo: ['', [Validators.required, Validators.maxLength(500)]]
 
     });
     /*
@@ -400,6 +400,13 @@ export class MiSemanaComponent {
   }
 
   async guardar(){
+
+    if (this.form.invalid) {
+      // Marcar todos los controles como 'tocados' para que se muestren los mensajes de error
+      this.form.markAllAsTouched();
+      return;
+    }
+
     if (this.form.valid) {
       console.log(this.form.value);
 
@@ -423,8 +430,6 @@ export class MiSemanaComponent {
       else {
         alert("No es posible reasignar seguimientos en horarios vencidos");
       }     // Lógica de guardado
-    } else {
-      console.log('Formulario inválido');
     }
   }
 

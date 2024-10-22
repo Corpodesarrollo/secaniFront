@@ -27,6 +27,7 @@
   <div [innerHtml] = "bodyDialog2" style="text-align:center"></div>
 
   <form [formGroup]="form" (ngSubmit)="guardar()">
+    <!-- Agente de Seguimiento -->
     <label for="agenteSeleccionado"><b>Agente de Seguimiento</b></label>
     <br>
     <p-dropdown
@@ -34,26 +35,43 @@
         formControlName="agenteSeleccionado"
         id="agenteSeleccionado"
         optionLabel="fullName"
-        placeholder="Seleccione un agente" />
+        placeholder="Seleccione un agente">
+    </p-dropdown>
+    <div *ngIf="form.controls['agenteSeleccionado'].invalid && form.controls['agenteSeleccionado'].touched" class="error-message">
+        <small style="color: red;">Debe seleccionar un agente</small>
+    </div>
     <br>
+
+    <!-- Motivo -->
     <label for="motivo"><b>Motivo</b></label>
     <br>
     <textarea
       rows="5"
       cols="30"
       pInputTextarea
-      formControlName="motivo" id="motivo">
+      id="motivo"
+      formControlName="motivo"
+      id="motivo">
     </textarea>
+    <div *ngIf="form.controls['motivo'].invalid && form.controls['motivo'].touched" class="error-message">
+        <small style="color: red;">Este ingresar un motivo</small>
+    </div>
+    <div *ngIf="form.controls['motivo'].value?.length > 500" class="error-message">
+      <small style="color: red;">Máximo 500 caracteres permitidos</small>
+  </div>
+    <br>
 
+    <!-- Botones -->
     <div class="row">
       <div class="col-sm-6">
-        <button type="button" pButton class="color-fondo_gris" (click) = "cerrarDialog()" >Cancelar</button>
+        <button type="button" pButton class="color-fondo_gris" (click)="cerrarDialog()">Cancelar</button>
       </div>
       <div class="col-sm-6">
         <button type="submit" pButton class="color-fondo">Guardar</button>
       </div>
     </div>
-  </form>
+</form>
+
 
 
 </p-dialog>
