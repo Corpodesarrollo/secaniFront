@@ -12,6 +12,7 @@ import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/
 import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-plantilla-correo.component';
 
 import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte-inconsistencia.component';
+import { ReporteDepuracionComponent } from './reporte-depuracion/reporte-depuracion.component';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
@@ -37,6 +38,7 @@ const routes: Routes = [
     path: 'reportes',
     children: [
       { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
+      { path: 'reporte-depuracion', component: ReporteDepuracionComponent },
       { path: '**', redirectTo: 'reporte-inconsistencia' }
     ]
   }
