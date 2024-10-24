@@ -17,6 +17,7 @@ import { ReporteDetalleNuevoDepuradosComponent } from './reporte-detalle-nuevo-d
 import { ReporteDinamicoAlertasComponent } from './reporte-dinamico-alertas/reporte-dinamico-alertas.component';
 import { ReporteDinamicoNnaComponent } from './reporte-dinamico-nna/reporte-dinamico-nna.component';
 import { ReporteDinamicoSeguimientoComponent } from './reporte-dinamico-seguimiento/reporte-dinamico-seguimiento.component';
+import { ReporteDinamicoEapbComponent } from './reporte-dinamico-eapb/reporte-dinamico-eapb.component';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
@@ -53,6 +54,7 @@ const routes: Routes = [
       { path: 'reporte-dinamico-alertas', component: ReporteDinamicoAlertasComponent },
       { path: 'reporte-dinamico-nna', component: ReporteDinamicoNnaComponent },
       { path: 'reporte-dinamico-seguimiento', component: ReporteDinamicoSeguimientoComponent },
+      { path: 'reporte-dinamico-eapb', component: ReporteDinamicoEapbComponent },
       { path: '**', redirectTo: 'reporte-inconsistencia' }
     ]
   }
