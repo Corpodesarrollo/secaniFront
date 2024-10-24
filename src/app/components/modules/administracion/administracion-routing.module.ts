@@ -13,6 +13,7 @@ import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-pl
 
 import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte-inconsistencia.component';
 import { ReporteDepuracionComponent } from './reporte-depuracion/reporte-depuracion.component';
+import { ReporteDetalleNuevoDepuradosComponent } from './reporte-detalle-nuevo-depurados/reporte-detalle-nuevo-depurados.component';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
@@ -38,7 +39,14 @@ const routes: Routes = [
     path: 'reportes',
     children: [
       { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
-      { path: 'reporte-depuracion', component: ReporteDepuracionComponent },
+      {
+        path: 'reporte-depuracion',
+        children: [
+          { path: '', component: ReporteDepuracionComponent },
+          { path: ':id', component: ReporteDetalleNuevoDepuradosComponent },
+          { path: '**', redirectTo: '' },
+        ]
+      },
       { path: '**', redirectTo: 'reporte-inconsistencia' }
     ]
   }
