@@ -14,6 +14,7 @@ import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-pl
 import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte-inconsistencia.component';
 import { ReporteDepuracionComponent } from './reporte-depuracion/reporte-depuracion.component';
 import { ReporteDetalleNuevoDepuradosComponent } from './reporte-detalle-nuevo-depurados/reporte-detalle-nuevo-depurados.component';
+import { ReporteDinamicoAlertasComponent } from './reporte-dinamico-alertas/reporte-dinamico-alertas.component';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
@@ -47,6 +48,7 @@ const routes: Routes = [
           { path: '**', redirectTo: '' },
         ]
       },
+      { path: 'reporte-dinamico-alertas', component: ReporteDinamicoAlertasComponent },
       { path: '**', redirectTo: 'reporte-inconsistencia' }
     ]
   }
