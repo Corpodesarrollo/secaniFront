@@ -11,6 +11,8 @@ import { PlantillasCorreoComponent } from './plantillas-correo/plantillas-correo
 import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/plantilla-correo-historico.component';
 import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-plantilla-correo.component';
 
+import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte-inconsistencia.component';
+
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
@@ -29,6 +31,13 @@ const routes: Routes = [
       { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
       { path: 'nueva', component: NuevaPlantillaCorreoComponent },
       { path: ':id/editar', component: NuevaPlantillaCorreoComponent },
+    ]
+  },
+  {
+    path: 'reportes',
+    children: [
+      { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
+      { path: '**', redirectTo: 'reporte-inconsistencia' }
     ]
   }
 ];
