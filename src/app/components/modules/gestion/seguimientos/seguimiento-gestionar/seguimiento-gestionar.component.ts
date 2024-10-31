@@ -16,15 +16,17 @@ import { Parametricas } from '../../../../../models/parametricas.model';
 import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimiento-historial.component";
 import { CommonModule } from '@angular/common';
 import { InfoSeguimientoNnaComponent } from "../info-seguimiento-nna/info-seguimiento-nna.component";
+import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 
 @Component({
   selector: 'app-seguimiento-gestionar',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-gestionar.component.html',
   styleUrl: './seguimiento-gestionar.component.css'
 })
 export class SeguimientoGestionarComponent {
+
   estado:string = 'Sin Diagnóstico';
   items: MenuItem[] = [];
   estados: Parametricas[] = [];
@@ -38,6 +40,7 @@ export class SeguimientoGestionarComponent {
   isLoadingDiagnostico: boolean = true;
   isLoadingEstados: boolean = true;
   isLoadingIPS: boolean = true;
+  showDialog: boolean = false;
 
   estadoFallecido: boolean = false;
   estadoEnTratamiento: boolean = false;
@@ -72,7 +75,7 @@ export class SeguimientoGestionarComponent {
        this.concatenatedAlertas = this.diagnostico.alertas.map(alerta => alerta.categoriaAlerta).join(', ');
       }
     } else {
-      console.error('El objeto diagnostico no fue pasado correctamente.');
+      console.log('El objeto diagnostico no fue pasado correctamente.');
       this.diagnostico = {
         id: 0,
         idSeguimiento: 0,
@@ -99,5 +102,9 @@ export class SeguimientoGestionarComponent {
     this.isLoadingEstados = false;
     this.diagnosticos =  await this.tpp.getDiagnosticos();
     this.isLoadingDiagnostico = false;
+  }
+
+  guardar() {
+    this.showDialog = true;
   }
 }
