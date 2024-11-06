@@ -112,7 +112,10 @@ export class SeguimientoDatosComponent implements OnInit {
       this.estado = 'Registrado';
     } else {
       let estados = await this.tpp.getTpEstadosNNA();
-      let estado: { id: number; nombre: string, colorText: string, colorBG: string  } | undefined = estados.find((x: { id: number }) => x.id == this.nna.estadoId);
+      let estado: { id: number; nombre: string; colorText: string; colorBG: string } | undefined;
+      if (estados) {
+        estado = estados.find((x: { id: number }) => x.id === this.nna.estadoId);
+      }
       this.estado = estado?.nombre ?? '';
       this.colorTxt = estado?.colorText ?? 'white';
       this.colorBg = estado?.colorBG ?? '#73b7ad';
