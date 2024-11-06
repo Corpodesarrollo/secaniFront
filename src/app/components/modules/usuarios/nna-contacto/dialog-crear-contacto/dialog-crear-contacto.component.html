@@ -4,13 +4,13 @@
     <div class="row text-left">
         <div class="col-sm-12">
             <div class="row align-items-center">
-                <div class="col-4 text-end">
+                <div class="col-3 text-end">
                     <label>Nombres y apellidos</label>
                 </div>
-                <div class="col-8 p-fluid">
+                <div class="col-9 p-fluid">
                     <input type="text" pInputText [(ngModel)]="contacto.nombreCompleto">
                 </div>
-                <div class="col-8 offset-4">
+                <div class="col-9 offset-3">
                     <div *ngIf="submitted && !contacto.nombreCompleto" class="text-danger">
                         Parentesco es requerido
                     </div>
@@ -18,10 +18,10 @@
             </div>
 
             <div class="row align-items-center mb-2 p-fluid">
-                <div class="col-4 text-end">
+                <div class="col-3 text-end">
                     <label for="parentesco" class="fw-bold">Parentesco</label>
                 </div>
-                <div class="col-8 flex-auto">
+                <div class="col-9 flex-auto">
                     <p-dropdown
                         [(ngModel)]="selectedParentesco"
                         [options]="parentescos"
@@ -32,7 +32,7 @@
                         [showClear]="true"
                         placeholder="Seleccione el parentesco" />
                 </div>
-                <div class="col-8 offset-4">
+                <div class="col-9 offset-3">
                     <div *ngIf="submitted && !selectedParentesco" class="text-danger">
                         Parentesco es requerido
                     </div>
@@ -40,26 +40,26 @@
             </div>
 
             <div class="row align-items-center">
-                <div class="col-4 text-end">
+                <div class="col-3 text-end">
                     <label>¿Cuidador?</label>
                 </div>
-                <div class="col-8 button-group p-fluid">
+                <div class="col-9 button-group p-fluid">
                     <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.esCuidador}" style="width: 150px;" (click)="contacto.esCuidador = true">SÍ</button>
                     <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.esCuidador  == false}" style="width: 150px;" (click)="contacto.esCuidador = false">NO</button>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-8 offset-4">
+                <div class="col-9 offset-3">
                     <small>Presione la tecla <b>Enter</b> o la tecla <b>Coma (,)</b> para agregar un teléfono</small>
                 </div>
-                <div class="col-4 text-end">
+                <div class="col-3 text-end">
                     <label>Teléfono</label>
                 </div>
-                <div class="col-8  p-fluid">
+                <div class="col-9  p-fluid">
                     <p-chips [(ngModel)]="this.contacto.telefono" separator="," (onAdd)="validarPhone($event)"/>
                 </div>
-                <div class="col-98 offset-4">
+                <div class="col-9 offset-3">
                     <div *ngIf="submitted && !this.contacto.telefono.length" class="text-danger">
                         Teléfonos es requerido
                     </div>
