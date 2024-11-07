@@ -1,5 +1,6 @@
 <br>
-<div class="container-fluid">
+<app-spinner *ngIf="!cargado"></app-spinner>
+<div class="container-fluid" *ngIf="cargado">
   <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
 
 
@@ -10,7 +11,7 @@
         <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
       </div>
       <div class="col-4">
-        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_2"></app-tarjetaKPI>
       </div>
       <div class="col-4">
         <app-tarjetaKPI [data] = "data_3"></app-tarjetaKPI>
@@ -59,12 +60,12 @@
                 </td>
                 <td>
 
-                  <strong>{{ alerta.nombre }}</strong>
-                  <strong>{{ alerta.tiempo }}</strong><br>
+                  <strong>{{ alerta.primerNombre }} {{ alerta.segundoNombre }} {{ alerta.primerApellido }} {{ alerta.segundoApellido }}</strong>
+                  <strong>{{ calcularTiempoTranscurrido(alerta.fechaNacimiento, hoy) }}</strong><br>
 
-                  <span class="enfermedad">{{alerta.enfermedad}}</span>
+                  <span class="enfermedad">{{alerta.diagnostico}}</span>
 
-                    <p style="color: {{alerta.color}}">{{ alerta.sinRespuesta }} días sin respuesta</p>
+                    <p style="color: {{alerta.color}}">{{ calcularTiempoTranscurrido(alerta.fechaSeguimiento, hoy) }} sin respuesta</p>
 
                 </td>
               </tr>

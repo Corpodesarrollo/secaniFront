@@ -36,6 +36,8 @@ export class IntentoComponent implements OnInit {
   //Formularios
   formFallido: FormGroup;
 
+  totalSeguimientos:any;
+
   constructor( private fb: FormBuilder, public servicio: IntentoService,private router: Router,) {
     this.formFallido = this.fb.group({
       TipoFallaIntentoId: ['', Validators.required],
@@ -59,7 +61,11 @@ export class IntentoComponent implements OnInit {
 
 
    this.tiposFallas = await this.servicio.GetTipoFallasLlamada();
+   this.totalSeguimientos = await this.servicio.GetSeguimientoNNA(this.seguimiento.nnaId);
 
+
+
+    this.formFallido.reset();
 
     /*this.tiposFallas = [
       {id_tipo_falla: 1, nombre_tipo_falla: 'Falla 1'},
@@ -96,6 +102,7 @@ export class IntentoComponent implements OnInit {
       let respuesta = await this.servicio.PostIntento(data);
 
       if(respuesta == 1){
+        this.formFallido.reset();
         this.recargaPadre.emit();
       }
       else {
@@ -103,7 +110,7 @@ export class IntentoComponent implements OnInit {
       }
 
     } else {
-
+      this.formFallido.markAllAsTouched();
       console.log('Formulario inválido', this.formFallido);
     }
   }

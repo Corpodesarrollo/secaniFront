@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './info-seguimiento-nna.component.css',
 })
 export class InfoSeguimientoNnaComponent {
-  @Input() idNNA: number = 0;
+  @Input() idNNA?: number = 0;
 
   isLoading: boolean = false;
   error: boolean = false;
@@ -44,7 +44,10 @@ export class InfoSeguimientoNnaComponent {
     this.isLoading = true;
     this.repos.get('Seguimiento/SeguimientoNNA/', `${this.idNNA}`, 'Seguimiento').subscribe({
       next: (data: any) => {
-        this.NNA = data;
+        console.log("data", data);
+        if (data != null) {
+          this.NNA = data;
+        }
         this.isLoading = false;
       },
       error: (err) => {

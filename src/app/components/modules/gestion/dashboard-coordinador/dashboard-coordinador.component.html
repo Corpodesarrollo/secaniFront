@@ -1,5 +1,6 @@
 <br>
-<div class="container-fluid">
+<app-spinner *ngIf="!cargado"></app-spinner>
+<div class="container-fluid" *ngIf="cargado">
   <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
 
 
@@ -10,13 +11,13 @@
         <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
       </div>
       <div class="col-3">
-        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_2"></app-tarjetaKPI>
       </div>
       <div class="col-3">
-        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_3"></app-tarjetaKPI>
       </div>
       <div class="col-3">
-        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_4"></app-tarjetaKPI>
       </div>
 
     </div>
@@ -29,17 +30,21 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="filters">
-        <label for="fechaInicio">Fecha inicio</label>
-        &nbsp;
-        <input id="fechaInicio" type="date">
-        &nbsp;
-        <label for="fechaFin">Fecha fin</label>
-        &nbsp;
-        <input id="fechaFin" type="date">
-        &nbsp;
-        <img src="iconos/aplicar.svg" />
-      </div>
+      <form [formGroup]="formFechas" (ngSubmit)="onSubmit()">
+        <div class="filters">
+          <label for="fechaInicio">Fecha inicio</label>
+          &nbsp;
+          <input id="fechaInicio" type="date" formControlName="fechaInicio">
+          &nbsp;
+          <label for="fechaFin">Fecha fin</label>
+          &nbsp;
+          <input id="fechaFin" type="date" formControlName="fechaFin">
+          &nbsp;
+          <button type="submit" style="border: none;">
+            <img src="iconos/aplicar.svg" />
+          </button>
+        </div>
+      </form>
       <br>
 
       <div class="card" style="padding:20px">
@@ -73,11 +78,15 @@
     <div class="col-6">
       <div class="card" style="padding:20px">
         <div class="critical-cases">
-          <h4>CASOS CRÍTICOS</h4>
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>CASOS CRÍTICOS</h4>
+            <a  (click)="verTodosCasosCriticos()">Ver todos ></a>
+          </div>
           <div *ngFor="let caso of casosCriticos" class="caso-critico">
             <app-tarjeta-caso-critico [caso] = caso ></app-tarjeta-caso-critico>
           </div>
         </div>
+
       </div>
 
       <br>

@@ -26,7 +26,6 @@
             <app-seguimiento-steps [stepsCount]="3" [activeIndex]="2" />
         </div>
     </div>
-    <app-info-seguimiento-nna [idNNA]="9" />
     <div class="row bm-2">
         <div class="col-12">
             <div class="row">
@@ -58,15 +57,20 @@
                                 <textarea id="observaciones" pInputText rows="3" maxlength="5000" [(ngModel)]="diagnostico.observaciones" placeholder="Escriba aquí"></textarea>
                             </div>
                         </div>
-                        <div class="row align-items-center mb-3" *ngFor="let item of diagnostico.alertasPendientes">
-                            <div class="col-6 col-md-8">
-                                <label for="tratamientoRequirioCambiodeCiudad" class="fw-bold">¿La alerta 7.1.1 fue solucionada por la EAPB?</label>
-                            </div>
-                            <div class="col-6 col-md-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': item.resuelta }" style="width: 70px;" (click)="item.resuelta = true">SÍ</button>
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': !item.resuelta }" style="width: 70px;" (click)="item.resuelta = false">NO</button>
+                        <div class="row" *ngIf="(diagnostico?.alertasPendientes?.length ?? 0) > 0">
+                            <div class="col-12">
+                                <div class="row align-items-center mb-3" *ngFor="let item of diagnostico?.alertasPendientes">
+                                    <div class="col-6 col-md-8">
+                                        <label for="tratamientoRequirioCambiodeCiudad" class="fw-bold">¿La alerta 7.1.1 fue solucionada por la EAPB?</label>
+                                    </div>
+                                    <div class="col-6 col-md-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
+                                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': item.resuelta }" style="width: 70px;" (click)="item.resuelta = true">SÍ</button>
+                                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': !item.resuelta }" style="width: 70px;" (click)="item.resuelta = false">NO</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="diagnostico && diagnostico.alertas && diagnostico.alertas.length > 0">
                             <div class="col-12">
                                 <label class="fw-bold">Alertas Identificadas</label>
@@ -115,11 +119,12 @@
             </div>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;">GUARDAR Y GESTIONAR ALERTAS</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" (click)="guardar()">GUARDAR Y GESTIONAR ALERTAS</button>
                 </div>
             </div>
         </div>
     </div>
     
+    <app-seguimiento-guardar [show]="showDialog"></app-seguimiento-guardar>
 </body>
 

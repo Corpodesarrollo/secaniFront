@@ -34,7 +34,7 @@ export class IntentoSeguimientoComponent implements OnInit {
   displayModalContacto: boolean = false;
 
   parentesco: any;
-  nnaId = 0;
+  nnaId: number = 0;
 
   constructor(public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
 
@@ -47,18 +47,20 @@ export class IntentoSeguimientoComponent implements OnInit {
     //TODO: operar con el id_seguimiento recibido
     this.seguimiento = await this.servicios.GetSeguimientoById(id_seguimiento);
     this.nnaId = this.seguimiento.nnaId;
-    this.NNaCargado = await this.servicios.GetNNaById(this.seguimiento.nnaId);
+    this.NNaCargado = await this.servicios.GetNNaById(this.nnaId);
 
     this.parentesco = await this.TpParametros.getTPParentesco();
     //Obtenemos valores para las 2 grillas de datos
-    this.contactos = await this.servicios.GetIntentoContactoAgrupado(this.seguimiento.nnaId);
-    this.intentos = await this.servicios.GetIntentosContactoNNA(this.seguimiento.nnaId);
+    this.contactos = await this.servicios.GetIntentoContactoAgrupado(this.nnaId);
+    this.intentos = await this.servicios.GetIntentosContactoNNA(this.nnaId);
 
     this.intentos = this.intentos.sort((a: any, b: any) => {
       return new Date(b.fechaIntento).getTime() - new Date(a.fechaIntento).getTime();
     });
     console.log("data", this.seguimiento, this.contactos)
     console.log("intentos", this.intentos)
+    console.log('nnaId enviada', this.nnaId);
+    console.log("ver 06/11/2024")
   }
 
 

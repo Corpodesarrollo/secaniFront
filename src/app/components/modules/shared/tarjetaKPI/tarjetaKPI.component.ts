@@ -11,13 +11,23 @@ import { TarjetaCasoCriticoComponent } from '../tarjeta-caso-critico/tarjeta-cas
 })
 export class TarjetaKPIComponent implements OnInit {
 
+  estilo: any;
+
   @Input() data: any;
 
 
 
-  constructor() { }
+  constructor() {
+
+
+  }
 
   ngOnInit() {
+    if(this.data.porcentaje.startsWith("-")){
+      this.estilo = false;
+    }
+    else
+      this.estilo = true;
   }
 
 }

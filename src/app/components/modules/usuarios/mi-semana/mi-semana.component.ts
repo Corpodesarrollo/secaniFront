@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 
 import { IntentoComponent } from '../intento-seguimiento/intento/intento.component';
 import { TpParametros } from '../../../../core/services/tpParametros';
+import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
 
 @Component({
   selector: 'app-mi-semana',
@@ -26,7 +27,7 @@ import { TpParametros } from '../../../../core/services/tpParametros';
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, BotonNotificacionComponent]
 })
 export class MiSemanaComponent {
   @ViewChild('calendar')
@@ -62,7 +63,7 @@ export class MiSemanaComponent {
 
   //agenteSeleccionado: any;
 
-  constructor(public servicios: MiSemanaService,  private fb: FormBuilder, private router: Router, private TpParametros: TpParametros) {
+  constructor(public servicios: MiSemanaService,  private fb: FormBuilder) {
 
 
 
@@ -119,7 +120,7 @@ export class MiSemanaComponent {
   async  ngOnInit(){
     this.form = this.fb.group({
       agenteSeleccionado: [null, Validators.required],
-      motivo: ['', Validators.required],
+      motivo: ['', [Validators.required, Validators.maxLength(500)]]
 
     });
     /*
@@ -130,7 +131,7 @@ export class MiSemanaComponent {
 
     // TODO: Determinar id del usuario
     //let usuarioId = sessionStorage.getItem('usuarioId');
-    this.usuarioId = '1';
+    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
 
     this.diasLimite(this.currentDate);
     await this.horarioLaboral();
@@ -220,8 +221,10 @@ export class MiSemanaComponent {
 
 
   async eventos(){
-    let eventosBD = await this.servicios.GetSeguimientoUsuario(this.usuarioId, this.fechaInicial, this.fechaFinal);
 
+
+    let eventosBD = await this.servicios.GetSeguimientoUsuario(this.usuarioId, this.fechaInicial, this.fechaFinal);
+    console.log("eventosBD", eventosBD, this.usuarioId, this.fechaInicial, this.fechaFinal)
 
     // Función para sumar 30 minutos a una fecha
     let addMinutes = (date: Date, minutes: number): Date => {
@@ -230,7 +233,8 @@ export class MiSemanaComponent {
 
     this.events = eventosBD.map((item: { primerNombre: any; segundoNombre: any; primerApellido: any; segundoApellido: any; fechaSeguimiento: string | number | Date; cantidadAlertas: any; fechaNotificacionSIVIGILA: any; id: any; }) => {
       // Concatenar nombres y apellidos
-      let title = `${item.primerNombre} ${item.segundoNombre} ${item.primerApellido} ${item.segundoApellido}`.trim();
+      //let title = `${item.primerNombre} ${item.segundoNombre} ${item.primerApellido} ${item.segundoApellido}`.trim();
+      let title = `${item.primerNombre} ${item.primerApellido}`.trim();
 
       // Fecha de seguimiento como start
       let start = new Date(item.fechaSeguimiento);
@@ -396,6 +400,13 @@ export class MiSemanaComponent {
   }
 
   async guardar(){
+
+    if (this.form.invalid) {
+      // Marcar todos los controles como 'tocados' para que se muestren los mensajes de error
+      this.form.markAllAsTouched();
+      return;
+    }
+
     if (this.form.valid) {
       console.log(this.form.value);
 
@@ -419,8 +430,6 @@ export class MiSemanaComponent {
       else {
         alert("No es posible reasignar seguimientos en horarios vencidos");
       }     // Lógica de guardado
-    } else {
-      console.log('Formulario inválido');
     }
   }
 

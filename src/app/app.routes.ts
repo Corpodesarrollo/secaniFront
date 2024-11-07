@@ -2,11 +2,14 @@ import { Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
 import { ContentComponent } from './components/content/content.component';
+import { ContenthomeComponent } from './components/contenthome/contenthome.component';
+import { NotificacionRespuestaComponent } from './components/modules/notificacion-respuesta/notificacion-respuesta.component';
+
 
 export const routes: Routes = [
 
-  { path: '', component: ContentComponent },
-  { path: 'home', component: ContentComponent },
+  { path: '', component: ContenthomeComponent },
+  { path: 'home', component: ContenthomeComponent },
   { path: 'login', component: LoginComponent },
 
   {
@@ -113,6 +116,8 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/modules/gestion/dashboard-eapb/dashboard-eapb.component').then((c) => c.DashboardEapbComponent),
   },
+
+   { path: 'respuesta-notificacion', component: NotificacionRespuestaComponent },
 
 /*
   {

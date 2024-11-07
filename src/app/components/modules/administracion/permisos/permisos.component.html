@@ -1,5 +1,10 @@
 <body class="formato-fondo fuente-letra">
-    <h1>Administración de usuarios, roles y permisos</h1>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h3>Administración de usuarios, roles y permisos</h3>
+            <app-boton-notificacion></app-boton-notificacion>
+        </div>
+    </div>
 
     <div class="navbar-urp">
         <a [routerLink]="['/home']" routerLinkActive="active">
@@ -12,6 +17,8 @@
             <button class="nav-button">PERMISOS</button>
         </a>
     </div>
+
+    <br>
 
     <p-card>
         <div class="content-container">
@@ -31,12 +38,15 @@
                     </option>
                 </select>
             </div>
+            
             <div class="buttons-container">
                 <button class="consultar-button" (click)="onConsultarClick()">CONSULTAR</button>
                 <button class="limpiar-button" (click)="onLimpiarClick()">LIMPIAR</button>
             </div>
         </div>
     </p-card>
+
+    <br>
 
     <p-card>
         <div class="header">

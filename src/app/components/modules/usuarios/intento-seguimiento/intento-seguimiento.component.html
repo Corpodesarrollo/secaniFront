@@ -14,11 +14,15 @@
     </app-intento>
   </div>
 </p-dialog>
-<app-info-seguimiento-nna [idNNA]="nnaId"  />
+
+<app-info-seguimiento-nna [idNNA]="nnaId" *ngIf="nnaId > 0" />
 
 <br>
 <div style="text-align:right">
-  <img src="iconos/agregarContacto.svg" (click)="nuevoContacto()"/>
+  <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()">
+    <i class="pi pi-plus"></i> Agregar Contacto
+  </button>
+
 </div>
 <br>
 
@@ -49,7 +53,7 @@
           <td>{{ contactos.telefonos }}</td>
           <td>{{ contactos.tipoResultadoIntento1 }}</td>
           <td>{{ contactos.tipoResultadoIntento2 }}</td>
-          <td><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo"/></a></td>
+          <td><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo" *ngIf="contactos.telefonos != ''"/></a></td>
       </tr>
   </ng-template>
 </p-table>

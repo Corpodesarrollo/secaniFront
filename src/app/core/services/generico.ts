@@ -14,6 +14,8 @@ export class Generico {
 
   private BASE_URL_PARAMETRICAS = environment.url_Parametricas;
 
+  private BASE_URL_USUARIOS = environment.url_MSUsuarioyRoles;
+
   constructor() {
     const token = localStorage.getItem("access_token");
     this.headers = {
@@ -128,4 +130,15 @@ export class Generico {
   isEmpty(value: any): boolean {
     return value === null || value === undefined || value.trim() === '';
   }
+
+
+  async retorno_get_usuarios(urltemp: string, baseUrl:string = this.BASE_URL_USUARIOS): Promise<any> {
+
+    const headers = await this.headersWithToken();
+    const url = `${baseUrl}${urltemp}`;
+    const request = axios.get(url, { headers });
+    return this.handleRequest(request);
+  }
+  // Método para verificar si un campo está vacío
+
 }

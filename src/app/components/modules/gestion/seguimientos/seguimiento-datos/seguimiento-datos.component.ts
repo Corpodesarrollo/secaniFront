@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -16,21 +16,36 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
 import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimiento-historial.component";
+import { Seguimiento } from '../../../../../models/seguimiento.model';
+import { SeguimientoDatosService } from './seguimiento-datos.service';
+import { DialogModule } from 'primeng/dialog';
+import { IntentoComponent } from '../../../usuarios/intento-seguimiento/intento/intento.component';
+import { UsuariosModule } from "../../../usuarios/usuarios.module";
+import { DialogCrearContactoComponent } from "../../../usuarios/nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component";
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, 
-  DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
+    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })
 
 export class SeguimientoDatosComponent implements OnInit {
+  @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
   nna: NNA = new NNA();
   id: string | undefined;
   fechaMaxima: Date;
   estadoIngreso: string = '';
+  estado: string = '';
+  colorTxt: string = 'white';
+  colorBg: string = '#73b7ad';
+  cntSeguimientos: number = 0;
+
+  listadoContacto: any[] = [];
+  displayModalContacto: boolean = false;
+  nnaFormCrearSinActivar = false;
 
   selectedTipoID: Parametricas | undefined;
   selectedPaisNacimiento: Parametricas | undefined;
@@ -65,7 +80,7 @@ export class SeguimientoDatosComponent implements OnInit {
   EAPB: Parametricas[] = [];
 
   constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, 
-  private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService) {
+  private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService, private ss: SeguimientoDatosService) {
     this.contactForm = this.fb.group({
       nombre: ['', [Validators.required]],
       parentesco: ['', [Validators.required]],
@@ -88,6 +103,20 @@ export class SeguimientoDatosComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
+    if (!this.nna){
+      this.nna = new NNA();
+    }
+
+    this.cntSeguimientos = await this.ss.getCntSeguimientoByNNA(Number(this.id));
+    if (this.cntSeguimientos == 0){
+      this.estado = 'Registrado';
+    } else {
+      let estados = await this.tpp.getTpEstadosNNA();
+      let estado: { id: number; nombre: string, colorText: string, colorBG: string  } | undefined = estados.find((x: { id: number }) => x.id == this.nna.estadoId);
+      this.estado = estado?.nombre ?? '';
+      this.colorTxt = estado?.colorText ?? 'white';
+      this.colorBg = estado?.colorBG ?? '#73b7ad';
+    }
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -134,6 +163,29 @@ export class SeguimientoDatosComponent implements OnInit {
     this.isLoadingEAPB = false;
 
     this.CalcularEdad();
+  }
+
+  onModalHide(){
+    this.resetChildState();
+  }
+
+  closeModal() {
+    this.displayModalContacto = false; // Cierra el modal
+  }
+
+  resetChildState() {
+    if (this.intentoComponent) {
+      this.intentoComponent.resetFormState();
+    }
+  }
+
+  nuevoContacto(){
+    this.displayModalContacto = true;
+  }
+
+  async handleDataContacto(data: any) {
+    this.listadoContacto = data;
+    console.log('Data received from child handleDataContacto:', 'Crear nna contacto', data);
   }
 
   applySexo(sexo: string) {

@@ -37,11 +37,11 @@
                     </div>
                     <div class="row">
                       <div class="col" style="font-weight: bold;">EAPB<br></div>
-                      <div class="col">{{datosNNA.eapbId}}<br></div>
+                      <div class="col">{{datosNNA.eapbNombre}}<br></div>
                     </div>
                     <div class="row">
                       <div class="col" style="font-weight: bold;">IPS<br></div>
-                      <div class="col">{{datosNNA.ipsId}}<br></div>
+                      <div class="col">{{datosNNA.epsNombre}}<br></div>
                     </div>
                   </div>
                   <div class="col">
@@ -113,7 +113,7 @@
                 [ngClass]="{'active': activeFilter === '4'}"
                 style="width: 240px; margin-top: 10px;"
                 (click)="applyFilter('4')">
-          Resultas
+          Resueltas
         </button>
 
         <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
@@ -155,23 +155,32 @@
         <ng-template pTemplate="body" let-alerta let-expanded="expanded">
           <tr>
             <td>{{ alerta.ultimaFechaSeguimiento | date:'dd/MM/yyyy' }}</td>
-            <td>{{ alerta.descripcionCategoria }}</td>
-            <td class="subcategoria-column">{{ alerta.descripcionSubcategoria }}</td>
+            <td>{{ alerta.categoriaAlerta }}</td>
+            <td class="subcategoria-column">{{ alerta.subcategoriaAlerta }}</td>
             <td class="observacion-column">{{ alerta.observaciones }}</td>
             <td>
-              <span [ngClass]="[getBadgeColor(alerta.estadoId), 'fixed-width-badge']" class="badge text-white me-1">
+              <span [ngClass]="[getBadgeColor(alerta.estadoId), 'fixed-width-badge', 'text-wrap']" class="badge text-white me-1">
                 {{ getDescripcionEstado(alerta.estadoId) }}
               </span>
             </td>
             <td>
               <div class="icon-container">
                 <i class="pi pi-file-pdf icon-style"></i>
-                <i class="pi pi-envelope icon-style"></i>
+                <button class="icon-button" (click)="showDialog(alerta)">
+                  <i class="pi pi-envelope"></i>
+                </button>
               </div>
             </td>
             <td>
-              <p-button type="button" pRipple [pRowToggler]="alerta" [text]="true" [rounded]="true"
-                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"  (onClick)="consultarNotificaciones(alerta.alertaId)" />
+              <p-button
+                type="button"
+                pRipple
+                [pRowToggler]="alerta"
+                [text]="true"
+                [rounded]="true"
+                [plain]="true"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                (onClick)="consultarNotificaciones(alerta.alertaId)" />
             </td>
           </tr>
         </ng-template>
@@ -237,5 +246,22 @@
           <button class="btn btn-detalle-seguimiento"><i class="bi bi-telephone-outbound-fill me-2"></i>GENERAR CONTACTO</button>
       </div>
   </div>
+
+
+
+
+
+
+  <p-dialog
+    header="Oficio de notificación"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [maximizable]="true">
+
+    <app-oficio-notificacion [alerta]="alertaSeleccionada" [NNAdatos]="datosNNA"  [nombreNNA]="datosBasicosNNA.nombreCompleto" [edadNNA]="tiempoTranscurrido" [diagnosticoNNA]="datosBasicosNNA.diagnostico"></app-oficio-notificacion>
+
+  </p-dialog>
 
 </body>

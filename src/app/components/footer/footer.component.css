@@ -43,6 +43,8 @@ p {
 
 .row {
     margin-left: 0 !important;
+    display: flex;
+    justify-content: space-between;
 }
 
 .row.col-xs-12.col-lg-7.govco-texto-sedes,
@@ -88,18 +90,15 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    
-    position: absolute;
-
     /* Uncomment for 3D effect */
     /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.govco-twitter-square:before {
+.govco-x-square:before {
     content: "\ee16";
 }
 
-.govco-twitter:before {
+.govco-x:before {
     content: "\ee17";
 }
 
@@ -135,13 +134,29 @@ body {
     content: "\ea85";
 }
 
+.govco-tiktok:before {
+    content: "\ee0f";
+}
+
+.govco-whatsapp-square:before {
+    content: "\ee37";
+}
+
+.govco-youtube-square:before {
+    content: "\ee51";
+}
+
+.govco-youtube:before {
+    content: "\ee52";
+}
+
 /*** FUENTE ICONOS ***/
 
 /*** MODAL 1 ***/
 .govco-logo-entidad {
-    height: 64px;
+    height: 83px;
     display: inline-block;
-    content: url(https://cdn.www.gov.co/v4/assets/images/Entidad.svg);
+    content: url(https://www.minsalud.gov.co/LogosInstitucionales/Logo-MinSalud.png);
 }
 
 .govco-co {
@@ -175,29 +190,25 @@ body {
 }
 
 .govco-data-front {
-    width: calc(100% - 40px);
-    margin-left: 20px !important;
-    -webkit-box-shadow: 50px 30px 0px -30px #e6effd, -50px 30px 0px -30px #e6effd,
-        0px 20px 0px 0px #e6effd, 50px 50px 0px -30px #e6effd,
-        -50px 50px 0px -30px #e6effd;
-    box-shadow: 50px 30px 0px -30px #e6effd, -50px 30px 0px -30px #e6effd,
-        0px 20px 0px 0px #e6effd, 50px 50px 0px -30px #e6effd,
-        -50px 50px 0px -30px #e6effd;
-    top: 0;
+    width: calc(100% - 39%);
+    -webkit-box-shadow: 600px 30px 0px -30px #73b9af -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+    box-shadow: 600px 30px 0px -30px #35AFA4, -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+    top: 10;
     border: 2px solid #e5eefb;
     border-radius: 10px;
     opacity: 1;
+    margin: auto !important;
 }
 
 .govco-text-header-1 {
-    color: #3366cc;
+    color: #35AFA4;
     text-align: left;
     font-size: 20px;
     font-weight: 600;
 }
 
 .govco-text-header-2 {
-    color: #3366cc;
+    color: #35AFA4;
     text-align: left;
     font-size: 16px;
     font-weight: bold;
@@ -228,7 +239,7 @@ body {
     margin-right: 10px !important;
     margin-left: 5px !important;
     vertical-align: text-top !important;
-    color: #3366cc;
+    color: #35AFA4;
 }
 
 .govco-iconContainer {
@@ -239,6 +250,7 @@ body {
 .govco-links-container {
     margin-bottom: 50px !important;
     margin-top: 30px !important;
+    justify-content: start;
 }
 
 .govco-footer-text {
@@ -279,6 +291,25 @@ body {
 
 .govco-nombre-entidad {
     margin-bottom: 0px !important;
+    padding-left: 0px;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 1400px) {
+    .govco-data-front {
+        width: calc(100% - 40px);
+        -webkit-box-shadow: 600px 30px 0px -30px #73b9af -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+        box-shadow: 600px 30px 0px -30px #35AFA4, -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+        top: 10;
+        border: 2px solid #e5eefb;
+        border-radius: 10px;
+        opacity: 1;
+        margin: auto !important;
+    }
 }
 
 @media (max-width: 991px) {
@@ -363,5 +394,5 @@ body {
     .right {
         max-width: 80px;
     }
-    
+
 }
