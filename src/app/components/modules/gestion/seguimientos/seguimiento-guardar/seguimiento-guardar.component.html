@@ -1,0 +1,95 @@
+<p-dialog header="Guardar y agendar seguimiento"  [(visible)]="show" [modal]="true" [style]="{ width: '800px' }">
+  <div *ngIf="isLoading" class="spinner">
+    <p class="{{ colorMensaje }}">{{ mensajeCarga }}</p>
+    <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
+  </div>
+  <div class="px-3" *ngIf="!isLoading">
+    <form [formGroup]="agendarForm" (ngSubmit)="onSubmit()">
+      <div
+        class="container my-3"
+        style="background-color: white; border-radius: 15px; max-width: 800px"
+      >
+        <div class="row align-items-center mb-3">
+          <div class="col-3 col-md-4 text-end fw-bold">
+            <label for="entidad" class="form-label">Fecha sugerida</label>
+          </div>
+          <div class="col-9 col-md-8 p-fluid">
+            {{ fechaSugerida | date: "dd/MM/yyyy" }}
+          </div>
+        </div>
+        <div class="row align-items-center mb-3">
+          <div class="col-3 text-end fw-bold">
+            <label for="nombreFuncionario" class="form-label"
+              >Nueva Fecha</label>
+          </div>
+          <div class="col-4 p-fluid">
+            <p-calendar
+              [iconDisplay]="'input'"
+              [showIcon]="true"
+              inputId="icondisplay"
+              [(ngModel)]="nuevaFecha"
+              [appendTo]="'body'"
+              placeholder="dd/mm/aaaa"
+            />
+          </div>
+          <div class="col-2 text-end fw-bold">
+            <label for="cargo" class="form-label">Hora*</label>
+          </div>
+          <div class="col-3 p-fluid">
+            <p-calendar
+              [showIcon]="true"
+              [(ngModel)]="nuevaHora"
+              [timeOnly]="true"
+              [hourFormat]="'12'"
+              [iconDisplay]="'input'"
+              placeholder="hh:mm am/pm"
+            >
+            </p-calendar>
+          </div>
+        </div>
+        <div class="row align-items-center mb-3">
+          
+          <div class="col-8 offset-4">
+            <div
+              *ngIf="submitted && agendarForm.get('cargo')?.invalid"
+              class="text-danger"
+            >
+              Campo requerido
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3 text-end fw-bold">
+            <label for="motivo" class="form-label">Motivo*</label>
+          </div>
+          <div class="col-9 p-fluid">
+            <textarea
+              pInputText
+              formControlName="motivo"
+              maxlength="3000"
+              rows="3"
+              [(ngModel)]="motivo"
+            ></textarea>
+          </div>
+          <div class="col-8 offset-4">
+            <div
+              *ngIf="submitted && agendarForm.get('respuesta')?.invalid"
+              class="text-danger"
+            >
+              Campo requerido
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button
+          type="submit"
+          class="btn text-white rounded-4 btn-lg"
+          style="background-color: #ff9801; color: white; width: 150px"
+        >
+          ENVIAR
+        </button>
+      </div>
+    </form>
+  </div>
+</p-dialog>

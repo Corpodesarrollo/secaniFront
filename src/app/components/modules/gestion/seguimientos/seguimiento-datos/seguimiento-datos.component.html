@@ -17,7 +17,7 @@
                 </ng-template>
             </p-breadcrumb>
             <div>
-                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">&nbsp;</span>
+                Estado: <span class="badge font-semibold ms-3" [ngStyle]="{'background-color': colorBg, 'color': colorTxt, 'width': '170px'}">{{estado}}</span>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
 
                                     <div class="row">
                                         <div class="col-12 text-end">
-                                            <button class="btn  btn-sm text-white rounded-3" type="submit" style="background-color: #73b7ad;">
+                                            <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()">
                                                 <i class="pi pi-plus"></i> Agregar Contacto
                                             </button>
                                         </div>
@@ -365,4 +365,5 @@
             </div>
         </div>
     </div>
+    <app-dialog-crear-contacto [show]="displayModalContacto" [nnaId]="nna.id" (closeModal)="closeModal()"></app-dialog-crear-contacto>
 </body>

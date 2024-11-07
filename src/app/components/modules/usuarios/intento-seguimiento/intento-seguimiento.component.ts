@@ -60,6 +60,7 @@ export class IntentoSeguimientoComponent implements OnInit {
     console.log("data", this.seguimiento, this.contactos)
     console.log("intentos", this.intentos)
     console.log('nnaId enviada', this.nnaId);
+    console.log("ver 06/11/2024")
   }
 
 
