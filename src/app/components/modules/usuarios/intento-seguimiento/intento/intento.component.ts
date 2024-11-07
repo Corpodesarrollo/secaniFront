@@ -63,7 +63,10 @@ export class IntentoComponent implements OnInit {
    this.tiposFallas = await this.servicio.GetTipoFallasLlamada();
    this.totalSeguimientos = await this.servicio.GetSeguimientoNNA(this.seguimiento.nnaId);
 
-    console.log(this.totalSeguimientos, this.seguimiento);
+
+
+    this.formFallido.reset();
+
     /*this.tiposFallas = [
       {id_tipo_falla: 1, nombre_tipo_falla: 'Falla 1'},
       {id_tipo_falla: 2, nombre_tipo_falla: 'Falla 2'},
@@ -99,6 +102,7 @@ export class IntentoComponent implements OnInit {
       let respuesta = await this.servicio.PostIntento(data);
 
       if(respuesta == 1){
+        this.formFallido.reset();
         this.recargaPadre.emit();
       }
       else {
@@ -106,7 +110,7 @@ export class IntentoComponent implements OnInit {
       }
 
     } else {
-
+      this.formFallido.markAllAsTouched();
       console.log('Formulario inválido', this.formFallido);
     }
   }
