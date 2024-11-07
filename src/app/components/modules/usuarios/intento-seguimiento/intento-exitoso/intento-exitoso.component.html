@@ -96,11 +96,16 @@
           <div class="col-4">
             <p-calendar
               inputId="calendar-12h"
+              id = "FechaIntento"
               formControlName = "FechaIntento"
               [showTime]="true"
               dateFormat="yy-mm-dd"
               hourFormat="12"
               [minDate]="fechaHoy" />
+
+              <div *ngIf="formGroup2.get('FechaIntento')?.invalid && formGroup2.get('FechaIntento')?.touched" class="invalid-feedback">
+                Por favor ingrese una fecha
+              </div>
           </div>
           <div class="col-4">
 
@@ -244,7 +249,10 @@
             <b>Nombre</b>
           </div>
           <div class="col-7">
-            <input type="text" class="form-control" placeholder="" formControlName="nombreRechazo" />
+            <input type="text" class="form-control" placeholder="" formControlName="nombreRechazo" id="nombreRechazo" [ngClass]="{'is-invalid': formGroup4.get('nombreRechazo')?.invalid && formGroup4.get('nombreRechazo')?.touched}"/>
+            <div *ngIf="formGroup4.get('nombreRechazo')?.invalid && formGroup4.get('nombreRechazo')?.touched" class="invalid-feedback">
+              Por favor ingrese el nombre.
+            </div>
           </div>
 
         </div>
@@ -254,7 +262,10 @@
             <b>Parentesco</b>
           </div>
           <div class="col-7">
-            <input type="text" class="form-control" placeholder="" formControlName="parentescoRechazo" />
+            <input type="text" class="form-control" placeholder="" formControlName="parentescoRechazo" id="parentescoRechazo" [ngClass]="{'is-invalid': formGroup4.get('parentescoRechazo')?.invalid && formGroup4.get('parentescoRechazo')?.touched}"/>
+            <div *ngIf="formGroup4.get('parentescoRechazo')?.invalid && formGroup4.get('parentescoRechazo')?.touched" class="invalid-feedback">
+              Por favor ingrese el parentezco.
+            </div>
           </div>
 
         </div>
@@ -264,7 +275,10 @@
             <b>Razones</b>
           </div>
           <div class="col-7">
-            <textarea class="form-control" formControlName="razonesRechazo"></textarea>
+            <textarea class="form-control" formControlName="razonesRechazo" id="razonesRechazo" [ngClass]="{'is-invalid': formGroup4.get('razonesRechazo')?.invalid && formGroup4.get('razonesRechazo')?.touched}"></textarea>
+            <div *ngIf="formGroup4.get('razonesRechazo')?.invalid && formGroup4.get('razonesRechazo')?.touched" class="invalid-feedback">
+              Por favor ingrese las razones
+            </div>
           </div>
 
         </div>

@@ -16,10 +16,12 @@ export class TablasParametricas {
         return new Promise((resolve, reject) => {
             this.repos.get('TablaParametrica/', `${tabla}`, 'TablaParametrica').subscribe({
                 next: (data: any) => {
+                    
                     this.tabla = data;
                     resolve(this.tabla);
                 },
                 error: (err) => {
+                    console.log("Ocurrio un error");
                     console.error(err);
                     reject(err);
                 }

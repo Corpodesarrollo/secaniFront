@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="seguimientos.length > 0">
   <div class="col-12">
     <p-card>
       <p-table
@@ -31,7 +31,7 @@
             <td>{{ seguimiento.observacion }}</td>
             <td>{{ seguimiento.nombreEntidad }}</td>
             <td>{{ seguimiento.fechaNotificacion | date: 'dd/MM/yyyy' }}</td>
-            <td><i *ngIf="seguimiento.asuntoUltimaActuacion.toLowerCase() == 'solicitado por cuidador'" class="bi bi-eye-fill" style="color: #73b7ad;"></i></td>
+            <td class="text-center"><i *ngIf="seguimiento.asuntoUltimaActuacion?.toLowerCase() != 'solicitado por cuidador'" class="bi bi-eye-fill" (click)="cargarRespuestas(seguimiento.id)"></i></td>
             <td>{{ seguimiento.fechaRespuesta | date: 'dd/MM/yyyy' }}</td>
           </tr>
         </ng-template>
@@ -39,3 +39,110 @@
     </p-card>
   </div>
 </div>
+
+<p-dialog [(visible)]="showDialog" [modal]="true" [style]="{width: '600px'}">
+    <div *ngIf="isLoading" class="spinner">
+      <p class="{{colorMensaje}}">{{mensajeCarga}}</p>
+      <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
+    </div>
+    <div class="px-3" *ngIf="!isLoading">
+        <div class="row mb-3">
+            <div class="col-12 text-center">
+              <h3 class="text-center mb-2" style="font-weight: bold">
+                Respuesta enviada
+              </h3>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="datos-usuario text-center">
+                  <p><strong>{{currentRespueta?.nombreNNA}} - {{currentRespueta?.documentoNNA}}</strong></p>
+                  <p>{{currentRespueta?.alertas}}</p>
+                  <p>esquemas de diagnostico</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="detalles-seguimiento">
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <span class="fw-bold">Para</span>
+                        </div>
+                        <div class="col-9">
+                            <span>{{ currentRespueta?.para }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <span class="fw-bold">Con copia</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="conCopia">
+                                <span>{{ currentRespueta?.conCopia }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <span class="fw-bold">Asunto</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="asunto">
+                                <span>{{ currentRespueta?.asunto }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <span class="fw-bold">Mensaje</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="mensaje">
+                                <span>{{ currentRespueta?.mensaje }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <span class="fw-bold">Firma</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="firma">
+                                <span>{{ currentRespueta?.firma }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-3">
+                            <span class="fw-bold">Adjuntos</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="adjuntos">
+                                <span>{{ currentRespueta?.adjuntos }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center align-items-center text-center">
+                      <div class="col-12">
+                        <button class="btn btn-light rounded-circle mx-2 btn-pag-icon" style="background-color: var(--bs-btn-hover-bg);" (click)="anterior()">
+                          <i class="pi pi-angle-left text-white" style="font-size: 1.2rem"></i>
+                        </button>
+
+                        <!-- Contador -->
+                        <span class="mx-2 span" style="font-size: 1.5rem">
+                          {{ currentIndex + 1 }}/{{ respuesta.length }}
+                        </span>
+
+                        <!-- Botón de siguiente -->
+                        <button class="btn btn-light rounded-circle mx-2 btn-pag-icon" (click)="siguiente()" style="background-color: var(--bs-btn-hover-bg);">
+                          <i class="pi pi-angle-right text-white" style="font-size: 1.5rem"></i>
+                        </button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+

@@ -124,4 +124,10 @@ export class TpParametros {
     var url = "RazonesSinDiagnostico";
     return await this.axios.retorno_get(url, urlbase);
   }
+
+  async getEntidades() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = "Entidades/Entidades";
+    return await this.axios.retorno_get(url, urlbase);
+  }
 }

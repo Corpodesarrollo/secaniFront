@@ -15,7 +15,7 @@
     <b>Intento fallido</b>
   </h3>
   <br><br>
-  <form [formGroup]="formFallido" (ngSubmit)="guardarFallido()">
+  <form [formGroup]="formFallido">
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-8" style="text-align:left">
@@ -32,10 +32,14 @@
       <div class="col-md-2"></div>
       <div class="col-md-8" style="text-align:left">
         <label for="TipoFallaIntentoId"><h5>Tipo de falla en la llamada</h5></label>
-        <select id="TipoFallaIntentoId" class="form-select" formControlName="TipoFallaIntentoId">
-          <option value="" disabled selected>Seleccione...</option>
+        <select id="TipoFallaIntentoId" class="form-select" formControlName="TipoFallaIntentoId" [ngClass]="{'is-invalid': formFallido.get('TipoFallaIntentoId')?.invalid && formFallido.get('TipoFallaIntentoId')?.touched}">
+          <option value="" selected>Seleccione...</option>
           <option *ngFor="let doc of tiposFallas" [value]="doc.id">{{ doc.nombre }}</option>
         </select>
+
+        <div *ngIf="formFallido.get('TipoFallaIntentoId')?.invalid && formFallido.get('TipoFallaIntentoId')?.touched" class="invalid-feedback">
+          Por favor seleccione el tipo de falla en la llamada
+        </div>
       </div>
       <div class="col-md-2"></div>
     </div>
