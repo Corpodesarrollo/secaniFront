@@ -37,3 +37,50 @@
   max-width: 200px;
   overflow-wrap: break-word;
 }
+
+
+.toggle-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #e0e0e0; /* Color de fondo para el estado no seleccionado */
+  color: #333; /* Color de texto para el estado no seleccionado */
+  width: 60px; /* Ajuste del ancho para los botones */
+  text-align: center;
+}
+
+.toggle-btn.active {
+  background-color: #5cbaba; /* Color de fondo para el estado seleccionado */
+  color: white; /* Color de texto para el estado seleccionado */
+}
+
+.recaidas-input {
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+
+.btn-guardar-nna {
+  background-color: #FF9801;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+  padding: 12px 30px; /* Incrementa el tamaño del botón */
+  font-size: 1.2rem; /* Aumenta el tamaño del texto */
+  border-radius: 8px; /* Opcional: Redondea los bordes */
+  border: none; /* Elimina cualquier borde predeterminado */
+  transition: all 0.3s ease; /* Añade una transición suave para efectos hover */
+}
+
+.btn-guardar-nna:hover {
+  background-color: #ff9901c3;
+  color: white;
+  transform: scale(1.05); /* Efecto hover para agrandar un poco */
+}
+

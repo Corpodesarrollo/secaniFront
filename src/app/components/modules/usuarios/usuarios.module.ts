@@ -11,6 +11,9 @@ import { AccordionModule } from 'primeng/accordion';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { RippleModule } from 'primeng/ripple';
 
 import { CrearNnaComponent } from './nna/crear-nna/crear-nna.component';
 import { DetalleNnaComponent } from './nna/detalle-nna/detalle-nna.component';
@@ -62,6 +65,9 @@ import { CardModule } from 'primeng/card';
     SelectButtonModule,
     DropdownModule,
     CalendarModule,
+    ToastModule,
+    ButtonModule,
+    RippleModule,
 
     /**Component standalone */
     BotonNotificacionComponent,
@@ -72,6 +78,7 @@ import { CardModule } from 'primeng/card';
     DialogCrearContactoComponent
   ],
   providers: [
+    MessageService,
     DatePipe // <-- Agrega DatePipe aquí
   ],
   exports: [CrearNnaAgregarContactoComponent],

@@ -1,5 +1,5 @@
 <div class="row container-fluid d-flex">
-
+  <p-toast />
   <div class="col-12">
     <div class="row">
       <div class="col-6 menu">
@@ -28,13 +28,6 @@
                 (click)="seleccionarPanel(2)">
           Información del tratamiento
         </button>
-
-        <!--button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
-                [ngClass]="{'active': panelSeleccionado === 3}"
-                style="width: 200px; margin-top: 10px;"
-                (click)="seleccionarPanel(3)">
-          Trazabilidad/ Seguimiento
-        </button-->
       </div>
     </div>
   </div>
@@ -63,150 +56,177 @@
             </div>
           </div>
         </div>
-        <div class="col-auto">
-          <span [ngClass]="['bg-info', 'fixed-width-badge', 'text-wrap', 'fs-6', 'p-3']" class="badge text-white me-2">
-            Estado del seguimiento
-          </span>
-        </div>
       </div>
       <br>
 
 
-      <p-card *ngIf="panelSeleccionado == 1"><!--Informacion del NNA-->
+      <p-card *ngIf="panelSeleccionado == 1">
         <div class="row">
-          <div class="col">
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Fecha de notificación: <br></div>
-              <div class="col">{{datosNNA.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy' }}<br></div>
+          <!-- Primera columna -->
+          <div class="col-md-6">
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Fecha de notificación SIVIGILA:</div>
+              <div class="col-6 text-wrap">{{datosNNA.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy' }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Sexo:</div>
+              <div class="col-6">{{getNombreSexoPorId(datosNNA.sexoId)}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Tipo identificación:</div>
+              <div class="col-6">{{datosNNA.tipoIdentificacionId}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Número identificación:</div>
+              <div class="col-6">{{datosNNA.numeroIdentificacion}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Fecha de nacimiento:</div>
+              <div class="col-6">{{datosNNA.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">País de nacimiento:</div>
+              <div class="col-6">{{getNombrePaisPorId(datosNNA.paisId)}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Departamento de nacimiento:</div>
+              <div class="col-6">{{getNombreDeptoPorId(datosNNA.residenciaOrigenMunicipioId)}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Ciudad de nacimiento:</div>
+              <div class="col-6">{{getNombreMuniPorId(datosNNA.residenciaOrigenMunicipioId)}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Etnia:</div>
+              <div class="col-6">{{getNombreEtniaPorId(datosNNA.etniaId)}}</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Grupo poblacional*:</div>
+              <div class="col-6">{{getNombreGrupoPoblaPorId(datosNNA.grupoPoblacionId)}}</div>
             </div>
             <div class="row">
-              <div class="col" style="font-weight: bold;">Sexo: <br></div>
-              <div class="col">{{datosNNA.sexoId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Tipo identificación: <br></div>
-              <div class="col">{{datosNNA.tipoIdentificacionId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Número identificación: <br></div>
-              <div class="col">{{datosNNA.numeroIdentificacion}}<br><br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Fecha de nacimiento: <br></div>
-              <div class="col">{{datosNNA.fechaNacimiento | date:'dd/MM/yyyy' }}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">País de nacimiento: <br></div>
-              <div class="col">{{datosNNA.paisId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Etnia: <br></div>
-              <div class="col">{{datosNNA.etniaId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Departamento de nacimiento: <br></div>
-              <div class="col">{{datosNNA.residenciaOrigenMunicipioId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Ciudad de nacimiento: <br></div>
-              <div class="col">{{datosNNA.residenciaOrigenMunicipioId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Grupo poblacional*: <br></div>
-              <div class="col">{{datosNNA.grupoPoblacionId}}<br></div>
-            </div>
-            <p-divider />
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Residencia de procedencia/ocurrencia<br></div>
-              <div class="col"></div>
+              <div class="col fw-bold">Afiliación al SGSSS</div>
             </div>
             <br>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Departamento: <br></div>
-              <div class="col">{{datosNNA.residenciaActualMunicipioId}}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Régimen de afiliación:</div>
+              <div class="col-6">
+                <p-dropdown
+                  placeholder="Seleccionar"
+                  [(ngModel)]="datosNNA.tipoRegimenSSId"
+                  [options]="regimenesAfiliacion"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  name="tipoRegimenSSId"
+                  styleClass="w-100"
+                  ></p-dropdown>
+              </div>
             </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Municipio: <br></div>
-              <div class="col">{{datosNNA.residenciaActualMunicipioId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Barrio: <br></div>
-              <div class="col">{{datosNNA.residenciaActualBarrio}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Área: <br></div>
-              <div class="col">{{datosNNA.residenciaActualAreaId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Dirección: <br></div>
-              <div class="col">{{datosNNA.residenciaActualDireccion}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Estrato: <br></div>
-              <div class="col">{{datosNNA.residenciaActualEstratoId}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Teléfono: <br></div>
-              <div class="col">{{datosNNA.residenciaActualTelefono}}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">EAPB:</div>
+              <div class="col-6">
+                <p-dropdown
+                  placeholder="Seleccionar"
+                  [(ngModel)]="datosNNA.eapbId"
+                  [options]="eapbs"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  name="eapbId"
+                  styleClass="w-100"
+                  ></p-dropdown>
+              </div>
             </div>
           </div>
-          <div class="col">
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Origen del reporte: <br></div>
-              <div class="col">{{datosNNA.origenReporteId}}<br></div>
+
+          <!-- Segunda columna -->
+          <div class="col-md-6">
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Régimen de afiliación:</div>
+              <div class="col-6">{{datosNNA.tipoRegimenSSId}}</div>
             </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Departamento donde actualmente recibe el tratamiento: <br></div>
-              <div class="col">{{datosNNA.departamentoTratamientoId}}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Asegurador:</div>
+              <div class="col-6">{{datosNNA.epsNombre}}</div>
             </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Estado de ingreso a la estrategia: <br></div>
-              <div class="col">{{datosNNA.estadoIngresoEstrategiaId}}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">IPS:</div>
+              <div class="col-6">{{datosNNA.ipsNombre}}</div>
             </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Fecha de ingreso a la estrategia: <br></div>
-              <div class="col">{{datosNNA.fechaIngresoEstrategia | date:'dd/MM/yyyy' }}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Estado de ingreso a la estrategia:</div>
+              <div class="col-6">{{datosNNA.estadoIngresoEstrategiaId}}</div>
             </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Régimen de afiliación: <br></div>
-              <div class="col">{{datosNNA.tipoRegimenSSId}}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Fecha de ingreso a la estrategia:</div>
+              <div class="col-6">{{datosNNA.fechaIngresoEstrategia | date:'dd/MM/yyyy' }}</div>
             </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">Asegurador: <br></div>
-              <div class="col">{{datosNNA.epsNombre}}<br></div>
-            </div>
-            <div class="row">
-              <div class="col" style="font-weight: bold;">IPS: <br></div>
-              <div class="col">{{datosNNA.ipsNombre}}<br></div>
+            <div class="row mb-3">
+              <div class="col-6 fw-bold">Origen del reporte:</div>
+              <div class="col-6">{{datosNNA.origenReporteId}}</div>
             </div>
             <br>
-
             <div class="row">
+              <div class="col fw-bold">Identificación del cuidador o representante legal</div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-4">
+                <label for="barrioProce" class="form-label fw-bold">Nombre:</label>
+              </div>
+              <div class="col-8">
+                <input type="text" class="form-control" id="nombreCuidador" [(ngModel)]="datosNNA.cuidadorNombres">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <label for="barrioProce" class="form-label fw-bold">Parentesco:</label>
+              </div>
+              <div class="col-8">
+                <p-dropdown
+                  placeholder="Seleccionar"
+                  [(ngModel)]="datosNNA.cuidadorParentescoId"
+                  [options]="parentescos"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  name="parentescos"
+                  styleClass="w-100"
+                  ></p-dropdown>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <label for="barrioProce" class="form-label fw-bold">Teléfono:</label>
+              </div>
+              <div class="col-8">
+                <input type="text" class="form-control" id="nombreCuidador" [(ngModel)]="datosNNA.cuidadorTelefono">
+              </div>
+            </div>
+            <div class="row mt-4">
               <div class="col">
                 <p-table [value]="contactosNna" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
                   <ng-template pTemplate="header">
-                      <tr>
-                          <th>Contacto</th>
-                          <th>Parentesco</th>
-                          <th>Correo electrónico</th>
-                          <th>Télefono de contacto</th>
-                      </tr>
+                    <tr>
+                      <th>Contacto</th>
+                      <th>Parentesco</th>
+                      <th>Correo electrónico</th>
+                      <th>Télefono de contacto</th>
+                    </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-contacto>
-                      <tr>
-                          <td>{{ contacto.nombres }}</td>
-                          <td>{{ contacto.parentescoId }}</td>
-                          <td class="correo-column">{{ contacto.email }}</td>
-                          <td>{{ contacto.telefonos }}</td>
-                      </tr>
+                    <tr>
+                      <td>{{ contacto.nombres }}</td>
+                      <td>{{ contacto.parentescoId }}</td>
+                      <td class="correo-column">{{ contacto.email }}</td>
+                      <td>{{ contacto.telefonos }}</td>
+                    </tr>
                   </ng-template>
                 </p-table>
               </div>
             </div>
-
           </div>
         </div>
       </p-card>
+
 
       <!--form-->
         <p-card *ngIf="panelSeleccionado == 2">
@@ -216,20 +236,19 @@
                 <div class="row">
                   <div class="col" style="font-weight: bold;">Razones por las cuales el menor no tiene diagnóstico:<br></div>
                   <div class="col">
-                    <form action="">
                     <div class="row" style="margin-bottom: 10px;">
                       <p-dropdown
                         placeholder="Seleccionar"
                         [(ngModel)]="datosNNA.motivoNoDiagnosticoId"
                         [options]="razonesSinDiagnostico"
                         optionLabel="nombre"
+                        optionValue="id"
                         name="idsindiagnostico"
-                      />
+                        ></p-dropdown>
                     </div>
                     <div class="row">
                       <input type="text" class="form-control" name="sindiagnosticootro" placeholder="Otro, ¿cuál?" [(ngModel)]="datosNNA.motivoNoDiagnosticoOtro">
                     </div>
-                  </form>
                   </div>
                 </div>
               </div>
@@ -241,19 +260,26 @@
                   <div class="row" style="margin-bottom: 10px;">
                     <div class="col" style="font-weight: bold;">Diagnóstico:<br></div>
                     <div class="col">
-                      <p-dropdown   placeholder="Seleccionar" name="iddiagnostico" [(ngModel)]="datosNNA.diagnosticoId" [options]="optionsDiagnostico"></p-dropdown>
+                      <p-dropdown
+                        placeholder="Seleccionar"
+                        name="iddiagnostico"
+                        [(ngModel)]="datosNNA.diagnosticoId"
+                        [options]="diagnosticos"
+                        optionLabel="nombre"
+                        optionValue="id"
+                        ></p-dropdown>
                     </div>
                   </div>
                   <div class="row" style="margin-bottom: 10px;">
                     <div class="col" style="font-weight: bold;">Fecha de consulta:<br></div>
                     <div class="col">
-                      <input type="date" class="form-control" name="fechaconsultadiagnostico"  [(ngModel)]="datosNNA.fechaConsultaDiagnostico">
+                      <input type="date" class="form-control" name="fechaConsultaDiagnostico"  [(ngModel)]="fechaConsultaDiagnosticoInput" (change)="setFechaConsultaDiagnostico()">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col" style="font-weight: bold;">Fecha de diagnóstico:<br></div>
                     <div class="col">
-                      <input type="date" class="form-control" name="fechadiagnostico" [(ngModel)]="datosNNA.fechaDiagnostico">
+                      <input type="Date" class="form-control" name="fechaDiagnostico" [(ngModel)]="fechaDiagnosticoInput" (change)="setFechaDiagnostico()" disabled>
                     </div>
                   </div>
                 </div>
@@ -262,13 +288,19 @@
                   <div class="row" style="margin-bottom: 10px;">
                     <div class="col" style="font-weight: bold;">Fecha de inicio de tratamiento:<br></div>
                     <div class="col">
-                      <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaInicioTratamiento">
+                      <input type="date" class="form-control" name="fechaInicioTratamiento" [(ngModel)]="fechaInicioTratamientoInput" (change)="setFechaDiagnostico()">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
                     <div class="col">
-                      <p-dropdown  placeholder="Seleccionar" [(ngModel)]="datosNNA.ipsId" [options]="optionsIps"></p-dropdown>
+                      <p-dropdown
+                        placeholder="datosNNA.ipsNombre"
+                        [(ngModel)]="datosNNA.ipsId"
+                        [options]="entidadesRecibirTratamiento"
+                        optionLabel="nombre"
+                        optionValue="id"
+                        ></p-dropdown>
                     </div>
                   </div>
                 </div>
@@ -283,29 +315,32 @@
                 <div class="col-6">
                   <div class="row">
                     <div class="col" style="font-weight: bold;">Recaídas:</div>
-                    <div class="col d-flex align-items-center">
-                      <!-- Radio buttons for Si / No -->
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input"  type="radio"  id="recSi"  name="recaida"  value="true"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === true">
-                        <label class="form-check-label" for="recSi">Sí</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input"  type="radio"  id="recNo"  name="recaida"  value="false"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === false">
-                        <label class="form-check-label" for="recNo">No</label>
-                      </div>
-
+                    <div class="col d-flex align-items-center justify-content-between">
+                      <button
+                        class="toggle-btn"
+                        [ngClass]="{'active': datosNNA.recaida === true}"
+                        (click)="cambiarRecaidaSiNo(true)">
+                        Sí
+                      </button>
+                      <button
+                        class="toggle-btn"
+                        [ngClass]="{'active': datosNNA.recaida === false}"
+                        (click)="cambiarRecaidaSiNo(false)">
+                        No
+                      </button>
                       <!-- Number input -->
-                      <input type="number" class="form-control mx-2" style="width: 70px;"  [(ngModel)]="datosNNA.cantidadRecaidas">
+                      <input type="number" class="form-control recaidas-input" [(ngModel)]="datosNNA.cantidadRecaidas">
                     </div>
                   </div>
                 </div>
+
 
                 <!-- Fecha de recaída -->
                 <div class="col-6">
                   <div class="row">
                     <div class="col" style="font-weight: bold;">Fecha de recaída:</div>
                     <div class="col">
-                      <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaUltimaRecaida">
+                      <input type="date" class="form-control" name="fechaUltimaRecaida" [(ngModel)]="fechaRecaidaInput" (change)="setFechaRecaida()">
                     </div>
                   </div>
                 </div>
@@ -321,15 +356,21 @@
                   <div class="col-6">
                     <label for="trasladoTratamiento" class="form-label fw-bold">¿Requirió trasladarse de ciudad para acceder al tratamiento?</label>
                   </div>
-                  <div class="col-6">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input"  type="radio"  id="traslSi"  name="traslados"  value="true"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === true">
-                      <label class="form-check-label" for="trasladoSi">Sí</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input"  type="radio"  id="traslNo"  name="traslados"  value="false"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === false">
-                      <label class="form-check-label" for="trasladoNo">No</label>
-                    </div>
+                  <div class="col-6 d-flex align-items-center">
+                    <button
+                        class="toggle-btn"
+                        [ngClass]="{'active': datosNNA.trasladosHaSidoTrasladadodeInstitucion === true}"
+                        (click)="cambiarHaSidoTrasladadoSiNo(true)"
+                        style="margin-right: 5px;">
+                        Sí
+                      </button>
+                      <button
+                        class="toggle-btn"
+                        [ngClass]="{'active': datosNNA.trasladosHaSidoTrasladadodeInstitucion === false}"
+                        (click)="cambiarHaSidoTrasladadoSiNo(false)"
+                        style="margin-left: 5px;">
+                        No
+                      </button>
                   </div>
                 </div>
 
@@ -345,10 +386,13 @@
                           <label for="departamentoProce" class="form-label fw-bold">Departamento:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="departamentoProce" [(ngModel)]="datosNNA.residenciaOrigenMunicipioId">
-                            <option>Antioquia</option>
-                            <!-- Más opciones -->
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaOrigenMunicipioId"
+                            [(ngModel)]="datosNNA.residenciaOrigenMunicipioId"
+                            [options]="departamentos"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -359,10 +403,13 @@
                           <label for="municipio" class="form-label fw-bold">Municipio:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="municipio" [(ngModel)]="datosNNA.residenciaOrigenMunicipioId">
-                            <option>Apartadó</option>
-                            <!-- Más opciones -->
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaOrigenMunicipioId"
+                            [(ngModel)]="datosNNA.residenciaOrigenMunicipioId"
+                            [options]="municipios"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -384,10 +431,13 @@
                           <label for="areaProce" class="form-label fw-bold">Área:</label>
                         </div>
                         <div class="col-8">
-                          <input type="text" class="form-control" id="areaProce" [(ngModel)]="datosNNA.residenciaOrigenAreaId">
-                          <!--select class="form-select" id="area">
-                            <option selected>Rural</option>
-                          </select-->
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaOrigenAreaId"
+                            [(ngModel)]="datosNNA.residenciaOrigenAreaId"
+                            [options]="areas"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -409,7 +459,13 @@
                           <label for="estratoProce" class="form-label fw-bold">Estrato:</label>
                         </div>
                         <div class="col-8">
-                          <input type="number" class="form-control" id="estratoProce" [(ngModel)]="datosNNA.residenciaOrigenEstratoId">
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaOrigenEstratoId"
+                            [(ngModel)]="datosNNA.residenciaOrigenEstratoId"
+                            [options]="estratos"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -435,10 +491,13 @@
                           <label for="departamentoActual" class="form-label fw-bold">Departamento:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="departamentoActual" [(ngModel)]="datosNNA.residenciaActualMunicipioId">
-                            <option selected>Antioquia</option>
-                            <!-- Más opciones -->
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaActualMunicipioId"
+                            [(ngModel)]="datosNNA.residenciaActualMunicipioId"
+                            [options]="departamentos"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -449,10 +508,13 @@
                           <label for="municipioActual" class="form-label fw-bold">Municipio:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="municipioActual" [(ngModel)]="datosNNA.residenciaActualMunicipioId">
-                            <option selected>Apartadó</option>
-                            <!-- Más opciones -->
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaActualMunicipioId"
+                            [(ngModel)]="datosNNA.residenciaActualMunicipioId"
+                            [options]="departamentos"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -474,10 +536,13 @@
                           <label for="areaActual" class="form-label fw-bold">Área:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="areaActual" [(ngModel)]="datosNNA.residenciaActualAreaId">
-                            <option>Rural</option>
-                            <!-- Más opciones -->
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaActualAreaId"
+                            [(ngModel)]="datosNNA.residenciaActualAreaId"
+                            [options]="areas"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -499,7 +564,13 @@
                           <label for="estratoActual" class="form-label fw-bold">Estrato:</label>
                         </div>
                         <div class="col-8">
-                          <input type="number" class="form-control" id="estratoActual" [(ngModel)]="datosNNA.residenciaActualEstratoId">
+                          <p-dropdown
+                            placeholder="datosNNA.residenciaActualEstratoId"
+                            [(ngModel)]="datosNNA.residenciaActualEstratoId"
+                            [options]="estratos"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -527,9 +598,9 @@
                           <label for="capacidadEconomica" class="form-label fw-bold">Cuenta con la capacidad económica para asumir el traslado del menor: </label>
                         </div>
                         <div class="col-3">
-                          <select class="form-select" id="capacidadEconomica" [(ngModel)]="datosNNA.trasladoTieneCapacidadEconomica">
+                          <select class="form-select" id="trasladoTieneCapacidadEconomica" [(ngModel)]="datosNNA.trasladoTieneCapacidadEconomica">
                             <option value="true">Si</option>
-                            <option value="flase">No</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -543,7 +614,7 @@
                         <div class="col-3">
                           <select class="form-select" id="apoyoEAPB" [(ngModel)]="datosNNA.trasladoEAPBSuministroApoyo">
                             <option value="true">Si</option>
-                            <option value="flase">No</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -557,7 +628,7 @@
                         <div class="col-3">
                           <select class="form-select" id="apoyoSocialOportuno" [(ngModel)]="datosNNA.trasladosServiciosdeApoyoOportunos">
                             <option value="true">Si</option>
-                            <option value="flase">No</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -571,7 +642,7 @@
                         <div class="col-3">
                           <select class="form-select" id="trasladoOportuno" [(ngModel)]="datosNNA.trasladosServiciosdeApoyoCobertura">
                             <option value="true">Si</option>
-                            <option value="flase">No</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -585,7 +656,7 @@
                         <div class="col-3">
                           <select class="form-select" id="solicitoApoyoFundacion" [(ngModel)]="datosNNA.trasladosHaSolicitadoApoyoFundacion">
                             <option value="true">Si</option>
-                            <option value="flase">No</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -622,10 +693,16 @@
                           <label for="sitioResidencia" class="form-label fw-bold">El sitio de residencia actual es:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="sitioResidencia" [(ngModel)]="datosNNA.propietarioResidenciaActualOtro">
-                            <option>De un familiar</option>
-                            <option>Otro</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.trasladosPropietarioResidenciaActualId"
+                            [(ngModel)]="datosNNA.trasladosPropietarioResidenciaActualId"
+                            [options]="tiposVivienda"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            ></p-dropdown>
+                          <div class="row">
+                            <input type="text" class="form-control" name="trasladosPropietarioResidenciaActualOtro" placeholder="Otro, ¿cuál?" [(ngModel)]="datosNNA.trasladosPropietarioResidenciaActualOtro">
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -700,24 +777,30 @@
                       <label class="form-check-label" for="remisionInstituciones">Remisión a instituciones especializadas</label>
                     </div>
 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="malaAtencion" [(ngModel)]="datosNNA.difMalaAtencionIPS">
-                      <label class="form-check-label" for="malaAtencion">Mala atención en la IPS</label>
+                    <div class="form-check d-flex align-items-center">
+                      <input
+                        class="form-check-input me-2"
+                        type="checkbox"
+                        id="malaAtencion"
+                        [(ngModel)]="datosNNA.difMalaAtencionIPS"
+                      />
+                      <label class="form-check-label" for="malaAtencion">
+                        Mala atención en la IPS.
+                      </label>
                     </div>
 
                     <div class="form-group mb-3">
-                      <div class="row">
-                        <div class="col-4">
-                          <label for="cualIPS">¿Cuál?</label>
-                        </div>
-                        <div class="col-8">
-                          <select class="form-select" id="cualIPS" [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId">
-                            <option value="1">IPS A</option>
-                            <option value="2">IPS B</option>
-                          </select>
-                        </div>
-                      </div>
+                      <p-dropdown
+                        placeholder="¿Cuál?"
+                        [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId"
+                        [options]="tiposMalaAtencionIps"
+                        optionLabel="nombre"
+                        optionValue="id"
+                        [disabled]="!datosNNA.difMalaAtencionIPS"
+                        styleClass="w-100"
+                      ></p-dropdown>
                     </div>
+
 
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" id="fallasMIPRES" [(ngModel)]="datosNNA.difFallasenMIPRES">
@@ -736,10 +819,14 @@
                           <label for="categoriaAlerta" class="form-label fw-bold">Categoría alerta:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="categoriaAlerta" [(ngModel)]="datosNNA.categoriaAlertaId">
-                            <option value="1">Categoría 1</option>
-                            <option value="2">Categoría 2</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="Seleccionar"
+                            [(ngModel)]="datosNNA.categoriaAlertaId"
+                            [options]="categoriasAlerta"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            styleClass="w-100"
+                          ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -750,10 +837,14 @@
                           <label for="subcategoriaAlerta" class="form-label fw-bold">Subcategoría alerta:</label>
                         </div>
                         <div class="col-8">
-                          <select class="form-select" id="subcategoriaAlerta" [(ngModel)]="datosNNA.subcategoriaAlertaId">
-                            <option value="1">Subcategoría 1</option>
-                            <option value="2">Subcategoría 2</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="Seleccionar"
+                            [(ngModel)]="datosNNA.subcategoriaAlertaId"
+                            [options]="subcategoriasAlerta"
+                            optionLabel="subCategoriaAlerta"
+                            optionValue="id"
+                            styleClass="w-100"
+                          ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -770,8 +861,8 @@
                         </div>
                         <div class="col-4">
                           <select class="form-select" id="trasladoInstitucion" [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion">
-                            <option>Si</option>
-                            <option>No</option>
+                            <option value="true">Si</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -794,10 +885,14 @@
                           <label for="ipsTraslados" class="form-label fw-bold">IPS:</label>
                         </div>
                         <div class="col-6">
-                          <select class="form-select" id="ipsTraslados" [(ngModel)]="datosNNA.trasladosIPSId">
-                            <option>Clínica oncológica</option>
-                            <option>Otro</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.trasladosIPSId"
+                            [(ngModel)]="datosNNA.trasladosIPSId"
+                            [options]="ipss"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            styleClass="w-100"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -809,8 +904,8 @@
                         </div>
                         <div class="col-4">
                           <select class="form-select" id="accionLegal" [(ngModel)]="datosNNA.trasladosHaRecurridoAccionLegal">
-                            <option>Si</option>
-                            <option>No</option>
+                            <option value="true">Si</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -833,10 +928,14 @@
                           <label for="tipoRecursoLegal" class="form-label fw-bold">Tipo de recurso:</label>
                         </div>
                         <div class="col-6">
-                          <select class="form-select" id="tipoRecursoLegal" [(ngModel)]="datosNNA.trasladosTipoAccionLegalId">
-                            <option selected>Tutela</option>
-                            <option>Otro</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.trasladosTipoAccionLegalId"
+                            [(ngModel)]="datosNNA.trasladosTipoAccionLegalId"
+                            [options]="tiposRecursoLegal"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            styleClass="w-100"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -862,8 +961,8 @@
                         </div>
                         <div class="col-4">
                           <select class="form-select" id="haDejadoAsistir" [(ngModel)]="datosNNA.tratamientoHaDejadodeAsistir">
-                            <option>Si</option>
-                            <option>No</option>
+                            <option value="true">Si</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -886,11 +985,14 @@
                           <label for="unidadMedidaTiempo" class="form-label fw-bold">Unidad de medida del tiempo:</label>
                         </div>
                         <div class="col-5">
-                          <select class="form-select" id="unidadMedidaTiempo" [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId">
-                            <option selected>Semanas</option>
-                            <option>Días</option>
-                            <option>Meses</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="datosNNA.tratamientoUnidadMedidaIdTiempoId"
+                            [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId"
+                            [options]="unidadesMedida"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            styleClass="w-100"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -901,11 +1003,14 @@
                           <label for="causasInasistencia" class="form-label fw-bold">Causas de inasistencia:</label>
                         </div>
                         <div class="col-5">
-                          <select class="form-select" id="causasInasistencia" [(ngModel)]="datosNNA.tratamientoCausasInasistenciaId">
-                            <option selected>Otra</option>
-                            <option>Motivo 1</option>
-                            <option>Motivo 2</option>
-                          </select>
+                          <p-dropdown
+                            placeholder="Seleccionar"
+                            [(ngModel)]="datosNNA.tratamientoCausasInasistenciaId"
+                            [options]="cuasasInasistencia"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            styleClass="w-100"
+                            ></p-dropdown>
                         </div>
                       </div>
                     </div>
@@ -924,8 +1029,8 @@
                         </div>
                         <div class="col-4">
                           <select class="form-select" id="estudiandoActualmente" [(ngModel)]="datosNNA.tratamientoEstudiaActualmente">
-                            <option>Si</option>
-                            <option>No</option>
+                            <option value="true">Si</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -938,8 +1043,8 @@
                         </div>
                         <div class="col-4">
                           <select class="form-select" id="dejadoAsistirColegio" [(ngModel)]="datosNNA.tratamientoHaDejadodeAsistirColegio">
-                            <option>Si</option>
-                            <option>No</option>
+                            <option value="true">Si</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
@@ -962,17 +1067,35 @@
                           <label for="unidadMedidaTiempoColegio" class="form-label fw-bold">Unidad de medida del tiempo:</label>
                         </div>
                         <div class="col-5">
-                          <select class="form-select" id="unidadMedidaTiempoColegio" [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId">
-                            <option>Semanas</option>
-                            <option>Días</option>
-                            <option>Meses</option>
+                          <p-dropdown
+                            placeholder="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId"
+                            [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId"
+                            [options]="unidadesMedida"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            styleClass="w-100"
+                            ></p-dropdown>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <div class="row">
+                        <div class="col-8">
+                          <label for="estudiandoActualmente" class="form-label fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
+                        </div>
+                        <div class="col-4">
+                          <select class="form-select" id="estudiandoActualmente" [(ngModel)]="datosNNA.tratamientoHaSidoInformadoClaramente">
+                            <option value="true">Si</option>
+                            <option value="false">No</option>
                           </select>
                         </div>
                       </div>
                     </div>
+
                     <div class="mb-3">
-                      <label for="informacionCompleta" class="form-label fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
-                      <textarea class="form-control" id="informacionCompleta" rows="3" [(ngModel)]="datosNNA.tratamientoHaSidoInformadoClaramente"></textarea>
+                      <label for="informacionCompleta" class="form-label fw-bold">Observación ¿Por qué?</label>
+                      <textarea class="form-control" id="informacionCompleta" rows="3" [(ngModel)]="datosNNA.tratamientoObservaciones"></textarea>
                     </div>
                   </div>
                 </div>
@@ -982,47 +1105,20 @@
             </p-accordionTab>
             <p-accordionTab header="OBSERVACIONES" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
               <div class="col">
-                <textarea class="form-control" id="observacion" rows="3" placeholder="Escriba aquí" [(ngModel)]="datosNNA.tratamientoObservaciones"></textarea>
+                <textarea class="form-control" id="observacion" rows="3" placeholder="Escriba aquí" [(ngModel)]="observacion"></textarea>
               </div>
 
             </p-accordionTab>
           </p-accordion>
         </p-card>
-      <!--/form-->
 
-      <!--p-card *ngIf="panelSeleccionado == 3">
-        <div class="row">
-          <p-table [value]="seguimientos" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Fecha seguimiento</th>
-                    <th>Categoria alerta</th>
-                    <th>Subcategoria alerta</th>
-                    <th>Descripción</th>
-                    <th>Entidad sobre la que genera alerta</th>
-                    <th>Fecha notificación</th>
-                    <th>Respuesta entidad</th>
-                    <th>Fecha de respuesta</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-seguimiento>
-                <tr>
-                    <td>{{ seguimiento.fechaSeguimiento }}</td>
-                    <td>{{ seguimiento.categoriaAlerta }}</td>
-                    <td>{{ seguimiento.subcategoriaAlerta }}</td>
-                    <td class="descripcion-column">{{ seguimiento.descripcion }}</td>
-                    <td>{{ seguimiento.entidad }}</td>
-                    <td>{{ seguimiento.fechaNotifi }}</td>
-                    <td></td>
-                    <td>{{ seguimiento.fechaRespuesta }}</td>
-                </tr>
-            </ng-template>
-          </p-table>
+        <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
+          <div>
+              <button class="btn btn-guardar-nna" (click)="guardarCambios()">GUARDAR</button>
+          </div>
         </div>
-      </p-card-->
 
     </p-card>
-
 
 
   </div>
