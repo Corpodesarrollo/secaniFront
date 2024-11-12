@@ -1,0 +1,27 @@
+.file-upload-icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-color:  #73b7ad;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.file-upload-icon:hover {
+  background-color: #61b9ab;
+}
+
+input[type="file"] {
+  display: none; /* Oculta el input de archivo */
+}
+
+::ng-deep .p-dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px; /* Ajusta el ancho según sea necesario */
+}
