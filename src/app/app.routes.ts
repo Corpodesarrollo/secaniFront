@@ -119,6 +119,10 @@ export const routes: Routes = [
 
    { path: 'respuesta-notificacion', component: NotificacionRespuestaComponent },
 
+  {
+    path: 'cuidador',
+    loadChildren: () => import('./components/modules/cuidador/cuidador.module').then( m => m.CuidadorModule )
+  }
 /*
   {
     path: 'crear-contacto',
