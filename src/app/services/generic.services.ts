@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, throwError, from } from 'rxjs';
+import { Observable, Subject, throwError, from, lastValueFrom } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { retry, catchError, map } from 'rxjs/operators';
 
@@ -67,6 +67,20 @@ export class GenericService {
     }
   }
 
+  public async getAsync(modulo: string, parameters: string, api: string = ''): Promise<any> {
+    try {
+      const apiUrl = this.getApiUrl(api);
+      if (environment.cookie) {
+        return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true }));
+      } else {
+        return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`));
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      throw error;
+    }
+  }
+
   public get_withoutParameters(modulo: string, api: string = '') {
     const apiUrl = this.getApiUrl(api);
     if (environment.cookie){
@@ -82,10 +96,6 @@ export class GenericService {
 
   public getAxios(modulo: string, params: { [key: string]: any }): Observable<any[]> {
     return from(axios.get<any[]>(`${this.url}${modulo}`, { params }).then(response => response.data));
-  }
-
-  public async getAsync(url: string = this.url, modulo: string, parameters: string) {
-    return await this.http.get(`${url}${modulo}${parameters}`).toPromise();
   }
 
   public async getAsyncLocal(url: string) {

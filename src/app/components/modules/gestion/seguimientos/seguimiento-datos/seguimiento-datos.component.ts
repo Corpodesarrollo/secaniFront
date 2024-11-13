@@ -22,12 +22,13 @@ import { DialogModule } from 'primeng/dialog';
 import { IntentoComponent } from '../../../usuarios/intento-seguimiento/intento/intento.component';
 import { UsuariosModule } from "../../../usuarios/usuarios.module";
 import { DialogCrearContactoComponent } from "../../../usuarios/nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component";
+import { NnaContactoListaComponent } from "../../../usuarios/nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent],
+    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent, NnaContactoListaComponent],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })
@@ -112,7 +113,10 @@ export class SeguimientoDatosComponent implements OnInit {
       this.estado = 'Registrado';
     } else {
       let estados = await this.tpp.getTpEstadosNNA();
-      let estado: { id: number; nombre: string, colorText: string, colorBG: string  } | undefined = estados.find((x: { id: number }) => x.id == this.nna.estadoId);
+      let estado: { id: number; nombre: string; colorText: string; colorBG: string } | undefined;
+      if (estados) {
+        estado = estados.find((x: { id: number }) => x.id === this.nna.estadoId);
+      }
       this.estado = estado?.nombre ?? '';
       this.colorTxt = estado?.colorText ?? 'white';
       this.colorBg = estado?.colorBG ?? '#73b7ad';
@@ -127,7 +131,7 @@ export class SeguimientoDatosComponent implements OnInit {
       this.nna.fechaNacimiento = new Date(this.nna.fechaNacimiento);
     }
 
-    this.parentescos = await this.tp.getTP('RLCPDParentesco');
+    this.parentescos = await this.tpp.getParentescos();
     this.selectedParentesco = this.parentescos.find(x => x.codigo == this.nna.cuidadorParentescoId);
     this.isLoadingParentesco = false;
 
