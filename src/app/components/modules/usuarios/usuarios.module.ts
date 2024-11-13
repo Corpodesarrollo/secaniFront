@@ -7,8 +7,16 @@ import { TableModule } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { AccordionModule } from 'primeng/accordion';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { RippleModule } from 'primeng/ripple';
 
 import { CrearNnaComponent } from './nna/crear-nna/crear-nna.component';
+import { DetalleNnaComponent } from './nna/detalle-nna/detalle-nna.component';
 
 
 import { BotonNotificacionComponent } from '../boton-notificacion/boton-notificacion.component';
@@ -20,12 +28,12 @@ import { DialogCrearContactoComponent } from './nna-contacto/dialog-crear-contac
 import { BrowserModule } from '@angular/platform-browser';
 import { CrearNnaAgregarContactoComponent } from './nna-contacto/crear-nna-agregar-contacto/crear-nna-agregar-contacto.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { CalendarModule } from 'primeng/calendar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -51,6 +59,14 @@ import { InputIconModule } from 'primeng/inputicon';
     FloatLabelModule,
     IconFieldModule,
     InputIconModule,
+    CardModule,
+    AccordionModule,
+    SelectButtonModule,
+    DropdownModule,
+    CalendarModule,
+    ToastModule,
+    ButtonModule,
+    RippleModule,
 
     /**Component standalone */
     HistoricoNnaComponent,
@@ -62,6 +78,7 @@ import { InputIconModule } from 'primeng/inputicon';
     DialogCrearContactoComponent
   ],
   providers: [
+    MessageService,
     DatePipe // <-- Agrega DatePipe aquí
   ],
   exports: [CrearNnaAgregarContactoComponent],
