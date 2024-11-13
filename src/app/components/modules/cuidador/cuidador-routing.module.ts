@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SeguimientosComponent } from './seguimientos/seguimientos.component';
 import { NuevoSeguimientoComponent } from './nuevo-seguimiento/nuevo-seguimiento.component';
+import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
     children: [
       { path: '', component: SeguimientosComponent },
       { path: 'nuevo', component: NuevoSeguimientoComponent },
+      { path: ':id', component: SeguimientoComponent },
       { path: '**', redirectTo: '' }
     ]
   },
