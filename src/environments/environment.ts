@@ -3,21 +3,20 @@
 // The list of file replacements can be found in `angular.json`.
 
 // RUTAS DE DESARROLLO
-// export const environment = {
-//   cookie : false,
-//   production: false,
-//   url: 'https://localhost:7084/',
-//   url_MsAuthention: 'https://localhost:7084/',
-//   //url_MsAuthention: 'https://devweb.sisprodesa.local:9000/',
-//   url_MSEntidad: 'https://localhost:7084/',
-//   url_MSPermisos: 'https://localhost:7084/',
-//   url_Parametricas: 'https://localhost:7294/',
-//   url_MSTablasParametricas: 'https://localhost:7294/',
-//   url_MsNna: 'https://localhost:7291/',
-//   url_MSSeguimiento: 'https://localhost:7085/',
-//   url_MSParametricas: 'https://localhost:7294/',
-//   url_MSUsuarioyRoles: 'https://localhost:7084/',
-// };
+export const environment = {
+  cookie : false,
+  production: false,
+  url: 'https://localhost:7084/',
+  url_MsAuthention: 'https://localhost:7084/',
+  url_MSEntidad: 'https://localhost:7084/',
+  url_MSPermisos: 'https://localhost:7084/',
+  url_Parametricas: 'https://localhost:7294/',
+  url_MSTablasParametricas: 'https://localhost:7294/',
+  url_MsNna: 'https://localhost:7291/',
+  url_MSSeguimiento: 'https://localhost:7085/',
+  url_MSParametricas: 'https://localhost:7294/',
+  url_MSUsuarioyRoles: 'https://localhost:7084/',
+};
 
 // RUTAS DE AZURE
 // export const environment = {
@@ -36,18 +35,18 @@
 // };
 
 // RUTAS DE MINISTERIO
-export const environment = {
-  cookie : false,
-  production: false,
-  url: 'http://192.168.110.12/auth/',
-  url_MsAuthention: 'http://192.168.110.12/auth/',
-  url_MSEntidad: 'http://192.168.110.12/auth/',
-  url_MSPermisos: 'http://192.168.110.12/auth/',
-  url_Parametricas: 'http://192.168.110.12/tablas/',
-  url_MSTablasParametricas: 'http://192.168.110.12/tablas/',
-  url_MsNna: 'http://192.168.110.12/nna/',
-  url_MSSeguimiento: 'http://192.168.110.12/seguimiento/',
-  url_MSParametricas: 'http://192.168.110.12/tablas/',
-  url_MSUsuarioyRoles: 'http://192.168.110.12/auth/',
-};
+// export const environment = {
+//   cookie : false,
+//   production: false,
+//   url: 'http://192.168.110.12/auth/',
+//   url_MsAuthention: 'http://192.168.110.12/auth/',
+//   url_MSEntidad: 'http://192.168.110.12/auth/',
+//   url_MSPermisos: 'http://192.168.110.12/auth/',
+//   url_Parametricas: 'http://192.168.110.12/tablas/',
+//   url_MSTablasParametricas: 'http://192.168.110.12/tablas/',
+//   url_MsNna: 'http://192.168.110.12/nna/',
+//   url_MSSeguimiento: 'http://192.168.110.12/seguimiento/',
+//   url_MSParametricas: 'http://192.168.110.12/tablas/',
+//   url_MSUsuarioyRoles: 'http://192.168.110.12/auth/',
+// };
 

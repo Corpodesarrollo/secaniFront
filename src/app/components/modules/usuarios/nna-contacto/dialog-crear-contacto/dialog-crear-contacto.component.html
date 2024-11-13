@@ -8,10 +8,10 @@
                     <label>Nombres y apellidos</label>
                 </div>
                 <div class="col-9 p-fluid">
-                    <input type="text" pInputText [(ngModel)]="contacto.nombreCompleto">
+                    <input type="text" pInputText [(ngModel)]="contacto.nombres">
                 </div>
                 <div class="col-9 offset-3">
-                    <div *ngIf="submitted && !contacto.nombreCompleto" class="text-danger">
+                    <div *ngIf="submitted && !contacto.nombres" class="text-danger">
                         Parentesco es requerido
                     </div>
                 </div>
@@ -44,8 +44,8 @@
                     <label>¿Cuidador?</label>
                 </div>
                 <div class="col-9 button-group p-fluid">
-                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.esCuidador}" style="width: 150px;" (click)="contacto.esCuidador = true">SÍ</button>
-                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.esCuidador  == false}" style="width: 150px;" (click)="contacto.esCuidador = false">NO</button>
+                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.cuidador}" style="width: 150px;" (click)="contacto.cuidador = true">SÍ</button>
+                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.cuidador  == false}" style="width: 150px;" (click)="contacto.cuidador = false">NO</button>
                 </div>
             </div>
 
@@ -54,42 +54,42 @@
                     <small>Presione la tecla <b>Enter</b> o la tecla <b>Coma (,)</b> para agregar un teléfono</small>
                 </div>
                 <div class="col-3 text-end">
-                    <label>Teléfono</label>
+                    <label>Teléfonos</label>
                 </div>
                 <div class="col-9  p-fluid">
-                    <p-chips [(ngModel)]="this.contacto.telefono" separator="," (onAdd)="validarPhone($event)"/>
+                    <p-chips [(ngModel)]="this.telefonos" separator="," (onAdd)="validarPhone($event)"/>
                 </div>
                 <div class="col-9 offset-3">
-                    <div *ngIf="submitted && !this.contacto.telefono.length" class="text-danger">
+                    <div *ngIf="submitted && !this.telefonos.length" class="text-danger">
                         Teléfonos es requerido
                     </div>
                 </div>
             </div>
 
             <div class="row align-items-center">
-                <div class="col-4 text-end">
+                <div class="col-3 text-end">
                     <label>Correo electrónico</label>
                 </div>
-                <div class="col-8 p-fluid">
-                    <input type="email" pInputText [(ngModel)]="contacto.correo" />
+                <div class="col-9 p-fluid">
+                    <input type="email" pInputText [(ngModel)]="contacto.email" />
                 </div>
-                <div class="col-8 offset-4">
-                    <div  *ngIf="submitted && !contacto.correo" class="text-danger">
+                <div class="col-9 offset-3">
+                    <div  *ngIf="submitted && !contacto.email" class="text-danger">
                         Correo electrónico es requerido
                     </div>
                 </div>
-                <div class="col-8 offset-4">
-                    <div *ngIf="submitted && contacto.correo && !isValidEmail(contacto.correo)" class="text-danger">
+                <div class="col-9 offset-3">
+                    <div *ngIf="submitted && contacto.email && !isValidEmail(contacto.email)" class="text-danger">
                         El formato del correo electrónico es inválido
                     </div>
                 </div>
             </div>
 
             <div class="row align-items-center mb-4">
-                <div class="col-4 text-end">
+                <div class="col-3 text-end">
                     <label>Estado</label>
                 </div>
-                <div class="col-8 button-group">
+                <div class="col-9 button-group">
                     <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.estado}" style="width: 150px;" (click)="contacto.estado = true">ACTIVO</button>
                     <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.estado == false}" style="width: 150px;" (click)="contacto.estado = false">INACTIVO</button>
                 </div>

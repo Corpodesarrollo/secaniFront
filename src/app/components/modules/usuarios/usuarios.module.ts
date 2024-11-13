@@ -29,7 +29,6 @@ import { InputIconModule } from 'primeng/inputicon';
 
 @NgModule({
   declarations: [
-    HistoricoNnaComponent,
     CrearNnaComponent,
     CrearNnaAgregarContactoComponent
 
@@ -54,6 +53,7 @@ import { InputIconModule } from 'primeng/inputicon';
     InputIconModule,
 
     /**Component standalone */
+    HistoricoNnaComponent,
     BotonNotificacionComponent,
     DialogValidarExistenciaComponent,
     DialogCrearNnaMsgRolAgenteComponent,

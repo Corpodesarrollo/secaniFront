@@ -23,6 +23,12 @@ export class TpParametros {
     return await this.axios.retorno_get(url, urlbase);
   }
 
+  async getParentescos() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `Parentescos`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
   async getTpEstadosNNA() {
     var urlbase: string = environment.url_MSTablasParametricas
     var url = "EstadoNNA";

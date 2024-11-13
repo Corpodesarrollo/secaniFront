@@ -1,10 +1,10 @@
 export interface ContactoNNA {
     id: number;
     nnaId: number;
-    nombreCompleto: string;
-    parentesco: string;
-    esCuidador: boolean;
-    telefono: string[];
-    correo: string;
+    nombres: string;
+    parentescoId: number;
+    cuidador: boolean;
+    telefonos: string;
+    email: string;
     estado: boolean;
 }
