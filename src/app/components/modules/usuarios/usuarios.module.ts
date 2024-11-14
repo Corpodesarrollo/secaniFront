@@ -37,7 +37,6 @@ import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
-    HistoricoNnaComponent,
     CrearNnaComponent,
     CrearNnaAgregarContactoComponent
 
@@ -70,6 +69,7 @@ import { CardModule } from 'primeng/card';
     RippleModule,
 
     /**Component standalone */
+    HistoricoNnaComponent,
     BotonNotificacionComponent,
     DialogValidarExistenciaComponent,
     DialogCrearNnaMsgRolAgenteComponent,

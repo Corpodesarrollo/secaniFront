@@ -4,19 +4,19 @@ import { Injectable } from "@angular/core";
   providedIn: 'root',
 })
 export class User {
-    id?: string;
-    alias?: string;
-    email?: string;
-    name?: string;
-    state?: boolean = false;
-    rolCode?: string[];
-    enterpriseCode?: string;
-    enterpriseDeptoCode?: string;
-    enterpriseEmail?: string;
-    enterpriseName?: string;
-    enterpriseIdentification?: string;
-    isMinSalud?: string;
-    isAuth?: boolean = false;
+    static id?: string;
+    static alias?: string;
+    static email?: string;
+    static name?: string;
+    static state?: boolean = false;
+    static rolCode?: string[];
+    static enterpriseCode?: string;
+    static enterpriseDeptoCode?: string;
+    static enterpriseEmail?: string;
+    static enterpriseName?: string;
+    static enterpriseIdentification?: string;
+    static isMinSalud?: string;
+    static isAuth?: boolean = false;
 
     constructor() {
         this.getData();
@@ -26,19 +26,35 @@ export class User {
         const usuarioJson = localStorage.getItem('user');
         if (usuarioJson) {
             const usuarioData = JSON.parse(usuarioJson);
-            this.id = usuarioData.Id;
-            this.alias = usuarioData.Alias;
-            this.email = usuarioData.Email;
-            this.name = usuarioData.Name;
-            this.state = usuarioData.State;
-            this.rolCode = usuarioData.RolCode;
-            this.enterpriseCode = usuarioData.EnterpriseCode;
-            this.enterpriseDeptoCode = usuarioData.EnterpriseDeptoCode;
-            this.enterpriseEmail = usuarioData.EnterpriseEmail;
-            this.enterpriseName = usuarioData.EnterpriseName;
-            this.enterpriseIdentification = usuarioData.EnterpriseIdentification;
-            this.isMinSalud = usuarioData.IsMinSalud;
-            this.isAuth = usuarioData.IsAuth;
+            User.id = usuarioData.Id;
+            User.alias = usuarioData.Alias;
+            User.email = usuarioData.Email;
+            User.name = usuarioData.Name;
+            User.state = usuarioData.State;
+            User.rolCode = usuarioData.RolCode;
+            User.enterpriseCode = usuarioData.EnterpriseCode;
+            User.enterpriseDeptoCode = usuarioData.EnterpriseDeptoCode;
+            User.enterpriseEmail = usuarioData.EnterpriseEmail;
+            User.enterpriseName = usuarioData.EnterpriseName;
+            User.enterpriseIdentification = usuarioData.EnterpriseIdentification;
+            User.isMinSalud = usuarioData.IsMinSalud;
+            User.isAuth = usuarioData.IsAuth;
         }
     }
+}
+
+export const user = {
+    id: User.id,
+    alias: User.alias,
+    email: User.email,
+    name: User.name,
+    state: User.state,
+    rolCode: User.rolCode,
+    enterpriseCode: User.enterpriseCode,
+    enterpriseDeptoCode: User.enterpriseDeptoCode,
+    enterpriseEmail: User.enterpriseEmail,
+    enterpriseName: User.enterpriseName,
+    enterpriseIdentification: User.enterpriseIdentification,
+    isMinSalud: User.isMinSalud,
+    isAuth: User.isAuth
 }

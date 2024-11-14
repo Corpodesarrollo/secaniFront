@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { GenericService } from '../../../../../services/generic.services';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../../environments/environment';
@@ -29,21 +29,23 @@ import { apis } from '../../../../../models/apis.model';
 })
 export class DialogCrearContactoComponent {
   @Input() show: boolean = false;
-  @Input() nnaId: number = 0; 
   @Input() contactoId: number = 0;
+  @Input() nnaId: number = 0;
   @Output() closeModal = new EventEmitter<void>(); // Emite un evento al cerrar el modal
   @Output() dataToParent: any = new EventEmitter<any>(); // Emitir datos al padre
 
   contacto: ContactoNNA = {
     id: 0,
     nnaId: 0,
-    nombreCompleto: '',
-    parentesco: '',
-    esCuidador: false,
-    telefono: [],
-    correo: '',
+    nombres: '',
+    parentescoId: 0,
+    cuidador: false,
+    telefonos: '',
+    email: '',
     estado: true
   }
+
+  telefonos:string[] = [];
 
   parentescos: Parametricas[] = [];
   selectedParentesco: Parametricas | undefined;
@@ -53,39 +55,44 @@ export class DialogCrearContactoComponent {
   estado: boolean = true;
   submitted: boolean = false;
 
-  constructor(private service: GenericService, private tp: TablasParametricas, private messageService: MessageService) {
+  constructor(private service: GenericService, private gs: GenericService, private tpp: TpParametros, private messageService: MessageService,private cdr: ChangeDetectorRef) {
   
   }
 
   async ngOnInit() {
-    this.parentescos = await this.tp.getTP('RLCPDParentesco');
+    this.parentescos = await this.tpp.getParentescos();
     this.isLoadingParentesco = false;
+  }
 
-    this.contacto.nnaId = this.nnaId;
+  async ngOnChanges(changes: SimpleChanges) {
+    if (changes['show'] && changes['show'].currentValue) {
+      console.log('contactoId', this.contactoId);
+      if (this.contactoId > 0) {
+        await this.cargarContacto();
+      }
+    }
 
-    if (this.contactoId > 0) {
-      this.cargarContacto();
+    if (changes['nnaId'] && changes['nnaId'].currentValue) {
+      this.contacto.nnaId = this.nnaId;
     }
   }
 
+
   close() {
+    this.contacto = {
+      id: 0,
+      nnaId: this.nnaId,
+      nombres: '',
+      parentescoId: 0,
+      cuidador: false,
+      telefonos: '',
+      email: '',
+      estado: true
+    };
+    this.telefonos = [];
+    this.selectedParentesco = undefined;
+
     this.closeModal.emit(); // Emite evento para cerrar el modal
-  }
-
-  cargarContacto() {
-    this.service.get("ContactoNNAs/Obtener", `/${this.contactoId}`, apis.nna).subscribe({
-      next: (response) => {
-        this.contacto = response as ContactoNNA;
-      },
-      error: (error) => {
-        console.error('Error al consumir el API:', error);
-      }
-    });
-  }
-
-
-  cancelar() {
-    //this.formNNAContacto.reset();
   }
 
   // Método para verificar si un campo está vacío
@@ -96,39 +103,55 @@ export class DialogCrearContactoComponent {
   async guardar() {
     let data = {
       nnaId: this.contacto.nnaId,
-      nombres: this.contacto.nombreCompleto,
-      parentescoId: this.selectedParentesco?.codigo,
-      email: this.contacto.correo,
-      telefonos: this.contacto.telefono.join(','),
-      telefnosInactivos: '',
-      cuidador: this.contacto.esCuidador,
+      nombres: this.contacto.nombres,
+      parentescoId: this.selectedParentesco?.id,
+      email: this.contacto.email,
+      telefonos: this.telefonos.join(','),
+      cuidador: this.contacto.cuidador,
       id: this.contacto.id
     };
 
     this.submitted = true;
 
     if (this.validarCamposRequeridos()){
-      this.service.post("ContactoNNAs/Crear", data, apis.nna).subscribe({
-        next: (response) => {
-          let result = response as { estado: boolean, descripcion: string };
-          if (!result.estado) {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: result.descripcion });
-            return;
+      if (this.contactoId > 0) {
+        this.service.put("ContactoNNAs", data, apis.nna).subscribe({
+          next: (response) => {
+            let result = response as { estado: boolean, descripcion: string };
+            if (!result.estado) {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: result.descripcion });
+              return;
+            }
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto creado exitosamente.' });
+            this.show = false;
+          },
+          error: (error) => {
+            console.error('Error al consumir el API:', error);
           }
-          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto creado exitosamente.' });
-          this.show = false;
-        },
-        error: (error) => {
-          console.error('Error al consumir el API:', error);
-        }
-      });
+        });
+      } else {
+        this.service.post("ContactoNNAs", data, apis.nna).subscribe({
+          next: (response) => {
+            let result = response as { estado: boolean, descripcion: string };
+            if (!result.estado) {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: result.descripcion });
+              return;
+            }
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto creado exitosamente.' });
+            this.show = false;
+          },
+          error: (error) => {
+            console.error('Error al consumir el API:', error);
+          }
+        });
+      }
     }
   }
 
   validarPhone(event: any): void {
     const phone = event.value;
     if (!this.formatPhone(phone)) {
-      this.contacto.telefono = this.contacto.telefono.filter(e => e !== phone);
+      this.telefonos = this.telefonos.filter(e => e !== phone);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: `${phone} no es un teléfono valido.` });
     }
   }
@@ -139,13 +162,13 @@ export class DialogCrearContactoComponent {
   }
 
   validarCamposRequeridos(): boolean {
-    this.contacto.parentesco = this.selectedParentesco?.codigo ?? '';
+    this.contacto.parentescoId = this.selectedParentesco?.id ?? 0;
 
     const camposAValidar = [
-      this.contacto.nombreCompleto,
-      this.contacto.parentesco,
-      this.contacto.correo,
-      this.contacto.telefono
+      this.contacto.nombres,
+      this.contacto.parentescoId,
+      this.contacto.email,
+      this.telefonos
     ];
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
@@ -156,6 +179,18 @@ export class DialogCrearContactoComponent {
     }
 
     return true;
+  }
+
+  async cargarContacto() {
+    try {
+      const data: any = await this.gs.getAsync('ContactoNNAs/Obtener', `/${this.contactoId}`, apis.nna);
+      let dataResult = data as { estado: boolean, descripcion: string, datos: ContactoNNA };
+      this.contacto = dataResult.datos;
+      this.telefonos = this.contacto.telefonos.split(',');
+      this.selectedParentesco = this.parentescos.find(e => e.id == this.contacto.parentescoId);
+    } catch (error) {
+      console.error('Error fetching contact list', error);
+    }
   }
 
   isValidEmail(correo: string): boolean {
