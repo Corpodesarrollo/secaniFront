@@ -1,0 +1,28 @@
+<div class="container my-5">
+
+  <h1 class="text-center">Solicitud de seguimiento</h1>
+  <div class="text-center mt-4">
+    <h4 class="mb-1">Ana del Pilar Velazco Ruiz</h4>
+    <p>R.C. 1.026.503.684</p>
+    <p>Femenino</p>
+    <p>12/02/2014</p>
+  </div>
+
+  <p-timeline [value]="eventos" layout="horizontal" align="top">
+    <ng-template pTemplate="marker" let-evento let-i="index">
+      <span
+        [class]="i <= pasoActual ? 'pi pi-check-circle text-primary' : 'pi pi-circle text-secondary'"
+        style="font-size: 2em;"
+      ></span>
+    </ng-template>
+    <ng-template pTemplate="content" let-evento>
+      <p>{{ evento.status }}</p>
+      <small>{{ evento.date }}</small>
+    </ng-template>
+  </p-timeline>
+
+  <div class="text-center mt-4">
+    <p class="mb-0">Fecha estimada de llamada</p>
+    <p><strong>12/06/2024</strong></p>
+  </div>
+</div>
