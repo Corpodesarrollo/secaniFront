@@ -127,7 +127,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       porcentaje: dataP1.toFixed(2)
     }
 
-    let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, '1');
+    let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, this.usuarioId);
     let dataP2 =  this.calculoPorcentaje(dataT2);
 
     this.data_2 = {
@@ -137,7 +137,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       porcentaje: dataP2.toFixed(2)
     }
 
-    let dataT3 = await this.servicios.GetTotalMisCasos(this.fechaInicial, this.fechaFinal, '1');
+    let dataT3 = await this.servicios.GetTotalMisCasos(this.fechaInicial, this.fechaFinal, this.usuarioId);
     let dataP3 =  this.calculoPorcentaje(dataT3);
 
     this.data_3 = {
@@ -147,7 +147,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
       porcentaje: dataP3.toFixed(2)
     }
 
-    let dataT4 = await this.servicios.GetTotalAlertas(this.fechaInicial, this.fechaFinal, '1');
+    let dataT4 = await this.servicios.GetTotalAlertas(this.fechaInicial, this.fechaFinal, this.usuarioId);
     let dataP4 =  this.calculoPorcentaje(dataT4);
 
     this.data_4 = {
