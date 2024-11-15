@@ -1,4 +1,25 @@
 
+<div class="row" style="padding:10px">
+  <div class="col-sm-12 col-md-5">
+    <img src="iconos/barra_{{data.imagen}}.svg" class="w-100" alt="" style="max-width: 82px"/>
+  </div>
+  <div class="col-sm-12 col-md-7">
+    <div class="row">
+      <div class="col-sm-12 col-md-12 titulo w-100 h-100" style="min-height:35px">
+        {{ data.titulo }}
+      </div>
+      <div class="col-sm-12 col-md-12 valor w-100 h-100" style="padding-top:5px">
+        {{ data.valor }}
+      </div>
+      <div class="col-sm-12 col-md-12 porcentaje"  *ngIf="data.porcentaje" style="padding-top:10px">
+        <span *ngIf="estilo" class="porcentaje_1">&#8679; {{ data.porcentaje }}% </span>
+        <span *ngIf="!estilo" class="porcentaje_2">&#8681; {{ data.porcentaje }}% </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
 
 <table class="table" style="width: 70%; ">
   <tr >
@@ -33,3 +54,4 @@
     </td>
   </tr>
 </table>
+-->

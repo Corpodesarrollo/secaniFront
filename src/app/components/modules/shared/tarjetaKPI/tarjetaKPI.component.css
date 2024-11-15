@@ -1,15 +1,15 @@
 .titulo{
-  font-family: Poppins;font-size: 14px;font-weight: 400;line-height: 21px;letter-spacing: -0.01em;
+ font-size: 14px;font-weight: 400;line-height: 18px;letter-spacing: -0.01em;
   color: #ACACAC;
 }
 
 .valor{
-  font-family: Poppins;font-size: 32px;font-weight: 600;line-height: 32px;letter-spacing: -0.01em;
+  font-size: 32px;font-weight: 600;line-height: 25px;letter-spacing: -0.01em;
   color: #4D4D4D;
 }
 
 .porcentaje{
-  font-family: Poppins;font-size: 12px;font-weight: 700;line-height: 18px;letter-spacing: -0.01em;
+  font-size: 12px;font-weight: 700;line-height: 18px;letter-spacing: -0.01em;
   color: #292D32;
 }
 

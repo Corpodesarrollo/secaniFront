@@ -2,3 +2,12 @@
   font-family: Montserrat;font-size: 24px;font-weight: 500;text-align: left;
   color: #000000;
 }
+
+
+
+
+.calendar-small .p-inputtext {
+  width: 100%; /* O un valor específico como 200px */
+  font-size: 12px; /* Tamaño de la fuente para el input */
+  padding: 0.25rem; /* Ajusta el espacio interno */
+}
