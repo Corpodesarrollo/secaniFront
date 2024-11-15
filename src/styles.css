@@ -33,7 +33,7 @@ button {
   color: white;
 }
 
-.p-button-secondary {
+.p-button-secondary:not(.p-button-text):not(.p-button-rounded) {
   background-color: #4D4D4D80;
   border-color: #4D4D4D80;
   border-radius: 0.3rem;
