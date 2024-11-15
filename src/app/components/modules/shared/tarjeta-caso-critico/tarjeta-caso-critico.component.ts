@@ -24,11 +24,25 @@ export class TarjetaCasoCriticoComponent implements OnInit {
 
     if ( this.caso.alertaId == 2){
       this.color = '#FF9801';
-      this.badge = 'warning';
-    }
+      this.badge = '#FF9801';
+    }else
     if ( this.caso.alertaId == 3){
       this.color = '#EC2121';
-      this.badge = 'danger';
+      this.badge = '#EC2121';
+    }else
+    if ( this.caso.alertaId == 1){
+      this.color = '#3563D3';
+      this.badge = '#3563D3';
+    }
+    else
+    if ( this.caso.alertaId == 4){
+      this.color = '#008E65';
+      this.badge = '#008E65';
+    }
+    else
+    if ( this.caso.alertaId == 5){
+      this.color = '#4D4D4D';
+      this.badge = '#4D4D4D';
     }
 
   }
