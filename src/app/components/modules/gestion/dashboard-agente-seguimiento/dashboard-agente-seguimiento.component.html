@@ -6,19 +6,19 @@
 
 
 
-  <div class="card" style=" display: grid; place-items: center;">
+  <div class="card" style="text-align:center">
 
     <div class="row" >
-      <div class="col-3" >
+      <div class="col-3" style="text-align:center; ">
         <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
       </div>
-      <div class="col-3">
+      <div class="col-3" style="text-align:center; ">
         <app-tarjetaKPI [data] = "data_2"></app-tarjetaKPI>
       </div>
-      <div class="col-3">
+      <div class="col-3" style="text-align:center; ">
         <app-tarjetaKPI [data] = "data_3"></app-tarjetaKPI>
       </div>
-      <div class="col-3">
+      <div class="col-3" style="text-align:center; ">
         <app-tarjetaKPI [data] = "data_4"></app-tarjetaKPI>
       </div>
 
@@ -30,33 +30,42 @@
   <br>
 
   <div class="row">
-    <div class="col-6">
-      <form [formGroup]="formFechas" (ngSubmit)="onSubmit()">
-        <div class="filters">
-          <label for="fechaInicio">Fecha inicio</label>
-          &nbsp;
+    <div class="col-sm-12 col-md-6">
+      <form [formGroup]="formFechas">
+      <div class="row">
 
+        <div class="col-sm-12 col-md-5 ">
+          <label for="fechaInicio">Fecha inicio</label>
+          <br>
           <p-calendar
               inputId="icondisplay"
               formControlName = "fechaInicio"
               dateFormat="yy-mm-dd"
-               />
 
-          &nbsp;
+               />
+        </div>
+        <div class="col-sm-12 col-md-5">
           <label for="fechaFin">Fecha fin</label>
-          &nbsp;
+          <br>
           <p-calendar
               inputId="icondisplay"
               formControlName = "fechaFin"
               dateFormat="yy-mm-dd"
-               />
 
-          &nbsp;
-          <button type="submit" style="border: none;">
-            <img src="iconos/aplicar.svg" />
-          </button>
+               />
         </div>
+        <div class="col-sm-12 col-md-2">
+          <br>
+          <button type="button" (click)="consultar()"  class="btn text-color-blanco" style="background-color: rgb(255, 152, 1); color: white; border-radius: 8px; border-color: transparent;">
+            <span>Aplicar</span>
+          </button>
+
+        </div>
+
+      </div>
       </form>
+
+
       <br>
       <div class="card" style="padding:20px" >
         <div class="chart" >
@@ -87,9 +96,10 @@
 
         </div>
       </div>
+      <br>
 
     </div>
-    <div class="col-6">
+    <div class="col-sm-12 col-md-6">
       <div class="card" style="padding:20px">
        <div class="critical-cases">
         <div class="d-flex justify-content-between align-items-center">
@@ -107,7 +117,7 @@
       <div class="card" style="padding:20px" (click)="redireccion(4)">
         <div class="chart">
           <h4>Llamadas</h4>
-          <p-chart type="bar" [data]="llamadasData" [options]="llamadasOptions"></p-chart>
+          <p-chart type="bar" [data]="llamadasData" [options]="llamadasOptions" width="552" height="300px"></p-chart>
 
         </div>
       </div>
@@ -117,7 +127,7 @@
       <div class="card" style="padding:20px" >
         <div class="chart">
           <h4>Mis Asignaciones</h4>
-          <p-chart type="line" [data]="asignacionesData" [options]="asignacionesOptions"></p-chart>
+          <p-chart type="line" [data]="asignacionesData" [options]="asignacionesOptions" width="552" height="283"></p-chart>
 
         </div>
       </div>

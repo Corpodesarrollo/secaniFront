@@ -10,13 +10,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DashboardCoordinadorService } from './dashboard-coordinador.services';
 import { SpinnerComponent } from './../../shared/spinner/spinner.component';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-dashboard-coordinador',
   templateUrl: './dashboard-coordinador.component.html',
   styleUrls: ['./dashboard-coordinador.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, ReactiveFormsModule, SpinnerComponent],
+  imports: [ChartModule, CalendarModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, ReactiveFormsModule, SpinnerComponent],
 })
 export class DashboardCoordinadorComponent implements OnInit {
 
@@ -149,6 +150,41 @@ export class DashboardCoordinadorComponent implements OnInit {
     const fechaFin = this.formFechas.value.fechaFin;
 
     this.filtroFechas(fechaInicio, fechaFin);
+  }
+
+  async consultar() {
+    // Obtén los valores de las fechas del formulario
+    const fechaInicioValue = this.formFechas.get('fechaInicio')?.value;
+    const fechaFinValue = this.formFechas.get('fechaFin')?.value;
+
+    // Convierte los valores a objetos Date
+    const fechaInicio: Date = new Date(fechaInicioValue);
+    const fechaFin: Date = new Date(fechaFinValue);
+
+    // Asegúrate de que las fechas sean válidas antes de continuar
+    if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
+      console.error("Una o ambas fechas no son válidas");
+      return;
+    }
+
+    // Extrae año, mes y día para formar las cadenas en el formato deseado
+    const year = fechaInicio.getFullYear();
+    const month = ('0' + (fechaInicio.getMonth() + 1)).slice(-2); // Añadir 1 al mes ya que empieza desde 0
+    const day = ('0' + fechaInicio.getDate()).slice(-2);
+
+    const fechaInicioForma = `${year}-${month}-${day}`;
+
+    const year2 = fechaFin.getFullYear();
+    const month2 = ('0' + (fechaFin.getMonth() + 1)).slice(-2);
+    const day2 = ('0' + fechaFin.getDate()).slice(-2);
+
+    const fechaFinForma = `${year2}-${month2}-${day2}`;
+
+    // Imprime las fechas formateadas
+    console.log("Las fechas ", fechaInicioForma, fechaFinForma);
+
+    // Llama a la función filtroFechas con las fechas formateadas
+    await this.filtroFechas(fechaInicioForma, fechaFinForma);
   }
 
   async filtroFechas(fecha_inicial: any, fecha_final: any){
