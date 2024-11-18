@@ -19,12 +19,13 @@ import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimien
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-dificultades',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-dificultades.component.html',
   styleUrl: './seguimiento-dificultades.component.css'
 })

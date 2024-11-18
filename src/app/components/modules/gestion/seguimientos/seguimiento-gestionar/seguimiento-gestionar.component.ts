@@ -17,11 +17,12 @@ import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimie
 import { CommonModule } from '@angular/common';
 import { InfoSeguimientoNnaComponent } from "../info-seguimiento-nna/info-seguimiento-nna.component";
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-gestionar',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent, SeguimientoGuardarComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent, SeguimientoGuardarComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-gestionar.component.html',
   styleUrl: './seguimiento-gestionar.component.css'
 })

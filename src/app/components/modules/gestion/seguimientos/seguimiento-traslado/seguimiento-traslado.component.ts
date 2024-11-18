@@ -14,11 +14,12 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoTraslado } from '../../../../../models/infoTraslado.model';
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-traslado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule, EstadoNnaComponent],
   templateUrl: './seguimiento-traslado.component.html',
   styleUrl: './seguimiento-traslado.component.css'
 })

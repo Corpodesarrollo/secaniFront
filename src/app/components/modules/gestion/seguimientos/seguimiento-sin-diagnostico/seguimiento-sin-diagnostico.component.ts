@@ -14,11 +14,12 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-sin-diagnostico',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-sin-diagnostico.component.html',
   styleUrl: './seguimiento-sin-diagnostico.component.css'
 })
