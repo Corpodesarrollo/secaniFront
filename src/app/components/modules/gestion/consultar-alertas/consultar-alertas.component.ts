@@ -102,7 +102,7 @@ export class ConsultarAlertasComponent implements OnInit {
   }
 
   loadNNAData() {
-    this.repos.get_withoutParameters(`/NNA/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
         this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
@@ -131,7 +131,7 @@ export class ConsultarAlertasComponent implements OnInit {
   }
 
   loadDatosBasicosNNA() {
-    this.repos.get_withoutParameters(`/NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
       next: (datosBasicosData: any) => {
         this.datosBasicosNNA = datosBasicosData;
         this.applyFilter('0');

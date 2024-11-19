@@ -26,6 +26,20 @@ button {
     cursor: pointer;
 }
 
+.p-button-success {
+  background-color: var(--color-base);
+  border-color: var(--color-base);
+  border-radius: 0.3rem;
+  color: white;
+}
+
+.p-button-secondary:not(.p-button-text):not(.p-button-rounded) {
+  background-color: #4D4D4D80;
+  border-color: #4D4D4D80;
+  border-radius: 0.3rem;
+  color: white;
+}
+
 h1, h3 {
     font-size: 24px;
     font-weight: 700;

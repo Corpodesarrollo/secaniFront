@@ -44,7 +44,7 @@
         <ng-template pTemplate="body" let-listaParametrica>
           <tr>
             <td>
-              <a [routerLink]="['/administracion/listas-parametricas', listaParametrica.id]">
+              <a [routerLink]="['/administracion/listas_parametricas', listaParametrica.id]">
                 {{ listaParametrica.id }}
               </a>
             </td>
@@ -58,12 +58,12 @@
             </th>
             <th>
               <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                [routerLink]="['/administracion/listas-parametricas', listaParametrica.id, 'items']"
+                [routerLink]="['/administracion/listas_parametricas', listaParametrica.id, 'items']"
               />
             </th>
             <th>
               <p-button icon="pi pi-info-circle" [rounded]="true" [link]="true" severity="secondary"
-                [routerLink]="['/administracion/listas-parametricas', listaParametrica.id, 'historico']"
+                [routerLink]="['/administracion/listas_parametricas', listaParametrica.id, 'historico']"
               />
             </th>
           </tr>
