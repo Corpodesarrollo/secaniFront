@@ -14,11 +14,12 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Parametricas } from '../../../../../models/parametricas.model';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-sin-tratamiento',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-sin-tratamiento.component.html',
   styleUrl: './seguimiento-sin-tratamiento.component.css'
 })
@@ -88,6 +89,8 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
       };
       this.concatenatedAlertas = '';
     }
+
+    console.log(this.diagnostico);
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },

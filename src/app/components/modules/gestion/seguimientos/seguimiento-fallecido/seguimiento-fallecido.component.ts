@@ -17,11 +17,12 @@ import { SeguimientoStepsComponent } from '../seguimiento-steps/seguimiento-step
 import { CalendarModule } from 'primeng/calendar';
 import { NNA } from '../../../../../models/nna.model';
 import { NotificacionComponent } from "../../../notificacion/notificacion.component";
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-fallecido',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-fallecido.component.html',
   styleUrl: './seguimiento-fallecido.component.css'
 })

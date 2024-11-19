@@ -18,11 +18,12 @@ import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.mod
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-estado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-estado.component.html',
   styleUrl: './seguimiento-estado.component.css'
 })
@@ -87,6 +88,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
     observaciones: "",
     alertas: []
   };
+  colorTxt: string = 'white';	
+  colorBg: string = '#73b7ad';
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute) {
   }
@@ -113,6 +116,16 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.nna.fechaInicioTratamiento = new Date(this.nna.fechaInicioTratamiento);
     }
  
+    let estadosNNA = await this.tpp.getTpEstadosNNA();
+    let estado: { id: number; nombre: string; colorText: string; colorBG: string } | undefined;
+    if (estadosNNA) {
+      estado = estadosNNA.find((x: { id: number }) => x.id === this.nna.estadoId);
+      console.log(estado);
+    }
+    this.estado = estado?.nombre ?? '';
+    this.colorTxt = estado?.colorText ?? 'white';
+    this.colorBg = estado?.colorBG ?? '#73b7ad';
+
     this.estados = await this.tpp.getTpEstadosNNA();
     this.selectedEstado = this.estados.find(x => x.id == this.nna.estadoId);
     this.isLoadingEstados = false;

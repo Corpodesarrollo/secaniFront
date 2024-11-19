@@ -15,7 +15,7 @@ export class AppComponent {
   constructor(private primengConfig: PrimeNGConfig, private menuService: MenuService, private repos: GenericService) {}
 
   ngOnInit() {
-    //this.loadAuth();
+    this.loadAuth();
 
     this.primengConfig.setTranslation({
       startsWith: 'Empieza con',
