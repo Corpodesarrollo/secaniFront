@@ -128,7 +128,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadDatosBasicosNNA() {
-    this.repos.get_withoutParameters(`/NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
       next: (datosBasicosData: any) => {
         this.datosBasicosNNA = datosBasicosData;
         this.fechaInicio = new Date(this.datosBasicosNNA.fechaNacimiento);
@@ -166,7 +166,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadNNAData() {
-    this.repos.get_withoutParameters(`/NNA/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
         this.fechaConsultaDiagnosticoInput = this.formatDate(this.datosNNA.fechaConsultaDiagnostico);
@@ -179,7 +179,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadContactosNna(){
-    this.repos.get_withoutParameters(`/ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
       next: async (data: any) => {
         this.contactosNna = data.datos;
       },
@@ -247,7 +247,7 @@ export class EditarNnaComponent implements OnInit {
   }*/
 
   loadRazonesSinDiagnostico(){
-    this.repos.get_withoutParameters(`/RazonesSinDiagnostico`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`RazonesSinDiagnostico`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.razonesSinDiagnostico = data;
       },
@@ -261,7 +261,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadPaisesNacimiento(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/Pais`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/Pais`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listadoPais = data;
       },
@@ -270,7 +270,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadDepartamentos(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/Departamento`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/Departamento`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listaDepartamentos = data;
       },
@@ -279,7 +279,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadMunicipios(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/Municipio`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/Municipio`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listaMunicipios = data;
       },
@@ -288,7 +288,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEtnias(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/GrupoEtnico`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/GrupoEtnico`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.etnias = data;
       },
@@ -297,7 +297,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadGruposPobla(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/LCETipoPoblacionEspecial`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/LCETipoPoblacionEspecial`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.gruposponlacional = data;
       },
@@ -306,7 +306,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadRegimenes(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/APSRegimenAfiliacion`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/APSRegimenAfiliacion`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.regimenesAfiliacion = data;
       },
@@ -315,7 +315,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEAPBs(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/CodigoEAPByNit`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/CodigoEAPByNit`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.eapbs = data;
       },
@@ -324,7 +324,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadParentescos(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/RLCPDParentesco`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/RLCPDParentesco`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.parentescos = data;
       },
@@ -333,7 +333,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadDiagnosticos(){
-    this.repos.get_withoutParameters(`/CIE10`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`CIE10`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.diagnosticos = data;
       },
@@ -342,7 +342,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEntidadesRecibirTratamiento(){
-    this.repos.get_withoutParameters(`/Entidades/Entidades`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`Entidades/Entidades`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.entidadesRecibirTratamiento = data;
       },
@@ -351,7 +351,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadTiposMalaAtencionIps(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/malaatencionips`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/malaatencionips`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.tiposMalaAtencionIps = data;
       },
@@ -360,7 +360,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadCategoriasAlerta(){
-    this.repos.get_withoutParameters(`/CategoriaAlerta`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`CategoriaAlerta`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.categoriasAlerta = data;
       },
@@ -369,7 +369,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadSubCategoriasAlerta(){
-    this.repos.get_withoutParameters(`/SubCategoriaAlerta`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`SubCategoriaAlerta`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.subcategoriasAlerta = data;
       },
@@ -378,7 +378,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadCausasInasistencia(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/causainasistencia`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`ApiTablasParametricas/causainasistencia`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.cuasasInasistencia = data;
       },
