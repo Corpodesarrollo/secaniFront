@@ -118,7 +118,7 @@ export const routes: Routes = [
   {
     path: 'reportes',
     loadChildren: () => import('./components/modules/reportes/reportes.module').then( m => m.ReportesModule )
-  }
+  },
 
 /*
   {
