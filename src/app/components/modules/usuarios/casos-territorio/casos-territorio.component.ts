@@ -20,17 +20,11 @@ import { NNA } from '../../../../models/nna.model';
 export class CasosTerritorioComponent implements OnInit {
 
   casos: any[] = [
-    {"noCaso": 1,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": true},
-    {"noCaso": 2,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": true},
-    {"noCaso": 3,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 4,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 5,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 6,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 7,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 8,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": true},
-    {"noCaso": 9,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 10,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
-    {"noCaso": 11,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}, {"id": 5, "nombre": "1.A"}, {"id": 6, "nombre": "1.E"}, {"id": 7, "nombre": "6.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false}
+    {"noCaso": 1,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}], "observacion": "Obseraciones para el caso registrado", "respuesta": true},
+    {"noCaso": 2,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}], "observacion": "Obseraciones para el caso registrado", "respuesta": true},
+    {"noCaso": 3,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 6, "nombre": "1.E"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
+    {"noCaso": 4,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 5, "nombre": "1.A"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false},
+    {"noCaso": 5,"fechaNotificacion": "2024-09-28 22:16:00.000", "nombreNnaCompleto": "Persona Perez Roa", "nombreEAPB": "Entidad_11", "nombreRegimenAfiliacion": "Subsidiado", "alertas": [{"id": 4, "nombre": "1.C"}], "observacion": "Obseraciones para el caso registrado", "respuesta": false}
   ];
 
   respuesta: any = {
@@ -51,6 +45,7 @@ export class CasosTerritorioComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    //consltar casos por region
   }
 
   getBadgeColor(estadoAlerta: number): string {
