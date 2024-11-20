@@ -11,15 +11,6 @@ import { PlantillasCorreoComponent } from './plantillas-correo/plantillas-correo
 import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/plantilla-correo-historico.component';
 import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-plantilla-correo.component';
 
-import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte-inconsistencia.component';
-import { ReporteDepuracionComponent } from './reporte-depuracion/reporte-depuracion.component';
-import { ReporteDetalleNuevoDepuradosComponent } from './reporte-detalle-nuevo-depurados/reporte-detalle-nuevo-depurados.component';
-import { ReporteDinamicoAlertasComponent } from './reporte-dinamico-alertas/reporte-dinamico-alertas.component';
-import { ReporteDinamicoNnaComponent } from './reporte-dinamico-nna/reporte-dinamico-nna.component';
-import { ReporteDinamicoSeguimientoComponent } from './reporte-dinamico-seguimiento/reporte-dinamico-seguimiento.component';
-import { ReporteDinamicoEapbComponent } from './reporte-dinamico-eapb/reporte-dinamico-eapb.component';
-import { ReporteGeneralLlamadasComponent } from './reporte-general-llamadas/reporte-general-llamadas.component';
-
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
@@ -38,26 +29,6 @@ const routes: Routes = [
       { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
       { path: 'nueva', component: NuevaPlantillaCorreoComponent },
       { path: ':id/editar', component: NuevaPlantillaCorreoComponent },
-    ]
-  },
-  {
-    path: 'reportes',
-    children: [
-      { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
-      {
-        path: 'reporte-depuracion',
-        children: [
-          { path: '', component: ReporteDepuracionComponent },
-          { path: ':id', component: ReporteDetalleNuevoDepuradosComponent },
-          { path: '**', redirectTo: '' },
-        ]
-      },
-      { path: 'reporte-dinamico-alertas', component: ReporteDinamicoAlertasComponent },
-      { path: 'reporte-dinamico-nna', component: ReporteDinamicoNnaComponent },
-      { path: 'reporte-dinamico-seguimiento', component: ReporteDinamicoSeguimientoComponent },
-      { path: 'reporte-dinamico-eapb', component: ReporteDinamicoEapbComponent },
-      { path: 'reporte-general-llamadas', component: ReporteGeneralLlamadasComponent },
-      { path: '**', redirectTo: 'reporte-inconsistencia' }
     ]
   }
 ];
