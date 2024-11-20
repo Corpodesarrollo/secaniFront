@@ -84,3 +84,51 @@
   transform: scale(1.05); /* Efecto hover para agrandar un poco */
 }
 
+/* Estilos para el botón redondo */
+.boton-redondo {
+  width: 3rem; /* Ancho del botón */
+  height: 3rem; /* Alto del botón */
+  border: none; /* Sin borde */
+  border-radius: 50%; /* Hace el botón redondo */
+  background-color: #6da192; /* Color de fondo */
+  color: #ffffff; /* Color del ícono */
+  font-size: 1.5rem; /* Tamaño del ícono */
+  display: flex; /* Centrar el ícono dentro del botón */
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Cambia el cursor a "mano" */
+  transition: background-color 0.3s ease; /* Efecto de hover */
+}
+
+/* Efecto al pasar el cursor por el botón */
+.boton-redondo:hover {
+  background-color: #5b8f79; /* Color al pasar el cursor */
+}
+
+/* Contenedor principal */
+.contenedor {
+  display: flex;
+  justify-content: flex-end; /* Alinea el botón a la derecha */
+  padding: 1rem; /* Espaciado interno opcional */
+}
+
+/* Botón */
+.boton-derecha {
+  background-color: #6da192; /* Color de fondo del botón */
+  color: #ffffff; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  padding: 0.5rem 1rem; /* Espaciado interno */
+  font-size: 1rem; /* Tamaño del texto */
+  display: flex; /* Flexbox para alinear ícono y texto */
+  align-items: center; /* Centra verticalmente ícono y texto */
+  gap: 0.5rem; /* Espaciado entre ícono y texto */
+  cursor: pointer; /* Cambia el cursor a "mano" */
+  transition: background-color 0.3s ease; /* Efecto suave al pasar el cursor */
+}
+
+/* Efecto hover para el botón */
+.boton-derecha:hover {
+  background-color: #5b8f79; /* Color más oscuro al pasar el cursor */
+}
+

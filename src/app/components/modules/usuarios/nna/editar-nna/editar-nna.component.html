@@ -90,11 +90,11 @@
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Departamento de nacimiento:</div>
-              <div class="col-6">{{getNombreDeptoPorId(datosNNA.residenciaOrigenMunicipioId)}}</div>
+              <div class="col-6">{{getNombreDeptoPorId(datosNNA.municipioNacimientoId)}}</div>
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Ciudad de nacimiento:</div>
-              <div class="col-6">{{getNombreMuniPorId(datosNNA.residenciaOrigenMunicipioId)}}</div>
+              <div class="col-6">{{getNombreMuniPorId(datosNNA.municipioNacimientoId)}}</div>
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Etnia:</div>
@@ -116,7 +116,7 @@
                   [(ngModel)]="datosNNA.tipoRegimenSSId"
                   [options]="regimenesAfiliacion"
                   optionLabel="nombre"
-                  optionValue="id"
+                  optionValue="codigo"
                   name="tipoRegimenSSId"
                   styleClass="w-100"
                   ></p-dropdown>
@@ -130,7 +130,7 @@
                   [(ngModel)]="datosNNA.eapbId"
                   [options]="eapbs"
                   optionLabel="nombre"
-                  optionValue="id"
+                  optionValue="codigo"
                   name="eapbId"
                   styleClass="w-100"
                   ></p-dropdown>
@@ -142,7 +142,7 @@
           <div class="col-md-6">
             <div class="row mb-3">
               <div class="col-6 fw-bold">Régimen de afiliación:</div>
-              <div class="col-6">{{datosNNA.tipoRegimenSSId}}</div>
+              <div class="col-6">{{getNombreTipoAfiliacionPorId(datosNNA.tipoRegimenSSId)}}</div>
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Asegurador:</div>
@@ -154,7 +154,7 @@
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Estado de ingreso a la estrategia:</div>
-              <div class="col-6">{{datosNNA.estadoIngresoEstrategiaId}}</div>
+              <div class="col-6">{{getNombreEstadoNNAPorId(datosNNA.estadoIngresoEstrategiaId)}}</div>
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Fecha de ingreso a la estrategia:</div>
@@ -162,7 +162,7 @@
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Origen del reporte:</div>
-              <div class="col-6">{{datosNNA.origenReporteId}}</div>
+              <div class="col-6">{{getNombreOrigenReportePorId(datosNNA.origenReporteId)}}</div>
             </div>
             <br>
             <div class="row">
@@ -187,7 +187,7 @@
                   [(ngModel)]="datosNNA.cuidadorParentescoId"
                   [options]="parentescos"
                   optionLabel="nombre"
-                  optionValue="id"
+                  optionValue="codigo"
                   name="parentescos"
                   styleClass="w-100"
                   ></p-dropdown>
@@ -201,6 +201,13 @@
                 <input type="text" class="form-control" id="nombreCuidador" [(ngModel)]="datosNNA.cuidadorTelefono">
               </div>
             </div>
+            <div class="row">
+              <div class="contenedor">
+                <button class="boton-derecha">
+                  <i class="pi pi-plus"></i> Agregar contacto
+                </button>
+              </div>
+            </div>
             <div class="row mt-4">
               <div class="col">
                 <p-table [value]="contactosNna" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
@@ -210,6 +217,7 @@
                       <th>Parentesco</th>
                       <th>Correo electrónico</th>
                       <th>Télefono de contacto</th>
+                      <th>Acción</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-contacto>
@@ -218,6 +226,12 @@
                       <td>{{ contacto.parentescoId }}</td>
                       <td class="correo-column">{{ contacto.email }}</td>
                       <td>{{ contacto.telefonos }}</td>
+                      <td>
+                        <button class="boton-redondo">
+                          <i class="pi pi-pencil"></i>
+                        </button>
+
+                      </td>
                     </tr>
                   </ng-template>
                 </p-table>
@@ -295,7 +309,7 @@
                     <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
                     <div class="col">
                       <p-dropdown
-                        placeholder="datosNNA.ipsNombre"
+                        placeholder="Seleccionar"
                         [(ngModel)]="datosNNA.ipsId"
                         [options]="entidadesRecibirTratamiento"
                         optionLabel="nombre"

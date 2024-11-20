@@ -16,12 +16,13 @@ import { InfoAdherencia } from '../../../../../models/infoAdherencia.model';
 import { NNA } from '../../../../../models/nna.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-adherencia',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-            DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, EstadoNnaComponent],
   templateUrl: './seguimiento-adherencia.component.html',
   styleUrl: './seguimiento-adherencia.component.css'
 })

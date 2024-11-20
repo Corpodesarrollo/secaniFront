@@ -10,8 +10,6 @@ import { DividerModule } from 'primeng/divider';
 import { TableModule } from 'primeng/table';
 import { EditorModule } from 'primeng/editor';
 import { EAPB } from '../../../../../models/eapb.model';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { GenericService } from '../../../../../services/generic.services';
 
 @Component({
@@ -101,7 +99,7 @@ export class OficioNotificacionComponent implements OnInit {
   }
 
   generarPDF() {
-    const doc = new jsPDF();
+    /*const doc = new jsPDF();
     const pageWidth = 180;
     const startY = 10;
     let currentY = startY;
@@ -132,10 +130,10 @@ export class OficioNotificacionComponent implements OnInit {
     currentY = this.addSeccionText(doc, ``, currentY);
     currentY = this.addFirmaToPDF(doc, currentY);
 
-    doc.save('notificacion.pdf');
+    doc.save('notificacion.pdf');*/
 }
 
-private addFirmaToPDF(doc: jsPDF, currentY: number): number {
+private addFirmaToPDF(doc: any, currentY: number): number {
 
   const parser = new DOMParser();
   const htmlDocument = parser.parseFromString(this.firma, 'text/html');
@@ -188,7 +186,7 @@ private addFirmaToPDF(doc: jsPDF, currentY: number): number {
     });
   }
 
-  private addText(doc: jsPDF, text: string, y: number): number {
+  private addText(doc: any, text: string, y: number): number {
 
     if (y > 280) {
       doc.addPage();
@@ -199,7 +197,7 @@ private addFirmaToPDF(doc: jsPDF, currentY: number): number {
     return y + 5;
   }
 
-  private addSeccionText(doc: jsPDF, text: string, y: number): number {
+  private addSeccionText(doc: any, text: string, y: number): number {
 
     if (y > 280) {
       doc.addPage();
@@ -210,7 +208,7 @@ private addFirmaToPDF(doc: jsPDF, currentY: number): number {
     return y + 15;
   }
 
-  private addMultilineText(doc: jsPDF, text: string, y: number, maxWidth: number, pdfDoc: jsPDF): number {
+  private addMultilineText(doc: any, text: string, y: number, maxWidth: number, pdfDoc: any): number {
     const splitText = doc.splitTextToSize(text, maxWidth);
     const lineHeight = 10;
 

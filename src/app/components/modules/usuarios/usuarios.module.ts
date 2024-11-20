@@ -34,6 +34,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { CardModule } from 'primeng/card';
+import { PaginatorModule } from 'primeng/paginator';
+
 
 @NgModule({
   declarations: [
@@ -67,6 +69,7 @@ import { CardModule } from 'primeng/card';
     ToastModule,
     ButtonModule,
     RippleModule,
+    PaginatorModule,
 
     /**Component standalone */
     HistoricoNnaComponent,

@@ -122,7 +122,7 @@ export class DialogCrearContactoComponent {
               this.messageService.add({ severity: 'error', summary: 'Error', detail: result.descripcion });
               return;
             }
-            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto creado exitosamente.' });
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto actualizado exitosamente.' });
             this.show = false;
           },
           error: (error) => {
