@@ -116,6 +116,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/modules/gestion/dashboard-eapb/dashboard-eapb.component').then((c) => c.DashboardEapbComponent),
   },
+  {
+    path: 'reportes',
+    loadChildren: () => import('./components/modules/reportes/reportes.module').then( m => m.ReportesModule )
+  }
 
    { path: 'respuesta-notificacion', component: NotificacionRespuestaComponent },
 

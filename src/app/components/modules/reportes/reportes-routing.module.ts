@@ -5,7 +5,7 @@ import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte
 
 const routes: Routes = [
   { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
-    { path: '**', redirectTo: 'reporte-inconsistencia' }
+  { path: '**', redirectTo: 'reporte-inconsistencia' }
 ];
 
 @NgModule({
