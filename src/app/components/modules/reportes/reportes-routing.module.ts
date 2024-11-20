@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ReporteInconsistenciaComponent } from './reporte-inconsistencia/reporte-inconsistencia.component';
 import { ReporteDepuracionComponent } from './reporte-depuracion/reporte-depuracion.component';
+import { ReporteDetalleNuevoDepuradosComponent } from './reporte-detalle-nuevo-depurados/reporte-detalle-nuevo-depurados.component';
 
 const routes: Routes = [
   { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
@@ -10,6 +11,7 @@ const routes: Routes = [
     path: 'reporte-depuracion',
     children: [
       { path: '', component: ReporteDepuracionComponent },
+      { path: ':id', component: ReporteDetalleNuevoDepuradosComponent },
       { path: '**', redirectTo: '' }
     ]
   },
