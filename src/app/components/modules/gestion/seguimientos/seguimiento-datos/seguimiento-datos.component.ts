@@ -38,6 +38,7 @@ export class SeguimientoDatosComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
   nna: NNA = new NNA();
   id: string | undefined;
+  idContacto: string | undefined;
   fechaMaxima: Date;
   estadoIngreso: string = '';
   estado: string = '';
@@ -103,7 +104,8 @@ export class SeguimientoDatosComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.id = this.routeAct.snapshot.paramMap.get('id')!;
+    this.id = this.routeAct.snapshot.paramMap.get('idNNA')!;
+    this.idContacto = this.routeAct.snapshot.paramMap.get('idContacto')!;
     this.nna = await this.tpp.getNNA(this.id);
     if (!this.nna){
       this.nna = new NNA();

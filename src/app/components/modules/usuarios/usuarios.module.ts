@@ -35,7 +35,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
-
+import { NnaContactoListaComponent } from "./nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 
 @NgModule({
   declarations: [
@@ -47,9 +47,7 @@ import { PaginatorModule } from 'primeng/paginator';
     UsuariosRoutingModule,
     FormsModule,
     CommonModule,
-
     ReactiveFormsModule,
-
     /**PrimeNG*/
     TableModule,
     ButtonModule,
@@ -70,7 +68,6 @@ import { PaginatorModule } from 'primeng/paginator';
     ButtonModule,
     RippleModule,
     PaginatorModule,
-
     /**Component standalone */
     HistoricoNnaComponent,
     BotonNotificacionComponent,
@@ -78,8 +75,9 @@ import { PaginatorModule } from 'primeng/paginator';
     DialogCrearNnaMsgRolAgenteComponent,
     DialogCrearNnaMsgRolCoordinadorComponent,
     DialogNnaMsgSeguimientoComponent,
-    DialogCrearContactoComponent
-  ],
+    DialogCrearContactoComponent,
+    NnaContactoListaComponent
+],
   providers: [
     MessageService,
     DatePipe // <-- Agrega DatePipe aquí

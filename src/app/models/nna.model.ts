@@ -83,7 +83,7 @@ export class NNA {
     trasladosIPSId!: number;
     trasladosHaRecurridoAccionLegal!: boolean;
     trasladosTipoAccionLegalId!: string;
-    tratamientoRequirioCambiodeCiudad!: boolean;
+    tratamientoRequirioCambiodeCiudad!: boolean | undefined;
     tratamientoHaDejadodeAsistir!: boolean;
     tratamientoCuantoTiemposinAsistir!: number;
     tratamientoUnidadMedidaIdTiempoId!: string;

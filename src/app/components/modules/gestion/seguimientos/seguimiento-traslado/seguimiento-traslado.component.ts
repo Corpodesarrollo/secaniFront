@@ -94,6 +94,7 @@ export class SeguimientoTrasladoComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
+    console.log(this.nna);
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
