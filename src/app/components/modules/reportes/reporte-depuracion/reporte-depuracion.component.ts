@@ -7,6 +7,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { ReportesService } from '../../../../services/reportes.service';
 
 @Component({
   selector: 'app-reporte-depuracion',
@@ -18,8 +19,10 @@ import { TableModule } from 'primeng/table';
 export class ReporteDepuracionComponent implements OnInit {
   public reportes: any[] = [];
 
+  constructor(private reportesService: ReportesService) {}
+
   ngOnInit(): void {
-    this.reportes = [
+    /* this.reportes = [
       {
         id: 1,
         fecha: new Date(),
@@ -42,6 +45,12 @@ export class ReporteDepuracionComponent implements OnInit {
         },
         estado: 'Fallida'
       }
-    ]
+    ] */
+    this.obtenerReportes();
+  }
+
+  async obtenerReportes() {
+    this.reportes = await this.reportesService.getReporteEstadoDepuracion();
+    console.log(this.reportes);
   }
 }
