@@ -10,7 +10,7 @@ import { ListaParametricaItemsComponent } from './lista-parametrica-items/lista-
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
-    path: 'listas_parametricas',
+    path: 'lista_parametricas',
     children: [
       { path: '', component: ListasParametricasComponent },
       { path: ':id', component: ListaParametricaComponent },

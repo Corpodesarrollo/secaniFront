@@ -9,32 +9,16 @@
         <ng-template pTemplate="header">
             <tr>
               <th pSortableColumn="id">
-                <div class="d-flex align-items-center justify-content-between">
-                  ID Lista
-                  <p-sortIcon field="id" />
-                  <p-columnFilter type="text" field="id" display="menu" class="ms-auto"/>
-                </div>
+                ID Lista
               </th>
               <th pSortableColumn="nombre">
-                <div class="d-flex align-items-center justify-content-between">
-                  Nombre de la lista
-                  <p-sortIcon field="nombre" />
-                  <p-columnFilter type="text" field="nombre" display="menu" class="ms-auto"/>
-                </div>
+                Nombre de la lista
               </th>
               <th pSortableColumn="tablaPadre">
-                <div class="d-flex align-items-center justify-content-between">
-                  Lista padre
-                  <p-sortIcon field="tablaPadre" />
-                  <p-columnFilter type="text" field="tablaPadre" display="menu" class="ms-auto"/>
-                </div>
+                Lista padre
               </th>
               <th pSortableColumn="descripcion">
-                <div class="d-flex align-items-center justify-content-between">
-                  Descripción
-                  <p-sortIcon field="descripcion" />
-                  <p-columnFilter type="text" field="descripcion" display="menu" class="ms-auto"/>
-                </div>
+                Descripción
               </th>
             <th>Editar</th>
             <th>Items</th>
@@ -44,7 +28,7 @@
         <ng-template pTemplate="body" let-listaParametrica>
           <tr>
             <td>
-              <a [routerLink]="['/administracion/listas_parametricas', listaParametrica.id]">
+              <a [routerLink]="['/administracion/lista_parametricas', listaParametrica.id]">
                 {{ listaParametrica.id }}
               </a>
             </td>
@@ -58,12 +42,12 @@
             </th>
             <th>
               <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                [routerLink]="['/administracion/listas_parametricas', listaParametrica.id, 'items']"
+                [routerLink]="['/administracion/lista_parametricas', listaParametrica.id, 'items']"
               />
             </th>
             <th>
               <p-button icon="pi pi-info-circle" [rounded]="true" [link]="true" severity="secondary"
-                [routerLink]="['/administracion/listas_parametricas', listaParametrica.id, 'historico']"
+                [routerLink]="['/administracion/lista_parametricas', listaParametrica.id, 'historico']"
               />
             </th>
           </tr>

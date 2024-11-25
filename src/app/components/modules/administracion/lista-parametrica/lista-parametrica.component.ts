@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
+import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
+
 @Component({
   selector: 'app-lista-parametrica',
   standalone: true,
@@ -17,12 +19,21 @@ export class ListaParametricaComponent {
   public listaParametrica?: any;
   private id: string | null = null;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private listasParametricasService: ListasParametricasService
+  ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.id = params.get('id'); // Obtiene el parámetro 'id'
     });
+
+    if (!this.id) return;
+    this.listaParametrica = await this.listasParametricasService.getItemListaParametricas('cie10');
+    console.log(this.listaParametrica);
+
 
     this.listaParametrica = {
       subCategoria: 'SUBCATEGORIAS',
