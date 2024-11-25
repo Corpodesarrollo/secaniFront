@@ -136,6 +136,7 @@
                                 <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaUltimaRecaida"  />
                             </div>
                         </div>
+
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
                             <div class="col-4">
                                 <label for="estado" class="fw-bold">Razones por las cuales el menor no tiene diagnóstico</label>
@@ -168,8 +169,21 @@
                                     [showClear]="true"
                                     name="estado"
                                     id="estado"
+                                    required="true"
                                     placeholder="Seleccione" />
-                            </div>ec
+                            </div>
+                        </div>
+                        <div class="row mb-2" *ngIf="estadoSinTratamiento">
+                            <div class="col-8 offset-4">
+                                <div *ngIf="submitted2 && !nna.RazonesSinIniciarTratamiento" class="text-danger">
+                                    Campo requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinTratamiento">
+                            <div class="col-8 offset-4">
+                                <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="nna.RazonesSinIniciarTratamientoOtros">
+                            </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
                             <div class="col-8 offset-4">

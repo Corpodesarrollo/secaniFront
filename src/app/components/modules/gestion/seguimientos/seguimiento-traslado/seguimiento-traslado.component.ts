@@ -139,10 +139,10 @@ export class SeguimientoTrasladoComponent implements OnInit {
   }
 
   ApoyoFundacion(value: boolean) {
-    this.traslado.haSolicitadoApoyoFundacion = value;
+    this.nna.trasladosHaSolicitadoApoyoFundacion = value;
     if (!value) {
-      this.traslado.nombreFundacion = '';
-      this.traslado.apoyoRecibidoFundacion = '';
+      this.nna.trasladosNombreFundacion = '';
+      this.nna.trasladosApoyoRecibidoxFundacion = '';
     }
   }
 

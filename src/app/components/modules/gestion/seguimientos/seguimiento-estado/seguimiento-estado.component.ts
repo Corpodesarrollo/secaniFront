@@ -19,6 +19,7 @@ import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { apis } from '../../../../../models/apis.model';
 
 @Component({
   selector: 'app-seguimiento-estado',
@@ -91,13 +92,15 @@ export class SeguimientoEstadoComponent  implements OnInit {
   colorTxt: string = 'white';	
   colorBg: string = '#73b7ad';
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute, private gs: GenericService,) {
   }
 
   async ngOnInit(): Promise<void> {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
+
+    this.validarSeguimiento(Number(this.id));
+
     this.nna = await this.tpp.getNNA(this.id);
-    console.log(this.nna);    
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -145,6 +148,21 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.isLoadingIPS = false;
   }
 
+  validarSeguimiento(id: number) {
+    this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
+      let cnt = Number(data);
+      console.log('cnt', cnt);
+      if (cnt > 1) {
+        this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`]).then(() => {
+          window.scrollTo(0, 0);
+        });
+        return;
+      }
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
+  }
+
   applyRecaida(value: boolean) {
     this.nna.recaida = value;
     if(!value) {
@@ -169,11 +187,24 @@ export class SeguimientoEstadoComponent  implements OnInit {
     else if(this.selectedEstado?.nombre === "Registrado") {
       this.stepsCount = 5;
       this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
+    }
+    else if(
+      this.selectedEstado?.nombre === "EP Tratamiento en domicilio" ||
+      this.selectedEstado?.nombre === "EP Ambulatorio" ||
+      this.selectedEstado?.nombre === "EP Intrahospitalario" ||
+      this.selectedEstado?.nombre === "EP Trasplante" ||
+      this.selectedEstado?.nombre === "Valoración por oncología"
+    ) {
+      this.stepsCount = 5;
+      this.estadoFallecido = false;
       this.estadoEnTratamiento = true;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
     }
-    else if(this.selectedEstado?.nombre === "Diagnóstico confirmado") {
+    else if(this.selectedEstado?.nombre === "Sin tratamiento") {
       this.estadoFallecido = false;
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = true;
@@ -196,9 +227,18 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.nna.diagnosticoId = this.selectedDiagnostico?.id ?? 0;
     this.nna.estadoId = this.selectedEstado?.id ?? 0;
 
-    const camposAValidar = [
-      this.nna.estadoId,
-    ];
+    let camposAValidar: any[] = [];
+
+    if(this.selectedEstado?.nombre === "Sin tratamiento"){
+      camposAValidar = [
+        this.nna.estadoId,
+        this.nna.RazonesSinIniciarTratamiento,
+      ];
+    } else {
+      camposAValidar = [
+        this.nna.estadoId
+      ];
+    }
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
     for (const campo of camposAValidar) {
