@@ -57,8 +57,7 @@ export class ListasParametricasComponent implements OnInit {
 
   async cargarDatos() {
     this.listasParametricas = (await this.listasParametricasService.getListasParametricas())
-      .filter( lista => lista.fuenteTabla == 1)
-      .map( lista => ({ ...lista, nombre: this.titulos[lista.nombre] }));
+      .filter( lista => lista.fuenteTabla == 1);
   }
 
   openEditModal(listaParametrica: any): void {
@@ -76,6 +75,7 @@ export class ListasParametricasComponent implements OnInit {
     try {
       const data = this.listaParametricaForm.getRawValue();
       const response = await this.listasParametricasService.putListaParametrica(data.id, data);
+      this.closeEditModal();
       await this.cargarDatos();
     } catch(error) {
       console.log(error);
