@@ -36,7 +36,7 @@ export class ListasParametricasService {
   /* Agregar Item de lista parametrica */
   postItemListaParametrica(nombre: string, dato: any) {
     const url: string = `${nombre}`;
-    return this.generico.retorno_post(url, dato);
+    return this.generico.retorno_post(url, dato, true, this.urlbase);
   }
 
   getItemListaParametricas(nombre: string) {

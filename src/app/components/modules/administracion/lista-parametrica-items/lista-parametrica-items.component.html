@@ -8,7 +8,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4 sm-col-12">
-          <form [formGroup]="itemsListaParametricaForm">
+          <form [formGroup]="itemsListaParametricaForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label class="fw-semibold mb-1" for="id">Id del Item</label>
               <input id="id" class="w-100" type="text" pInputText formControlName="id" />
@@ -38,6 +38,7 @@
             <div class="d-flex justify-content-center mt-5">
               <p-button type="button"
                 styleClass="me-3" severity="success"
+                (onClick)="clearForm()"
               >
                 <i class="pi pi-plus me-1"></i>
                 Nuevo Item
@@ -102,7 +103,7 @@
                       [rounded]="true"
                       [text]="true"
                       severity="secondary"
-                      (click)="openEditModal(item)"
+                      (click)="openItemForEdit(item)"
                     />
                     <p-button
                       icon="pi pi-trash"
