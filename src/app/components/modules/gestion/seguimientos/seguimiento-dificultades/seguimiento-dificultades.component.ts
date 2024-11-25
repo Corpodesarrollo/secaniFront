@@ -89,8 +89,8 @@ export class SeguimientoDificultadesComponent implements OnInit {
     ];
 
     //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
-    //this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
-    //this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
+    this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
+    this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
 
 
     this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
@@ -170,7 +170,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
   }
 
   actualizarTrasladosArray() {
-    const nuevoTamano = this.dificultades.numeroTraslados;
+    const nuevoTamano = this.nna.trasladosNumerodeTraslados;
 
     // Ajusta el tamaño de trasladosArray sin borrar valores existentes
     if (nuevoTamano > this.trasladosArray.length) {

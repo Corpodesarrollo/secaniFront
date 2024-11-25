@@ -45,6 +45,8 @@ export class NNA {
     fechaDefuncion!: Date;
     motivoDefuncion!: string;
     fechaInicioTratamiento!: Date;
+    RazonesSinIniciarTratamiento!: number;
+    RazonesSinIniciarTratamientoOtros!: string;
     recaida!: boolean;
     cantidadRecaidas!: number;
     fechaUltimaRecaida!: Date;
@@ -62,7 +64,7 @@ export class NNA {
     trasladoEAPBSuministroApoyo!: boolean;
     trasladosServiciosdeApoyoOportunos!: boolean;
     trasladosServiciosdeApoyoCobertura!: boolean;
-    trasladosHaSolicitadoApoyoFundacion!: string;
+    trasladosHaSolicitadoApoyoFundacion!: boolean;
     trasladosNombreFundacion!: string;
     trasladosApoyoRecibidoxFundacion!: string;
     difAutorizaciondeMedicamentos!: boolean;
