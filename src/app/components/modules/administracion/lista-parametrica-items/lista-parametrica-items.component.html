@@ -60,32 +60,16 @@
             <ng-template pTemplate="header">
               <tr>
                 <th pSortableColumn="nombre">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Nombre
-                    <p-sortIcon field="nombre" />
-                    <p-columnFilter type="text" field="nombre" display="menu" class="ms-auto"/>
-                  </div>
+                  Nombre
                 </th>
-                <th pSortableColumn="identificador">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Identificador
-                    <p-sortIcon field="identificador" />
-                    <p-columnFilter type="text" field="identificador" display="menu" class="ms-auto"/>
-                  </div>
+                <th pSortableColumn="indicador">
+                  Identificador
                 </th>
                 <th pSortableColumn="ordenLista">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Orden de la lista
-                    <p-sortIcon field="ordenLista" />
-                    <p-columnFilter type="text" field="ordenLista" display="menu" class="ms-auto"/>
-                  </div>
+                  Orden de la lista
                 </th>
                 <th pSortableColumn="itemListaPadre">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Item lista padre
-                    <p-sortIcon field="itemListaPadre" />
-                    <p-columnFilter type="text" field="itemListaPadre" display="menu" class="ms-auto"/>
-                  </div>
+                  Item lista padre
                 </th>
                 <th>Acciones</th>
               </tr>
@@ -93,7 +77,7 @@
             <ng-template pTemplate="body" let-item>
               <tr>
                 <td>{{ item.nombre }}</td>
-                <td>{{ item.identificador }}</td>
+                <td>{{ item.indicador }}</td>
                 <td>{{ item.ordenLista }}</td>
                 <td>{{ item.itemListaPadre }}</td>
                 <td>

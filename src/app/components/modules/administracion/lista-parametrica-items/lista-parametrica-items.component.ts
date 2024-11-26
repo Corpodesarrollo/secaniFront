@@ -48,10 +48,6 @@ export class ListaParametricaItemsComponent implements OnInit {
         this.obtenerListaParametricaPorId(this.id);
       }
     });
-
-    this.items = [
-      { nombre: 'Leucemia Linfoide Aguda', identificador: 'i.', ordenLista: 'i.', itemListaPadre: 'N/A' }
-    ];
   }
 
   async obtenerListaParametricaPorId(id: string) {
@@ -61,8 +57,14 @@ export class ListaParametricaItemsComponent implements OnInit {
 
   async obtenerItems() {
     if (!this.listaParametricaPadre?.nombre) return;
-    this.items = await this.listasParametricasService.getItemListaParametricas(this.listaParametricaPadre?.nombre);
-    console.log(this.items);
+
+    const rawItems = await this.listasParametricasService.getItemListaParametricas(this.listaParametricaPadre?.nombre);
+
+    // Normalizar los datos para garantizar que todos tengan el campo `nombre`
+    this.items = rawItems.map((item: any) => ({
+      ...item,
+      nombre: item.nombre || item.festivo || item.subCategoriaAlerta || 'Sin nombre',
+    }));
   }
 
   openItemForEdit(itemListaParematrica: any): void {
@@ -70,11 +72,10 @@ export class ListaParametricaItemsComponent implements OnInit {
   }
 
   async onSubmit() {
-    console.log(this.itemsListaParametricaForm.getRawValue());
-    if(this.itemsListaParametricaForm.invalid) return;
+    if(this.itemsListaParametricaForm.invalid || !this.listaParametricaPadre) return;
 
     const { identificador, ordenLista, itemListaPadre, id, ...datos } = this.itemsListaParametricaForm.getRawValue();
-    const nombre = 'CIE10';
+    const { nombre } = this.listaParametricaPadre;
 
     try {
       if (id) {
