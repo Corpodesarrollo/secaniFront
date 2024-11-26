@@ -57,8 +57,7 @@ export class ListasParametricasComponent implements OnInit {
 
   async cargarDatos() {
     this.listasParametricas = (await this.listasParametricasService.getListasParametricas())
-      .filter( lista => lista.fuenteTabla == 1)
-      .map( lista => ({ ...lista, nombre: this.titulos[lista.nombre] }));
+      .filter( lista => lista.fuenteTabla == 1);
   }
 
   openEditModal(listaParametrica: any): void {
