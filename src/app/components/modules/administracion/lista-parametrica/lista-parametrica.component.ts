@@ -53,6 +53,10 @@ export class ListaParametricaComponent {
     this.listaParametrica = await this.listasParametricasService.getListaParametrica(this.id);
 
     if (!this.listaParametrica) return;
-    this.itemsListaParamtreicas = await this.listasParametricasService.getItemListaParametricas(this.listaParametrica.nombre);
+    const rawItems = await this.listasParametricasService.getItemListaParametricas(this.listaParametrica.nombre);
+    this.itemsListaParamtreicas = rawItems.map((item: any) => ({
+      ...item,
+      nombre: item.nombre || item.festivo || item.subCategoriaAlerta || 'Sin nombre',
+    }));
   }
 }
