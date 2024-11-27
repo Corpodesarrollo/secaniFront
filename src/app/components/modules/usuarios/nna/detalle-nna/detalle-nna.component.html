@@ -81,7 +81,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Sexo: <br></div>
-              <div class="col">{{datosNNA.sexoId}}<br></div>
+              <div class="col-6">{{getNombreSexoPorId(datosNNA.sexoId)}}</div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Tipo identificación: <br></div>
@@ -97,23 +97,23 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">País de nacimiento: <br></div>
-              <div class="col">{{datosNNA.paisId}}<br></div>
+              <div class="col-6">{{getNombrePaisPorId(datosNNA.paisId)}}</div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Etnia: <br></div>
-              <div class="col">{{datosNNA.etniaId}}<br></div>
+              <div class="col-6">{{getNombreEtniaPorId(datosNNA.etniaId)}}</div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento de nacimiento: <br></div>
-              <div class="col">{{datosNNA.residenciaOrigenMunicipioId}}<br></div>
+              <div class="col">{{getNombreDeptoPorId(datosNNA.residenciaOrigenMunicipioId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Ciudad de nacimiento: <br></div>
-              <div class="col">{{datosNNA.residenciaOrigenMunicipioId}}<br></div>
+              <div class="col">{{getNombreMuniPorId(datosNNA.residenciaOrigenMunicipioId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Grupo poblacional*: <br></div>
-              <div class="col">{{datosNNA.grupoPoblacionId}}<br></div>
+              <div class="col-6">{{getNombreGrupoPoblaPorId(datosNNA.grupoPoblacionId)}}</div>
             </div>
             <p-divider />
             <div class="row">
@@ -123,11 +123,11 @@
             <br>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento: <br></div>
-              <div class="col">{{datosNNA.residenciaActualMunicipioId}}<br></div>
+              <div class="col">{{getNombreDeptoPorId(datosNNA.residenciaActualMunicipioId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Municipio: <br></div>
-              <div class="col">{{datosNNA.residenciaActualMunicipioId}}<br></div>
+              <div class="col">{{getNombreMuniPorId(datosNNA.residenciaActualMunicipioId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Barrio: <br></div>
@@ -135,7 +135,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Área: <br></div>
-              <div class="col">{{datosNNA.residenciaActualAreaId}}<br></div>
+              <div class="col">{{getNombreAreaPorId(datosNNA.residenciaActualAreaId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Dirección: <br></div>
@@ -143,7 +143,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Estrato: <br></div>
-              <div class="col">{{datosNNA.residenciaActualEstratoId}}<br></div>
+              <div class="col">{{getNombreEstratoPorId(datosNNA.residenciaActualEstratoId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Teléfono: <br></div>
@@ -153,15 +153,15 @@
           <div class="col">
             <div class="row">
               <div class="col" style="font-weight: bold;">Origen del reporte: <br></div>
-              <div class="col">{{datosNNA.origenReporteId}}<br></div>
+              <div class="col">{{getNombreOrigenReportePorId(datosNNA.origenReporteId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento donde actualmente recibe el tratamiento: <br></div>
-              <div class="col">{{datosNNA.departamentoTratamientoId}}<br></div>
+              <div class="col">{{getNombreDeptoPorId(datosNNA.departamentoTratamientoId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Estado de ingreso a la estrategia: <br></div>
-              <div class="col">{{datosNNA.estadoIngresoEstrategiaId}}<br></div>
+              <div class="col">{{getNombreEstadoNNAPorId(datosNNA.estadoIngresoEstrategiaId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Fecha de ingreso a la estrategia: <br></div>
@@ -169,7 +169,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Régimen de afiliación: <br></div>
-              <div class="col">{{datosNNA.tipoRegimenSSId}}<br></div>
+              <div class="col">{{getNombreTipoAfiliacionPorId(datosNNA.tipoRegimenSSId)}}<br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Asegurador: <br></div>
