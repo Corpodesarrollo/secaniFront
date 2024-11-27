@@ -84,7 +84,7 @@ export class EditarNnaComponent implements OnInit {
   sexoAnn: any[] = [
     {"id" : 1, "nombre" : "Masculino"},
     {"id" : 2, "nombre" : "Femenino"}
-  ]
+  ];
 
   observacion: any = '';
 

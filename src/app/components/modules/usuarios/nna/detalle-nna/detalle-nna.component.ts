@@ -16,6 +16,7 @@ import { GenericService } from '../../../../../services/generic.services';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { NNA } from '../../../../../models/nna.model';
 import { FormsModule } from '@angular/forms';
+import { Parametricas } from '../../../../../models/parametricas.model';
 
 @Component({
   selector: 'app-detalle-nna',
@@ -52,6 +53,21 @@ export class DetalleNnaComponent implements OnInit {
     { label: 'NO', value: false }
   ];
 
+  sexoAnn: any[] = [
+    {"id" : 1, "nombre" : "Masculino"},
+    {"id" : 2, "nombre" : "Femenino"}
+  ];
+  listadoPais: Parametricas[] = [];
+  etnias: Parametricas[] = [];
+  listaDepartamentos: Parametricas[] = [];
+  listaMunicipios: Parametricas[] = [];
+  gruposponlacional: Parametricas[] = [];
+  areas: Parametricas[] = [];
+  estratos: Parametricas[] = [];
+  tiposOrigenReporte: Parametricas[] = [];
+  estadosNNA: any[] = [];
+  regimenesAfiliacion: Parametricas[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private repos: GenericService,
@@ -70,6 +86,17 @@ export class DetalleNnaComponent implements OnInit {
       this.loadContactosNna();
     });
 
+    this.loadPaisesNacimiento();
+    this.loadEtnias();
+    this.loadDepartamentos();
+    this.loadMunicipios();
+    this.loadGruposPobla();
+    this.loadAreas();
+    this.loadEstratos();
+    this.loadTiposOrigen();
+    this.loadEstadosNNA();
+    this.loadRegimenes();
+
   }
 
   seleccionarPanel(numPanel:any){
@@ -77,7 +104,7 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   loadDatosBasicosNNA() {
-    this.repos.get_withoutParameters(`/NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
       next: (datosBasicosData: any) => {
         this.datosBasicosNNA = datosBasicosData;
         this.fechaInicio = new Date(this.datosBasicosNNA.fechaNacimiento);
@@ -118,7 +145,7 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   loadNNAData() {
-    this.repos.get_withoutParameters(`/NNA/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
 
@@ -163,7 +190,7 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   loadContactosNna(){
-    this.repos.get_withoutParameters(`/ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
       next: async (data: any) => {
         this.contactosNna = data.datos;
       },
@@ -171,7 +198,158 @@ export class DetalleNnaComponent implements OnInit {
     });
   }
 
+  getNombreSexoPorId(id: any): string | undefined {
+    const resultado = this.sexoAnn.find(item => item.id === Number(id));
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
 
+  loadPaisesNacimiento(){
+    this.repos.get_withoutParameters(`TablaParametrica/Pais`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.listadoPais = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombrePaisPorId(id: any): string | undefined {
+    const resultado = this.listadoPais.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadEtnias(){
+    this.repos.get_withoutParameters(`TablaParametrica/GrupoEtnico`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.etnias = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreEtniaPorId(id: any): string | undefined {
+    const resultado = this.etnias.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadDepartamentos(){
+    this.repos.get_withoutParameters(`TablaParametrica/Departamento`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.listaDepartamentos = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreDeptoPorId(codigo: any): string | undefined {
+    const extraerDosPrimeros = (codigo: string): string => {
+      return codigo.substring(0, 2);
+    };
+    let codDepto: string = extraerDosPrimeros.toString();
+    const resultado = this.listaDepartamentos.find(item => item.codigo === codDepto);
+    return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
+  }
+
+  loadMunicipios(){
+    this.repos.get_withoutParameters(`TablaParametrica/Municipio`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.listaMunicipios = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreMuniPorId(codigo: any): string | undefined {
+    const completarCodigo = (codigo: string): string => {
+      return codigo.padEnd(5, '0');
+    };
+    let codigoCompleto: string = completarCodigo.toString();
+    const resultado = this.listaMunicipios.find(item => item.codigo === codigoCompleto);
+    return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
+  }
+
+  loadGruposPobla(){
+    this.repos.get_withoutParameters(`TablaParametrica/LCETipoPoblacionEspecial`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.gruposponlacional = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreGrupoPoblaPorId(id: any): string | undefined {
+    const resultado = this.gruposponlacional.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadAreas(){
+    this.repos.get_withoutParameters(`TablaParametrica/ZonaTerritorial`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.areas = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreAreaPorId(id: any): string | undefined {
+    const resultado = this.areas.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadEstratos(){
+    this.repos.get_withoutParameters(`TablaParametrica/EstratoSocioeconomico`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estratos = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreEstratoPorId(id: any): string | undefined {
+    const resultado = this.estratos.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadTiposOrigen(){
+    this.repos.get_withoutParameters(`OrigenReporte`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.tiposOrigenReporte = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreOrigenReportePorId(id: any): string | undefined {
+    const resultado = this.tiposOrigenReporte.find(item => item.id === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadEstadosNNA(){
+    this.repos.get_withoutParameters(`EstadoNNA`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estadosNNA = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreEstadoNNAPorId(id: any): string | undefined {
+    const resultado = this.estadosNNA.find(item => item.id === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  loadRegimenes(){
+    this.repos.get_withoutParameters(`TablaParametrica/APSRegimenAfiliacion`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.regimenesAfiliacion = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  getNombreTipoAfiliacionPorId(id: any): string | undefined {
+    const resultado = this.regimenesAfiliacion.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
 
 
 }
