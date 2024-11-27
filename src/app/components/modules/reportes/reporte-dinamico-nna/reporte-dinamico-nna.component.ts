@@ -10,6 +10,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 
+import { ReportesService } from '../../../../services/reportes.service';
+
 @Component({
   selector: 'app-reporte-dinamico-nna',
   standalone: true,
@@ -51,8 +53,7 @@ export class ReporteDinamicoNnaComponent {
     { header: 'Correo electrónico', field: 'correoElectronico' }
   ];
 
-
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private reportesService: ReportesService) {
     this.camposForm = this.formBuilder.group({
       buscador: [''], // Campo de búsqueda
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
@@ -79,8 +80,10 @@ export class ReporteDinamicoNnaComponent {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
-  onSubmit(): void {
-    if ( this.camposForm.invalid ) return;
-    console.log(this.camposForm.value);
+  async onSubmit() {
+    const { fechaInicio, fechaFin } = this.camposForm.value;
+    
+    this.reportes = await this.reportesService
+      .getReporteDinamicoNNA(fechaInicio.toISOString(), fechaFin.toISOString());
   }
 }

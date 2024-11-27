@@ -13,8 +13,8 @@ export class ReportesService {
     return this.generico.retorno_get(url, this.urlbase);
   }
 
-  getReporteDinamicoNNA() {
-    const url: string = `ReportesSeguimiento/ReporteDinamicoNNA`;
+  getReporteDinamicoNNA(fechaInicial: string, fechaFinal: string) {
+    const url: string = `ReportesSeguimiento/ReporteDinamicoNNA?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
 }
