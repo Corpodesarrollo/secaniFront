@@ -13,7 +13,7 @@ import { ReporteGeneralLlamadasComponent } from './reporte-general-llamadas/repo
 const routes: Routes = [
   { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
   {
-    path: 'reporte-depuracion',
+    path: 'depuracion_p115',
     children: [
       { path: '', component: ReporteDepuracionComponent },
       { path: ':id', component: ReporteDetalleNuevoDepuradosComponent },
@@ -21,10 +21,10 @@ const routes: Routes = [
     ]
   },
   { path: 'reporte-dinamico-alertas', component: ReporteDinamicoAlertasComponent },
-  { path: 'reporte-dinamico-nna', component: ReporteDinamicoNnaComponent },
-  { path: 'reporte-dinamico-seguimiento', component: ReporteDinamicoSeguimientoComponent },
+  { path: 'nna', component: ReporteDinamicoNnaComponent },
+  { path: 'seguimientos', component: ReporteDinamicoSeguimientoComponent },
   { path: 'reporte-dinamico-eapb', component: ReporteDinamicoEapbComponent },
-  { path: 'reporte-general-llamadas', component: ReporteGeneralLlamadasComponent },
+  { path: 'llamadas', component: ReporteGeneralLlamadasComponent },
   { path: '**', redirectTo: 'reporte-inconsistencia' }
 ];
 
