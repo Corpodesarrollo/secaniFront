@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
+import { ListaParametrica } from '../../../../models/listaParametrica.model';
 
 @Component({
   selector: 'app-lista-parametrica',
@@ -16,7 +17,8 @@ import { ListasParametricasService } from '../../../../services/listas-parametri
 })
 export class ListaParametricaComponent {
 
-  public listaParametrica?: any;
+  public listaParametrica?: ListaParametrica;
+  public itemsListaParamtreicas: any[] = [];
   private id: string | null = null;
 
   constructor(
@@ -31,21 +33,9 @@ export class ListaParametricaComponent {
     });
 
     if (!this.id) return;
-    this.listaParametrica = await this.listasParametricasService.getItemListaParametricas('cie10');
-    console.log(this.listaParametrica);
+    this.listaParametrica = await this.listasParametricasService.getListaParametrica(this.id);
 
-
-    this.listaParametrica = {
-      subCategoria: 'SUBCATEGORIAS',
-      listaPadre: 'CATEGORIAS',
-      descripcion: 'Subcategorías de las alertas',
-      items: [
-        { id: 1, fechaCreacion: new Date('2024-04-15'), nombre: 'No contar o demorar la autorización...', identificador: 'A', orden: 1, itemListaPadre: 'Accesibilidad' },
-        { id: 2, fechaCreacion: new Date('2024-04-15'), nombre: 'El cobro de copagos...', identificador: 'B', orden: 2, itemListaPadre: 'Accesibilidad' },
-        { id: 3, fechaCreacion: new Date('2024-04-15'), nombre: 'No tener implementados esquemas...', identificador: 'C', orden: 3, itemListaPadre: 'Accesibilidad' },
-        { id: 4, fechaCreacion: new Date('2024-04-15'), nombre: 'Incumplir las actividades...', identificador: 'D', orden: 4, itemListaPadre: 'Accesibilidad' },
-        { id: 5, fechaCreacion: new Date('2024-04-15'), nombre: 'No realizar la notificación obligatoria...', identificador: 'E', orden: 5, itemListaPadre: 'Accesibilidad' }
-      ]
-    };
+    if (!this.listaParametrica) return;
+    this.itemsListaParamtreicas = await this.listasParametricasService.getItemListaParametricas(this.listaParametrica.nombre);
   }
 }
