@@ -32,8 +32,8 @@
                 {{ listaParametrica.id }}
               </a>
             </td>
-            <td>{{ titulos[listaParametrica.nombre] }}</td>
-            <td>{{ listaParametrica.tablaPadre }}</td>
+            <td>{{ listaParametrica.nombre }}</td>
+            <td>{{ listaParametrica.tablaPadre || 'No aplica' }}</td>
             <td>{{ listaParametrica.descripcion }}</td>
             <th>
               <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
