@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -11,7 +11,7 @@ import { ListaParametrica } from '../../../../models/listaParametrica.model';
 @Component({
   selector: 'app-lista-parametrica',
   standalone: true,
-  imports: [ButtonModule, CommonModule, TableModule],
+  imports: [ButtonModule, CommonModule, RouterModule, TableModule],
   templateUrl: './lista-parametrica.component.html',
   styleUrl: './lista-parametrica.component.css'
 })
@@ -20,6 +20,23 @@ export class ListaParametricaComponent {
   public listaParametrica?: ListaParametrica;
   public itemsListaParamtreicas: any[] = [];
   private id: string | null = null;
+
+  public titulos: Record<string, string> = {
+    "festivos": 'Festivos',
+    "estadoseguimiento": 'Estado seguimientos',
+    "subcategoriaalerta": 'Subcategoría alerta',
+    "razonessindiagnostico": 'Razones sin diagnósticos',
+    "estadonna": 'Estado NNA',
+    "malaatencionips": 'Mala atención IPS',
+    "motivocierresolicitud": 'Motivo cierre solicitud',
+    "origenreporte": 'Origen reporte',
+    "tipofallallamada": 'Tipo falla llamada',
+    "categoriaalerta": 'Categoría alerta',
+    "causainasistencia": 'Causa inasistencia',
+    "cie10": 'Diagnóstico',
+    "estadoalerta": 'Estado alerta',
+    "estadoingresoestrategia": 'Estado ingreso estrategia',
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
