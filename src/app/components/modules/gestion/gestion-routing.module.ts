@@ -15,7 +15,7 @@ import { ConsultarAlertasComponent } from './consultar-alertas/consultar-alertas
 
 const routes: Routes = [
   { path: 'seguimientos', component: ConsultarSeguimientosComponent },
-  { path: 'seguimientos/datos-seguimiento/:id', component: SeguimientoDatosComponent },
+  { path: 'seguimientos/datos-seguimiento/:idNNA/:idContacto', component: SeguimientoDatosComponent },
   { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent },
   { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent },
   { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent },

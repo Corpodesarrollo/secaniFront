@@ -24,6 +24,8 @@ import { UsuariosModule } from "../../../usuarios/usuarios.module";
 import { DialogCrearContactoComponent } from "../../../usuarios/nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component";
 import { NnaContactoListaComponent } from "../../../usuarios/nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { apis } from '../../../../../models/apis.model';
+import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 
 @Component({
   selector: 'app-seguimiento-datos',
@@ -38,6 +40,17 @@ export class SeguimientoDatosComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
   nna: NNA = new NNA();
   id: string | undefined;
+  contacto: ContactoNNA = {
+    id: 0,
+    nnaId: 0,
+    nombres: '',
+    parentescoId: 0,
+    cuidador: false,
+    telefonos: '',
+    email: '',
+    estado: false
+  };
+  idContacto: string | undefined;
   fechaMaxima: Date;
   estadoIngreso: string = '';
   estado: string = '';
@@ -81,7 +94,7 @@ export class SeguimientoDatosComponent implements OnInit {
   regimenAfiliacion: Parametricas[] = [];
   EAPB: Parametricas[] = [];
 
-  constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, 
+  constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, private gs: GenericService,
   private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService, private ss: SeguimientoDatosService) {
     this.contactForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -103,11 +116,25 @@ export class SeguimientoDatosComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.id = this.routeAct.snapshot.paramMap.get('id')!;
+    this.id = this.routeAct.snapshot.paramMap.get('idNNA')!;
+    this.idContacto = this.routeAct.snapshot.paramMap.get('idContacto')!;
+
+    this.validarSeguimiento(Number(this.id));
+
     this.nna = await this.tpp.getNNA(this.id);
     if (!this.nna){
       this.nna = new NNA();
     }
+
+    this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then((data: any) => {
+      this.contacto = data.datos;
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
+
+    this.parentescos = await this.tpp.getParentescos();
+    this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
+    this.isLoadingParentesco = false;
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -117,10 +144,6 @@ export class SeguimientoDatosComponent implements OnInit {
     if (this.nna.fechaNacimiento) {
       this.nna.fechaNacimiento = new Date(this.nna.fechaNacimiento);
     }
-
-    this.parentescos = await this.tpp.getParentescos();
-    this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.nna.cuidadorParentescoId));
-    this.isLoadingParentesco = false;
 
     this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
     this.selectedTipoID = this.tipoID.find(x => x.codigo == this.nna.tipoIdentificacionId);
@@ -154,6 +177,21 @@ export class SeguimientoDatosComponent implements OnInit {
     this.isLoadingEAPB = false;
 
     this.CalcularEdad();
+  }
+
+  validarSeguimiento(id: number) {
+    this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
+      let cnt = Number(data);
+      console.log('cnt', cnt);
+      if (cnt > 1) {
+        this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`]).then(() => {
+          window.scrollTo(0, 0);
+        });
+        return;
+      }
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
   }
 
   onModalHide(){

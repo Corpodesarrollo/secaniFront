@@ -44,9 +44,10 @@
             </div>
             <div class="col-9 flex-auto">
                 <p-dropdown
-                    [(ngModel)]="selectedEntidad"
-                    [options]="entidades"
-                    [loading]="isLoadingEntidades"
+                    [(ngModel)]="selectedPlantilla"
+                    [options]="plantillas"
+                    [loading]="isLoadingPLantillas"
+                    (onChange)="cargarPlantilla($event)" 
                     optionLabel="nombre"
                     [filter]="true"
                     filterBy="nombre"
@@ -79,7 +80,7 @@
                     name="agregarComentario" />
             </div>
         </div>
-        <div class="row mb-2 p-fluid">
+        <div class="row mb-2 p-fluid" *ngIf="notificacion.agregarComentario">
             <div class="col-3">
                 <label for="Comentario" class="fw-bold">Comentario</label>
             </div>
@@ -87,12 +88,23 @@
                 <p-editor [(ngModel)]="notificacion.comentario" [style]="{ height: '80px' }" />
             </div>
         </div>
-        <div class="row mb-2 p-fluid">
-            <div class="col-3">
+        <div class="row align-items-center">
+            <div class="col-3 col-md-3 fw-bold">
                 <label for="Adjuntar" class="fw-bold">Adjuntar</label>
             </div>
-            <div class="col-9 flex-auto">
-                <i class="bi bi-paperclip" style="color: #73b7ad; font-size: 1.5rem"></i>
+            <div class="col-2 col-ms-1 col-md-1">
+                <label class="file-upload-icon">
+                    <i class="bi bi-paperclip" style="font-size: 24px;" (click)="openFileDialog($event)"></i>
+                </label>
+                <input id="archivo" type="file" (change)="onFileChange($event)" #fileInput style="display: none;" accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg" />
+            </div>
+            <div class="col-7 col-md-8">
+                <label class="fw-bold" style="word-break: break-all;">{{ fileName }}</label>
+            </div>
+        </div>
+        <div class="row mb-2 ">
+            <div class="col-8 col-md-8 offset-4">
+                <small class="text-danger" *ngIf="fileError" >{{ fileError }}</small>
             </div>
         </div>
         <div class="row mb-3 p-fluid">

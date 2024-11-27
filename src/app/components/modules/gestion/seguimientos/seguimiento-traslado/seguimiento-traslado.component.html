@@ -40,14 +40,14 @@
                     </div>
                     <div class="col-6 col-md-2 button-group d-inline-flex align-items-center d-flex justify-content-end">
                         <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoRequirioCambiodeCiudad }" style="width: 70px;" (click)="nna.tratamientoRequirioCambiodeCiudad = true">SÍ</button>
-                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': !nna.tratamientoRequirioCambiodeCiudad }" style="width: 70px;" (click)="nna.tratamientoRequirioCambiodeCiudad = false">NO</button>
+                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.tratamientoRequirioCambiodeCiudad == false }" style="width: 70px;" (click)="nna.tratamientoRequirioCambiodeCiudad = false">NO</button>
                     </div>
                     <div class="col-12">
                         <hr>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-6 pe-5">
+                    <div class="col-12 col-md-6 pe-5" *ngIf="nna.tratamientoRequirioCambiodeCiudad == true || nna.tratamientoRequirioCambiodeCiudad == false">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold mb-3">Residencia de procedencia</label>
@@ -273,12 +273,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row align-items-center mb-2" *ngIf="nna.tratamientoRequirioCambiodeCiudad">
+                <div class="row align-items-center mb-2" *ngIf="nna.tratamientoRequirioCambiodeCiudad == true">
                     <div class="col-12">
                         <hr>
                     </div>
                 </div>
-                <div class="row" *ngIf="nna.tratamientoRequirioCambiodeCiudad">
+                <div class="row" *ngIf="nna.tratamientoRequirioCambiodeCiudad == true">
                     <div class="col-6 pe-5">
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-8">
@@ -291,7 +291,7 @@
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-8">
-                                <label for="estado" class="fw-bold">¿La EAPN le ha suministrado servicios sociales de apoyo (alojamiento, alimentación y desplazamiento) para el traslado?</label>
+                                <label for="estado" class="fw-bold">¿La EAPB le ha suministrado servicios sociales de apoyo (alojamiento, alimentación y desplazamiento) para el traslado?</label>
                             </div>
                             <div class="col-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
                                 <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.trasladoEAPBSuministroApoyo }" style="width: 70px;" (click)="nna.trasladoEAPBSuministroApoyo = true">SÍ</button>
@@ -333,12 +333,12 @@
                                 <input id="nombreFundacion" type="text" pInputText [(ngModel)]="nna.trasladosNombreFundacion" [disabled]="!nna.trasladosHaSolicitadoApoyoFundacion" placeholder="Escriba aquí">
                             </div>
                         </div>
-                        <div class="row mb-2" *ngIf="traslado.haSolicitadoApoyoFundacion">
+                        <div class="row mb-2" *ngIf="nna.trasladosHaSolicitadoApoyoFundacion">
                             <div class="col-4">
                                 <label for="apoyoRecibidoFundacion" class="fw-bold">Apoyo recibido por la fundacion</label>
                             </div>
                             <div class="col-8 p-fluid">
-                                <textarea id="apoyoRecibidoFundacion" pInputText rows="2" [(ngModel)]="nna.trasladosApoyoRecibidoxFundacion" [disabled]="!nna.trasladosApoyoRecibidoxFundacion" placeholder="Escriba aquí"></textarea>
+                                <textarea id="apoyoRecibidoFundacion" pInputText rows="2" [(ngModel)]="nna.trasladosApoyoRecibidoxFundacion" [disabled]="!nna.trasladosHaSolicitadoApoyoFundacion" placeholder="Escriba aquí"></textarea>
                             </div>
                         </div>
                     </div>

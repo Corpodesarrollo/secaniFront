@@ -70,10 +70,10 @@ export class SeguimientoAdherenciaComponent implements OnInit {
       { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
     ];
 
-    this.unidadesTiempo =  await this.tp.getTP('UnidadesTiempo');
+    this.unidadesTiempo =  await this.tp.getTP('UnidadMedidaEdad');
     this.isLoadingUnidadesTiempo = false;
 
-    this.causasInasistencia =  await this.tp.getTP('CausasInasistencia');
+    this.causasInasistencia =  await this.tpp.getCausaInasistencia();
     this.isLoadingCausasInasistencia = false;
   }
 

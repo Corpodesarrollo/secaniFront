@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { Parametricas } from '../../../models/parametricas.model';
 import { Notificacion } from '../../../models/notificacion.model';
@@ -15,29 +15,41 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { EditorModule } from 'primeng/editor';
 import { ButtonModule } from 'primeng/button';
 import { TablasParametricas } from '../../../core/services/tablasParametricas';
+import { TpParametros } from '../../../core/services/tpParametros';
+import { Plantilla } from '../../../models/plantilla.model';
 
 @Component({
   selector: 'app-notificacion',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule, 
+  imports: [CommonModule, BreadcrumbModule, CardModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule,
             InputTextModule, ChipsModule, ToastModule, NotificacionComponent, CheckboxModule, EditorModule, ButtonModule],
   templateUrl: './notificacion.component.html',
   styleUrl: './notificacion.component.css',
   providers: [MessageService]
 })
 export class NotificacionComponent {
+
   @Input() id!: number;
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
   isLoading: boolean = false;
   submitted: boolean = false;
   isLoadingEntidades: boolean = true;
+  isLoadingPLantillas: boolean = true;
   showDialog: boolean = false;
+
+  selectedFile: File | null = null;
+  fileError: string | null = null;
+  fileName: string | null = null;
 
   mensajeCarga: string = 'Cargando datos...';
   colorMensaje: string = 'text-primary';
 
   entidades: Parametricas[] = [];
   selectedEntidad: Parametricas | undefined;
+
+  plantillas: Plantilla[] = [];
+  selectedPlantilla: Plantilla | undefined;
 
   notificacion: Notificacion = {
     id: 0,
@@ -53,11 +65,14 @@ export class NotificacionComponent {
     firma: "",
   };
 
-  constructor(private messageService: MessageService, private tp: TablasParametricas) {}
+  constructor(private messageService: MessageService, private tp: TablasParametricas, private tpp: TpParametros) {}
 
   async ngOnInit(): Promise<void> {
     this.entidades =  await this.tp.getTP('EntidadTerritorial');
     this.isLoadingEntidades = false;
+
+    this.plantillas = await this.tpp.getPlantillas();
+    this.isLoadingPLantillas = false;
   }
 
   openModal() {
@@ -81,4 +96,49 @@ export class NotificacionComponent {
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     return emailPattern.test(email);
   }
+
+  cargarPlantilla(event: any) {
+    this.notificacion.mensaje = this.selectedPlantilla?.mensaje ?? '';
+    this.notificacion.asunto = this.selectedPlantilla?.asunto ?? '';
+    this.notificacion.firma = this.selectedPlantilla?.firmante ?? '';
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    this.fileError = null;
+    this.fileName = null;
+
+    if (file) {
+      const fileType = file.type;
+      const fileSize = file.size;
+
+      // Validar tipos permitidos
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg'];
+
+      if (!allowedTypes.includes(fileType)) {
+        this.fileError = 'Tipo de archivo no permitido. Solo PDF, Word, Excel y JPG están permitidos.';
+        return;
+      }
+
+      // Validar tamaño máximo de archivo (5MB)
+      const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+      if (fileSize > maxSizeInBytes) {
+        this.fileError = 'El archivo excede el tamaño máximo permitido de 5MB.';
+        return;
+      }
+
+      // Si todo es válido, guardar el archivo seleccionado
+      this.selectedFile = file;
+      this.fileName = file.name;
+      // this.contactForm.patchValue({
+      //   archivo: file
+      // });
+    }
+  }
+
+  openFileDialog(event: Event) {
+    this.fileInput.nativeElement.click();
+    event.stopPropagation();  // Evita que el evento se propague dos veces
+  }
 }
+
