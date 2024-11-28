@@ -21,11 +21,9 @@ import { Reporte } from '../../../../models/reporte.model';
   styleUrl: './reporte-dinamico-nna.component.css'
 })
 export class ReporteDinamicoNnaComponent {
+
   public reportes: Reporte[] = [];
-  public columnas!: string[];
-
   public camposForm!: FormGroup;
-
   public campos: { header: string, field: string }[] = [
     { header: 'Fecha notificación', field: 'fechaNotificacionSIVIGILA' },
     { header: 'Origen del reporte', field: 'origenReporte' },
@@ -77,6 +75,12 @@ export class ReporteDinamicoNnaComponent {
 
   get camposSeleccionados() {
     return this.camposForm.value.camposSeleccionados;
+  }
+
+  get columnasFiltroGlobal() {
+    const fields = this.campos.map(campo => campo.field);
+    return [ 'primerNombre', 'segundoNombre', 'primerApellido', 'segundoApellido', 'diagnostico',
+      'edad', 'sexo', 'tipoIdentificacion', 'numeroIdentificacion', ...fields ];
   }
 
   async onSubmit() {
