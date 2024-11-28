@@ -106,8 +106,12 @@ export class ReporteDinamicoNnaComponent {
     if (this.camposForm.invalid) return;
     const { fechaInicio, fechaFin } = this.camposForm.value;
 
+    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
+    const fechaFinalString = fechaFin.toISOString().split('T')[0];
+
+
     this.reportes = await this.reportesService
-      .getReporteDinamicoNNA(fechaInicio.toISOString(), fechaFin.toISOString());
+      .getReporteDinamicoNNA(fechaInicialString, fechaFinalString);
   }
 
   exportExcel() {
