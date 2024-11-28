@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 
 import { ReportesService } from '../../../../services/reportes.service';
 import { Reporte } from '../../../../models/reporte.model';
+import { ExcelExportService } from '../../../../services/excel-export.service';
 
 @Component({
   selector: 'app-reporte-dinamico-nna',
@@ -24,7 +25,20 @@ export class ReporteDinamicoNnaComponent {
 
   public reportes: Reporte[] = [];
   public camposForm!: FormGroup;
-  public campos: { header: string, field: string }[] = [
+
+  public columnasObligatorios: { header: string, field: string }[] = [
+    { header: 'Primer nombre', field: 'primerNombre' },
+    { header: 'Segundo nombre', field: 'segundoNombre' },
+    { header: 'Primer apellido', field: 'primerApellido' },
+    { header: 'Segundo apellido', field: 'segundoApellido' },
+    { header: 'Diagnóstico ', field: 'diagnostico' },
+    { header: 'Edad ', field: 'edad' },
+    { header: 'Sexo ', field: 'sexo' },
+    { header: 'Tipo de identificación', field: 'tipoIdentificacion' },
+    { header: 'Número de identificación', field: 'numeroIdentificacion' },
+  ];
+
+  public columnasOpcionales: { header: string, field: string }[] = [
     { header: 'Fecha notificación', field: 'fechaNotificacionSIVIGILA' },
     { header: 'Origen del reporte', field: 'origenReporte' },
     { header: 'Fecha de nacimiento', field: 'fechaNacimiento' },
@@ -53,7 +67,11 @@ export class ReporteDinamicoNnaComponent {
     { header: 'Correo electrónico', field: 'cuidadorEmail' }
   ];
 
-  constructor(private formBuilder: FormBuilder, private reportesService: ReportesService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private reportesService: ReportesService,
+    private excelExportService: ExcelExportService
+  ) {
     this.camposForm = this.formBuilder.group({
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
       fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
@@ -73,14 +91,15 @@ export class ReporteDinamicoNnaComponent {
     }
   }
 
-  get camposSeleccionados() {
-    return this.camposForm.value.camposSeleccionados;
+  get columnas() {
+    const columnasSeleccionadas = this.camposForm.value.camposSeleccionados;
+    return [ ...this.columnasObligatorios, ...columnasSeleccionadas ];
   }
 
   get columnasFiltroGlobal() {
-    const fields = this.campos.map(campo => campo.field);
-    return [ 'primerNombre', 'segundoNombre', 'primerApellido', 'segundoApellido', 'diagnostico',
-      'edad', 'sexo', 'tipoIdentificacion', 'numeroIdentificacion', ...fields ];
+    const fieldsColumnasOpcionales = this.columnasOpcionales.map(campo => campo.field);
+    const fieldsColumnasObligatorias = this.columnasObligatorios.map(campo => campo.field);
+    return [ ...fieldsColumnasOpcionales, ...fieldsColumnasObligatorias ];
   }
 
   async onSubmit() {
@@ -89,5 +108,11 @@ export class ReporteDinamicoNnaComponent {
 
     this.reportes = await this.reportesService
       .getReporteDinamicoNNA(fechaInicio.toISOString(), fechaFin.toISOString());
+  }
+
+  exportExcel() {
+    this.excelExportService.exportReporteToExcel(
+      this.reportes, this.columnas, 'Reporte dinámico NNA'
+    );
   }
 }
