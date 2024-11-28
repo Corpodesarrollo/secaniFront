@@ -19,7 +19,9 @@
         <div class="row align-items-center mb-3">
           <div class="col-12 mb-4 col-sm-10 mb-sm-0">
             <p-inputGroup>
-              <input class="w-100" type="text" placeholder="Buscar..." pInputText />
+              <input class="w-100" type="text" placeholder="Buscar..." pInputText
+                (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
+              />
               <p-inputGroupAddon>
                   <i class="pi pi-search"></i>
               </p-inputGroupAddon>
@@ -33,12 +35,18 @@
         <div class="row mb-3">
           @for (campo of campos; track campo) {
             <div class="col-md-3">
-              <p-checkbox styleClass="mt-1" name="group" [label]="campo.header" [value]="campo.field" />
+              <p-checkbox
+                styleClass="mt-1"
+                name="columnas"
+                [label]="campo.header"
+                [value]="campo.field"
+                (onChange)="onCheckboxChange($event, campo)"
+              />
             </div>
           }
         </div>
         <div class="d-flex justify-content-end mb-3">
-          <div class="col-12 col-sm-2">
+          <div class="col-12 col-sm-2 d-flex justify-content-end">
             <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
@@ -47,7 +55,7 @@
       <div class="mt-3">
         <p-table
           #tabla
-          [columns]="columnas"
+          [columns]="camposSeleccionados"
           [value]="reportes"
           [tableStyle]="{ 'min-width': '50rem' }"
           [paginator]="true"
@@ -64,6 +72,15 @@
           </ng-template>
           <ng-template pTemplate="header" let-columns>
             <tr>
+              <th>Primer nombre</th>
+              <th>Segundo nombre</th>
+              <th>Primer apellido</th>
+              <th>Segundo apellido</th>
+              <th>Diagnóstico</th>
+              <th>Edad</th>
+              <th>Sexo</th>
+              <th>Tipo de identificación</th>
+              <th>Número de identificación</th>
               @for (col of columns; track col) {
                 <th>
                   {{ col.header }}
@@ -71,13 +88,32 @@
               }
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <ng-template pTemplate="body" let-reporte let-columns="columns">
             <tr>
+              <td>{{ reporte.primerNombre }}</td>
+              <td>{{ reporte.segundoNombre }}</td>
+              <td>{{ reporte.primerApellido }}</td>
+              <td>{{ reporte.segundoApellido }}</td>
+              <td>{{ reporte.diagnostico }}</td>
+              <td>{{ reporte.edad }}</td>
+              <td>{{ reporte.sexo }}</td>
+              <td>{{ reporte.tipoIdentificacion }}</td>
+              <td>{{ reporte.numeroIdentificacion }}</td>
               @for (col of columns; track col) {
-                <td>
-                  {{ rowData[col.field] }}
+                <td *ngIf="col.field === 'fechaNacimiento' || col.field === 'fechaNotificacionSIVIGILA' || col.field === 'fechaIngresoEstrategia'">
+                  {{ reporte[col.field] | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+                <td *ngIf="col.field !== 'fechaNacimiento' && col.field !== 'fechaNotificacionSIVIGILA' && col.field !== 'fechaIngresoEstrategia'">
+                  {{ reporte[col.field] }}
                 </td>
               }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="9 + camposSeleccionados.length" class="text-center">
+                Reportes no encotrados.
+              </td>
             </tr>
           </ng-template>
         </p-table>
