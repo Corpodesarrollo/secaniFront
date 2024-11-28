@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 
 import { ReportesService } from '../../../../services/reportes.service';
+import { Reporte } from '../../../../models/reporte.model';
 
 @Component({
   selector: 'app-reporte-dinamico-nna',
@@ -20,69 +21,68 @@ import { ReportesService } from '../../../../services/reportes.service';
   styleUrl: './reporte-dinamico-nna.component.css'
 })
 export class ReporteDinamicoNnaComponent {
-  public reportes: any[] = [];
-  public columnas!: any[];
+  public reportes: Reporte[] = [];
+  public columnas!: string[];
 
   public camposForm!: FormGroup;
+
   public campos: { header: string, field: string }[] = [
-    { header: 'Fecha notificación', field: 'fechaNotificacion' },
+    { header: 'Fecha notificación', field: 'fechaNotificacionSIVIGILA' },
     { header: 'Origen del reporte', field: 'origenReporte' },
     { header: 'Fecha de nacimiento', field: 'fechaNacimiento' },
-    { header: 'País de nacimiento', field: 'paisNacimiento' },
+    { header: 'País de nacimiento', field: 'pais' },
     { header: 'Tipo de seguimiento', field: 'tipoSeguimiento' },
     { header: 'Etnia', field: 'etnia' },
     { header: 'Departamento de nacimiento', field: 'departamentoNacimiento' },
-    { header: 'Ciudad de nacimiento', field: 'ciudadNacimiento' },
-    { header: 'Grupo poblacional', field: 'grupoPoblacional' },
-    { header: 'Departamento procedencia', field: 'departamentoProcedencia' },
-    { header: 'Municipio procedencia', field: 'municipioProcedencia' },
+    { header: 'Ciudad de nacimiento', field: 'municipioNacimiento' },
+    { header: 'Grupo poblacional', field: 'grupoPoblacion' },
+    { header: 'Departamento procedencia', field: 'residenciaOrigenDepartamento' },
+    { header: 'Municipio procedencia', field: 'residenciaOrigenMunicipio' },
     { header: 'Barrio procedencia', field: 'barrioProcedencia' },
-    { header: 'Área procedencia', field: 'areaProcedencia' },
-    { header: 'Dirección procedencia', field: 'direccionProcedencia' },
-    { header: 'Estrato', field: 'estrato' },
-    { header: 'Teléfono', field: 'telefono' },
+    { header: 'Área procedencia', field: 'residenciaOrigenBarrio' },
+    { header: 'Dirección procedencia', field: 'residenciaOrigenDireccion' },
+    { header: 'Estrato', field: 'residenciaOrigenEstratoId' },
+    { header: 'Teléfono', field: 'residenciaActualTelefono' },
     { header: 'Departamento donde actualmente recibe el tratamiento', field: 'departamentoTratamiento' },
     { header: 'Estado de ingreso a la estrategia', field: 'estadoIngresoEstrategia' },
     { header: 'Fecha de ingreso a la estrategia', field: 'fechaIngresoEstrategia' },
-    { header: 'Régimen de afiliación', field: 'regimenAfiliacion' },
+    { header: 'Régimen de afiliación', field: 'tipoRegimenSS' },
     { header: 'Asegurador', field: 'asegurador' },
-    { header: 'IPS / UPGD', field: 'ipsUpgd' },
-    { header: 'Teléfono de contacto', field: 'telefonoContacto' },
-    { header: 'Contacto', field: 'contacto' },
-    { header: 'Parentesco', field: 'parentesco' },
-    { header: 'Correo electrónico', field: 'correoElectronico' }
+    { header: 'IPS / UPGD', field: 'ips' },
+    { header: 'Teléfono de contacto', field: 'cuidadorTelefono' },
+    { header: 'Contacto', field: 'cuidadorNombres' },
+    { header: 'Parentesco', field: 'cuidadorParentesco' },
+    { header: 'Correo electrónico', field: 'cuidadorEmail' }
   ];
 
   constructor(private formBuilder: FormBuilder, private reportesService: ReportesService) {
     this.camposForm = this.formBuilder.group({
-      buscador: [''], // Campo de búsqueda
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
       fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
       camposSeleccionados: this.formBuilder.array([])
     });
   }
 
-  ngOnInit(): void {
-    this.columnas = [
-      { field: 'primerNombre', header: 'Primer nombre' },
-      { field: 'segundoNombre', header: 'Segundo nombre' },
-      { field: 'primerApellido', header: 'Primer apellido' },
-      { field: 'segundoApellido', header: 'Segundo apellido' },
-      { field: 'diagnostico', header: 'Diagnóstico' },
-      { field: 'edad', header: 'Edad' },
-      { field: 'sexo', header: 'Sexo' },
-      { field: 'tipoIdentificacion', header: 'Tipo de identificación' },
-      { field: 'numeroIdentificacion', header: 'Número de identificación' },
-    ];
+  ngOnInit(): void { }
+
+  onCheckboxChange(e: any, columna: { header: string, field: string }) {
+    const camposSeleccionadosArray = this.camposForm.get('camposSeleccionados') as FormArray;
+    if (e.checked.length != 0) {
+      camposSeleccionadosArray.push(this.formBuilder.control(columna));
+    } else {
+      const index = camposSeleccionadosArray.controls.findIndex(x => x.value === columna);
+      if (index >= 0) camposSeleccionadosArray.removeAt(index);
+    }
   }
 
   get camposSeleccionados() {
-    return this.camposForm.get('camposSeleccionados') as FormArray;
+    return this.camposForm.value.camposSeleccionados;
   }
 
   async onSubmit() {
+    if (this.camposForm.invalid) return;
     const { fechaInicio, fechaFin } = this.camposForm.value;
-    
+
     this.reportes = await this.reportesService
       .getReporteDinamicoNNA(fechaInicio.toISOString(), fechaFin.toISOString());
   }
