@@ -154,7 +154,7 @@
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Estado de ingreso a la estrategia:</div>
-              <div class="col-6">{{getNombreEstadoNNAPorId(datosNNA.estadoIngresoEstrategiaId)}}</div>
+              <div class="col-6">{{getNombreEstadoIngresoPorId(datosNNA.estadoIngresoEstrategiaId)}}</div>
             </div>
             <div class="row mb-3">
               <div class="col-6 fw-bold">Fecha de ingreso a la estrategia:</div>
@@ -246,7 +246,7 @@
         <p-card *ngIf="panelSeleccionado == 2">
           <p-accordion [multiple]="true">
             <p-accordionTab header="DIAGNÓSTICO Y TRATAMIENTO" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="row">
                   <div class="col" style="font-weight: bold;">Razones por las cuales el menor no tiene diagnóstico:<br></div>
                   <div class="col">
@@ -270,7 +270,7 @@
               <p-divider />
 
               <div class="row">
-                <div class="col-6">
+                <div class="col-md-6">
                   <div class="row" style="margin-bottom: 10px;">
                     <div class="col" style="font-weight: bold;">Diagnóstico:<br></div>
                     <div class="col">
@@ -298,7 +298,7 @@
                   </div>
                 </div>
 
-                <div class="col-6">
+                <div class="col-md-6">
                   <div class="row" style="margin-bottom: 10px;">
                     <div class="col" style="font-weight: bold;">Fecha de inicio de tratamiento:<br></div>
                     <div class="col">
@@ -326,7 +326,7 @@
 
               <div class="row">
                 <!-- Recidiva options (Sí / No) -->
-                <div class="col-6">
+                <div class="col-md-6">
                   <div class="row">
                     <div class="col" style="font-weight: bold;">Recaídas:</div>
                     <div class="col d-flex align-items-center justify-content-between">
@@ -350,9 +350,9 @@
 
 
                 <!-- Fecha de recaída -->
-                <div class="col-6">
-                  <div class="row">
-                    <div class="col" style="font-weight: bold;">Fecha de recaída:</div>
+                <div class="col-md-6">
+                  <div class="row" style="font-weight: bold; margin-bottom: 5px;">
+                    <div class="col" style="font-weight: bold">Fecha de recaída:</div>
                     <div class="col">
                       <input type="date" class="form-control" name="fechaUltimaRecaida" [(ngModel)]="fechaRecaidaInput" (change)="setFechaRecaida()">
                     </div>
@@ -367,7 +367,7 @@
               <div class="container">
                 <!-- Primera fila: Requerimiento de traslado -->
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <label for="trasladoTratamiento" class="form-label fw-bold">¿Requirió trasladarse de ciudad para acceder al tratamiento?</label>
                   </div>
                   <div class="col-6 d-flex align-items-center">
@@ -392,22 +392,30 @@
 
                 <!-- Residencia procedencia/ocurrencia y residencia actual -->
                 <div class="row mt-4">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <h5>Residencia procedencia/ocurrencia</h5>
                     <div class="mb-2">
-                      <div class="row">
-                        <div class="col-4">
-                          <label for="departamentoProce" class="form-label fw-bold">Departamento:</label>
-                        </div>
-                        <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaOrigenMunicipioId"
-                            [(ngModel)]="datosNNA.residenciaOrigenMunicipioId"
-                            [options]="departamentos"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
-                        </div>
+
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-4">
+                        <label for="departamentoProce" class="form-label fw-bold">Departamento:</label>
+                      </div>
+
+                      <div class="col-8">
+                        <!--p-dropdown
+                          placeholder="Seleccionar"
+                          [(ngModel)]="datosNNA.residenciaOrigenMunicipioId"
+                          [options]="departamentos"
+                          optionLabel="nombre"
+                          optionValue="id"
+                          [ngClass]="{'full-width': true}"
+                          /-->
+
+                          <select class="form-select" aria-label="Default select example" name="deptoprocedencia" [(ngModel)]="departamentoOrigen" (change)="loadMunisPorDepto()">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let depto of departamentosOrigen" value="{{depto.codigo}}">{{depto.nombre}}</option>
+                          </select>
                       </div>
                     </div>
 
@@ -417,13 +425,17 @@
                           <label for="municipio" class="form-label fw-bold">Municipio:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaOrigenMunicipioId"
+                          <select class="form-select" aria-label="Default select example" name="muniprocedencia" [(ngModel)]="municipioOrigen" (change)="seleccionMunicipioOrigen()">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let muni of municipiosOrigen" value="{{muni.codigo}}">{{muni.nombre}}</option>
+                          </select>
+                          <!--p-dropdown
+                            placeholder="Seleccionar"
                             [(ngModel)]="datosNNA.residenciaOrigenMunicipioId"
                             [options]="municipios"
                             optionLabel="nombre"
                             optionValue="id"
-                            ></p-dropdown>
+                            ></p-dropdown-->
                         </div>
                       </div>
                     </div>
@@ -445,13 +457,10 @@
                           <label for="areaProce" class="form-label fw-bold">Área:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaOrigenAreaId"
-                            [(ngModel)]="datosNNA.residenciaOrigenAreaId"
-                            [options]="areas"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="areapreocedencia" [(ngModel)]="datosNNA.residenciaOrigenAreaId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let area of areas" value="{{area.codigo}}">{{area.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -473,13 +482,10 @@
                           <label for="estratoProce" class="form-label fw-bold">Estrato:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaOrigenEstratoId"
-                            [(ngModel)]="datosNNA.residenciaOrigenEstratoId"
-                            [options]="estratos"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="estratopreocedencia" [(ngModel)]="datosNNA.residenciaOrigenEstratoId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let estrato of estratos" value="{{estrato.codigo}}">{{estrato.codigo}} - {{estrato.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -497,7 +503,7 @@
                   </div>
 
                   <!-- Columna derecha: Residencia actual -->
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <h5>Residencia actual</h5>
                     <div class="mb-2">
                       <div class="row">
@@ -505,13 +511,10 @@
                           <label for="departamentoActual" class="form-label fw-bold">Departamento:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaActualMunicipioId"
-                            [(ngModel)]="datosNNA.residenciaActualMunicipioId"
-                            [options]="departamentos"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="deptoactual" [(ngModel)]="departamentoRecidenciaActual" (change)="loadMunisResiActualPorDepto()">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let depto of departamentosResidenciaActual" value="{{depto.codigo}}">{{depto.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -522,13 +525,10 @@
                           <label for="municipioActual" class="form-label fw-bold">Municipio:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaActualMunicipioId"
-                            [(ngModel)]="datosNNA.residenciaActualMunicipioId"
-                            [options]="departamentos"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="muniactual" [(ngModel)]="municipioRecidenciaActual" (change)="seleccionMunicipioResiActual()">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let muni of municipiosResidenciaActual" value="{{muni.codigo}}">{{muni.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -550,13 +550,10 @@
                           <label for="areaActual" class="form-label fw-bold">Área:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaActualAreaId"
-                            [(ngModel)]="datosNNA.residenciaActualAreaId"
-                            [options]="areas"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="areaActual" [(ngModel)]="datosNNA.residenciaActualAreaId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let area of areas" value="{{area.codigo}}">{{area.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -578,13 +575,10 @@
                           <label for="estratoActual" class="form-label fw-bold">Estrato:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.residenciaActualEstratoId"
-                            [(ngModel)]="datosNNA.residenciaActualEstratoId"
-                            [options]="estratos"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="estratoactual" [(ngModel)]="datosNNA.residenciaActualEstratoId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let estrato of estratos" value="{{estrato.codigo}}">{{estrato.codigo}} - {{estrato.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -605,7 +599,7 @@
                 <p-divider />
 
                 <div class="row mt-4">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <div class="mb-2">
                       <div class="row">
                         <div class="col-9">
@@ -700,22 +694,21 @@
 
                   </div>
 
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <div class="mb-2">
                       <div class="row">
                         <div class="col-4">
                           <label for="sitioResidencia" class="form-label fw-bold">El sitio de residencia actual es:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="datosNNA.trasladosPropietarioResidenciaActualId"
-                            [(ngModel)]="datosNNA.trasladosPropietarioResidenciaActualId"
-                            [options]="tiposVivienda"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            ></p-dropdown>
                           <div class="row">
-                            <input type="text" class="form-control" name="trasladosPropietarioResidenciaActualOtro" placeholder="Otro, ¿cuál?" [(ngModel)]="datosNNA.trasladosPropietarioResidenciaActualOtro">
+                            <select class="form-select" aria-label="Default select example" name="tipocicienda" [(ngModel)]="datosNNA.trasladosPropietarioResidenciaActualId">
+                              <option value="" selected>Seleccionar</option>
+                              <option *ngFor="let tipo of tiposVivienda" value="{{tipo.codigo}}">{{tipo.nombre}}</option>
+                            </select>
+                          </div>
+                          <div class="row">
+                            <input type="text" class="form-control" name="trasladosPropietarioResidenciaActualOtro" placeholder="Otro, ¿cuál?" [(ngModel)]="datosNNA.trasladosPropietarioResidenciaActualOtro" style="margin-top: 3px;">
                           </div>
                         </div>
                       </div>
@@ -753,7 +746,7 @@
               <div class="container">
                 <!-- Primera fila: Dificultades en procesos -->
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <h5>¿Ha presentado dificultades en los siguientes procesos?</h5>
 
                     <div class="form-check">
@@ -866,7 +859,7 @@
                   </div>
 
                   <!-- Segunda fila: Información de traslados -->
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <h5>Información de traslados</h5>
                     <div class="mb-3">
                       <div class="row">
@@ -900,7 +893,7 @@
                         </div>
                         <div class="col-6">
                           <p-dropdown
-                            placeholder="datosNNA.trasladosIPSId"
+                            placeholder="Seleccionar"
                             [(ngModel)]="datosNNA.trasladosIPSId"
                             [options]="ipss"
                             optionLabel="nombre"
@@ -943,7 +936,7 @@
                         </div>
                         <div class="col-6">
                           <p-dropdown
-                            placeholder="datosNNA.trasladosTipoAccionLegalId"
+                            placeholder="Seleccionar"
                             [(ngModel)]="datosNNA.trasladosTipoAccionLegalId"
                             [options]="tiposRecursoLegal"
                             optionLabel="nombre"
@@ -966,7 +959,7 @@
 
               <div class="container">
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <h5>Información relacionada con la adherencia el tratamiento</h5>
                     <div class="mb-3">
                       <div class="row">
@@ -1000,7 +993,7 @@
                         </div>
                         <div class="col-5">
                           <p-dropdown
-                            placeholder="datosNNA.tratamientoUnidadMedidaIdTiempoId"
+                            placeholder="Seleccionar"
                             [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId"
                             [options]="unidadesMedida"
                             optionLabel="nombre"
@@ -1034,7 +1027,7 @@
                   </div>
 
                   <!-- Sección derecha: Información relacionada con la posibilidad de dar continuidad al calendario escolar -->
-                  <div class="col-6">
+                  <div class="col-md-6">
                     <h5>Información relacionada con la posibilidad de dar continuidad al calendario escolar</h5>
                     <div class="mb-3">
                       <div class="row">
@@ -1082,7 +1075,7 @@
                         </div>
                         <div class="col-5">
                           <p-dropdown
-                            placeholder="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId"
+                            placeholder="Seleccionar"
                             [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId"
                             [options]="unidadesMedida"
                             optionLabel="nombre"

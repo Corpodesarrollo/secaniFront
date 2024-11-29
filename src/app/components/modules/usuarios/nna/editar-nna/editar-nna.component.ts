@@ -71,9 +71,9 @@ export class EditarNnaComponent implements OnInit {
   entidadesRecibirTratamiento: any[] = [];
   departamentos: any[] = [];
   municipios: any[] = [];
-  areas: any[] = [];
-  estratos: any[] = [];
-  tiposVivienda: any[] = [];
+
+
+
   tiposMalaAtencionIps: any[] = [];
   categoriasAlerta: any[] = [];
   subcategoriasAlerta: any[] = [];
@@ -85,8 +85,20 @@ export class EditarNnaComponent implements OnInit {
     {"id" : 1, "nombre" : "Masculino"},
     {"id" : 2, "nombre" : "Femenino"}
   ];
+  estadosIngresoEstrategia: any[] = [];
+  departamentosOrigen: any[] = [];
+  municipiosOrigen: any[] = [];
+  departamentosResidenciaActual: any[] = [];
+  municipiosResidenciaActual: any[] = [];
+  areas: any[] = [];
+  estratos: any[] = [];
+  tiposVivienda: any[] = [];
 
   observacion: any = '';
+  departamentoOrigen: any ='';
+  municipioOrigen: any ='';
+  departamentoRecidenciaActual: any ='';
+  municipioRecidenciaActual: any ='';
 
   constructor(
     private route: ActivatedRoute,
@@ -124,6 +136,11 @@ export class EditarNnaComponent implements OnInit {
     this.loadCausasInasistencia();
     this.loadEstadosNNA();
     this.loadTiposOrigen();
+    this.loadEstadoIngresoEstrategia();
+    this.loadAreas();
+    this.loadEstratos();
+    this.loadTiposVivienda();
+
 
   }
 
@@ -177,6 +194,8 @@ export class EditarNnaComponent implements OnInit {
         this.fechaDiagnosticoInput = this.formatDate(this.datosNNA.fechaDiagnostico);
         this.fechaInicioTratamientoInput = this.formatDate(this.datosNNA.fechaInicioTratamiento);
         this.fechaRecaidaInput = this.formatDate(this.datosNNA.fechaUltimaRecaida);
+        this.deptoMuniOrigen(nnaData.residenciaOrigenMunicipioId);
+        this.deptoMuniResiActual(nnaData.residenciaActualMunicipioId);
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
@@ -250,6 +269,8 @@ export class EditarNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`TablaParametrica/Departamento`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listaDepartamentos = data;
+        this.departamentosOrigen = data;
+        this.departamentosResidenciaActual = data;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
@@ -381,6 +402,42 @@ export class EditarNnaComponent implements OnInit {
     });
   }
 
+  loadEstadoIngresoEstrategia(){
+    this.repos.get_withoutParameters(`EstadoIngresoEstrategia`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estadosIngresoEstrategia = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadAreas(){
+    this.repos.get_withoutParameters(`TablaParametrica/ZonaTerritorial`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.areas = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadEstratos(){
+    this.repos.get_withoutParameters(`TablaParametrica/EstratoSocioeconomico`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estratos = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadTiposVivienda(){
+    this.repos.get_withoutParameters(`TablaParametrica/RIBATipoVivienda`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.tiposVivienda = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
   setFechaConsultaDiagnostico() {
     const fechaDate = new Date(this.fechaConsultaDiagnosticoInput);
     this.datosNNA.fechaConsultaDiagnostico = fechaDate;
@@ -415,24 +472,38 @@ export class EditarNnaComponent implements OnInit {
   }
 
   getNombrePaisPorId(id: any): string | undefined {
-    const resultado = this.listadoPais.find(item => item.codigo === id);
+    const limpiarDato = (dato: string | null | undefined): string => {
+      if (!dato) return ''; // Si es null o undefined, retorna una cadena vacía
+      return dato.replace(/'/g, '');
+    };
+    let codPais : string = limpiarDato(id);
+    const resultado = this.listadoPais.find(item => item.codigo === codPais);
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
   }
 
   getNombreDeptoPorId(codigo: any): string | undefined {
-    const extraerDosPrimeros = (codigo: string): string => {
+    const extraerDosPrimeros = (codigo: string | undefined | null): string => {
+      if (!codigo) {
+        return '';
+      }
       return codigo.substring(0, 2);
     };
-    let codDepto: string = extraerDosPrimeros.toString();
+    let codDepto: string = extraerDosPrimeros(codigo);
     const resultado = this.listaDepartamentos.find(item => item.codigo === codDepto);
     return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
   }
 
   getNombreMuniPorId(codigo: any): string | undefined {
-    const completarCodigo = (codigo: string): string => {
+    const completarCodigo = (codigo: string | undefined | null): string => {
+      if (!codigo) {
+        return '';
+      }
       return codigo.padEnd(5, '0');
     };
-    let codigoCompleto: string = completarCodigo.toString();
+    /*const completarCodigo = (codigo: string): string => {
+      return codigo.padEnd(5, '0');
+    };*/
+    let codigoCompleto: string = completarCodigo(codigo);
     const resultado = this.listaMunicipios.find(item => item.codigo === codigoCompleto);
     return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
   }
@@ -460,6 +531,67 @@ export class EditarNnaComponent implements OnInit {
   getNombreOrigenReportePorId(id: any): string | undefined {
     const resultado = this.tiposOrigenReporte.find(item => item.id === id);
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  getNombreEstadoIngresoPorId(id: any): string | undefined {
+    const resultado = this.estadosIngresoEstrategia.find(item => item.id === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  deptoMuniOrigen(codigoMuniOrigenNNa:string){
+    const extraerDosPrimeros = (codigoMuniOrigenNNa: string | undefined | null): string => {
+      if (!codigoMuniOrigenNNa) {
+        return '';
+      }
+      return codigoMuniOrigenNNa.substring(0, 2);
+    };
+    this.departamentoOrigen = extraerDosPrimeros(codigoMuniOrigenNNa);
+    this.municipioOrigen = codigoMuniOrigenNNa;
+
+    if(this.departamentoOrigen!=''){
+      this.loadMunisPorDepto();
+    }
+  }
+
+  deptoMuniResiActual(codigoMuniResiActualNNa:string){
+    const extraerDosPrimeros = (codigoMuniResiActualNNa: string | undefined | null): string => {
+      if (!codigoMuniResiActualNNa) {
+        return '';
+      }
+      return codigoMuniResiActualNNa.substring(0, 2);
+    };
+    this.departamentoRecidenciaActual = extraerDosPrimeros(codigoMuniResiActualNNa);
+    this.municipioRecidenciaActual = codigoMuniResiActualNNa;
+
+    if(this.departamentoOrigen!=''){
+      this.loadMunisPorDepto();
+    }
+  }
+
+  loadMunisPorDepto(){
+    this.repos.get_withoutParameters(`TablaParametrica/Municipios/`+this.departamentoOrigen, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.municipiosOrigen = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  seleccionMunicipioOrigen(){
+    this.datosNNA.residenciaOrigenMunicipioId = this.municipioOrigen;
+  }
+
+  loadMunisResiActualPorDepto(){
+    this.repos.get_withoutParameters(`TablaParametrica/Municipios/`+this.departamentoRecidenciaActual, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.municipiosResidenciaActual = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  seleccionMunicipioResiActual(){
+    this.datosNNA.residenciaActualMunicipioId = this.municipioRecidenciaActual;
   }
 
 
