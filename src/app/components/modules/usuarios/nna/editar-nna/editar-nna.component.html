@@ -251,14 +251,10 @@
                   <div class="col" style="font-weight: bold;">Razones por las cuales el menor no tiene diagnóstico:<br></div>
                   <div class="col">
                     <div class="row" style="margin-bottom: 10px;">
-                      <p-dropdown
-                        placeholder="Seleccionar"
-                        [(ngModel)]="datosNNA.motivoNoDiagnosticoId"
-                        [options]="razonesSinDiagnostico"
-                        optionLabel="nombre"
-                        optionValue="id"
-                        name="idsindiagnostico"
-                        ></p-dropdown>
+                      <select class="form-select" aria-label="Default select example" name="sindiagnostico" [(ngModel)]="datosNNA.motivoNoDiagnosticoId">
+                        <option value="" selected>Seleccionar</option>
+                        <option *ngFor="let razon of razonesSinDiagnostico" value="{{razon.id}}">{{razon.nombre}}</option>
+                      </select>
                     </div>
                     <div class="row">
                       <input type="text" class="form-control" name="sindiagnosticootro" placeholder="Otro, ¿cuál?" [(ngModel)]="datosNNA.motivoNoDiagnosticoOtro">
@@ -274,14 +270,10 @@
                   <div class="row" style="margin-bottom: 10px;">
                     <div class="col" style="font-weight: bold;">Diagnóstico:<br></div>
                     <div class="col">
-                      <p-dropdown
-                        placeholder="Seleccionar"
-                        name="iddiagnostico"
-                        [(ngModel)]="datosNNA.diagnosticoId"
-                        [options]="diagnosticos"
-                        optionLabel="nombre"
-                        optionValue="id"
-                        ></p-dropdown>
+                      <select class="form-select" aria-label="Default select example" name="diagnostico" [(ngModel)]="datosNNA.diagnosticoId">
+                        <option value="" selected>Seleccionar</option>
+                        <option *ngFor="let diag of diagnosticos" value="{{diag.id}}">{{diag.nombre}}</option>
+                      </select>
                     </div>
                   </div>
                   <div class="row" style="margin-bottom: 10px;">
@@ -308,13 +300,10 @@
                   <div class="row">
                     <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
                     <div class="col">
-                      <p-dropdown
-                        placeholder="Seleccionar"
-                        [(ngModel)]="datosNNA.ipsId"
-                        [options]="entidadesRecibirTratamiento"
-                        optionLabel="nombre"
-                        optionValue="id"
-                        ></p-dropdown>
+                      <select class="form-select" aria-label="Default select example" name="ipsTratamiento" [(ngModel)]="datosNNA.ipsId">
+                        <option value="" selected>Seleccionar</option>
+                        <option *ngFor="let entidad of entidadesRecibirTratamiento" value="{{entidad.id}}">{{entidad.nombre}}</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -797,15 +786,10 @@
                     </div>
 
                     <div class="form-group mb-3">
-                      <p-dropdown
-                        placeholder="¿Cuál?"
-                        [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId"
-                        [options]="tiposMalaAtencionIps"
-                        optionLabel="nombre"
-                        optionValue="id"
-                        [disabled]="!datosNNA.difMalaAtencionIPS"
-                        styleClass="w-100"
-                      ></p-dropdown>
+                      <select class="form-select" aria-label="Default select example" name="malaatencionips" [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId">
+                        <option value="" selected>Seleccionar</option>
+                        <option *ngFor="let tipo of tiposMalaAtencionIps" value="{{tipo.id}}">{{tipo.nombre}}</option>
+                      </select>
                     </div>
 
 
@@ -826,14 +810,10 @@
                           <label for="categoriaAlerta" class="form-label fw-bold">Categoría alerta:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.categoriaAlertaId"
-                            [options]="categoriasAlerta"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            styleClass="w-100"
-                          ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="categoriaalerta" [(ngModel)]="datosNNA.categoriaAlertaId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let categ of categoriasAlerta" value="{{categ.id}}">{{categ.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -844,14 +824,10 @@
                           <label for="subcategoriaAlerta" class="form-label fw-bold">Subcategoría alerta:</label>
                         </div>
                         <div class="col-8">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.subcategoriaAlertaId"
-                            [options]="subcategoriasAlerta"
-                            optionLabel="subCategoriaAlerta"
-                            optionValue="id"
-                            styleClass="w-100"
-                          ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="categoriaalerta" [(ngModel)]="datosNNA.subcategoriaAlertaId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let subcateg of subcategoriasAlerta" value="{{subcateg.id}}">{{subcateg.indicador}} - {{subcateg.subCategoriaAlerta}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -892,14 +868,10 @@
                           <label for="ipsTraslados" class="form-label fw-bold">IPS:</label>
                         </div>
                         <div class="col-6">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.trasladosIPSId"
-                            [options]="ipss"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            styleClass="w-100"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="ipstraslado" [(ngModel)]="datosNNA.trasladosIPSId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let ips of ipss" value="{{ips.codigo}}">{{ips.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -935,14 +907,10 @@
                           <label for="tipoRecursoLegal" class="form-label fw-bold">Tipo de recurso:</label>
                         </div>
                         <div class="col-6">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.trasladosTipoAccionLegalId"
-                            [options]="tiposRecursoLegal"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            styleClass="w-100"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="recursolegal" [(ngModel)]="datosNNA.trasladosTipoAccionLegalId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let tipo of tiposRecursoLegal" value="{{tipo.codigo}}">{{tipo.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -992,14 +960,10 @@
                           <label for="unidadMedidaTiempo" class="form-label fw-bold">Unidad de medida del tiempo:</label>
                         </div>
                         <div class="col-5">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId"
-                            [options]="unidadesMedida"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            styleClass="w-100"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="unidadmediasinasistir" [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let unidad of unidadesMedida" value="{{unidad.codigo}}">{{unidad.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -1010,14 +974,10 @@
                           <label for="causasInasistencia" class="form-label fw-bold">Causas de inasistencia:</label>
                         </div>
                         <div class="col-5">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.tratamientoCausasInasistenciaId"
-                            [options]="cuasasInasistencia"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            styleClass="w-100"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="causainasistencia" [(ngModel)]="datosNNA.tratamientoCausasInasistenciaId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let causa of cuasasInasistencia" value="{{causa.id}}">{{causa.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -1074,14 +1034,10 @@
                           <label for="unidadMedidaTiempoColegio" class="form-label fw-bold">Unidad de medida del tiempo:</label>
                         </div>
                         <div class="col-5">
-                          <p-dropdown
-                            placeholder="Seleccionar"
-                            [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId"
-                            [options]="unidadesMedida"
-                            optionLabel="nombre"
-                            optionValue="id"
-                            styleClass="w-100"
-                            ></p-dropdown>
+                          <select class="form-select" aria-label="Default select example" name="unidadmediasinasistir2" [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId">
+                            <option value="" selected>Seleccionar</option>
+                            <option *ngFor="let unidad of unidadesMedida" value="{{unidad.codigo}}">{{unidad.nombre}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>

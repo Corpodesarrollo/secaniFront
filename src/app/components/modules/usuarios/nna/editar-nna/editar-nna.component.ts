@@ -140,6 +140,7 @@ export class EditarNnaComponent implements OnInit {
     this.loadAreas();
     this.loadEstratos();
     this.loadTiposVivienda();
+    this.loadUnidadesMedida();
 
 
   }
@@ -251,11 +252,6 @@ export class EditarNnaComponent implements OnInit {
     });
   }
 
-  getPlaceholderidsindiagnostico(id:any){
-    const selectedOption = this.razonesSinDiagnostico.find(option => option.id === id);
-    return selectedOption ? selectedOption.nombre : 'Seleccionar';
-  }
-
   loadPaisesNacimiento(){
     this.repos.get_withoutParameters(`TablaParametrica/Pais`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
@@ -316,6 +312,7 @@ export class EditarNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`TablaParametrica/CodigoEAPByNit`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.eapbs = data;
+        this.ipss = data;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
@@ -349,7 +346,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadTiposMalaAtencionIps(){
-    this.repos.get_withoutParameters(`ApiTablasParametricas/malaatencionips`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`MalaAtencionIPS`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.tiposMalaAtencionIps = data;
       },
@@ -376,7 +373,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadCausasInasistencia(){
-    this.repos.get_withoutParameters(`ApiTablasParametricas/causainasistencia`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`CausaInasistencia`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.cuasasInasistencia = data;
       },
@@ -433,6 +430,15 @@ export class EditarNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`TablaParametrica/RIBATipoVivienda`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.tiposVivienda = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadUnidadesMedida(){
+    this.repos.get_withoutParameters(`TablaParametrica/UnidadMedida`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.unidadesMedida = data;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
