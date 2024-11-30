@@ -12,8 +12,10 @@ import { SeguimientoFallecidoComponent } from './seguimientos/seguimiento-fallec
 import { DetalleSeguimientosComponent } from './detalle-seguimientos/detalle-seguimientos.component';
 import { SeguimientoGestionarComponent } from './seguimientos/seguimiento-gestionar/seguimiento-gestionar.component';
 import { ConsultarAlertasComponent } from './consultar-alertas/consultar-alertas.component';
+import { CargueMasivoComponent } from './cargue-masivo/cargue-masivo.component';
 
 const routes: Routes = [
+  { path: 'cargue_masivo', component: CargueMasivoComponent},
   { path: 'seguimientos', component: ConsultarSeguimientosComponent },
   { path: 'seguimientos/datos-seguimiento/:idNNA/:idContacto', component: SeguimientoDatosComponent },
   { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent },
