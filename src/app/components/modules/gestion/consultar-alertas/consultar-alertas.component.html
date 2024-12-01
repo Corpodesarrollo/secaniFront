@@ -260,7 +260,13 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [maximizable]="true">
 
-    <app-oficio-notificacion [alerta]="alertaSeleccionada" [NNAdatos]="datosNNA"  [nombreNNA]="datosBasicosNNA.nombreCompleto" [edadNNA]="tiempoTranscurrido" [diagnosticoNNA]="datosBasicosNNA.diagnostico"></app-oficio-notificacion>
+    <app-oficio-notificacion
+      [alerta]="alertaSeleccionada"
+      [NNAdatos]="datosNNA"
+      [nombreNNA]="datosBasicosNNA.nombreCompleto"
+      [edadNNA]="tiempoTranscurrido"
+      [diagnosticoNNA]="datosBasicosNNA.diagnostico">
+    </app-oficio-notificacion>
 
   </p-dialog>
 

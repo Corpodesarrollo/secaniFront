@@ -21,13 +21,14 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { GenericService } from '../../../../../services/generic.services';
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
+import { DialogCrearContactoComponent } from '../../nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component';
 
 @Component({
   selector: 'app-editar-nna',
   templateUrl: './editar-nna.component.html',
   styleUrls: ['./editar-nna.component.css'],
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, AccordionModule, SelectButtonModule, DropdownModule, CalendarModule, FormsModule, ToastModule, ButtonModule, RippleModule],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, AccordionModule, SelectButtonModule, DropdownModule, CalendarModule, FormsModule, ToastModule, ButtonModule, RippleModule, DialogCrearContactoComponent],
   providers: [MessageService]
 })
 export class EditarNnaComponent implements OnInit {
@@ -835,4 +836,32 @@ export class EditarNnaComponent implements OnInit {
     });
 
   }
+
+
+
+  visibleCrearContacto: boolean = false;
+  visibleEditarContacto: boolean = false;
+  headerContacto: any = '';
+  contactoId: any = '';
+
+  showDialogCrearContacto() {
+    this.headerContacto = "Crear contacto"
+    this.visibleCrearContacto = true;
+  }
+
+  showDialogEditarContacto(id: any) {
+    this.headerContacto = "Editar contacto"
+    this.visibleCrearContacto = true;
+    this.contactoId = id;
+  }
+
+  manejarContactoCreado(contacto: any) {
+    console.log('Contacto creado:', contacto);
+  }
+
+  manejarCierreModal() {
+    console.log('El modal ha sido cerrado');
+    this.visibleCrearContacto = false; // Cerrar el modal
+  }
+
 }
