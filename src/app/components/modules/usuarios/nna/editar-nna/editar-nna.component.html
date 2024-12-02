@@ -57,6 +57,11 @@
               </div>
             </div>
           </div>
+          <div class="col-auto">
+            <span [ngClass]="['bg-info', 'fixed-width-badge', 'text-wrap', 'fs-6', 'p-3']" class="badge text-white me-2">
+              {{getNombreEstadoNNAPorId(datosNNA.estadoId)}}
+            </span>
+          </div>
         </div>
         <br>
 
@@ -245,6 +250,17 @@
 
         <!--form-->
           <p-card *ngIf="panelSeleccionado == 2">
+            <div class="col-md-6">
+              <div class="row mb-3 align-items-center">
+                <div class="col-6 text-center fw-bold">Estado: </div>
+                <div class="col-6">
+                  <select class="form-select" aria-label="Default select example" name="estadonna" [(ngModel)]="datosNNA.estadoId">
+                    <option value="" selected>Seleccionar</option>
+                    <option *ngFor="let est of estadosNNA" value="{{est.id}}">{{est.nombre}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <p-accordion [multiple]="true">
               <p-accordionTab header="DIAGNÓSTICO Y TRATAMIENTO" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
                 <div class="col-md-6">
