@@ -1,6 +1,8 @@
 <p-toast  [life]="10000" />
 
-<p-dialog header="Crear contacto" [(visible)]="show" [modal]="true"  [style]="{ width: '700px' }" [draggable]="false" [resizable]="false" (onHide)="close()">
+
+<p-dialog header="Crear contacto" [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false"
+    [resizable]="false" (onHide)="close()">
     <div class="row text-left">
         <div class="col-sm-12">
             <div class="row align-items-center">
@@ -22,14 +24,8 @@
                     <label for="parentesco" class="fw-bold">Parentesco</label>
                 </div>
                 <div class="col-9 flex-auto">
-                    <p-dropdown
-                        [(ngModel)]="selectedParentesco"
-                        [options]="parentescos"
-                        [loading]="isLoadingParentesco"
-                        optionLabel="nombre"
-                        [filter]="true"
-                        filterBy="nombre"
-                        [showClear]="true"
+                    <p-dropdown [(ngModel)]="selectedParentesco" [options]="parentescos" [loading]="isLoadingParentesco"
+                        optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true"
                         placeholder="Seleccione el parentesco" />
                 </div>
                 <div class="col-9 offset-3">
@@ -44,8 +40,12 @@
                     <label>¿Cuidador?</label>
                 </div>
                 <div class="col-9 button-group p-fluid">
-                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.cuidador}" style="width: 150px;" (click)="contacto.cuidador = true">SÍ</button>
-                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.cuidador  == false}" style="width: 150px;" (click)="contacto.cuidador = false">NO</button>
+                    <button class="btn col-auto rounded-2 text-center me-2 py-1"
+                        [ngClass]="{'active': contacto.cuidador}" style="width: 150px;"
+                        (click)="contacto.cuidador = true">SÍ</button>
+                    <button class="btn col-auto rounded-2 text-center me-2 py-1"
+                        [ngClass]="{'active': contacto.cuidador  == false}" style="width: 150px;"
+                        (click)="contacto.cuidador = false">NO</button>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
                     <label>Teléfonos</label>
                 </div>
                 <div class="col-9  p-fluid">
-                    <p-chips [(ngModel)]="this.telefonos" separator="," (onAdd)="validarPhone($event)"/>
+                    <p-chips [(ngModel)]="this.telefonos" separator="," (onAdd)="validarPhone($event)" />
                 </div>
                 <div class="col-9 offset-3">
                     <div *ngIf="submitted && !this.telefonos.length" class="text-danger">
@@ -74,7 +74,7 @@
                     <input type="email" pInputText [(ngModel)]="contacto.email" />
                 </div>
                 <div class="col-9 offset-3">
-                    <div  *ngIf="submitted && !contacto.email" class="text-danger">
+                    <div *ngIf="submitted && !contacto.email" class="text-danger">
                         Correo electrónico es requerido
                     </div>
                 </div>
@@ -90,15 +90,20 @@
                     <label>Estado</label>
                 </div>
                 <div class="col-9 button-group">
-                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.estado}" style="width: 150px;" (click)="contacto.estado = true">ACTIVO</button>
-                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.estado == false}" style="width: 150px;" (click)="contacto.estado = false">INACTIVO</button>
+                    <button class="btn col-auto rounded-2 text-center me-2 py-1" [ngClass]="{'active': contacto.estado}"
+                        style="width: 150px;" (click)="contacto.estado = true">ACTIVO</button>
+                    <button class="btn col-auto rounded-2 text-center me-2 py-1"
+                        [ngClass]="{'active': contacto.estado == false}" style="width: 150px;"
+                        (click)="contacto.estado = false">INACTIVO</button>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg fondo-color-cancelar me-2" type="button" style="width: 200px;"  (click)="close()">Cancelar</button>
-                    <button class="btn text-white rounded-4 btn-lg fondo-color-principal" type="button" style="width: 200px;" (click)="guardar()">Guardar</button>
+                    <button class="btn text-white rounded-4 btn-lg fondo-color-cancelar me-2" type="button"
+                        style="width: 200px;" (click)="close()">Cancelar</button>
+                    <button class="btn text-white rounded-4 btn-lg fondo-color-principal" type="button"
+                        style="width: 200px;" (click)="guardar()">Guardar</button>
                 </div>
             </div>
         </div>

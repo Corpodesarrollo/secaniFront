@@ -1,3 +1,4 @@
+
 .user-icon {
   font-size: 24px;
   color: #708090;
@@ -53,7 +54,7 @@
 }
 
 .toggle-btn.active {
-  background-color: #5cbaba; /* Color de fondo para el estado seleccionado */
+  background-color: #73b7ad; /* Color de fondo para el estado seleccionado */
   color: white; /* Color de texto para el estado seleccionado */
 }
 
@@ -90,7 +91,7 @@
   height: 3rem; /* Alto del botón */
   border: none; /* Sin borde */
   border-radius: 50%; /* Hace el botón redondo */
-  background-color: #6da192; /* Color de fondo */
+  background-color: #73b7ad; /* Color de fondo */
   color: #ffffff; /* Color del ícono */
   font-size: 1.5rem; /* Tamaño del ícono */
   display: flex; /* Centrar el ícono dentro del botón */
@@ -114,7 +115,7 @@
 
 /* Botón */
 .boton-derecha {
-  background-color: #6da192; /* Color de fondo del botón */
+  background-color: #73b7ad; /* Color de fondo del botón */
   color: #ffffff; /* Color del texto */
   border: none; /* Sin borde */
   border-radius: 0.5rem; /* Bordes redondeados */
@@ -130,5 +131,18 @@
 /* Efecto hover para el botón */
 .boton-derecha:hover {
   background-color: #5b8f79; /* Color más oscuro al pasar el cursor */
+}
+
+select.form-select {
+  border-radius: 8px; /* Ajusta el valor según lo que necesites */
+  padding: 10px; /* Aumenta el espacio interno para un aspecto más limpio */
+  font-size: 14px; /* Ajusta el tamaño del texto */
+}
+
+.form-select option {
+  border-radius: 8px; /* Aplica esquinas redondeadas a las opciones */
+  background-color: #ffffff; /* Fondo blanco */
+  color: #495057; /* Texto oscuro */
+  padding: 8px; /* Espaciado interno */
 }
 

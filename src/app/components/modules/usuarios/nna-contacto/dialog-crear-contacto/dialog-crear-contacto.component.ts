@@ -56,7 +56,7 @@ export class DialogCrearContactoComponent {
   submitted: boolean = false;
 
   constructor(private service: GenericService, private gs: GenericService, private tpp: TpParametros, private messageService: MessageService,private cdr: ChangeDetectorRef) {
-  
+
   }
 
   async ngOnInit() {
