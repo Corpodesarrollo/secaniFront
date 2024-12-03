@@ -35,8 +35,8 @@ export class ListaParametricaItemsComponent implements OnInit {
       nombre: ['', Validators.required],
       codigo: [{ value: null, disabled: true }],
       descripcion: [{ value: null, disabled: true }],
-      identificador: ['', Validators.required],
-      ordenLista: [{ value: null, disabled: true }],
+      indicador: ['', Validators.required],
+      orden: [{ value: null, disabled: true }],
       itemListaPadre: [{ value: null, disabled: true }]
     });
   }
