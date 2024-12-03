@@ -1117,23 +1117,6 @@
 
 
 
-  <p-dialog
-    header="{{headerContacto}}"
-    [modal]="true"
-    [(visible)]="visibleCrearContacto"
-    [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    [maximizable]="true"
-    >
+    <app-dialog-crear-contacto [show]="visibleCrearContacto" [contactoId]="contactoId" [nnaId]="datosNNA.id" (closeModal)="manejarCierreModal()"></app-dialog-crear-contacto>
 
-      <app-dialog-crear-contacto
-        [nnaId]="datosNNA.id"
-        [contactoId]="contactoId"
-        [show]="true"
-
-        (closeModal)="manejarCierreModal()"
-        (dataToParent)="manejarContactoCreado($event)">
-      </app-dialog-crear-contacto>
-
-    </p-dialog>
 </body>
