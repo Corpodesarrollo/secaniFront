@@ -20,6 +20,7 @@ const routes: Routes = [
       { path: ':id', component: ListaParametricaComponent },
       { path: ':id/historico', component: ListaParametricaHistoricoComponent },
       { path: ':id/items', component: ListaParametricaItemsComponent },
+      { path: '**', redirectTo: '' }
     ]
   },
   {
@@ -29,8 +30,10 @@ const routes: Routes = [
       { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
       { path: 'nueva', component: NuevaPlantillaCorreoComponent },
       { path: ':id/editar', component: NuevaPlantillaCorreoComponent },
+      { path: '**', redirectTo: '' }
     ]
-  }
+  },
+  { path: '**', redirectTo: 'permisos' }
 ];
 
 @NgModule({
