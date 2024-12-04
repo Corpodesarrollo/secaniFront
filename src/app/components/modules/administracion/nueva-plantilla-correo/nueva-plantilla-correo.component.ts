@@ -9,8 +9,6 @@ import { EditorModule } from 'primeng/editor';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
-
 @Component({
   selector: 'app-nueva-plantilla-correo',
   standalone: true,
@@ -25,9 +23,8 @@ export class NuevaPlantillaCorreoComponent {
 
   public plantillaCorreoForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private plantillasCorreoService: PlantillasCorreoService) {
+  constructor(private formBuilder: FormBuilder) {
     this.plantillaCorreoForm = this.formBuilder.group({
-      id: [0],
       nombre: ['', [Validators.required,  Validators.maxLength(100)]],
       tipoPlantilla: ['', Validators.required],
       firmante: ['', Validators.required],
@@ -59,12 +56,10 @@ export class NuevaPlantillaCorreoComponent {
     return null;
   }
 
-  async onSubmit() {
+  onSubmit(): void {
     if(this.plantillaCorreoForm.invalid)
       return this.plantillaCorreoForm.markAllAsTouched();;
-
-    const data = this.plantillaCorreoForm.value;
-    const response = await this.plantillasCorreoService.crearEditarPlantillaCorreo(data);
+    console.log(this.plantillaCorreoForm.value);
     this.plantillaCorreoForm.reset();
   }
 }
