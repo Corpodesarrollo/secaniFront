@@ -86,6 +86,7 @@
                 <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary"
                   [routerLink]="['/administracion/plantillas-correo', plantillaCorreo.id, 'historico']"
                 />
+                <p-button (onClick)="confirm($event)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>
               </div>
             </th>
           </tr>
