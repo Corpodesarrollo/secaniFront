@@ -38,9 +38,9 @@
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               <div class="text-center justify-content-between">
-                Reporte de deúración SIVIGILA - 22052024
+                Reporte de deúración SIVIGILA
               </div>
-              <p-button severity="success" icon="pi pi-file-excel" />
+              <p-button (onClick)="exportExcel()" severity="success" icon="pi pi-file-excel" />
             </div>
         </ng-template>
           <ng-template pTemplate="header">
