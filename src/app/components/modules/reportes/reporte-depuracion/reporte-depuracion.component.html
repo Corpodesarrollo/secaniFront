@@ -3,34 +3,38 @@
 
   <div class="card">
     <div class="card-body">
-      <div class="row align-items-center mb-3">
-        <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
-        <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-          <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
+      <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
+        <div class="row align-items-center mb-3">
+          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
+          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+            <p-calendar formControlName="fechaInicio" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
+          </div>
+
+          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
+          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+            <p-calendar formControlName="fechaFin" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
+          </div>
         </div>
 
-        <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
-        <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-          <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
+        <div class="row align-items-center">
+          <div class="col-12 mb-4 col-sm-10 mb-sm-0">
+            <p-inputGroup>
+              <input class="w-100" type="text" placeholder="Buscar..." pInputText
+                (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
+              />
+              <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
+          <div class="col-6 mb-3 col-sm-2 mb-sm-0">
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100"/>
+          </div>
         </div>
-      </div>
-
-      <div class="row align-items-center">
-        <div class="col-12 mb-4 col-sm-10 mb-sm-0">
-          <p-inputGroup>
-            <input class="w-100" type="text" placeholder="Buscar..." pInputText />
-            <p-inputGroupAddon>
-                <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-          </p-inputGroup>
-        </div>
-        <div class="col-6 mb-3 col-sm-2 mb-sm-0">
-          <p-button severity="success" label="Generar" styleClass="w-100"/>
-        </div>
-      </div>
+      </form>
 
       <div class="mt-3">
-        <p-table [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table #tabla [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               <div class="text-center justify-content-between">

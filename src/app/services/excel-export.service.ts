@@ -30,7 +30,10 @@ export class ExcelExportService {
     XLSX.writeFile(wb, finalFileName);
   }
 
-  exportReporteToExcel(reportes: Reporte[], columnas: { header: string, field: string }[], fileName: string = 'reporte') {
+  exportReporteToExcel(reportes: Reporte[], columnas?: { header: string, field: string }[], fileName: string = 'reporte') {
+    if (!reportes|| reportes.length === 0) return;
+    if (!columnas || columnas.length === 0) return this.exportToExcel({ data: reportes, sheetName: 'Reporte' }, fileName);
+
     const datosExportar = reportes.map(reporte => {
       return columnas.reduce((acc, key) => {
         if (key.field in reporte) {
