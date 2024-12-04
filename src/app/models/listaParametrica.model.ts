@@ -3,5 +3,6 @@ export interface ListaParametrica {
   nombre: string,
   descripcion: string,
   tablaPadre: null,
+  nombreTablaPadre: string,
   fuenteTabla: number
 }
