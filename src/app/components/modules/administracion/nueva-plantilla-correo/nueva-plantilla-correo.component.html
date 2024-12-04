@@ -49,7 +49,38 @@
         <div class="row mb-3">
           <div class="col-12 col-md-2 mb-1 mb-md-0 fw-semibold">Mensaje:</div>
           <div class="col-12 col-md-10">
-            <p-editor [style]="{ height: '200px' }" formControlName="mensaje" />
+            <p-editor [style]="{ height: '200px' }" formControlName="mensaje">
+              <ng-template pTemplate="header">
+                <span class="ql-formats">
+                  <select class="ql-header">
+                      <option value="1">Título 1</option>
+                      <option value="2">Título 2</option>
+                      <option selected>Normal</option>
+                  </select>
+                  <select class="ql-font">
+                      <option selected>Sans Serif</option>
+                      <option value="serif">Serif</option>
+                      <option value="monospace">Monospace</option>
+                  </select>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-bold" aria-label="Negrita"></button>
+                  <button type="button" class="ql-italic" aria-label="Cursiva"></button>
+                  <button type="button" class="ql-underline" aria-label="Subrayado"></button>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-list" value="ordered" aria-label="Lista ordenada"></button>
+                  <button type="button" class="ql-list" value="bullet" aria-label="Lista con viñetas"></button>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-align" value="" aria-label="Alinear"></button>
+                  <button type="button" class="ql-link" aria-label="Insertar enlace"></button>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-clean" aria-label="Quitar estilos"></button>
+                </span>
+              </ng-template>
+            </p-editor>
             <small *ngIf="isValidField('mensaje')" class="text-danger mt-1">{{ getFieldError('mensaje') }}</small>
           </div>
         </div>
@@ -57,7 +88,38 @@
         <div class="row mb-3">
           <div class="col-12 col-md-2 mb-1 mb-md-0 fw-semibold">Cierre:</div>
           <div class="col-12 col-md-10">
-            <p-editor [style]="{ height: '140px' }" formControlName="cierre"/>
+            <p-editor [style]="{ height: '140px' }" formControlName="cierre">
+              <ng-template pTemplate="header">
+                <span class="ql-formats">
+                  <select class="ql-header">
+                    <option value="1">Título 1</option>
+                    <option value="2">Título 2</option>
+                    <option selected>Normal</option>
+                  </select>
+                  <select class="ql-font">
+                    <option selected>Sans Serif</option>
+                    <option value="serif">Serif</option>
+                    <option value="monospace">Monospace</option>
+                  </select>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-bold" aria-label="Negrita"></button>
+                  <button type="button" class="ql-italic" aria-label="Cursiva"></button>
+                  <button type="button" class="ql-underline" aria-label="Subrayado"></button>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-list" value="ordered" aria-label="Lista ordenada"></button>
+                  <button type="button" class="ql-list" value="bullet" aria-label="Lista con viñetas"></button>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-align" value="" aria-label="Alinear"></button>
+                  <button type="button" class="ql-link" aria-label="Insertar enlace"></button>
+                </span>
+                <span class="ql-formats">
+                  <button type="button" class="ql-clean" aria-label="Quitar estilos"></button>
+                </span>
+              </ng-template>
+            </p-editor>
             <small *ngIf="isValidField('cierre')" class="text-danger mt-1">{{ getFieldError('cierre') }}</small>
           </div>
         </div>
