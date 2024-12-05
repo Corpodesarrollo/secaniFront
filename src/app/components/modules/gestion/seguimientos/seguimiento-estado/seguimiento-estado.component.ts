@@ -54,7 +54,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
 
   submitted2: boolean = false;
   estado:string = 'Registrado';
-  stepsCount: number = 5;
+  stepsCount: number = 6;
   items: MenuItem[] = [];
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];

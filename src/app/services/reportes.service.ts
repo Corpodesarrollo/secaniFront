@@ -9,12 +9,12 @@ export class ReportesService {
   constructor(private generico: Generico) { }
 
   getReporteEstadoDepuracion(fechaInicial: string, fechaFinal: string) {
-    const url: string = `ReportesSeguimiento/EstadoDepuracion?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const url: string = `Reportes/EstadoDepuracion?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
 
   getReporteDinamicoNNA(fechaInicial: string, fechaFinal: string) {
-    const url: string = `ReportesSeguimiento/ReporteDinamicoNNA?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const url: string = `Reportes/ReporteDinamicoNNA?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
 }

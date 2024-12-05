@@ -1,5 +1,5 @@
 export interface Plantilla {
-    id: string;
+    id: number;
     fechaCreacion: Date;
     nombre: string;
     asunto: string;

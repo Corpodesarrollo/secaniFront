@@ -102,6 +102,10 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   }
 
   Siguiente() {
+    //1.- Guardar datos nna
+    //2.- validar si hay alertas
+    //3.- si no hay alertas
+    
     // this.router.navigate(['/gestion/seguimiento/dificultades-seguimiento']).then(() => {
     //   window.scrollTo(0, 0);
     // });
