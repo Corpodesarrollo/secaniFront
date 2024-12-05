@@ -22,13 +22,14 @@ import { GenericService } from '../../../../../services/generic.services';
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { DialogCrearContactoComponent } from '../../nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component';
+import { NnaContactoListaComponent } from "../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 
 @Component({
   selector: 'app-editar-nna',
   templateUrl: './editar-nna.component.html',
   styleUrls: ['./editar-nna.component.css'],
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, AccordionModule, SelectButtonModule, DropdownModule, CalendarModule, FormsModule, ToastModule, ButtonModule, RippleModule, DialogCrearContactoComponent],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, AccordionModule, SelectButtonModule, DropdownModule, CalendarModule, FormsModule, ToastModule, ButtonModule, RippleModule, DialogCrearContactoComponent, NnaContactoListaComponent],
   providers: [MessageService]
 })
 export class EditarNnaComponent implements OnInit {
