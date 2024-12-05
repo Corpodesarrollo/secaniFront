@@ -175,74 +175,8 @@
                 <div class="col fw-bold">Identificación del cuidador o representante legal</div>
               </div>
               <br>
-              <!--div class="row">
-                <div class="col-4">
-                  <label for="barrioProce" class="form-label fw-bold">Nombre:</label>
-                </div>
-                <div class="col-8">
-                  <input type="text" class="form-control" id="nombreCuidador" [(ngModel)]="datosNNA.cuidadorNombres">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <label for="barrioProce" class="form-label fw-bold">Parentesco:</label>
-                </div>
-                <div class="col-8">
-                  <p-dropdown
-                    placeholder="Seleccionar"
-                    [(ngModel)]="datosNNA.cuidadorParentescoId"
-                    [options]="parentescos"
-                    optionLabel="nombre"
-                    optionValue="codigo"
-                    name="parentescos"
-                    styleClass="w-100"
-                    ></p-dropdown>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <label for="barrioProce" class="form-label fw-bold">Teléfono:</label>
-                </div>
-                <div class="col-8">
-                  <input type="text" class="form-control" id="nombreCuidador" [(ngModel)]="datosNNA.cuidadorTelefono">
-                </div>
-              </div>
-              <div class="row">
-                <div class="contenedor">
-                  <button class="boton-derecha" (click)="showDialogCrearContacto()">
-                    <i class="pi pi-plus"></i> Agregar contacto
-                  </button>
-                </div>
-              </div-->
               <div class="row mt-4">
                 <app-nna-contacto-lista [contactoId]="contactoId" [nnaId]="datosNNA.id"></app-nna-contacto-lista>
-                <!--div class="col">
-                  <p-table [value]="contactosNna" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
-                    <ng-template pTemplate="header">
-                      <tr>
-                        <th>Contacto</th>
-                        <th>Parentesco</th>
-                        <th>Correo electrónico</th>
-                        <th>Télefono de contacto</th>
-                        <th>Acción</th>
-                      </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-contacto>
-                      <tr>
-                        <td>{{ contacto.nombres }}</td>
-                        <td>{{ contacto.parentescoId }}</td>
-                        <td class="correo-column">{{ contacto.email }}</td>
-                        <td>{{ contacto.telefonos }}</td>
-                        <td>
-                          <button class="boton-redondo" (click)="showDialogEditarContacto(contacto.id)">
-                            <i class="pi pi-pencil"></i>
-                          </button>
-
-                        </td>
-                      </tr>
-                    </ng-template>
-                  </p-table>
-                </div-->
               </div>
             </div>
           </div>
