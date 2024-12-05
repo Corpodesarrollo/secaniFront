@@ -206,16 +206,17 @@
                 <div class="col-8">
                   <input type="text" class="form-control" id="nombreCuidador" [(ngModel)]="datosNNA.cuidadorTelefono">
                 </div>
-              </div-->
+              </div>
               <div class="row">
                 <div class="contenedor">
                   <button class="boton-derecha" (click)="showDialogCrearContacto()">
                     <i class="pi pi-plus"></i> Agregar contacto
                   </button>
                 </div>
-              </div>
+              </div-->
               <div class="row mt-4">
-                <div class="col">
+                <app-nna-contacto-lista [contactoId]="contactoId" [nnaId]="datosNNA.id"></app-nna-contacto-lista>
+                <!--div class="col">
                   <p-table [value]="contactosNna" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
                       <tr>
@@ -241,7 +242,7 @@
                       </tr>
                     </ng-template>
                   </p-table>
-                </div>
+                </div-->
               </div>
             </div>
           </div>
@@ -1114,9 +1115,5 @@
 
 
   </div>
-
-
-
-    <app-dialog-crear-contacto [show]="visibleCrearContacto" [contactoId]="contactoId" [nnaId]="datosNNA.id" (closeModal)="manejarCierreModal()"></app-dialog-crear-contacto>
 
 </body>
