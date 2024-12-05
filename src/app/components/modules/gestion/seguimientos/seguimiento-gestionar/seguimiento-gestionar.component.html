@@ -23,7 +23,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <app-seguimiento-steps [stepsCount]="3" [activeIndex]="2" />
+            <app-seguimiento-steps [stepsCount]="6" [activeIndex]="5" />
         </div>
     </div>
     <div class="row bm-2">
@@ -40,6 +40,7 @@
                                     [(ngModel)]="selectedEstado"
                                     [options]="estados"
                                     [loading]="isLoadingEstados"
+                                    [disabled]="true"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"

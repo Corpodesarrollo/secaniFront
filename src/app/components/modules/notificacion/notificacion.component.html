@@ -17,7 +17,7 @@
                     filterBy="nombre"
                     [showClear]="true"
                     placeholder="Seleccione" />
-                <div *ngIf="submitted && (!notificacion.idEntidad || notificacion.idEntidad === 0)" class="text-danger">
+                <div *ngIf="submitted && (!notificacion.idEntidad || notificacion.idEntidad === '')" class="text-danger">
                     Campo requerido
                 </div>
             </div>
@@ -117,10 +117,23 @@
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;">ENVIAR</button>
+                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="enviar()" >ENVIAR</button>
             </div>
         </div>
     </div>
 </p-dialog>
 
-<p-toast  [life]="10000" />
+<p-dialog 
+  [(visible)]="mostrarDialogo" (onHide)="limpiar()"
+  modal="true" 
+  dismissableMask="true" 
+  [style]="{ width: '30vw' }" 
+  [closable]="true"
+  [contentStyle]="{ 'text-align': 'center' }">
+  
+  <div>
+    <i class="pi pi-check-circle" style="font-size: 4rem; color: #4CAF50;"></i>
+    <h3>Notificación enviada con éxito</h3>
+  </div>
+</p-dialog>
+
