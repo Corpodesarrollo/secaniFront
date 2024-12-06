@@ -30,7 +30,10 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <button class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;" 
+                        <button *ngIf="listadoContacto.id == 0" class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;"
+                        (click)="eliminarContacto(listadoContacto)"><i class="bi bi-trash-fill"></i></button>
+
+                        <button *ngIf="listadoContacto.id > 0" class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;" 
                         (click)="editarContacto(listadoContacto.id)"><i class="bi bi-pen-fill"></i></button>
                     </td>
                 </tr>
@@ -46,4 +49,4 @@
     </div>
 </div>
 
-<app-dialog-crear-contacto [show]="displayModalContacto" [contactoId]="contactoId" [nnaId]="nnaId" (closeModal)="closeModal()"></app-dialog-crear-contacto>
+<app-dialog-crear-contacto [show]="displayModalContacto" [contactoId]="contactoId" [nnaId]="nnaId" (closeModal)="closeModal()" (dataToParent)="obtenerContacto($event)"></app-dialog-crear-contacto>

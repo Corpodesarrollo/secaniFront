@@ -11,3 +11,4 @@ export interface Seguimiento {
     fechaUltimaActuacion: Date;
     alertas: EstadoAlerta[];
 }
+

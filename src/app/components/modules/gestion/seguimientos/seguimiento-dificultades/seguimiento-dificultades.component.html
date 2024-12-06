@@ -23,7 +23,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="3" />
+            <app-seguimiento-steps [stepsCount]="6" [activeIndex]="3" />
         </div>
     </div>
     <div class="row">
@@ -162,7 +162,7 @@
                                 </div>
                             </div>
                         </div>
-                        <app-seguimiento-alertas />
+                        <app-seguimiento-alertas (alertasChange)="cargarAlertas($event)" />
                     </div>
                     <div class="col-12 col-md-6  pe-5">
                         <div class="row mb-3">

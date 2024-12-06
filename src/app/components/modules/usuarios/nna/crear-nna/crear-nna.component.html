@@ -433,7 +433,7 @@
           </div>
         </div>
         <div class="col-sm-6">
-          <app-nna-contacto-lista [nnaId]="nnaId" />
+          <app-nna-contacto-lista [nnaId]="0" (lista)="obtenerLista($event)" />
         </div>
       </div>
     </form>

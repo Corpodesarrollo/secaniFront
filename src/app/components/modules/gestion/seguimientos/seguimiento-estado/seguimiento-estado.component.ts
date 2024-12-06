@@ -76,6 +76,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
   estadoSinTratamiento: boolean = false;
   estadoSinDiagnostico: boolean = false;
 
+  idContacto: string | undefined;
+
   diagnostico: InfoDiagnostico = {
     id: 0,
     idSeguimiento: 0,
@@ -96,6 +98,9 @@ export class SeguimientoEstadoComponent  implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
 
     this.validarSeguimiento(Number(this.id));
@@ -140,7 +145,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.isLoadingDiagnostico = false;
 
     this.razonesSinDiagnostico = await this.tpp.getRazonesSinDiagnostico();
-    this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.codigo == this.nna.motivoNoDiagnosticoId);
+    console.log(this.razonesSinDiagnostico);
+    this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.id == this.nna.motivoNoDiagnosticoId);
     this.isLoadingRazonesSinDiagnostico = false;
 
     //this.IPS = await this.tp.getTP('IPSCodHabilitacion');
@@ -266,7 +272,9 @@ export class SeguimientoEstadoComponent  implements OnInit {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoEnTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`]).then(() => {
+        this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`], {
+          state: { idContacto: this.idContacto }
+        }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoSinTratamiento) {

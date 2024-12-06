@@ -53,7 +53,7 @@ export class NNA {
     tipoDiagnosticoId!: string;
     diagnosticoId!: number;
     fechaDiagnostico!: Date;
-    motivoNoDiagnosticoId!: string;
+    motivoNoDiagnosticoId!: number;
     motivoNoDiagnosticoOtro!: string;
     fechaConsultaDiagnostico!: Date;
     departamentoTratamientoId!: string;

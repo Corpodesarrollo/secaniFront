@@ -1,0 +1,6 @@
+::ng-deep .p-dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px; /* Ajusta el ancho según sea necesario */
+}

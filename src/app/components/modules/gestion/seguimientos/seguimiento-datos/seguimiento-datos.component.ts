@@ -45,11 +45,13 @@ export class SeguimientoDatosComponent implements OnInit {
     nnaId: 0,
     nombres: '',
     parentescoId: 0,
+    parentesco: '',
     cuidador: false,
     telefonos: '',
     email: '',
     estado: false
   };
+  
   idContacto: string | undefined;
   fechaMaxima: Date;
   estadoIngreso: string = '';
@@ -248,7 +250,9 @@ export class SeguimientoDatosComponent implements OnInit {
     this.submitted2 = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
-      this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`]).then(() => {
+      this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
+        state: { idContacto: this.idContacto }
+      }).then(() => {
         window.scrollTo(0, 0);
       });
     }

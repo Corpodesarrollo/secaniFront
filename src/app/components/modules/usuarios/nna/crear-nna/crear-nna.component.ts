@@ -5,6 +5,7 @@ import { AngleUpIcon } from 'primeng/icons/angleup';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { environment } from '../../../../../../environments/environment';
 import { Generico } from '../../../../../core/services/generico';
+import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 
 @Component({
   selector: 'app-crear-nna',
@@ -57,6 +58,8 @@ export class CrearNnaComponent {
 
   sexoId: any;
   rolIdGeneral = sessionStorage.getItem('roleId');
+
+  listaContactos:ContactoNNA[] = [];
 
   constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, private axios: Generico) {
 
@@ -118,7 +121,11 @@ export class CrearNnaComponent {
     if (this.rolIdGeneral == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
       this.coordinadorId = this.userId;
     }
+  }
 
+  obtenerLista(lista:ContactoNNA[]) {
+    this.listaContactos = lista; // Guardar la lista emitida por el hijo
+    console.log('Lista de alertas recibidas:', this.listaContactos);
   }
 
   applySexo(sexo: string) {

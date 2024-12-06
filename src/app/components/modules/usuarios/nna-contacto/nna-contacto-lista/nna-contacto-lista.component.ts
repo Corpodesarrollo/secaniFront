@@ -12,12 +12,12 @@ import { ButtonModule } from 'primeng/button';
   standalone: true,
   imports: [TableModule, CommonModule, ButtonModule, DialogCrearContactoComponent],
   templateUrl: './nna-contacto-lista.component.html',
-  styleUrl: './nna-contacto-lista.component.css'
+  styleUrls: ['./nna-contacto-lista.component.css']
 })
 export class NnaContactoListaComponent {
   @Input() nnaId: number = 0;
   @Input() contactoId: number = 0;
-  @Output() dataToParent: any = new EventEmitter<any>(); // Emitir datos al padre
+  @Output() lista = new EventEmitter<any>();
   
   displayModalContacto: boolean = false;
 
@@ -25,6 +25,17 @@ export class NnaContactoListaComponent {
   first = 0;
   rows = 10;
   listadoContacto: ContactoNNA[] = [];
+  contacto: ContactoNNA = {
+    id: 0,
+    nnaId: 0,
+    nombres: '',
+    parentescoId: 0,
+    parentesco: '',
+    cuidador: false,
+    telefonos: '',
+    email: '',
+    estado: false
+  };
 
   constructor(private gs: GenericService) {
   }
@@ -33,6 +44,17 @@ export class NnaContactoListaComponent {
     if (changes['nnaId'] && changes['nnaId'].currentValue) {
       this.recargarLista();
     }
+
+    if (changes['listadoContacto'] && changes['listadoContacto'].currentValue) {
+      this.enviarLista();
+    }
+  }
+
+  obtenerContacto(data: ContactoNNA){
+    console.log("editarContacto",data);
+    this.listadoContacto.push(data);
+    this.enviarLista();
+    
   }
 
   pageChange(event: any) {
@@ -40,9 +62,15 @@ export class NnaContactoListaComponent {
     this.rows = event.rows;
   }
 
+  eliminarContacto(contacto: ContactoNNA) {
+    this.listadoContacto = this.listadoContacto.filter(x => x !== contacto);
+  }
+
   editarContacto(id: number) {
     this.displayModalContacto = true;
-    this.contactoId = id;
+    if(this.nnaId > 0){
+      this.contactoId = id;
+    } 
   }
 
   onModalHide(){
@@ -50,7 +78,10 @@ export class NnaContactoListaComponent {
 
   closeModal() {
     this.displayModalContacto = false; // Cierra el modal
-    this.recargarLista();
+    if(this.nnaId > 0){
+      console.log("nnaId",this.nnaId);
+      this.recargarLista();
+    }
   }
 
   recargarLista(){
@@ -59,6 +90,10 @@ export class NnaContactoListaComponent {
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
+  }
+
+  enviarLista(){
+    this.lista.emit(this.listadoContacto);
   }
 
   nuevoContacto(){
