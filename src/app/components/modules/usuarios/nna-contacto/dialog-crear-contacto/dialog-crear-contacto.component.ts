@@ -110,6 +110,7 @@ export class DialogCrearContactoComponent {
 
   async guardarContacto(){
     this.contacto.parentesco = this.selectedParentesco?.nombre ?? '';
+    this.contacto.parentescoId = this.selectedParentesco?.id ?? 0;
     this.contacto.telefonos = this.telefonos.join(',');
 
     if(this.contacto.nnaId == 0){

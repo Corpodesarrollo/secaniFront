@@ -107,7 +107,7 @@
 </p-dialog>
 
 <p-dialog 
-  [(visible)]="mostrarMensaje" (onHide)="limpiar()"
+  [(visible)]="mostrarMensaje" (onHide)="terminar()"
   modal="true" 
   dismissableMask="true" 
   [style]="{ width: '30vw' }" 
@@ -115,7 +115,8 @@
   [contentStyle]="{ 'text-align': 'center' }">
   
   <div>
-    <i class="pi pi-check-circle" style="font-size: 4rem; color: #4CAF50;"></i>
+    <i class="pi pi-check-circle mb-3" style="font-size: 4rem; color: #4CAF50;"></i>
     <h3>Seguimiento gestionado con éxito</h3>
+    <button class="btn text-white rounded-4 btn-lg mt-3" type="button" style="background-color: #73B7AD; color: white; width: 200px" (click)="terminar()">Aceptar</button>
   </div>
 </p-dialog>

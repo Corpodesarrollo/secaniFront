@@ -1,445 +1,309 @@
-<div class="row container-fluid d-flex">
-  <div class="col-12">
+<body class="formato-fondo fuente-letra pe-4">
+  <div class="row mb-3 align-items-center">
+    <div class="col-12 d-flex justify-content-between">
+      <p-breadcrumb class="" [model]="items">
+        <ng-template pTemplate="item" let-item>
+          <ng-container *ngIf="item.route; else elseBlock">
+            <a [routerLink]="item.route" class="p-menuitem-link">
+              <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+              <span class="text-primary font-semibold">{{ item.label }}</span>
+            </a>
+          </ng-container>
+          <ng-template #elseBlock>
+            <a [href]="item.url">
+              <span class="text-color">{{ item.label }}</span>
+            </a>
+          </ng-template>
+        </ng-template>
+      </p-breadcrumb>
+      <div>
+        <app-boton-notificacion />
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
+          <div class="col-md-4">
+            <label for="tipoDocumento" class="fw-bold">Tipo de ID*</label>
+          </div>
+          <div class="col-8 flex-auto">
+            <p-dropdown [(ngModel)]="selectedTipoID" [options]="tipoID" [loading]="isLoadingTipoID" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" name="tipoID" [disabled]="!nnaFormCrearSinActivar"
+              placeholder="Seleccione el tipo de documento" />
+            <div *ngIf="submitted2 && (!nna.tipoIdentificacionId || nna.tipoIdentificacionId.trim() === '')"
+              class="text-danger">
+              Campo requerido
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center mb-2">
+          <div class="col-md-4">
+            <label for="numeroDocumento" class="fw-bold">Número de ID*</label>
+          </div>
+          <div class="col-8 p-fluid">
+            <input id="numeroDocumento" type="text" pInputText [(ngModel)]="nna.numeroIdentificacion"
+              [readOnly]="!nnaFormCrearSinActivar">
+            <div *ngIf="submitted2 && (!nna.numeroIdentificacion || nna.numeroIdentificacion.trim() === '')"
+              class="text-danger">
+              Campo requerido
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-12 text-end">
+            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar">VALIDAR
+              EXISTENCIA</button>
+            <button class="btn botonSecundario" (click)="cancelarExistencia()"
+              *ngIf="!nnaFormCrearSinActivar">CANCELAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
-      <div class="col-6 menu">
-        <a href="/usuarios/historico_nna" (click)="btn_historial_nna()">Histórico NNA</a> > Crear NNA
+      <div class="col-md-6">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Primer nombre*
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <input type="text" pInputText [(ngModel)]="nna.primerNombre" [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.primerNombre || nna.primerNombre.trim() === '')">
+              Primer nombre es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Segundo nombre
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <input type="text" pInputText [(ngModel)]="nna.segundoNombre" [readonly]="nnaFormCrearSinActivar" />
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Primer apellido*
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <input type="text" pInputText [(ngModel)]="nna.primerApellido" [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.primerApellido || nna.primerApellido.trim() === '')">
+              Primer apellido es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Segundo apellido
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <input type="text" pInputText [(ngModel)]="nna.segundoApellido" [readonly]="nnaFormCrearSinActivar" />
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Fecha de nacimiento*
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <p-calendar [iconDisplay]="'input'" [(ngModel)]="nna.fechaNacimiento" [showIcon]="true"
+              inputId="icondisplay" [maxDate]="maxDate" (onSelect)="CalcularEdad()" [disabled]="nnaFormCrearSinActivar"
+              readonlyInput="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.fechaNacimiento)">
+              Fecha de nacimiento es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Edad
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <input type="text" pInputText [readonly]="true" [value]="nna.edad" />
+          </div>
+        </div>
+        <div class="row align-items-center mb-3">
+          <div class="col-md-4">
+            <label for="sexo" class="fw-bold">Sexo*</label>
+          </div>
+          <div class="col-8 button-group">
+            <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '2'}"
+              style="width: 150px;" (click)="applySexo('2')" [disabled]="nnaFormCrearSinActivar">Femenino</button>
+            <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '1'}"
+              style="width: 150px;" (click)="applySexo('1')" [disabled]="nnaFormCrearSinActivar">Masculino</button>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              País de nacimiento*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedPaisNacimiento" [options]="paisNacimiento" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
+              [disabled]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.paisId || nna.paisId.trim() === '')">
+              País de nacimiento es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center" *ngIf="selectedPaisNacimiento?.codigo == '170'">
+          <div class="col-md-4">
+            <label>
+              Departamento de nacimiento*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedDepartamento" [options]="departamentos" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione" (onChange)="ciudad($event)"
+              [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger"
+                *ngIf="submitted && (!nna.municipioNacimientoId || nna.municipioNacimientoId.trim() === '')">
+                Ciudad de nacimiento es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center" *ngIf="selectedPaisNacimiento?.codigo == '170'">
+          <div class="col-md-4">
+            <label>
+              Ciudad de nacimiento*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedMunicipio" [options]="municipios" optionLabel="nombre" [filter]="true"
+              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+              <div class="text-danger"
+                *ngIf="submitted && (!nna.municipioNacimientoId || nna.municipioNacimientoId.trim() === '')">
+                Ciudad de nacimiento es requerido.
+              </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Etnia
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedEtnia" [options]="etnias" optionLabel="nombre" [filter]="true"
+              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Grupo poblacional
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedGrupoPoblacional" [options]="gruposPoblacionales" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
+              [readonly]="nnaFormCrearSinActivar" />
+          </div>
+        </div>
       </div>
-      <div class="col-6 text-end">
-        <app-boton-notificacion></app-boton-notificacion>
+      <div class="col-md-6">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Régimen de afiliación*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedRegimenAfiliacion" [options]="regimenAfiliacion" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
+              [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.tipoRegimenSSId || nna.tipoRegimenSSId.trim() === '')">
+              Régimen de afiliación es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              EAPB*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedEAPB" [options]="EAPB" optionLabel="nombre" [filter]="true"
+              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.eapbId || nna.eapbId.trim() === '')">
+              EAPB es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Estado de ingreso a la estrategia*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedEstadoIngresoEstrategia" [options]="estadosIngresoEstrategia" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
+              [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger"
+              *ngIf="submitted && (!nna.tipoRegimenSSId || nna.tipoRegimenSSId === '')">
+              Estado de ingreso a la estrategia es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Fecha de ingreso a la estrategia*
+            </label>
+          </div>
+          <div class="col-8 p-fluid">
+            <p-calendar [iconDisplay]="'input'" [(ngModel)]="nna.fechaIngresoEstrategia" [showIcon]="true"
+              inputId="icondisplay" [readonlyInput]="true"  [disabled]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.fechaIngresoEstrategia)">
+              Fecha de ingreso a la estrategia es requerido.
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label>
+              Origen del reporte*
+            </label>
+          </div>
+          <div class="col-md-8 p-fluid">
+            <p-dropdown [(ngModel)]="selectedOrigenReporte" [options]="origenReporte" optionLabel="nombre"
+              [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
+              [readonly]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && (!nna.origenReporteId || nna.origenReporteId === 0)">
+              Origen del reporte es requerido.
+            </div>
+          </div>
+        </div>
+        
+        <div class="row align-items-center">
+          <div class="col-md-12">
+            <app-nna-contacto-lista [nnaId]="0" (lista)="obtenerLista($event)" [disable]="nnaFormCrearSinActivar" />
+            <div class="text-danger" *ngIf="submitted && listaContactos.length == 0">
+              Se requiere al menos un contacto.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-2 contenido">
-    <div class="fondo-color-principal text-color-blanco rondear text-center">Información <br /> NNA
-    </div>
-  </div>
-  <div class="card">
-    <form [formGroup]="formNNA">
-      <div class="row container-fluid">
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Tipo de ID*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-select" formControlName="tipoId">
-                <option selected value="">Seleccione</option>
-                <option *ngFor="let tipoId of listadoTipoIdentificacion" [value]="tipoId.codigo">
-                  {{ tipoId.nombre }}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-12" *ngIf="formNNA.get('tipoId')?.invalid && formNNA.get('tipoId')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('tipoId')?.value)">Tipo ID es
-                requerido.</small>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Número de ID*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" formControlName="numeroId" />
-            </div>
-            <div class="col-sm-12" *ngIf="formNNA.get('numeroId')?.invalid && formNNA.get('numeroId')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('numeroId')?.value)">Número de ID es
-                requerido.</small>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12 text-end">
-              <app-dialog-validar-existencia [tipoId]="formNNA.get('tipoId')?.value"
-                [numeroId]="formNNA.get('numeroId')?.value"
-                (dataToParentValidarExistencia)="handleDataValidarExistencia($event)"></app-dialog-validar-existencia>
-              <div class="col-sm-12"
-                *ngIf="formNNA.get('validaExistencia')?.invalid && formNNA.get('validaExistencia')?.touched">
-                <small class="errors" *ngIf="isEmpty(formNNA.get('validaExistencia')?.value)">Validar
-                  Existencia
-                  es requerido.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-
-        </div>
-      </div>
-      <div class="row container-fluid">
-        <div class="col-sm-12">
-          <label>Identificación del menor de edad</label>
-        </div>
-        <div class="col-sm-6">
-          <label>Afiliación al SGSSS</label> (Información contrastada con ADRES)
-        </div>
-      </div>
-
-      <div class="row container-fluid">
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Primer nombre*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" formControlName="primerNombre"
-                [readonly]="nnaFormCrearSinActivar" />
-            </div>
-            <div class="col-sm-12" *ngIf="formNNA.get('primerNombre')?.invalid && formNNA.get('primerNombre')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('primerNombre')?.value)">Primer nombre es
-                requerido.</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Régimen de afiliación*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-select" formControlName="regimenAfiliacion">
-                <option value="">Seleccione</option>
-                <option *ngFor="let regimen of listadoRegimenAfiliacion" [value]="regimen.codigo"
-                  [disabled]="nnaFormCrearSinActivar">
-                  {{ regimen.nombre }}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('regimenAfiliacion')?.invalid && formNNA.get('regimenAfiliacion')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('regimenAfiliacion')?.value)">Régimen de
-                afiliación
-                es requerido.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Segundo nombre:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" formControlName="segundoNombre"
-                [readonly]="nnaFormCrearSinActivar" />
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                EAPB*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-select" formControlName="eapb">
-                <option value="">Seleccione</option>
-                <option *ngFor="let eapb of listadoEAPB" [value]="eapb.codigo" [disabled]="nnaFormCrearSinActivar">
-                  {{ eapb.nombre }}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-12" *ngIf="formNNA.get('eapb')?.invalid && formNNA.get('eapb')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('eapb')?.value)">EAPB es requerido.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Primer apellido*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" formControlName="primerApellido"
-                [readonly]="nnaFormCrearSinActivar" />
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('primerApellido')?.invalid && formNNA.get('primerApellido')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('primerApellido')?.value)">Primer apellido
-                es
-                requerido.</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="row">
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Segundo apellido:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" formControlName="segundoApellido"
-                [readonly]="nnaFormCrearSinActivar" />
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('segundoApellido')?.invalid && formNNA.get('segundoApellido')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('segundoApellido')?.value)">Segundo
-                apellido es
-                requerido.</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Estado de ingreso a la estrategia*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-select" formControlName="estadoIngresoEstrategia">
-                <option value="">Seleccione</option>
-                <option *ngFor="let estado of listadoEstadoIngresoEstrategia" [value]="estado.id"
-                  [disabled]="nnaFormCrearSinActivar">
-                  {{ estado.nombre }}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('estadoIngresoEstrategia')?.invalid && formNNA.get('estadoIngresoEstrategia')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('estadoIngresoEstrategia')?.value)">Estado
-                de
-                ingreso a la estrategia es requerido.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Fecha de nacimiento*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <p-calendar [iconDisplay]="'input'" [disabled]="nnaFormCrearSinActivar" formControlName="fechaNacimiento"
-                [showIcon]="true" inputId="icondisplay" [maxDate]="maxDate" (onSelect)="generarCalculoEdad()" [readonlyInput]="true" />
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('fechaNacimiento')?.invalid && formNNA.get('fechaNacimiento')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('fechaNacimiento')?.value)">Fecha de
-                nacimiento es
-                requerido.</small>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Edad:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" [readonly]="true" [value]="edad" />
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Fecha de ingreso a la estrategia*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <p-calendar [iconDisplay]="'input'" [disabled]="nnaFormCrearSinActivar"
-                formControlName="fechaIngresoEstrategia" [showIcon]="true" inputId="icondisplay" [readonlyInput]="true"/>
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('fechaIngresoEstrategia')?.invalid && formNNA.get('fechaIngresoEstrategia')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('fechaIngresoEstrategia')?.value)">Fecha de
-                ingreso
-                a la estrategia es requerido.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Sexo*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <div class="row">
-                <div class="col-12 button-group">
-                  <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '2'}"
-                    style="width: 150px;" (click)="applySexo('2')" [disabled]="nnaFormCrearSinActivar">Femenino</button>
-                  <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '1'}"
-                    style="width: 150px;" (click)="applySexo('1')" [disabled]="nnaFormCrearSinActivar">Masculino</button>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12" *ngIf="isEmpty(sexoId)">
-              <small class="errors" *ngIf="isEmpty(sexoId)">Sexo es requerido.</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label>
-                Origen del reporte*:
-              </label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-select" formControlName="originReporte">
-                <option value="">Seleccione</option>
-                <option *ngFor="let origen of listadoOrigenReporte" [value]="origen.id"
-                  [disabled]="nnaFormCrearSinActivar">
-                  {{ origen.nombre }}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-12"
-              *ngIf="formNNA.get('originReporte')?.invalid && formNNA.get('originReporte')?.touched">
-              <small class="errors" *ngIf="isEmpty(formNNA.get('originReporte')?.value)">Origen del
-                reporte es
-                requerido.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-sm-3">
-                <label>
-                  País de nacimiento*:
-                </label>
-              </div>
-              <div class="col-sm-9">
-                <select class="form-select" formControlName="paisNacimiento" [(ngModel)]="paiscolombia"
-                  (change)="departamento($event)">
-                  <option value="">Seleccione</option>
-                  <option *ngFor="let pais of listadoPais" [value]="pais.codigo" [disabled]="nnaFormCrearSinActivar">
-                    {{ pais.nombre }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-12"
-                *ngIf="formNNA.get('paisNacimiento')?.invalid && formNNA.get('paisNacimiento')?.touched">
-                <small class="errors" *ngIf="isEmpty(formNNA.get('paisNacimiento')?.value)">País de
-                  nacimiento
-                  es
-                  requerido.</small>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3">
-                <label>
-                  Departamento de nacimiento*:
-                </label>
-              </div>
-              <div class="col-sm-9">
-                <select class="form-select" formControlName="departamentoNacimiento" (change)="ciudad($event)"
-                  [(ngModel)]="departamentoSeleccion">
-                  <option value="">Seleccione</option>
-                  <option *ngFor="let depa of listadoDepartamento" [value]="depa.codigo"
-                    [disabled]="nnaFormCrearSinActivar">
-                    {{ depa.nombre }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-12" *ngIf="!nnaFormCrearSinActivarDepartamento">
-                <div class="col-sm-12"
-                  *ngIf="formNNA.get('departamentoNacimiento')?.invalid && formNNA.get('departamentoNacimiento')?.touched">
-                  <small class="errors" *ngIf="isEmpty(formNNA.get('departamentoNacimiento')?.value)">Departamento
-                    de
-                    nacimiento es requerido.</small>
-                </div>
-              </div>
-
-            </div>
-            <div class="row">
-              <div class="col-sm-3">
-                <label>
-                  Ciudad de nacimiento*:
-                </label>
-              </div>
-              <div class="col-sm-9">
-                <select class="form-select" formControlName="ciudadNacimiento" [(ngModel)]="ciudadSeleccion">
-                  <option value="">Seleccione</option>
-                  <option *ngFor="let ciudad of listadoCiudad" [value]="ciudad.codigo"
-                    [disabled]="nnaFormCrearSinActivar">
-                    {{ ciudad.nombre }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-12" *ngIf="!nnaFormCrearSinActivarDepartamento">
-                <div class="col-sm-12"
-                  *ngIf="formNNA.get('ciudadNacimiento')?.invalid && formNNA.get('ciudadNacimiento')?.touched">
-                  <small class="errors" *ngIf="isEmpty(formNNA.get('ciudadNacimiento')?.value)">Ciudad de
-                    nacimiento
-                    es requerido.</small>
-                </div>
-              </div>
-
-            </div>
-            <div class="row">
-              <div class="col-sm-3">
-                <label>
-                  Etnia*:
-                </label>
-              </div>
-              <div class="col-sm-9">
-                <select class="form-select" formControlName="etnia">
-                  <option value="">Seleccione</option>
-                  <option *ngFor="let etnia of listadoEtnia" [value]="etnia.codigo" [disabled]="nnaFormCrearSinActivar">
-                    {{ etnia.nombre }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-12" *ngIf="formNNA.get('etnia')?.invalid && formNNA.get('etnia')?.touched">
-                <small class="errors" *ngIf="isEmpty(formNNA.get('etnia')?.value)">Etnia es
-                  requerido.</small>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3">
-                <label>
-                  Grupo poblacional:
-                </label>
-              </div>
-              <div class="col-sm-9">
-                <select class="form-select" formControlName="grupoPoblacion">
-                  <option value="">Seleccione</option>
-                  <option *ngFor="let grupoPoblacion of listadoGrupoPoblacional" [disabled]="nnaFormCrearSinActivar"
-                    [value]="grupoPoblacion.codigo">
-                    {{ grupoPoblacion.nombre }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <app-nna-contacto-lista [nnaId]="0" (lista)="obtenerLista($event)" />
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <div class="col-sm-12 text-center">
+  <div class="col-md-12 text-center">
     <app-dialog-crear-nna-msg-rol-agente [visible]="visibleDialogRolAgente" [nnaId]="nnaId" [agenteId]="agenteId"
       [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"></app-dialog-crear-nna-msg-rol-agente>
 
@@ -447,10 +311,17 @@
       [agenteId]="agenteId" [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId">
     </app-dialog-crear-nna-msg-rol-coordinador>
 
-    <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" [disabled]="!validarDisabledForm()"
-      (click)="onSubmit()">Guardar</button>
+    <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" (click)="onSubmit()">Guardar</button>
     <br />
     <br />
   </div>
+</body>
 
-</div>
+<p-dialog header="" [(visible)]="visible" [modal]="true" [style]="{ width: '500px' }" [draggable]="false"
+  [resizable]="false">
+  <div class="text-center">
+    <span>El menor ya está registrado en SECÁNI</span>
+    <br /><br />
+    <button (click)="btn_ver_detalle_nna()" class="btn fondo-color-principal text-color-blanco">Ver detalle NNA</button>
+  </div>
+</p-dialog>

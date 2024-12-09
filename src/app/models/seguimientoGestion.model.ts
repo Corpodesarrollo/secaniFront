@@ -17,4 +17,5 @@ export interface SeguimientoGestion {
     nombreRechazo: string;
     parentescoRechazo: string;
     razonesRechazo: string;
+    alertas: number[];
 }

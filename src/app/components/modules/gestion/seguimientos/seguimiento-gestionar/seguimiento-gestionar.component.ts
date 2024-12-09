@@ -24,6 +24,7 @@ import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.mod
 import { apis } from '../../../../../models/apis.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
+import { EstadoAlerta } from '../../../../../models/estadoAlerta.model';
 
 @Component({
   selector: 'app-seguimiento-gestionar',
@@ -71,7 +72,8 @@ export class SeguimientoGestionarComponent {
     ultimaActuacionFecha: new Date(),
     nombreRechazo: '',
     parentescoRechazo: '',
-    razonesRechazo: ''
+    razonesRechazo: '',
+    alertas: []
   };
 
   contacto: ContactoNNA = {
@@ -86,9 +88,8 @@ export class SeguimientoGestionarComponent {
     estado: false
   };
 
-  alertasPendientes: AlertasTratamiento[] = [];
-
   alertas: AlertasTratamiento[] = [];
+  alertasPendientes: EstadoAlerta[] = [];
   nna: NNA = new NNA();
   id: string | undefined;
   idContacto: string | undefined;
@@ -126,6 +127,13 @@ export class SeguimientoGestionarComponent {
       { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
     ];
 
+    //alertas pendientes
+    this.gs.getAsync('Alerta/ConsultarAlertasUltimoSeguimiento', `/${this.id}`, apis.seguimiento).then((data: any) => {
+      this.alertasPendientes = data;
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
+
     this.estados = await this.tpp.getTpEstadosNNA();
     this.selectedEstado = this.estados.find(x => x.id == this.nna.estadoId);
     this.isLoadingEstados = false;
@@ -134,7 +142,6 @@ export class SeguimientoGestionarComponent {
 
     this.validarEstado();
     this.CargarData();
-    
   }
 
   CargarData() {
@@ -151,41 +158,27 @@ export class SeguimientoGestionarComponent {
   }
 
   validarEstado() {
-    switch (this.selectedEstado?.id) {
-      case 1:
-        this.idEstadoSeguimiento = 3; break;
-      case 2:
-        this.idEstadoSeguimiento = 2; this.cntDias = 8; break;
-      case 3:
-        this.idEstadoSeguimiento = 2; this.cntDias = 8; break;
-      case 4:
-        this.idEstadoSeguimiento = 2; this.cntDias = 15; break;
-      case 5:
-        this.idEstadoSeguimiento = 2; this.cntDias = 15; break;
-      case 6:
-        this.idEstadoSeguimiento = 2; this.cntDias = 8; break;
-      case 7:
-        this.idEstadoSeguimiento = 2; this.cntDias = 8; break;
-      case 8:
-        this.idEstadoSeguimiento = 2; this.cntDias = 30; break;
-      case 9:
-        this.idEstadoSeguimiento = 2; this.cntDias = -1; break;
-      case 10:
-        this.idEstadoSeguimiento = 3; break;
-      case 11:
-        this.idEstadoSeguimiento = 3; break;
-      case 12:
-        this.idEstadoSeguimiento = 3; break;
-      case 13:
-        this.idEstadoSeguimiento = 3; break;
-      case 14:
-        this.idEstadoSeguimiento = 3; break;
-      case 15:
-        this.idEstadoSeguimiento = 1; break;
-      default:
-        this.idEstadoSeguimiento = 0; // or any default value you want to set
-        break;
-    }
+    const estadoDiasMap: { [key: number]: { idEstadoSeguimiento: number, cntDias: number } } = {
+      1: { idEstadoSeguimiento: 3, cntDias: 0 },
+      2: { idEstadoSeguimiento: 2, cntDias: 8 },
+      3: { idEstadoSeguimiento: 2, cntDias: 8 },
+      4: { idEstadoSeguimiento: 2, cntDias: 15 },
+      5: { idEstadoSeguimiento: 2, cntDias: 15 },
+      6: { idEstadoSeguimiento: 2, cntDias: 8 },
+      7: { idEstadoSeguimiento: 2, cntDias: 8 },
+      8: { idEstadoSeguimiento: 2, cntDias: 30 },
+      9: { idEstadoSeguimiento: 2, cntDias: -1 },
+      10: { idEstadoSeguimiento: 3, cntDias: 0 },
+      11: { idEstadoSeguimiento: 3, cntDias: 0 },
+      12: { idEstadoSeguimiento: 3, cntDias: 0 },
+      13: { idEstadoSeguimiento: 3, cntDias: 0 },
+      14: { idEstadoSeguimiento: 3, cntDias: 0 },
+      15: { idEstadoSeguimiento: 1, cntDias: 0 }
+    };
+
+    const estadoConfig = estadoDiasMap[this.selectedEstado?.id || 0] || { idEstadoSeguimiento: 0, cntDias: 0 };
+    this.idEstadoSeguimiento = estadoConfig.idEstadoSeguimiento;
+    this.cntDias = estadoConfig.cntDias;
   }
 
   guardar() {
@@ -205,10 +198,39 @@ export class SeguimientoGestionarComponent {
       ultimaActuacionFecha: new Date(),
       nombreRechazo: '',
       parentescoRechazo: '',
-      razonesRechazo: ''
+      razonesRechazo: '',
+      alertas: this.alertas.map(alerta => alerta.idSubcategoriaAlerta as number)
     };
+
+    let alertasGestionadas = this.alertasPendientes.filter(alerta => alerta.resuelta != true);
+    if (alertasGestionadas.length > 0) {
+      alertasGestionadas.forEach(alerta => {
+        if (!this.seguimiento.alertas.includes(alerta.idAlerta as number)) {
+          this.seguimiento.alertas.push(alerta.idAlerta as number);
+        }
+      });
+    }
+
     console.log('Datos del seguimiento:', this.seguimiento);
     this.showDialog = true;
-    
+  }
+
+  getBadgeColor(estadoAlerta: number): string {
+    switch (estadoAlerta) {
+      case 4: // Resuelta
+        return ' '; // Verde
+      case 1 || 2:
+        return 'bg-warning'; // Amarillo
+      case 3:
+        return 'bg-danger'; // Rojo
+      case 5:
+        return 'bg-danger'; // Gris
+      default:
+        return 'bg-secondary'; // Por defecto
+    }
+  }
+
+  closeModal(){
+    this.showDialog = false;
   }
 }

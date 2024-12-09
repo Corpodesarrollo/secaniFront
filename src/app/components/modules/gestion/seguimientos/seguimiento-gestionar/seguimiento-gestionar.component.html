@@ -62,16 +62,16 @@
                             <div class="col-12">
                                 <div class="row align-items-center mb-3" *ngFor="let item of alertasPendientes">
                                     <div class="col-6 col-md-8">
-                                        <label for="tratamientoRequirioCambiodeCiudad" class="fw-bold">¿La alerta 7.1.1 fue solucionada por la EAPB?</label>
+                                        <label for="tratamientoRequirioCambiodeCiudad" class="fw-bold">¿La alerta {{ item.nombre }} fue solucionada por la EAPB?</label>
                                     </div>
                                     <div class="col-6 col-md-4 button-group d-inline-flex align-items-center d-flex justify-content-end">
-                                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': item.resuelta }" style="width: 70px;" (click)="item.resuelta = true">SÍ</button>
-                                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': !item.resuelta }" style="width: 70px;" (click)="item.resuelta = false">NO</button>
+                                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': item.resuelta == true }" style="width: 70px;" (click)="item.resuelta = true">SÍ</button>
+                                        <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': item.resuelta == false }" style="width: 70px;" (click)="item.resuelta = false">NO</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+                                                                                                                                                                                           
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="alertas && alertas.length > 0">
                             <div class="col-12">
                                 <label class="fw-bold mb-2">Alertas Identificadas</label>
@@ -125,7 +125,6 @@
             </div>
         </div>
     </div>
-    
-    <app-seguimiento-guardar [show]="showDialog" [seguimiento]="seguimiento"></app-seguimiento-guardar>
+    <app-seguimiento-guardar [show]="showDialog" [seguimiento]="seguimiento" (closeModal)="closeModal()"></app-seguimiento-guardar>
 </body>
 

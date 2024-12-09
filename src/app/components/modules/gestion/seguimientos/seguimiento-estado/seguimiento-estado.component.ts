@@ -94,6 +94,9 @@ export class SeguimientoEstadoComponent  implements OnInit {
   colorTxt: string = 'white';	
   colorBg: string = '#73b7ad';
 
+  alertas: AlertasTratamiento[] = [];
+  cnt: number = 0;
+
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute, private gs: GenericService,) {
   }
 
@@ -156,14 +159,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
 
   validarSeguimiento(id: number) {
     this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
-      let cnt = Number(data);
-      console.log('cnt', cnt);
-      if (cnt > 1) {
-        this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-        return;
-      }
+      this.cnt = Number(data);
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
@@ -225,8 +221,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
     }
   }
 
-  onAlertasChange(alertas: AlertasTratamiento[]) {
-    this.diagnostico.alertas = alertas;
+  onAlertasChange(alertas: AlertasTratamiento[]) {    
+    this.alertas = alertas; // Guardar la lista emitida por el hijo
   }
 
   validarCamposRequeridos(): boolean {
@@ -261,28 +257,32 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.saving = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
-      if(this.estadoSinDiagnostico) {
-        this.router.navigate([`/gestion/seguimientos/sin-diagnostico-seguimiento/${this.id}`], {
-          state: { diagnostico: this.diagnostico }
+      if(this.estadoSinDiagnostico || this.estadoSinTratamiento) {
+        this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto }
         }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoFallecido) {
-        this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-      }else if(this.estadoEnTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`], {
+        this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`], {
           state: { idContacto: this.idContacto }
         }).then(() => {
           window.scrollTo(0, 0);
         });
-      }else if(this.estadoSinTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/sin-tratamiento-seguimiento/${this.id}`], {
-          state: { diagnostico: this.diagnostico }
-        }).then(() => {
-          window.scrollTo(0, 0);
-        });
+      }else if(this.estadoEnTratamiento) {
+        if (this.cnt > 1) {
+          this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+            state: { alertas: this.alertas, idContacto: this.idContacto }
+          }).then(() => {
+            window.scrollTo(0, 0);
+          });
+        } else {
+          this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`], {
+            state: { idContacto: this.idContacto }
+          }).then(() => {
+            window.scrollTo(0, 0);
+          });
+        }
       }
     }
     this.saving = false;

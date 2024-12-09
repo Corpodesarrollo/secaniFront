@@ -1,39 +1,94 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AngleUpIcon } from 'primeng/icons/angleup';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { environment } from '../../../../../../environments/environment';
 import { Generico } from '../../../../../core/services/generico';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
+import { CommonModule } from '@angular/common';
+import { BotonNotificacionComponent } from "../../../boton-notificacion/boton-notificacion.component";
+import { DialogValidarExistenciaComponent } from "./dialog/dialog-validar-existencia/dialog-validar-existencia.component";
+import { DialogCrearNnaMsgRolAgenteComponent } from "./dialog/dialog-crear-nna-msg-rol-agente/dialog-crear-nna-msg-rol-agente.component";
+import { DialogCrearNnaMsgRolCoordinadorComponent } from "./dialog/dialog-crear-nna-msg-rol-coordinador/dialog-crear-nna-msg-rol-coordinador.component";
+import { NnaContactoListaComponent } from "../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
+import { CalendarModule } from 'primeng/calendar';
+import { Parametricas } from '../../../../../models/parametricas.model';
+import { NNA } from '../../../../../models/nna.model';
+import { DropdownModule } from 'primeng/dropdown';
+import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
+import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
+import { NNAService } from '../../../../../core/services/nnaService';
 
 @Component({
   selector: 'app-crear-nna',
+  standalone: true,
   templateUrl: './crear-nna.component.html',
-  styleUrls: ['../../general.component.css', './crear-nna.component.css'],
-  encapsulation: ViewEncapsulation.Emulated // Esto es por defecto
+  imports: [
+    BreadcrumbModule,
+    CommonModule,
+    BotonNotificacionComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    DialogValidarExistenciaComponent,
+    CalendarModule,
+    InputTextModule,
+    DialogModule,
+    DialogCrearNnaMsgRolAgenteComponent,
+    DialogCrearNnaMsgRolCoordinadorComponent,
+    NnaContactoListaComponent,
+    DropdownModule,
+  ],
+  styleUrls: ['./crear-nna.component.css'],
+  encapsulation: ViewEncapsulation.Emulated, // Esto es por defecto
 })
 export class CrearNnaComponent {
-  visualizars!: any;
-  first = 0;
-  rows = 10;
-  dataToParent: any;
+  nna: NNA = new NNA();
 
-  formNNA: FormGroup;
-  maxDate: Date;
+  maxDate: Date = new Date();
 
-  //Listados select
-  listadoTipoIdentificacion: any;
-  listadoRegimenAfiliacion: any;
-  listadoEAPB: any;
-  listadoEstadoIngresoEstrategia: any;
-  listadoOrigenReporte: any;
-  listadoPais: any;
-  listadoDepartamento: any;
-  listadoCiudad: any;
-  listadoParentesco: any;
-  listadoEtnia: any;
-  listadoGrupoPoblacional: any;
+  items: MenuItem[] = [];
+  submitted: boolean = false;
+  submitted2: boolean = false;
+
+  selectedTipoID: Parametricas | undefined;
+  selectedPaisNacimiento: Parametricas | undefined;
+  selectedEtnia: Parametricas | undefined;
+  selectedGrupoPoblacional: Parametricas | undefined;
+  selectedRegimenAfiliacion: Parametricas | undefined;
+  selectedEAPB: Parametricas | undefined;
+  selectedParentesco: Parametricas | undefined;
+  selectedOrigenReporte: Parametricas | undefined;
+  selectedDepartamento: Parametricas | undefined;
+  selectedMunicipio: Parametricas | undefined;
+  selectedEstadoIngresoEstrategia: Parametricas | undefined;
+
+  isLoadingTipoID: boolean = true;
+  isLoadingPaisNacimiento: boolean = true;
+  isLoadingEtnia: boolean = true;
+  isLoadingGrupoPoblacional: boolean = true;
+  isLoadingRegimenAfiliacion: boolean = true;
+  isLoadingEAPB: boolean = true;
+  isLoadingParentesco: boolean = true;
+  isLoadingOrigenReporte: boolean = true;
+  isLoadingDepartamento: boolean = true;
+  isLoadingMunicipio: boolean = false;
+  isLoadingEstadosIngresoEstrategia: boolean = true;
+
+  tipoID: Parametricas[] = [];
+  paisNacimiento: Parametricas[] = [];
+  etnias: Parametricas[] = [];
+  gruposPoblacionales: Parametricas[] = [];
+  regimenAfiliacion: Parametricas[] = [];
+  EAPB: Parametricas[] = [];
+  parentescos: Parametricas[] = [];
+  origenReporte: Parametricas[] = [];
+  departamentos: Parametricas[] = [];
+  municipios: Parametricas[] = [];
+  estadosIngresoEstrategia: Parametricas[] = [];
 
   nnaId: any;
   agenteId: any;
@@ -41,7 +96,7 @@ export class CrearNnaComponent {
   //createdByUserId
   userId: any;
   ContactoNNAId: any;
-  edad: string = "";
+  edad: string = '';
   listadoContacto: any = [];
 
   nnaFormCrearSinActivar: boolean = true;
@@ -51,7 +106,6 @@ export class CrearNnaComponent {
   visibleDialogRolAgente: boolean = false;
   visibleDialogRolCoordinador: boolean = false;
 
-
   paiscolombia = 170;
   departamentoSeleccion: any;
   ciudadSeleccion: any;
@@ -59,297 +113,268 @@ export class CrearNnaComponent {
   sexoId: any;
   rolIdGeneral = sessionStorage.getItem('roleId');
 
-  listaContactos:ContactoNNA[] = [];
+  listaContactos: ContactoNNA[] = [];
 
-  constructor(private router: Router, private fb: FormBuilder, private tpParametros: TpParametros, private axios: Generico) {
+  visible: boolean = false;
 
-    // Set the maximum date to today
-    this.maxDate = new Date();
-
-    this.formNNA = this.fb.group({
-      tipoId: ['', [Validators.required]],
-      numeroId: ['', [Validators.required, Validators.maxLength(20)]],
-      primerNombre: ['', [Validators.required, Validators.maxLength(30)]],
-      segundoNombre: ['', [Validators.maxLength(30)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(30)]],
-      segundoApellido: ['', [Validators.maxLength(30)]],
-
-      fechaNacimiento: ['', [Validators.required]],
-
-      paisNacimiento: ['', [Validators.required]],
-      sexo: ['', [Validators.required]],
-      departamentoNacimiento: ['', [Validators.required]],
-      ciudadNacimiento: ['', [Validators.required]],
-      etnia: ['', [Validators.required]],
-      grupoPoblacion: ['', []],
-      regimenAfiliacion: ['', [Validators.required]],
-      eapb: ['', [Validators.required]],
-      estadoIngresoEstrategia: ['', [Validators.required]],
-      fechaIngresoEstrategia: ['', [Validators.required]],
-      originReporte: ['', [Validators.required]],
-      fecha: ['', []],
-      hora: ['', []],
-    });
-
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private tpParametros: TpParametros,
+    private axios: Generico,
+    private tp: TablasParametricas,
+    private nnaService: NNAService
+  ) {
     //createdByUserId
     this.userId = sessionStorage.getItem('userId');
   }
 
   async ngOnInit() {
-    this.listadoTipoIdentificacion = await this.tpParametros.getTPTipoIdentificacion();
-    this.listadoRegimenAfiliacion = await this.tpParametros.getTPRegimenAfiliacion();
-    this.listadoEAPB = await this.tpParametros.getTPEAPB();
-    this.listadoEstadoIngresoEstrategia = await this.tpParametros.getTPEstadoIngresoEstrategia();
-    this.listadoOrigenReporte = await this.tpParametros.getTPOrigenReporte();
-    this.listadoPais = await this.tpParametros.getTPPais();
-    this.listadoParentesco = await this.tpParametros.getTPParentesco();
-    this.listadoEtnia = await this.tpParametros.getTPEtnia();
-    this.listadoGrupoPoblacional = await this.tpParametros.getGrupoPoblacional();
+    this.items = [
+      { label: 'Histórico NNA', routerLink: '/usuarios/historico_nna' },
+      { label: `Crear NNA` },
+    ];
 
-    this.departamentoTs(this.paiscolombia);
+    this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
+    this.selectedTipoID = this.tipoID.find(
+      (x) => x.codigo == this.nna.tipoIdentificacionId,
+    );
+    this.isLoadingTipoID = false;
+
+    this.origenReporte = await this.tpParametros.getTPOrigenReporte();
+    this.selectedOrigenReporte = this.origenReporte.find(
+      (x) => x.id == this.nna.origenReporteId,
+    );
+    this.isLoadingOrigenReporte = false;
+
+    this.paisNacimiento = await this.tp.getTP('Pais');
+    this.selectedPaisNacimiento = this.paisNacimiento.find(
+      (x) => x.codigo == '170',
+    );
+    this.isLoadingPaisNacimiento = false;
+
+    this.etnias = await this.tp.getTP('GrupoEtnico');
+    this.selectedEtnia = this.etnias.find((x) => x.codigo == this.nna.etniaId);
+    this.isLoadingEtnia = false;
+
+    this.gruposPoblacionales = await this.tp.getTP('LCETipoPoblacionEspecial');
+    this.selectedGrupoPoblacional = this.gruposPoblacionales.find(
+      (x) => x.codigo == this.nna.grupoPoblacionId,
+    );
+    this.isLoadingGrupoPoblacional = false;
+
+    this.regimenAfiliacion = await this.tp.getTP('APSRegimenAfiliacion');
+    this.selectedRegimenAfiliacion = this.regimenAfiliacion.find(
+      (x) => x.codigo == this.nna.tipoRegimenSSId,
+    );
+    this.isLoadingRegimenAfiliacion = false;
+
+    this.EAPB = await this.tp.getTP('CodigoEAPByNit');
+    this.selectedEAPB = this.EAPB.find((x) => x.codigo == this.nna.eapbId);
+    this.isLoadingEAPB = false;
+
+    this.estadosIngresoEstrategia = await this.tpParametros.getEstadosIngresoEstrategia();
+    this.selectedEstadoIngresoEstrategia = this.estadosIngresoEstrategia.find(x => x.id == this.nna.estadoId);
+    this.isLoadingEstadosIngresoEstrategia = false;
+
+    this.departamentos = await this.tp.getTP('Departamento');
+    this.selectedDepartamento = this.departamentos.find(
+      (x) => x.codigo == this.nna.residenciaOrigenCategoriaId,
+    );
+    this.isLoadingDepartamento = false;
 
     //Inicializando form
-    this.nnaId = "";
-    this.agenteId = "";
-    this.coordinadorId = "";
+    this.nna.edad = '';
     this.userId = sessionStorage.getItem('userId');
 
-    if (this.rolIdGeneral == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
+    if (this.rolIdGeneral == '14CDDEA5-FA06-4331-8359-036E101C5046') {
+      //Agente de seguimiento
       this.agenteId = this.userId;
     }
 
-    if (this.rolIdGeneral == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
+    if (this.rolIdGeneral == '311882D4-EAD0-4B0B-9C5D-4A434D49D16D') {
+      //Coordinador
       this.coordinadorId = this.userId;
     }
   }
 
-  obtenerLista(lista:ContactoNNA[]) {
+  obtenerLista(lista: ContactoNNA[]) {
     this.listaContactos = lista; // Guardar la lista emitida por el hijo
     console.log('Lista de alertas recibidas:', this.listaContactos);
   }
 
   applySexo(sexo: string) {
     this.sexoId = sexo;
-    this.formNNA.get('sexo')?.setValue(sexo);
+    this.nna.sexoId = this.sexoId;
   }
 
-  generarCalculoEdad() {
-    this.edad = "";
-    const dob = this.formNNA.get('fechaNacimiento')?.value;
-    if (dob) {
-      const birthDate = new Date(dob);
-      const today = new Date();
-      const years = today.getFullYear() - birthDate.getFullYear();
-      const months = today.getMonth() - birthDate.getMonth();
-      const days = today.getDate() - birthDate.getDate();
+  CalcularEdad() {
+    if (this.nna.fechaNacimiento) {
+      const nacimiento = new Date(this.nna.fechaNacimiento);
+      const hoy = new Date();
 
-      let ageString = `${years} años`;
+      let años = hoy.getFullYear() - nacimiento.getFullYear();
+      let meses = hoy.getMonth() - nacimiento.getMonth();
+      let días = hoy.getDate() - nacimiento.getDate();
 
-      if (months < 0 || (months === 0 && days < 0)) {
-        ageString = `${years - 1} años`;
+      if (días < 0) {
+        meses--;
+        días += new Date(hoy.getFullYear(), hoy.getMonth(), 0).getDate();
       }
 
-      const actualMonths = ((months + 12) % 12) + (days < 0 ? -1 : 0);
-      const actualDays = (days + (days < 0 ? new Date(today.getFullYear(), today.getMonth(), 0).getDate() : 0)) % 30; // Simplified days
-
-      if (actualMonths > 0) {
-        ageString += `, ${actualMonths} meses`;
+      if (meses < 0) {
+        años--;
+        meses += 12;
       }
 
-      if (actualDays > 0) {
-        ageString += ` y ${actualDays} días`;
-      }
-
-      this.edad = ageString;
-    } else {
-      this.edad = '';
+      this.nna.edad = `${años} años, ${meses} meses, ${días} días`;
     }
   }
 
-  async departamento(pais: any) {
-    this.departamentoSeleccion = null;
-    this.ciudadSeleccion = null;
-    if (pais.target.value == 170) {//Colombia
-      //console.log("pais", pais.target.value);
-      this.listadoDepartamento = await this.tpParametros.getTPDepartamento(pais.target.value);
-      this.nnaFormCrearSinActivarDepartamento = false;
-      this.formNNA.get('departamentoNacimiento')?.setValidators([Validators.required]); // Eliminar validaciones
-      this.formNNA.get('departamentoNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
-      this.formNNA.get('ciudadNacimiento')?.setValidators([Validators.required]);  // Eliminar validaciones
-      this.formNNA.get('ciudadNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
-    } else {//Diferente a colombia
-      this.listadoDepartamento = [];
-      this.listadoCiudad = [];
-      this.nnaFormCrearSinActivarDepartamento = true;
-      this.formNNA.get('departamentoNacimiento')?.clearValidators();  // Eliminar validaciones
-      this.formNNA.get('departamentoNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
-      this.formNNA.get('ciudadNacimiento')?.clearValidators();  // Eliminar validaciones
-      this.formNNA.get('ciudadNacimiento')?.updateValueAndValidity();  // Actualizar el estado del control
+  async validarExistencia() {
+    const baseUrl = environment.url_MsNna;
+    this.submitted2 = true;
+    this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
+    if (this.nna.numeroIdentificacion && this.nna.tipoIdentificacionId) {
+      const url = `NNA/ConsultarNNAsByTipoIdNumeroId/${this.nna.tipoIdentificacionId}/${this.nna.numeroIdentificacion}`;
+      try {
+        const response: any = await this.axios.retorno_get(url, baseUrl);
+        if (response && Object.keys(response).length > 0) {
+          this.nna.id = response.id;
+          this.visible = true;
+        } else {
+          this.nnaFormCrearSinActivar = false;
+          console.log('Response is empty or invalid');
+        }
+      } catch (error) {
+        console.error('Error validating existence:', error);
+      }
     }
   }
 
-  async departamentoTs(pais: any) {
-    if (pais == 170) {//Colombia
-      //console.log("pais", pais.target.value);
-      this.listadoDepartamento = await this.tpParametros.getTPDepartamento(pais);
-      this.nnaFormCrearSinActivarDepartamento = false;
-    } else {//Diferente a colombia
-      this.nnaFormCrearSinActivarDepartamento = true;
-    }
+  cancelarExistencia() {
+    this.nnaFormCrearSinActivar = true;
+    this.nna.numeroIdentificacion = '';
+    this.nna.tipoIdentificacionId = '';
+    this.selectedTipoID = undefined;
+    this.nna = new NNA();
+    this.nna.edad = '';
+    this.submitted2 = false;
   }
 
   async ciudad(departamento: any) {
-    this.listadoCiudad = await this.tpParametros.getTPCiudad(departamento.target.value);
-  }
-
-  btn_historial_nna() {
-    //this.router.navigate(["/usuarios/historico_nna"]);
+    this.isLoadingMunicipio = true;
+    this.municipios = [];
+    if (this.selectedDepartamento) {
+      this.municipios = await this.tpParametros.getTPCiudad(
+        this.selectedDepartamento.codigo,
+      );
+    }
+    this.selectedMunicipio = this.municipios.find(
+      (x) => x.codigo == this.nna.residenciaActualMunicipioId,
+    );
+    this.isLoadingMunicipio = false;
   }
 
   //Guardar formulario
   async onSubmit() {
-    // Set default date and time
-    const now = new Date();
-    const defaultDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
-    const defaultTime = now.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
+    this.submitted = true;
+    if (this.validarCamposRequeridos()) {
+      let result = await this.nnaService.postNNA(this.nna);
+      if (result.estado) {
+        this.nnaId = result.datos.id;
+        if (this.rolIdGeneral == '14CDDEA5-FA06-4331-8359-036E101C5046') {
+          //Agente de seguimiento
+          this.visibleDialogRolAgente = false;
+          this.visibleDialogRolAgente = true;
+          this.agenteId = this.userId;
+        }
 
-    this.formNNA.patchValue({
-      fecha: defaultDate,
-      hora: defaultTime
+        if (this.rolIdGeneral == '311882D4-EAD0-4B0B-9C5D-4A434D49D16D') {
+          //Coordinador
+          this.visibleDialogRolCoordinador = false;
+          this.visibleDialogRolCoordinador = true;
+          this.agenteId = null;
+        }
+      } else {
+        console.log('Error en la validación de los campos');
+      }
+    }
+    else {
+      console.log('Error en la validación de los campos');
+    }
+  }
+
+  validarCamposRequeridos(): boolean {
+    this.nna.cuidadorParentescoId = this.selectedParentesco?.codigo ?? '';
+    this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
+    this.nna.paisId = this.selectedPaisNacimiento?.codigo ?? '';
+    this.nna.etniaId = this.selectedEtnia?.codigo ?? '';
+    this.nna.grupoPoblacionId = this.selectedGrupoPoblacional?.codigo ?? '';
+    this.nna.tipoRegimenSSId = this.selectedRegimenAfiliacion?.codigo ?? '';
+    this.nna.eapbId = this.selectedEAPB?.codigo ?? '';
+    this.nna.origenReporteId = this.selectedOrigenReporte?.id ?? 0;
+    this.nna.municipioNacimientoId = this.selectedMunicipio?.codigo ?? '';
+    this.nna.estadoIngresoEstrategiaId = this.selectedEstadoIngresoEstrategia?.id ?? 0;
+    this.nna.contactos = this.listaContactos;
+
+    let camposAValidar: (string | number | Date | ContactoNNA[])[] = [];
+
+    if(this.nna.paisId == '170'){
+      camposAValidar = [
+        this.nna.origenReporteId,
+        this.nna.primerNombre,
+        this.nna.segundoApellido,
+        this.nna.tipoIdentificacionId,
+        this.nna.numeroIdentificacion,
+        this.nna.fechaNacimiento,
+        this.nna.sexoId,
+        this.nna.paisId,
+        this.nna.municipioNacimientoId,
+        this.nna.etniaId,
+        this.nna.tipoRegimenSSId,
+        this.nna.eapbId,
+        this.nna.grupoPoblacionId,
+        this.nna.estadoIngresoEstrategiaId,
+        this.nna.tipoRegimenSSId,
+        this.nna.contactos,
+      ];
+    }
+    else{
+      camposAValidar = [
+        this.nna.origenReporteId,
+        this.nna.primerNombre,
+        this.nna.segundoApellido,
+        this.nna.tipoIdentificacionId,
+        this.nna.numeroIdentificacion,
+        this.nna.fechaNacimiento,
+        this.nna.sexoId,
+        this.nna.paisId,
+        this.nna.etniaId,
+        this.nna.tipoRegimenSSId,
+        this.nna.eapbId,
+        this.nna.grupoPoblacionId,
+        this.nna.estadoIngresoEstrategiaId,
+        this.nna.tipoRegimenSSId,
+        this.nna.contactos,
+      ];
+    }
+
+
+    // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    for (const campo of camposAValidar) {
+      if (!campo || campo.toString().trim() === '') {
+        console.log('Campo requerido vacío:', campo);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  btn_ver_detalle_nna() {
+    this.router.navigate([`/usuarios/editar_nna/${this.nna.id}`]).then(() => {
+      window.scrollTo(0, 0);
     });
-
-    const cuidadorEncontrado = this.listadoContacto.find((cuidador: any) => cuidador.cuidadorCuidador === "1");
-    var cuidadorJson = {
-      "cuidadorNombres": "",
-      "cuidadorParentescoId": 0,
-      "cuidadorEmail": "",
-      "cuidadorTelefono": ""
-    };
-    if (cuidadorEncontrado) {
-      console.log('Cuidador encontrado:', cuidadorEncontrado);
-      cuidadorJson = {
-        "cuidadorNombres": cuidadorEncontrado.nombreCompletoCuidador,
-        "cuidadorParentescoId": cuidadorEncontrado.parentescoCuidador,
-        "cuidadorEmail": cuidadorEncontrado.correoElectronicoCuidador,
-        "cuidadorTelefono": cuidadorEncontrado.numeroTelefonoCuidador
-      };
-    } else {
-      console.log('No se encontró ningún cuidador con cuidadorCuidador = 1');
-    }
-
-
-    //Setear NNid
-    var urlbase: string = environment.url_MsNna;
-    var url_path = "NNA/Crear";
-    var datosNna = {
-      "id": 0,
-      "estadoId": 15,
-      "primerNombre": this.formNNA.get("primerNombre")?.value,
-      "segundoNombre": this.formNNA.get("segundoNombre")?.value,
-      "primerApellido": this.formNNA.get("primerApellido")?.value,
-      "segundoApellido": this.formNNA.get("segundoApellido")?.value,
-      "tipoIdentificacionId": this.formNNA.get('tipoId')?.value,
-      "numeroIdentificacion": this.formNNA.get("numeroId")?.value,
-      "fechaNacimiento": this.formNNA.get("fechaNacimiento")?.value,
-      "municipioNacimientoId": this.formNNA.get("ciudadNacimiento")?.value,
-      "sexoId": this.sexoId,
-      "eapbId": this.formNNA.get("eapb0")?.value,
-      "grupoPoblacionId": this.formNNA.get("grupoPoblacion")?.value,
-      "etniaId": this.formNNA.get("etnia")?.value,
-      "estadoIngresoEstrategiaId": this.formNNA.get('estadoIngresoEstrategia')?.value,
-      "fechaIngresoEstrategia": this.formNNA.get('fechaIngresoEstrategia')?.value,
-      "origenReporteId": this.formNNA.get('originReporte')?.value,
-      "tipoRegimenSSId": this.formNNA.get("regimenAfiliacion")?.value,
-      "departamentoTratamientoId": this.formNNA.get('departamentoNacimiento')?.value,
-      "CreatedByUserId": this.userId || ' ',
-      "dateCreated": now,
-      "isDeleted": false,
-      "paisId": "'"+this.formNNA.get("paisNacimiento")?.value+"'",
-      "cuidadorNombres": cuidadorJson.cuidadorNombres,
-      "cuidadorParentescoId": cuidadorJson.cuidadorParentescoId,
-      "cuidadorEmail": cuidadorJson.cuidadorEmail,
-      "cuidadorTelefono": cuidadorJson.cuidadorTelefono,
-    };
-    var nna = await this.axios.retorno_post(url_path, datosNna, true, urlbase);
-    console.log("Crear Nna Guardar", nna, "form", this.formNNA.value, " this.listadoContacto ::", this.listadoContacto);
-
-    this.nnaId = nna.datos[0].id;
-
-    //Guardado de lista de contactos
-    this.listadoContacto.forEach(async (cuidador: any) => {
-      var contactoDatosNna = {
-        "id": 0,
-        "dateCreated": now,
-        "createdByUserId": this.userId || ' ',
-        "isDeleted": false,
-        "nnaId": this.nnaId,
-        "nombres": cuidador.nombreCompletoCuidador,
-        "parentescoId": cuidador.parentescoCuidador,
-        "email": cuidador.correoElectronicoCuidador,
-        "telefonos": cuidador.numeroTelefonoCuidador,
-        "telefnosInactivos": "",
-        "cuidador": cuidador.cuidadorCuidador == 1 ? true : false
-      };
-      var urlbase: string = environment.url_MsNna;
-      var url_path = "ContactoNNAs/Crear";
-      var data = await this.axios.retorno_post(url_path, contactoDatosNna, true, urlbase);
-      this.ContactoNNAId = data.datos[0].id;
-    });
-
-
-
-    //Genrar guardado
-    if (this.rolIdGeneral == "14CDDEA5-FA06-4331-8359-036E101C5046") {//Agente de seguimiento
-      this.visibleDialogRolAgente = false;
-      this.visibleDialogRolAgente = true;
-      this.agenteId = this.userId;
-    }
-
-    if (this.rolIdGeneral == "311882D4-EAD0-4B0B-9C5D-4A434D49D16D") {//Coordinador
-      this.visibleDialogRolCoordinador = false;
-      this.visibleDialogRolCoordinador = true;
-      this.agenteId = null;
-    }
   }
-
-  pageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
-  }
-
-  // Método para verificar si un campo está vacío
-  isEmpty(value: any): boolean {
-    return value === null || value === undefined || value.trim() === '';
-  }
-
-  async handleDataValidarExistencia(data: any) {
-
-
-    if (!data && Object.keys(data).length == 0) {
-      //console.log('**** Data received from child:', 'handleDataValidarExistencia', data);
-      this.nnaFormCrearSinActivar = false;
-      this.nnaFormCrearSinActivarDepartamento = false;
-    } else {
-      // Handle the case where the response is empty
-      this.nnaFormCrearSinActivar = true;
-      this.nnaFormCrearSinActivarDepartamento = true;
-    }
-  }
-
-  async handleDataContacto(data: any) {
-    this.listadoContacto = data;
-    console.log('Data received from child handleDataContacto:', 'Crear nna contacto', data, this.listadoContacto);
-  }
-
-  cancelar() {
-    this.formNNA.reset();
-  }
-
-  validarDisabledForm() {
-    var r = (this.nnaFormCrearSinActivar == false && this.formNNA.valid && Object.keys(this.listadoContacto).length > 0) == true;
-    //console.log('validarDisabledForm', this.nnaFormCrearSinActivar == false, this.formNNA.valid, Object.keys(this.listadoContacto).length > 0, r);
-    return r;
-  }
-
-
 }

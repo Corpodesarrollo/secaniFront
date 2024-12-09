@@ -59,4 +59,32 @@ label{
 .button-group button.active {
   background-color: #73b7ad !important;
   color: white;
+
+}
+
+.botonPrimario {
+  background-color: #73b7ad !important;
+  color: white;
+}
+
+.botonSecundario {
+    background-color: #848382 !important;
+    color: white;
+}
+
+::ng-deep .p-breadcrumb {
+  background: transparent;
+  padding: 0px;
+  border: none;
+}
+
+::ng-deep .p-breadcrumb .p-breadcrumb-list {
+  background: transparent;
+  border: none;
+  padding-left: 0px;
+}
+
+::ng-deep .p-breadcrumb .p-breadcrumb-list .p-breadcrumb-item a {
+  background: transparent;
+  border: none;
 }

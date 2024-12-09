@@ -17,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
 export class NnaContactoListaComponent {
   @Input() nnaId: number = 0;
   @Input() contactoId: number = 0;
+  @Input() disable: boolean = false;
   @Output() lista = new EventEmitter<any>();
   
   displayModalContacto: boolean = false;

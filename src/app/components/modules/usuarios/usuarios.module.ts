@@ -39,7 +39,7 @@ import { NnaContactoListaComponent } from "./nna-contacto/nna-contacto-lista/nna
 
 @NgModule({
   declarations: [
-    CrearNnaComponent,
+    
     CrearNnaAgregarContactoComponent
 
   ],

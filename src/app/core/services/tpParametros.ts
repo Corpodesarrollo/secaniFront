@@ -23,6 +23,12 @@ export class TpParametros {
     return await this.axios.retorno_get(url, urlbase);
   }
 
+  async getEstadosIngresoEstrategia() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `EstadoIngresoEstrategia`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
   async getCausaInasistencia() {
     var urlbase: string = environment.url_MSParametricas;
     var url = `CausaInasistencia`;

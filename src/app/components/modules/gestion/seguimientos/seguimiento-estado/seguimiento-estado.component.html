@@ -191,7 +191,7 @@
                                 <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="nna.motivoNoDiagnosticoOtro">
                             </div>
                         </div>
-                        <app-seguimiento-alertas (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
+                        <app-seguimiento-alertas  (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
                     </p-card>
                 </div>
                 <div class="col-12 col-md-6">

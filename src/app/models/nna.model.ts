@@ -1,3 +1,5 @@
+import { ContactoNNA } from "./contactoNNA.model";
+
 export class NNA {
     id!: number;
     estadoId!: number;
@@ -118,4 +120,7 @@ export class NNA {
     trasladosPropietarioResidenciaActualOtro!: string;
     trasladosQuienAsumioCostosTraslado!: string;
     trasladosQuienAsumioCostosVivienda!: string;
+
+    //contactos
+    contactos!: ContactoNNA[];
 }

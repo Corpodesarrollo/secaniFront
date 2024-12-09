@@ -10,6 +10,7 @@ import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.mod
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { Seguimiento } from '../../../../../models/seguimiento.model';
 import { apis } from '../../../../../models/apis.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-seguimiento-guardar',
@@ -41,7 +42,7 @@ export class SeguimientoGuardarComponent {
   minutos: number | null = null;  // Minutos
   periodo: string = 'AM';         // AM o PM
 
-  constructor(private fb: FormBuilder, private tp: TpParametros, private gs: GenericService) {
+  constructor(private fb: FormBuilder, private tp: TpParametros, private gs: GenericService, private router: Router) {
     
   }
 
@@ -152,5 +153,11 @@ export class SeguimientoGuardarComponent {
     }
 
     this.enviar();
+  }
+
+  terminar(){
+    this.router.navigate([`/gestion/seguimientos`]).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 }

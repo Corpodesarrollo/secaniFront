@@ -15,6 +15,7 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 
 @Component({
   selector: 'app-seguimiento-sin-tratamiento',
@@ -59,12 +60,16 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
     alertas: []
   };
 
+  alertas: AlertasTratamiento[] = [];
+  idContacto: string | undefined;
+
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
     this.router.paramMap.subscribe(() => {
-      this.diagnostico = history.state.diagnostico;
+      this.alertas = history.state.alertas;
+      this.idContacto = history.state.idContacto;
     });
 
     if (this.diagnostico) {
