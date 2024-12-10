@@ -9,6 +9,7 @@ import { ReporteDinamicoNnaComponent } from './reporte-dinamico-nna/reporte-dina
 import { ReporteDinamicoSeguimientoComponent } from './reporte-dinamico-seguimiento/reporte-dinamico-seguimiento.component';
 import { ReporteDinamicoEapbComponent } from './reporte-dinamico-eapb/reporte-dinamico-eapb.component';
 import { ReporteGeneralLlamadasComponent } from './reporte-general-llamadas/reporte-general-llamadas.component';
+import { ReporteDinamicoEntidadTerritorialComponent } from './reporte-dinamico-entidad-territorial/reporte-dinamico-entidad-territorial.component';
 
 const routes: Routes = [
   { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'seguimientos', component: ReporteDinamicoSeguimientoComponent },
   { path: 'reporte-dinamico-eapb', component: ReporteDinamicoEapbComponent },
   { path: 'llamadas', component: ReporteGeneralLlamadasComponent },
+  { path: 'reporte-dinamico-entidad-territorial', component: ReporteDinamicoEntidadTerritorialComponent },
   { path: '**', redirectTo: 'reporte-inconsistencia' }
 ];
 
