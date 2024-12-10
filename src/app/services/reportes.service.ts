@@ -19,7 +19,7 @@ export class ReportesService {
   }
 
   getReporteSeguimientos(fechaInicial: string, fechaFinal: string) {
-    const url: string = `ReportesSeguimiento/ReporteDinamicoSeguimiento?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const url: string = `Reportes/ReporteDinamicoSeguimiento?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
 }
