@@ -9,6 +9,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { ReportesService } from '../../../../services/reportes.service';
 
 @Component({
   selector: 'app-reporte-dinamico-seguimiento',
@@ -48,9 +49,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     { field: 'nombreContacto', header: 'Nombre contacto' },
   ];
 
-
-
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private reportesService: ReportesService) {
     this.camposForm = this.formBuilder.group({
       buscador: [''], // Campo de búsqueda
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
@@ -82,8 +81,15 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
-  onSubmit(): void {
-    if ( this.camposForm.invalid ) return;
-    console.log(this.camposForm.value);
+  async onSubmit() {
+    if (this.camposForm.invalid) return;
+    const { fechaInicio, fechaFin } = this.camposForm.value;
+
+    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
+    const fechaFinalString = fechaFin.toISOString().split('T')[0];
+
+
+    this.reportes = await this.reportesService
+      .getReporteSeguimientos(fechaInicialString, fechaFinalString);
   }
 }

@@ -17,4 +17,9 @@ export class ReportesService {
     const url: string = `Reportes/ReporteDinamicoNNA?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
+
+  getReporteSeguimientos(fechaInicial: string, fechaFinal: string) {
+    const url: string = `ReportesSeguimiento/ReporteDinamicoSeguimiento?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    return this.generico.retorno_get(url, this.urlbase);
+  }
 }
