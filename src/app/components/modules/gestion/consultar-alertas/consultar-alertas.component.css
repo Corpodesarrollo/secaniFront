@@ -39,7 +39,6 @@
   display: flex;
   gap: 10px; /* Espacio entre los íconos */
   justify-content: center; /* Centra horizontalmente */
-  align-items: center;
 }
 
 .icon-style {
@@ -53,6 +52,7 @@
   justify-content: center;
   align-items: center;
   font-size: 20px;
+
 }
 
 .fixed-width-badge {
@@ -68,8 +68,6 @@
   width: 40px;
   height: 40px;
   display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 20px;
 }
 

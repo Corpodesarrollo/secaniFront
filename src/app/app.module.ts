@@ -62,7 +62,7 @@ import { InputIconModule } from 'primeng/inputicon';
     InputTextModule,
     CalendarModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
 
     /**Component standalone */
 

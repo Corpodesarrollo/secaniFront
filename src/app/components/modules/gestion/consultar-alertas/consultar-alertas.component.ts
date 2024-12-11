@@ -18,13 +18,15 @@ import { from, map, Observable } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { OficioNotificacionComponent } from './oficio-notificacion/oficio-notificacion.component';
+import { VerNotificacionComponent } from '../oficio-notificacion/ver-notificacion/ver-notificacion.component';
+import { VerRespuestaComponent } from '../oficio-notificacion/ver-respuesta/ver-respuesta.component';
 
 
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
   imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule,
-    OficioNotificacionComponent
+    OficioNotificacionComponent, VerNotificacionComponent, VerRespuestaComponent
   ],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
@@ -320,6 +322,26 @@ export class ConsultarAlertasComponent implements OnInit {
 
     this.alertaSeleccionada = alerta;
     this.visible = true;
+  }
+
+  verNotificaciones: boolean = false;
+
+  showNotificaciones() {
+    this.verNotificaciones = true;
+  }
+
+  closeVerNotificaciones(){
+    this.verNotificaciones = false;
+  }
+
+  verRespuestas: boolean = false;
+
+  showRespuestas() {
+    this.verRespuestas = true;
+  }
+
+  closeVerRespuestas(){
+    this.verRespuestas = false;
   }
 
 }
