@@ -68,7 +68,7 @@
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               Reporte dinámico NNA
-              <p-button severity="success" icon="pi pi-file-excel" />
+              <p-button (onClick)="exportExcel()" severity="success" icon="pi pi-file-excel" />
             </div>
           </ng-template>
           <ng-template pTemplate="header" let-columns>
