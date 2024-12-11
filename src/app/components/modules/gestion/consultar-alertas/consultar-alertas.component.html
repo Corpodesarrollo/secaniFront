@@ -214,12 +214,12 @@
                       <td>{{ notificaciones.asuntoNotificacion }}</td>
                       <td>
                         <div class="icon-container">
-                          <i class="pi pi-eye icon-style-eye"></i>
+                          <i class="pi pi-eye icon-style-eye" (click)="showNotificaciones()"></i>
                         </div>
                       </td>
                       <td>
                         <div class="icon-container">
-                          <i class="pi pi-eye icon-style-eye"></i>
+                          <i class="pi pi-eye icon-style-eye" (click)="showRespuestas()"></i>
                         </div>
                       </td>
                       <td>{{ notificaciones.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
@@ -271,3 +271,7 @@
   </p-dialog>
 
 </body>
+
+
+<app-ver-notificacion [show]="verNotificaciones" (closeModal)="closeVerNotificaciones()"></app-ver-notificacion>
+<app-ver-respuesta [show]="verRespuestas" (closeModal)="closeVerRespuestas()"></app-ver-respuesta>
