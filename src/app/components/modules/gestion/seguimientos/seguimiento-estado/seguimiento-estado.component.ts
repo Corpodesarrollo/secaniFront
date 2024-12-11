@@ -75,6 +75,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
   estadoEnTratamiento: boolean = false;
   estadoSinTratamiento: boolean = false;
   estadoSinDiagnostico: boolean = false;
+  estadoDefault: boolean = false;
 
   idContacto: string | undefined;
 
@@ -185,6 +186,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Registrado") {
       this.stepsCount = 5;
@@ -192,6 +194,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(
       this.selectedEstado?.nombre === "EP Tratamiento en domicilio" ||
@@ -205,12 +208,14 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = true;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
-    else if(this.selectedEstado?.nombre === "Sin tratamiento") {
+    else if(this.selectedEstado?.nombre === "Diagnóstico confirmado") {
       this.estadoFallecido = false;
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = true;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Sin diagnóstico") {
       this.stepsCount = 3;
@@ -218,7 +223,15 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = true;
+      this.estadoDefault = false;
+    } else {
+      this.estadoDefault = true;
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
     }
+
   }
 
   onAlertasChange(alertas: AlertasTratamiento[]) {    
@@ -257,7 +270,13 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.saving = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
-      if(this.estadoSinDiagnostico || this.estadoSinTratamiento) {
+      if(this.estadoDefault) {
+        this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto }
+        }).then(() => {
+          window.scrollTo(0, 0);
+        });
+      }else if(this.estadoSinDiagnostico || this.estadoSinTratamiento) {
         this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
           state: { alertas: this.alertas, idContacto: this.idContacto }
         }).then(() => {

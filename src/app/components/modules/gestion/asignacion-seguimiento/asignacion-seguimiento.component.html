@@ -1,0 +1,365 @@
+<p-toast></p-toast>
+
+<body class="formato-fondo fuente-letra">
+  <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+          <h3>Asiganción de seguimientos</h3>
+          <app-boton-notificacion></app-boton-notificacion>
+      </div>
+  </div>
+  <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+          <div class="button-group">
+              <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0 " [ngClass]="{'active': activeFilter === '1'}" style="width: 150px;" (click)="applyFilter('1')">
+                  <div class="row">
+                      <div class="col">
+                          Hoy
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <h3 class="fw-bold mb-0">{{cntFiltros.hoy}}</h3>
+                      </div>
+                  </div>
+              </button>
+              <button class="btn col-auto  bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '2'}" style="width: 150px;" (click)="applyFilter('2')">
+                  <div class="row">
+                      <div class="col">
+                          Con alerta
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <h3 class="fw-bold mb-0">{{cntFiltros.conAlerta}}</h3>
+                      </div>
+                  </div>
+              </button>
+              <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '3'}" style="width: 150px;" (click)="applyFilter('3')">
+                  <div class="row">
+                      <div class="col">
+                          Todos
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <h3 class="fw-bold mb-0">{{cntFiltros.todos}}</h3>
+                      </div>
+                  </div>
+              </button>
+              <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '4'}" style="width: 240px;" (click)="applyFilter('4')">
+                  <div class="row">
+                      <div class="col">
+                          Solicitados por cuidador
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <h3 class="fw-bold mb-0">{{cntFiltros.solicitadosPorCuidador}}</h3>
+                      </div>
+                  </div>
+              </button>
+          </div>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-12">
+          <p-card>
+              <p-table
+              [value]="seguimientos"
+              [paginator]="true"
+              [rows]="20"
+              [responsive]="true"
+              [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+              [(selection)]="selectedRecords"
+              (selectionChange)="onSelectionChange($event)"
+              >
+                  <ng-template pTemplate="header">
+                      <tr>
+                          <th class="header-th" [width]="100">No. Caso</th>
+                          <th class="header-th" [width]="120">Fecha Notificación</th>
+                          <th class="header-th">Nombre</th>
+                          <th class="header-th" [width]="200">Estado</th>
+                          <th class="header-th">Asunto Última Actuación</th>
+                          <th class="header-th" [width]="120">Fecha Última Actuación</th>
+                          <th class="header-th" [width]="100">Alertas</th>
+                          <th class="header-th" [width]="100">Acción</th>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-seguimiento>
+                      <tr>
+                          <td><a [routerLink]="">{{ seguimiento.noCaso }}</a></td>
+                          <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
+                          <td>{{ seguimiento.nombreCompleto }}</td>
+                          <td><span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.nombre }}</span></td>
+                          <td>{{ seguimiento.asuntoUltimaActuacion }}</td>
+                          <td>{{ seguimiento.fechaUltimaActuacion | date:'dd/MM/yyyy' }}</td>
+                          <td>
+                              <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
+                              {{ alerta.nombre }}
+                              </span>
+                          </td>
+                          <td class="accion-container">
+                            <p-tableCheckbox [value]="seguimiento" class="accion-item" />
+                            <i *ngIf="seguimiento.asuntoUltimaActuacion?.toLowerCase() == 'solicitado por cuidador'" class="bi bi-eye-fill accion-item" style="color: #73b7ad; cursor: pointer;" (click)="solicitudCuidador(seguimiento.noCaso)"></i>
+                          </td>
+                      </tr>
+                  </ng-template>
+              </p-table>
+              <!--p-table
+  [value]="seguimientos"
+  [paginator]="true"
+  [rows]="20"
+  [responsive]="true"
+  [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+  [(selection)]="selectedRecords"
+  (selectionChange)="onSelectionChange($event)"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="header-th" [width]="100">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th class="header-th" [width]="100">No. Caso</th>
+      <th class="header-th" [width]="120">Fecha Notificación</th>
+      <th class="header-th">Nombre</th>
+      <th class="header-th" [width]="200">Estado</th>
+      <th class="header-th" [width]="100">Acción</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-seguimiento>
+    <tr>
+      <td>
+        <p-tableCheckbox [value]="seguimiento"></p-tableCheckbox>
+      </td>
+      <td>{{ seguimiento.noCaso }}</td>
+      <td>{{ seguimiento.fechaNotificacion | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ seguimiento.nombreCompleto }}</td>
+      <td>{{ seguimiento.estado.nombre }}</td>
+      <td class="accion-container">
+        <i
+          class="bi bi-eye-fill accion-item"
+          style="color: #73b7ad; cursor: pointer;"
+          (click)="solicitudCuidador(seguimiento.noCaso)"
+        ></i>
+      </td>
+    </tr>
+  </ng-template>
+</p-table-->
+
+          </p-card>
+      </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
+    <div>
+        <button class="btn btn-asignar-nna" (click)="asignarSeleccion()">ASIGNAR</button>
+    </div>
+  </div>
+</body>
+
+<p-dialog [(visible)]="showDialog" [modal]="true" [style]="{width: '600px'}">
+  <div *ngIf="isLoading" class="spinner">
+    <p class="{{colorMensaje}}">{{mensajeCarga}}</p>
+    <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
+  </div>
+  <div class="px-3" *ngIf="!isLoading">
+      <div class="row mb-3">
+          <div class="col-12 text-center">
+              <span class="fw-bold">Solicitud de seguimiento</span>
+          </div>
+          <div class="col-12 text-center">
+              <span class="fw-bold">No. CASO: {{nna.id}}</span>
+          </div>
+      </div>
+      <div class="row mb-3">
+          <div class="col-12">
+              <div class="usuario">
+                  <i class="bi bi-person-circle foto-perfil"></i>
+                  <div class="datos-usuario">
+                      <p><strong>{{nna.primerNombre}} {{nna.segundoNombre}} {{nna.primerApellido}} {{nna.segundoApellido}}</strong></p>
+                      <p *ngIf="nna.sexoId == '2'">Femenino</p>
+                      <p *ngIf="nna.sexoId == '1'">Masculino</p>
+                      <p>{{nna.edad}}</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12">
+              <div class="detalles-seguimiento">
+                  <div class="row mb-1">
+                      <div class="col-4">
+                          <span class="fw-bold">Nombre Solicitante:</span>
+                      </div>
+                      <div class="col-8">
+                          <span>{{ nna.cuidadorNombres }}</span>
+                      </div>
+                  </div>
+                  <div class="row mb-1">
+                      <div class="col-4">
+                          <span class="fw-bold">Parentesco:</span>
+                      </div>
+                      <div class="col-8">
+                          <span>{{ parentesco?.nombre }}</span>
+                      </div>
+                  </div>
+                  <div class="row mb-1">
+                      <div class="col-4">
+                          <span class="fw-bold">Correo:</span>
+                      </div>
+                      <div class="col-8">
+                          <span>{{ nna.cuidadorEmail }}</span>
+                      </div>
+                  </div>
+                  <div class="row mb-1">
+                      <div class="col-4">
+                          <span class="fw-bold">Teléfono:</span>
+                      </div>
+                      <div class="col-8">
+                          <span>{{ nna.cuidadorTelefono }}</span>
+                      </div>
+                  </div>
+                  <div class="row mb-1">
+                      <div class="col-4">
+                          <span class="fw-bold">Diagnóstico:</span>
+                      </div>
+                      <div class="col-8">
+                          <span>{{ diagnostico?.nombre }}</span>
+                      </div>
+                  </div>
+                  <div class="row mb-1">
+                      <div class="col-4">
+                          <span class="fw-bold">Fecha diagnóstico:</span>
+                      </div>
+                      <div class="col-8">
+                          <span>{{ nna.fechaDiagnostico | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-4">
+                          <span class="fw-bold">Observación:</span>
+                      </div>
+                      <div class="col-8">
+                          <div class="observacion">
+                              <span>{{ nna.tratamientoObservaciones }}</span>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- <div class="row mb-1">
+                      <div class="col-8 offset-4">
+                          <a href="ruta/a/anexo.pdf" class="anexo-link">Anexo-Diagnóstico Francy.pdf</a>
+                      </div>
+                  </div> -->
+              </div>
+          </div>
+      </div>
+  </div>
+</p-dialog>
+
+<p-dialog header="Vista previa" [(visible)]="showDialogSeleccionados" [modal]="true" [style]="{width: '600px'}">
+
+  <span class="p-text-secondary block mb-8">Total casos seleccionados: {{selectedRecords.length}}</span>
+
+  <div class="flex items-center gap-4 mb-4">
+    <p-table
+    [value]="selectedRecords"
+    [paginator]="true"
+    [rows]="20"
+    [responsive]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="header-th" [width]="100">No. Caso</th>
+                <th class="header-th">Nombre</th>
+                <th class="header-th" [width]="200">Estado</th>
+                <th class="header-th" [width]="100">Alertas</th>
+                <th class="header-th" [width]="100">Acción</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-seguimiento>
+            <tr>
+                <td><a [routerLink]="">{{ seguimiento.noCaso }}</a></td>
+                <td>{{ seguimiento.nombreCompleto }}</td>
+                <td><span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.nombre }}</span></td>
+                <td>
+                    <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
+                    {{ alerta.nombre }}
+                    </span>
+                </td>
+                <td class="accion-container justify-content-center align-items-center">
+                  <button
+                      pButton pRipple
+                      type="button"
+                      icon="pi pi-times"
+                      (click)="onRowEditCancel(seguimiento)"
+                      class="p-button-rounded p-button-text p-button-danger">
+                  </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+  </div>
+
+  <div class="seleccion-dialog">
+    <button
+      class="btn-vista-previa-close"
+      (click)="closeVistaPrevia()">
+      Cancelar
+    </button>
+    <button
+      class="btn-vista-previa-confirmar"
+      (click)="openSeleccionarAgente()">
+      Confirmar
+    </button>
+  </div>
+
+</p-dialog>
+
+<p-dialog header="Reasignar seguimiento" [(visible)]="showDialogAgente" [modal]="true" [style]="{width: '600px'}">
+
+  <span *ngIf="selectedRecords.length==1" class="p-text-secondary block mb-8">{{selectedRecords[0].nombreCompleto}} - Seguimiento No.  {{selectedRecords[0].noCaso}}</span>
+  <span *ngIf="selectedRecords.length!=1" class="p-text-secondary block mb-8">Casos seleccionados: {{selectedRecords.length}}</span>
+
+  <div class="flex items-center gap-4 mb-8">
+    <div class="row fw-bold">
+      Agente de segimiento*
+    </div>
+    <div class="row">
+      <select class="form-select" aria-label="Default select example" name="agentes" [(ngModel)]="agente">
+        <option value="" selected>Seleccionar</option>
+        <option *ngFor="let ag of agentes" value="{{ag.value}}">{{ag.label}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4 mb-8">
+    <div class="row fw-bold">
+      Motivo*
+    </div>
+    <div class="row">
+      <textarea
+        id="motivo"
+        [(ngModel)]="motivo"
+        rows="3"
+        class="form-control"
+        placeholder="Ingrese el motivo">
+      </textarea>
+    </div>
+  </div>
+
+  <div class="agente-dialog">
+    <button
+      class="btn-agente-close"
+      (click)="closeSeleccionarAgente()">
+      Cancelar
+    </button>
+    <button
+      class="btn-agente-guardar"
+      (click)="reasignarCasos()">
+      Confirmar
+    </button>
+  </div>
+
+</p-dialog>

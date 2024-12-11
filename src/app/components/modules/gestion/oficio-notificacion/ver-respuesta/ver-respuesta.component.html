@@ -1,0 +1,72 @@
+<p-dialog [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false" [resizable]="false" (onHide)="close()">
+  <ng-template pTemplate="header">
+    <h1 class="dialog-title">Respuesta a notificación de alerta</h1>
+  </ng-template>
+  <div class="contenedor-respuestas">
+
+      <p-carousel
+          [value]="respuestas"
+          [numVisible]="1"
+          [numScroll]="1"
+          [circular]="true"
+          [showIndicators]="false"
+          [page]="paginaActual"
+          >
+
+          <ng-template let-respuesta pTemplate="item">
+            <div class="respuesta">
+              <div class="row">
+                <p>
+                  {{alertaTexto}}
+                </p>
+              </div>
+              <div class="row">
+                <div class="col-4"><span class="titulo">Entidad</span></div>
+                <div class="col">{{ respuesta.entidad }}</div>
+              </div>
+              <div class="row">
+                <div class="col-4"><span class="titulo">Nombre funcionario</span></div>
+                <div class="col">{{ respuesta.funcionario }}</div>
+              </div>
+              <div class="row">
+                <div class="col-4"><span class="titulo">Cargo</span></div>
+                <div class="col">{{ respuesta.cargo }}</div>
+              </div>
+              <div class="row">
+                <div class="col-4"><span class="titulo">Correo electrónico</span></div>
+                <div class="col">{{ respuesta.correo }}</div>
+              </div>
+              <div class="row">
+                <div class="col-4"><span class="titulo">Teléfono de contacto</span></div>
+                <div class="col">{{ respuesta.telefono }}</div>
+              </div>
+              <div class="row">
+                <div class="col-4"><span class="titulo">Respuesta</span></div>
+                <div class="col">
+                  <div class="row">
+                    <p-card>
+
+                    </p-card>
+                  </div>
+                  <div class="row">
+                    <a [href]="respuesta.adjunto.url" target="_blank">{{ respuesta.adjunto.nombre }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </ng-template>
+      </p-carousel>
+
+      <div class="carousel-controls">
+        <button class="control-btn" (click)="prevPage()">
+          <i class="pi pi-angle-left"></i>
+        </button>
+        <span>{{ paginaActual + 1 }}/{{ respuestas.length }}</span>
+        <button class="control-btn" (click)="nextPage()">
+          <i class="pi pi-angle-right"></i>
+        </button>
+      </div>
+
+  </div>
+</p-dialog>

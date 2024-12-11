@@ -1,0 +1,96 @@
+.dialog-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+
+.respuesta {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fff;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.linea {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.titulo {
+  font-weight: bold;
+  min-width: 150px;
+  text-align: left;
+  color: #000;
+}
+
+a {
+  color: #007ad9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.row {
+  margin-bottom: 5%;
+}
+
+.carousel-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 20px;
+}
+
+.carousel-controls .control-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.carousel-controls .control-btn:hover {
+  background-color: #bdbdbd;
+  transform: scale(1.1);
+}
+
+.carousel-controls span {
+  font-size: 16px;
+  color: #777;
+}
+
+::ng-deep .p-carousel-prev,
+::ng-deep .p-carousel-next {
+    display: none;
+}
+
+p {
+  text-align: center !important;
+
+}
