@@ -206,7 +206,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
     }
-    else if(this.selectedEstado?.nombre === "Sin tratamiento") {
+    else if(this.selectedEstado?.nombre === "Diagnóstico confirmado") {
       this.estadoFallecido = false;
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = true;
