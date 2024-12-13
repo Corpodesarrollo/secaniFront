@@ -21,13 +21,14 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { GenericService } from '../../../../../services/generic.services';
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
+import { NnaContactoListaComponent } from '../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component';
 
 @Component({
   selector: 'app-editar-nna',
   templateUrl: './editar-nna.component.html',
   styleUrls: ['./editar-nna.component.css'],
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, AccordionModule, SelectButtonModule, DropdownModule, CalendarModule, FormsModule, ToastModule, ButtonModule, RippleModule],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, AccordionModule, SelectButtonModule, DropdownModule, CalendarModule, FormsModule, ToastModule, ButtonModule, RippleModule, NnaContactoListaComponent],
   providers: [MessageService]
 })
 export class EditarNnaComponent implements OnInit {
@@ -66,12 +67,14 @@ export class EditarNnaComponent implements OnInit {
   razonesSinDiagnostico: any[] = [];
   placeholderidsindiagnostico: any;
   diagnosticos: any[] = [];
+  estadosNNA: any[] = [];
+  tiposOrigenReporte: any[] = [];
   entidadesRecibirTratamiento: any[] = [];
   departamentos: any[] = [];
   municipios: any[] = [];
-  areas: any[] = [];
-  estratos: any[] = [];
-  tiposVivienda: any[] = [];
+
+
+
   tiposMalaAtencionIps: any[] = [];
   categoriasAlerta: any[] = [];
   subcategoriasAlerta: any[] = [];
@@ -82,9 +85,21 @@ export class EditarNnaComponent implements OnInit {
   sexoAnn: any[] = [
     {"id" : 1, "nombre" : "Masculino"},
     {"id" : 2, "nombre" : "Femenino"}
-  ]
+  ];
+  estadosIngresoEstrategia: any[] = [];
+  departamentosOrigen: any[] = [];
+  municipiosOrigen: any[] = [];
+  departamentosResidenciaActual: any[] = [];
+  municipiosResidenciaActual: any[] = [];
+  areas: any[] = [];
+  estratos: any[] = [];
+  tiposVivienda: any[] = [];
 
   observacion: any = '';
+  departamentoOrigen: any ='';
+  municipioOrigen: any ='';
+  departamentoRecidenciaActual: any ='';
+  municipioRecidenciaActual: any ='';
 
   constructor(
     private route: ActivatedRoute,
@@ -120,6 +135,14 @@ export class EditarNnaComponent implements OnInit {
     this.loadCategoriasAlerta();
     this.loadSubCategoriasAlerta();
     this.loadCausasInasistencia();
+    this.loadEstadosNNA();
+    this.loadTiposOrigen();
+    this.loadEstadoIngresoEstrategia();
+    this.loadAreas();
+    this.loadEstratos();
+    this.loadTiposVivienda();
+    this.loadUnidadesMedida();
+
 
   }
 
@@ -128,7 +151,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadDatosBasicosNNA() {
-    this.repos.get_withoutParameters(`/NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
       next: (datosBasicosData: any) => {
         this.datosBasicosNNA = datosBasicosData;
         this.fechaInicio = new Date(this.datosBasicosNNA.fechaNacimiento);
@@ -166,20 +189,22 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadNNAData() {
-    this.repos.get_withoutParameters(`/NNA/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
         this.fechaConsultaDiagnosticoInput = this.formatDate(this.datosNNA.fechaConsultaDiagnostico);
         this.fechaDiagnosticoInput = this.formatDate(this.datosNNA.fechaDiagnostico);
         this.fechaInicioTratamientoInput = this.formatDate(this.datosNNA.fechaInicioTratamiento);
         this.fechaRecaidaInput = this.formatDate(this.datosNNA.fechaUltimaRecaida);
+        this.deptoMuniOrigen(nnaData.residenciaOrigenMunicipioId);
+        this.deptoMuniResiActual(nnaData.residenciaActualMunicipioId);
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
   }
 
   loadContactosNna(){
-    this.repos.get_withoutParameters(`/ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
+    this.repos.get_withoutParameters(`ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
       next: async (data: any) => {
         this.contactosNna = data.datos;
       },
@@ -219,35 +244,8 @@ export class EditarNnaComponent implements OnInit {
     console.log(event.value);
   }
 
-  /*async getNombreDepto(codigo: string): Promise<string> {
-
-    if (!codigo) {
-      return 'No encontrado';
-    }
-
-    let cod = codigo.substring(0, 2);
-    let deptos: any[] = await this.tpp.getTPDepartamento(cod);
-
-    let filtrado = deptos.filter(objeto => objeto.codigo === cod);
-
-    return filtrado.length > 0 ? filtrado[0].nombre : 'No encontrado';
-  }*/
-
-  /*async getNombreMuni(codigo: string): Promise<string> {
-
-    if (!codigo) {
-      return 'No encontrado';
-    }
-
-    let deptos: any[] = await this.tpp.getTPCiudad(codigo);
-
-    let filtrado = deptos.filter(objeto => objeto.codigo === codigo);
-
-    return filtrado.length > 0 ? filtrado[0].nombre : 'No encontrado';
-  }*/
-
   loadRazonesSinDiagnostico(){
-    this.repos.get_withoutParameters(`/RazonesSinDiagnostico`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`RazonesSinDiagnostico`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.razonesSinDiagnostico = data;
       },
@@ -255,13 +253,8 @@ export class EditarNnaComponent implements OnInit {
     });
   }
 
-  getPlaceholderidsindiagnostico(id:any){
-    const selectedOption = this.razonesSinDiagnostico.find(option => option.id === id);
-    return selectedOption ? selectedOption.nombre : 'Seleccionar';
-  }
-
   loadPaisesNacimiento(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/Pais`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/Pais`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listadoPais = data;
       },
@@ -270,16 +263,18 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadDepartamentos(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/Departamento`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/Departamento`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listaDepartamentos = data;
+        this.departamentosOrigen = data;
+        this.departamentosResidenciaActual = data;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
   }
 
   loadMunicipios(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/Municipio`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/Municipio`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.listaMunicipios = data;
       },
@@ -288,7 +283,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEtnias(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/GrupoEtnico`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/GrupoEtnico`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.etnias = data;
       },
@@ -297,7 +292,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadGruposPobla(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/LCETipoPoblacionEspecial`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/LCETipoPoblacionEspecial`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.gruposponlacional = data;
       },
@@ -306,7 +301,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadRegimenes(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/APSRegimenAfiliacion`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/APSRegimenAfiliacion`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.regimenesAfiliacion = data;
       },
@@ -315,16 +310,17 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEAPBs(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/CodigoEAPByNit`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/CodigoEAPByNit`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.eapbs = data;
+        this.ipss = data;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
   }
 
   loadParentescos(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/RLCPDParentesco`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`TablaParametrica/RLCPDParentesco`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.parentescos = data;
       },
@@ -333,7 +329,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadDiagnosticos(){
-    this.repos.get_withoutParameters(`/CIE10`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`CIE10`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.diagnosticos = data;
       },
@@ -342,7 +338,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEntidadesRecibirTratamiento(){
-    this.repos.get_withoutParameters(`/Entidades/Entidades`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`Entidades/Entidades`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.entidadesRecibirTratamiento = data;
       },
@@ -351,7 +347,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadTiposMalaAtencionIps(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/malaatencionips`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`MalaAtencionIPS`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.tiposMalaAtencionIps = data;
       },
@@ -360,7 +356,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadCategoriasAlerta(){
-    this.repos.get_withoutParameters(`/CategoriaAlerta`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`CategoriaAlerta`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.categoriasAlerta = data;
       },
@@ -369,7 +365,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadSubCategoriasAlerta(){
-    this.repos.get_withoutParameters(`/SubCategoriaAlerta`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`SubCategoriaAlerta`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.subcategoriasAlerta = data;
       },
@@ -378,9 +374,72 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadCausasInasistencia(){
-    this.repos.get_withoutParameters(`/ApiTablasParametricas/causainasistencia`, 'TablaParametrica').subscribe({
+    this.repos.get_withoutParameters(`CausaInasistencia`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.cuasasInasistencia = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadEstadosNNA(){
+    this.repos.get_withoutParameters(`EstadoNNA`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estadosNNA = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadTiposOrigen(){
+    this.repos.get_withoutParameters(`OrigenReporte`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.tiposOrigenReporte = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadEstadoIngresoEstrategia(){
+    this.repos.get_withoutParameters(`EstadoIngresoEstrategia`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estadosIngresoEstrategia = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadAreas(){
+    this.repos.get_withoutParameters(`TablaParametrica/ZonaTerritorial`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.areas = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadEstratos(){
+    this.repos.get_withoutParameters(`TablaParametrica/EstratoSocioeconomico`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.estratos = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadTiposVivienda(){
+    this.repos.get_withoutParameters(`TablaParametrica/RIBATipoVivienda`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.tiposVivienda = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadUnidadesMedida(){
+    this.repos.get_withoutParameters(`TablaParametrica/UnidadMedida`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.unidadesMedida = data;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
@@ -415,33 +474,131 @@ export class EditarNnaComponent implements OnInit {
   }
 
   getNombreSexoPorId(id: any): string | undefined {
-    const resultado = this.sexoAnn.find(item => item.id === id);
+    const resultado = this.sexoAnn.find(item => item.id === Number(id));
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
   }
 
   getNombrePaisPorId(id: any): string | undefined {
-    const resultado = this.listadoPais.find(item => item.id === id);
+    const limpiarDato = (dato: string | null | undefined): string => {
+      if (!dato) return ''; // Si es null o undefined, retorna una cadena vacía
+      return dato.replace(/'/g, '');
+    };
+    let codPais : string = limpiarDato(id);
+    const resultado = this.listadoPais.find(item => item.codigo === codPais);
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
   }
 
-  getNombreDeptoPorId(id: any): string | undefined {
-    const resultado = this.listaDepartamentos.find(item => item.id === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  getNombreDeptoPorId(codigo: any): string | undefined {
+    const extraerDosPrimeros = (codigo: string | undefined | null): string => {
+      if (!codigo) {
+        return '';
+      }
+      return codigo.substring(0, 2);
+    };
+    let codDepto: string = extraerDosPrimeros(codigo);
+    const resultado = this.listaDepartamentos.find(item => item.codigo === codDepto);
+    return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
   }
 
-  getNombreMuniPorId(id: any): string | undefined {
-    const resultado = this.listaMunicipios.find(item => item.id === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  getNombreMuniPorId(codigo: any): string | undefined {
+    const completarCodigo = (codigo: string | undefined | null): string => {
+      if (!codigo) {
+        return '';
+      }
+      return codigo.padEnd(5, '0');
+    };
+    /*const completarCodigo = (codigo: string): string => {
+      return codigo.padEnd(5, '0');
+    };*/
+    let codigoCompleto: string = completarCodigo(codigo);
+    const resultado = this.listaMunicipios.find(item => item.codigo === codigoCompleto);
+    return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
   }
 
   getNombreEtniaPorId(id: any): string | undefined {
-    const resultado = this.etnias.find(item => item.id === id);
+    const resultado = this.etnias.find(item => item.codigo === id);
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
   }
 
   getNombreGrupoPoblaPorId(id: any): string | undefined {
-    const resultado = this.gruposponlacional.find(item => item.id === id);
+    const resultado = this.gruposponlacional.find(item => item.codigo === id);
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  getNombreTipoAfiliacionPorId(id: any): string | undefined {
+    const resultado = this.regimenesAfiliacion.find(item => item.codigo === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  getNombreEstadoNNAPorId(id: any): string | undefined {
+    const resultado = this.estadosNNA.find(item => item.id === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  getNombreOrigenReportePorId(id: any): string | undefined {
+    const resultado = this.tiposOrigenReporte.find(item => item.id === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  getNombreEstadoIngresoPorId(id: any): string | undefined {
+    const resultado = this.estadosIngresoEstrategia.find(item => item.id === id);
+    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+  }
+
+  deptoMuniOrigen(codigoMuniOrigenNNa:string){
+    const extraerDosPrimeros = (codigoMuniOrigenNNa: string | undefined | null): string => {
+      if (!codigoMuniOrigenNNa) {
+        return '';
+      }
+      return codigoMuniOrigenNNa.substring(0, 2);
+    };
+    this.departamentoOrigen = extraerDosPrimeros(codigoMuniOrigenNNa);
+    this.municipioOrigen = codigoMuniOrigenNNa;
+
+    if(this.departamentoOrigen!=''){
+      this.loadMunisPorDepto();
+    }
+  }
+
+  deptoMuniResiActual(codigoMuniResiActualNNa:string){
+    const extraerDosPrimeros = (codigoMuniResiActualNNa: string | undefined | null): string => {
+      if (!codigoMuniResiActualNNa) {
+        return '';
+      }
+      return codigoMuniResiActualNNa.substring(0, 2);
+    };
+    this.departamentoRecidenciaActual = extraerDosPrimeros(codigoMuniResiActualNNa);
+    this.municipioRecidenciaActual = codigoMuniResiActualNNa;
+
+    if(this.departamentoOrigen!=''){
+      this.loadMunisPorDepto();
+    }
+  }
+
+  loadMunisPorDepto(){
+    this.repos.get_withoutParameters(`TablaParametrica/Municipios/`+this.departamentoOrigen, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.municipiosOrigen = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  seleccionMunicipioOrigen(){
+    this.datosNNA.residenciaOrigenMunicipioId = this.municipioOrigen;
+  }
+
+  loadMunisResiActualPorDepto(){
+    this.repos.get_withoutParameters(`TablaParametrica/Municipios/`+this.departamentoRecidenciaActual, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.municipiosResidenciaActual = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  seleccionMunicipioResiActual(){
+    this.datosNNA.residenciaActualMunicipioId = this.municipioRecidenciaActual;
   }
 
 
@@ -679,4 +836,33 @@ export class EditarNnaComponent implements OnInit {
     });
 
   }
+
+
+
+  visibleCrearContacto: boolean = false;
+  visibleEditarContacto: boolean = false;
+  headerContacto: any = '';
+  contactoId: any = '0';
+
+  showDialogCrearContacto() {
+    this.headerContacto = "Crear contacto"
+    this.visibleCrearContacto = true;
+  }
+
+  showDialogEditarContacto(id: any) {
+    this.headerContacto = "Editar contacto"
+    this.visibleCrearContacto = true;
+    this.contactoId = id;
+  }
+
+  manejarContactoCreado(contacto: any) {
+    console.log('Contacto creado:', contacto);
+  }
+
+  manejarCierreModal() {
+    console.log('El modal ha sido cerrado');
+    this.contactoId = '0';
+    this.visibleCrearContacto = false; // Cerrar el modal
+  }
+
 }

@@ -2,7 +2,7 @@
   <div class="d-flex align-items-center justify-content-between mt-5 mb-4">
     <h1>Plantillas de correo</h1>
     <p-button class="me-3" severity="success" label="Crear"
-      [routerLink]="['/administracion/plantillas-correo/nueva']"
+      [routerLink]="['/administracion/plantilla_de_correo/nueva']"
     />
   </div>
 
@@ -80,12 +80,13 @@
             <th>
               <div>
                 <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                  [routerLink]="['/administracion/plantillas-correo', plantillaCorreo.id, 'editar']"
+                  [routerLink]="['/administracion/plantilla_de_correo', plantillaCorreo.id, 'editar']"
                 />
                 <p-button icon="pi pi-eye" (click)="openViewModal(plantillaCorreo)" [rounded]="true" [text]="true" severity="secondary"/>
                 <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary"
-                  [routerLink]="['/administracion/plantillas-correo', plantillaCorreo.id, 'historico']"
+                  [routerLink]="['/administracion/plantilla_de_correo', plantillaCorreo.id, 'historico']"
                 />
+                <p-button (onClick)="confirm($event)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>
               </div>
             </th>
           </tr>
@@ -157,3 +158,5 @@
     <p-button severity="success" label="Volver" (click)="closeViewModal()"/>
   </div>
 </p-dialog>
+
+<p-confirmDialog />

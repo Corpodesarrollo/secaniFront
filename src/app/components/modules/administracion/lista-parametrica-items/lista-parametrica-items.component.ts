@@ -5,6 +5,9 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
+import { ActivatedRoute } from '@angular/router';
+import { ListaParametrica } from '../../../../models/listaParametrica.model';
 
 @Component({
   selector: 'app-lista-parametrica-items',
@@ -15,33 +18,79 @@ import { TableModule } from 'primeng/table';
 })
 export class ListaParametricaItemsComponent implements OnInit {
 
+  public id: string | null = null;
+  public listaParametricaPadre: ListaParametrica | null = null;
+
   public items: any[] = [];
   public itemsListasPadre: any[] = [];
   public itemsListaParametricaForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private listasParametricasService: ListasParametricasService
+  ) {
     this.itemsListaParametricaForm = this.formBuilder.group({
-      id: [{ value: '', disabled: true }],
+      id: [{ value: '', disabled: true }, Validators.required],
       nombre: ['', Validators.required],
-      identificador: ['', Validators.required],
-      ordenLista: [{ value: '', disabled: true }, Validators.required],
-      itemListaPadre: ['', Validators.required]
+      codigo: [{ value: null, disabled: true }],
+      descripcion: [{ value: null, disabled: true }],
+      indicador: ['', Validators.required],
+      orden: [{ value: null, disabled: true }],
+      itemListaPadre: [{ value: null, disabled: true }]
     });
   }
 
-  ngOnInit(): void {
-    this.items = [
-      { nombre: 'Leucemia Linfoide Aguda', identificador: 'i.', ordenLista: 'i.', itemListaPadre: 'N/A' }
-    ];
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.id = params.get('id');
+      if (this.id) {
+        this.obtenerListaParametricaPorId(this.id);
+      }
+    });
   }
 
-  openEditModal(itemListaParematrica: any): void {
+  async obtenerListaParametricaPorId(id: string) {
+    this.listaParametricaPadre = await this.listasParametricasService.getListaParametrica(id);
+    await this.obtenerItems();
+  }
+
+  async obtenerItems() {
+    if (!this.listaParametricaPadre?.nombre) return;
+
+    const rawItems = await this.listasParametricasService.getItemListaParametricas(this.listaParametricaPadre?.nombre);
+
+    // Normalizar los datos para garantizar que todos tengan el campo `nombre`
+    this.items = rawItems.map((item: any) => ({
+      ...item,
+      nombre: item.nombre || item.festivo || item.subCategoriaAlerta || 'Sin nombre',
+    }));
+  }
+
+  openItemForEdit(itemListaParematrica: any): void {
     this.itemsListaParametricaForm.reset(itemListaParematrica);
   }
 
-  onSubmit(): void {
-    if(this.itemsListaParametricaForm.invalid) return;
-    console.log(this.itemsListaParametricaForm.value);
+  async onSubmit() {
+    if(this.itemsListaParametricaForm.invalid || !this.listaParametricaPadre) return;
+
+    const { identificador, ordenLista, itemListaPadre, id, ...datos } = this.itemsListaParametricaForm.getRawValue();
+    const { nombre } = this.listaParametricaPadre;
+
+    try {
+      if (id) {
+        await this.listasParametricasService.putItemListaParametrica(nombre, id, { id, ...datos });
+      } else {
+        await this.listasParametricasService.postItemListaParametrica(nombre, datos);
+      }
+      await this.obtenerItems();
+      this.clearForm();
+    } catch (error) {
+      console.error('Error al guardar los datos:', error);
+    }
+  }
+
+  clearForm(): void {
     this.itemsListaParametricaForm.reset();
   }
 }

@@ -110,4 +110,8 @@ export class HistoricoNnaComponent {
     this.router.navigate(["/usuarios/crear_nna"]);
   }
 
+  redirigirDetalleNna(idNna: string): void {
+    this.router.navigate(["/usuarios/detalle_nna/", idNna]);
+  }
+
 }

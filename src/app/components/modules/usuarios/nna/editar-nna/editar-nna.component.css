@@ -1,3 +1,4 @@
+
 .user-icon {
   font-size: 24px;
   color: #708090;
@@ -53,7 +54,7 @@
 }
 
 .toggle-btn.active {
-  background-color: #5cbaba; /* Color de fondo para el estado seleccionado */
+  background-color: #73b7ad; /* Color de fondo para el estado seleccionado */
   color: white; /* Color de texto para el estado seleccionado */
 }
 
@@ -82,5 +83,66 @@
   background-color: #ff9901c3;
   color: white;
   transform: scale(1.05); /* Efecto hover para agrandar un poco */
+}
+
+/* Estilos para el botón redondo */
+.boton-redondo {
+  width: 3rem; /* Ancho del botón */
+  height: 3rem; /* Alto del botón */
+  border: none; /* Sin borde */
+  border-radius: 50%; /* Hace el botón redondo */
+  background-color: #73b7ad; /* Color de fondo */
+  color: #ffffff; /* Color del ícono */
+  font-size: 1.5rem; /* Tamaño del ícono */
+  display: flex; /* Centrar el ícono dentro del botón */
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Cambia el cursor a "mano" */
+  transition: background-color 0.3s ease; /* Efecto de hover */
+}
+
+/* Efecto al pasar el cursor por el botón */
+.boton-redondo:hover {
+  background-color: #5b8f79; /* Color al pasar el cursor */
+}
+
+/* Contenedor principal */
+.contenedor {
+  display: flex;
+  justify-content: flex-end; /* Alinea el botón a la derecha */
+  padding: 1rem; /* Espaciado interno opcional */
+}
+
+/* Botón */
+.boton-derecha {
+  background-color: #73b7ad; /* Color de fondo del botón */
+  color: #ffffff; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  padding: 0.5rem 1rem; /* Espaciado interno */
+  font-size: 1rem; /* Tamaño del texto */
+  display: flex; /* Flexbox para alinear ícono y texto */
+  align-items: center; /* Centra verticalmente ícono y texto */
+  gap: 0.5rem; /* Espaciado entre ícono y texto */
+  cursor: pointer; /* Cambia el cursor a "mano" */
+  transition: background-color 0.3s ease; /* Efecto suave al pasar el cursor */
+}
+
+/* Efecto hover para el botón */
+.boton-derecha:hover {
+  background-color: #5b8f79; /* Color más oscuro al pasar el cursor */
+}
+
+select.form-select {
+  border-radius: 8px; /* Ajusta el valor según lo que necesites */
+  padding: 10px; /* Aumenta el espacio interno para un aspecto más limpio */
+  font-size: 14px; /* Ajusta el tamaño del texto */
+}
+
+.form-select option {
+  border-radius: 8px; /* Aplica esquinas redondeadas a las opciones */
+  background-color: #ffffff; /* Fondo blanco */
+  color: #495057; /* Texto oscuro */
+  padding: 8px; /* Espaciado interno */
 }
 

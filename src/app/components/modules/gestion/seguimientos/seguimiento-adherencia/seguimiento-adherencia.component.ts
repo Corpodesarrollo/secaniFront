@@ -16,12 +16,14 @@ import { InfoAdherencia } from '../../../../../models/infoAdherencia.model';
 import { NNA } from '../../../../../models/nna.model';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 
 @Component({
   selector: 'app-seguimiento-adherencia',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-            DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, EstadoNnaComponent],
   templateUrl: './seguimiento-adherencia.component.html',
   styleUrl: './seguimiento-adherencia.component.css'
 })
@@ -54,6 +56,10 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   isLoadingUnidadesTiempo: boolean = true;
   isLoadingCausasInasistencia: boolean = true;
 
+  alertas: AlertasTratamiento[] = [];
+
+  idContacto: string | undefined;
+
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
@@ -61,6 +67,11 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.alertas = history.state.alertas;
+      this.idContacto = history.state.idContacto;
+    });
+
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
 
@@ -69,10 +80,10 @@ export class SeguimientoAdherenciaComponent implements OnInit {
       { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
     ];
 
-    this.unidadesTiempo =  await this.tp.getTP('UnidadesTiempo');
+    this.unidadesTiempo =  await this.tp.getTP('UnidadMedidaEdad');
     this.isLoadingUnidadesTiempo = false;
 
-    this.causasInasistencia =  await this.tp.getTP('CausasInasistencia');
+    this.causasInasistencia =  await this.tpp.getCausaInasistencia();
     this.isLoadingCausasInasistencia = false;
   }
 
@@ -100,10 +111,21 @@ export class SeguimientoAdherenciaComponent implements OnInit {
     }
   }
 
-  Siguiente() {
+  async Siguiente() {
+    //1.- Guardar datos nna
+    await this.Actualizar();
+    //2.- validar si hay alertas
+    
+    //3.- si no hay alertas
+
     // this.router.navigate(['/gestion/seguimiento/dificultades-seguimiento']).then(() => {
     //   window.scrollTo(0, 0);
     // });
+    this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+      state: { alertas: this.alertas, idContacto: this.idContacto }
+    }).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 
   async Actualizar() {

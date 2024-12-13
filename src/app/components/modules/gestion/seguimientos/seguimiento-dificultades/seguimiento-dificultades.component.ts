@@ -19,12 +19,13 @@ import { SeguimientoAlertasComponent } from "../../seguimiento-alertas/seguimien
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-dificultades',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-dificultades.component.html',
   styleUrl: './seguimiento-dificultades.component.css'
 })
@@ -74,11 +75,16 @@ export class SeguimientoDificultadesComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
+  idContacto: string | undefined;
+
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, 
     private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
 
@@ -88,8 +94,8 @@ export class SeguimientoDificultadesComponent implements OnInit {
     ];
 
     //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
-    //this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
-    //this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
+    this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
+    this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
 
 
     this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
@@ -169,7 +175,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
   }
 
   actualizarTrasladosArray() {
-    const nuevoTamano = this.dificultades.numeroTraslados;
+    const nuevoTamano = this.nna.trasladosNumerodeTraslados;
 
     // Ajusta el tamaño de trasladosArray sin borrar valores existentes
     if (nuevoTamano > this.trasladosArray.length) {
@@ -187,12 +193,20 @@ export class SeguimientoDificultadesComponent implements OnInit {
 
   async Siguiente() {
     await this.Actualizar();
-      this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`]).then(() => {
-        window.scrollTo(0, 0);
-      });
+
+    this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`], {
+      state: { alertas: this.alertas, idContacto: this.idContacto }
+    }).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 
   async Actualizar() {
     await this.nnaService.putNNA(this.nna);
+  }
+
+  cargarAlertas(lista:AlertasTratamiento[]) {
+    this.alertas = lista; // Guardar la lista emitida por el hijo
+    console.log('Lista de alertas recibidas:', this.alertas);
   }
 }

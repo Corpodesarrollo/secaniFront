@@ -4,3 +4,11 @@
   text-overflow: ellipsis;
   max-width: 400px; /* Ajusta el ancho según sea necesario */
 }
+
+.file-upload-icon {
+  display: inline-block;
+  width: 40px;
+  color: #73b7ad;
+  display: flex;
+  cursor: pointer;
+}

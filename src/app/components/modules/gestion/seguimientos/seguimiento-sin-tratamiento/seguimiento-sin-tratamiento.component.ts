@@ -14,11 +14,13 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Parametricas } from '../../../../../models/parametricas.model';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 
 @Component({
   selector: 'app-seguimiento-sin-tratamiento',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-sin-tratamiento.component.html',
   styleUrl: './seguimiento-sin-tratamiento.component.css'
 })
@@ -58,12 +60,16 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
     alertas: []
   };
 
+  alertas: AlertasTratamiento[] = [];
+  idContacto: string | undefined;
+
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
     this.router.paramMap.subscribe(() => {
-      this.diagnostico = history.state.diagnostico;
+      this.alertas = history.state.alertas;
+      this.idContacto = history.state.idContacto;
     });
 
     if (this.diagnostico) {
@@ -88,6 +94,8 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
       };
       this.concatenatedAlertas = '';
     }
+
+    console.log(this.diagnostico);
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },

@@ -14,11 +14,12 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { InfoTraslado } from '../../../../../models/infoTraslado.model';
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-seguimiento-traslado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule, EstadoNnaComponent],
   templateUrl: './seguimiento-traslado.component.html',
   styleUrl: './seguimiento-traslado.component.css'
 })
@@ -86,13 +87,18 @@ export class SeguimientoTrasladoComponent implements OnInit {
   submitted2: boolean = false;
   estado:string = 'Registrado';
   items: MenuItem[] = [];
+  idContacto: string | undefined;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private repos: GenericService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
+    console.log(this.nna);
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -137,10 +143,10 @@ export class SeguimientoTrasladoComponent implements OnInit {
   }
 
   ApoyoFundacion(value: boolean) {
-    this.traslado.haSolicitadoApoyoFundacion = value;
+    this.nna.trasladosHaSolicitadoApoyoFundacion = value;
     if (!value) {
-      this.traslado.nombreFundacion = '';
-      this.traslado.apoyoRecibidoFundacion = '';
+      this.nna.trasladosNombreFundacion = '';
+      this.nna.trasladosApoyoRecibidoxFundacion = '';
     }
   }
 
@@ -149,7 +155,9 @@ export class SeguimientoTrasladoComponent implements OnInit {
     if (this.validarCamposRequeridos()){
       this.saving = true;
       await this.Actualizar();
-      this.router.navigate([`/gestion/seguimientos/dificultades-seguimiento/${this.id}`]).then(() => {
+      this.router.navigate([`/gestion/seguimientos/dificultades-seguimiento/${this.id}`], {
+        state: { idContacto: this.idContacto }
+      }).then(() => {
         window.scrollTo(0, 0);
       });
     }

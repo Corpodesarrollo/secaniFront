@@ -8,7 +8,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4 sm-col-12">
-          <form [formGroup]="itemsListaParametricaForm">
+          <form [formGroup]="itemsListaParametricaForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label class="fw-semibold mb-1" for="id">Id del Item</label>
               <input id="id" class="w-100" type="text" pInputText formControlName="id" />
@@ -18,12 +18,12 @@
               <input id="nombre" class="w-100" type="text" pInputText formControlName="nombre" />
             </div>
             <div class="mb-3">
-              <label class="fw-semibold mb-1" for="identificador">Identificador del item</label>
-              <input id="identificador" class="w-100" type="text" pInputText formControlName="identificador" />
+              <label class="fw-semibold mb-1" for="indicador">Identificador del item</label>
+              <input id="indicador" class="w-100" type="text" pInputText formControlName="indicador" />
             </div>
             <div class="mb-3">
-              <label class="fw-semibold mb-1" for="ordenLista">Orden en la lista</label>
-              <input id="ordenLista" class="w-100" type="text" pInputText formControlName="ordenLista" />
+              <label class="fw-semibold mb-1" for="orden">Orden en la lista</label>
+              <input id="orden" class="w-100" type="text" pInputText formControlName="orden" />
             </div>
             <div class="mb-3">
               <label class="fw-semibold mb-1" for="itemListaPadre">Item lista padre</label>
@@ -38,6 +38,7 @@
             <div class="d-flex justify-content-center mt-5">
               <p-button type="button"
                 styleClass="me-3" severity="success"
+                (onClick)="clearForm()"
               >
                 <i class="pi pi-plus me-1"></i>
                 Nuevo Item
@@ -59,32 +60,16 @@
             <ng-template pTemplate="header">
               <tr>
                 <th pSortableColumn="nombre">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Nombre
-                    <p-sortIcon field="nombre" />
-                    <p-columnFilter type="text" field="nombre" display="menu" class="ms-auto"/>
-                  </div>
+                  Nombre
                 </th>
-                <th pSortableColumn="identificador">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Identificador
-                    <p-sortIcon field="identificador" />
-                    <p-columnFilter type="text" field="identificador" display="menu" class="ms-auto"/>
-                  </div>
+                <th pSortableColumn="indicador">
+                  Identificador
                 </th>
                 <th pSortableColumn="ordenLista">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Orden de la lista
-                    <p-sortIcon field="ordenLista" />
-                    <p-columnFilter type="text" field="ordenLista" display="menu" class="ms-auto"/>
-                  </div>
+                  Orden de la lista
                 </th>
                 <th pSortableColumn="itemListaPadre">
-                  <div class="d-flex align-items-center justify-content-between">
-                    Item lista padre
-                    <p-sortIcon field="itemListaPadre" />
-                    <p-columnFilter type="text" field="itemListaPadre" display="menu" class="ms-auto"/>
-                  </div>
+                  Item lista padre
                 </th>
                 <th>Acciones</th>
               </tr>
@@ -92,9 +77,9 @@
             <ng-template pTemplate="body" let-item>
               <tr>
                 <td>{{ item.nombre }}</td>
-                <td>{{ item.identificador }}</td>
-                <td>{{ item.ordenLista }}</td>
-                <td>{{ item.itemListaPadre }}</td>
+                <td>{{ item.indicador || 'No aplica' }}</td>
+                <td>{{ item.orden || 'No aplica' }}</td>
+                <td>{{ item.itemListaPadre || 'No aplica' }}</td>
                 <td>
                   <div>
                     <p-button
@@ -102,7 +87,7 @@
                       [rounded]="true"
                       [text]="true"
                       severity="secondary"
-                      (click)="openEditModal(item)"
+                      (click)="openItemForEdit(item)"
                     />
                     <p-button
                       icon="pi pi-trash"

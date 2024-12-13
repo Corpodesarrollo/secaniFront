@@ -18,11 +18,13 @@ import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.mod
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { apis } from '../../../../../models/apis.model';
 
 @Component({
   selector: 'app-seguimiento-estado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-estado.component.html',
   styleUrl: './seguimiento-estado.component.css'
 })
@@ -52,7 +54,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
 
   submitted2: boolean = false;
   estado:string = 'Registrado';
-  stepsCount: number = 5;
+  stepsCount: number = 6;
   items: MenuItem[] = [];
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];
@@ -73,6 +75,9 @@ export class SeguimientoEstadoComponent  implements OnInit {
   estadoEnTratamiento: boolean = false;
   estadoSinTratamiento: boolean = false;
   estadoSinDiagnostico: boolean = false;
+  estadoDefault: boolean = false;
+
+  idContacto: string | undefined;
 
   diagnostico: InfoDiagnostico = {
     id: 0,
@@ -87,14 +92,24 @@ export class SeguimientoEstadoComponent  implements OnInit {
     observaciones: "",
     alertas: []
   };
+  colorTxt: string = 'white';	
+  colorBg: string = '#73b7ad';
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute) {
+  alertas: AlertasTratamiento[] = [];
+  cnt: number = 0;
+
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute, private gs: GenericService,) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
+
+    this.validarSeguimiento(Number(this.id));
+
     this.nna = await this.tpp.getNNA(this.id);
-    console.log(this.nna);    
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -113,6 +128,16 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.nna.fechaInicioTratamiento = new Date(this.nna.fechaInicioTratamiento);
     }
  
+    let estadosNNA = await this.tpp.getTpEstadosNNA();
+    let estado: { id: number; nombre: string; colorText: string; colorBG: string } | undefined;
+    if (estadosNNA) {
+      estado = estadosNNA.find((x: { id: number }) => x.id === this.nna.estadoId);
+      console.log(estado);
+    }
+    this.estado = estado?.nombre ?? '';
+    this.colorTxt = estado?.colorText ?? 'white';
+    this.colorBg = estado?.colorBG ?? '#73b7ad';
+
     this.estados = await this.tpp.getTpEstadosNNA();
     this.selectedEstado = this.estados.find(x => x.id == this.nna.estadoId);
     this.isLoadingEstados = false;
@@ -124,12 +149,21 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.isLoadingDiagnostico = false;
 
     this.razonesSinDiagnostico = await this.tpp.getRazonesSinDiagnostico();
-    this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.codigo == this.nna.motivoNoDiagnosticoId);
+    console.log(this.razonesSinDiagnostico);
+    this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.id == this.nna.motivoNoDiagnosticoId);
     this.isLoadingRazonesSinDiagnostico = false;
 
     //this.IPS = await this.tp.getTP('IPSCodHabilitacion');
     //this.selectedIPS = this.IPS.find(x => x.id == this.nna.ipsId);
     this.isLoadingIPS = false;
+  }
+
+  validarSeguimiento(id: number) {
+    this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
+      this.cnt = Number(data);
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
   }
 
   applyRecaida(value: boolean) {
@@ -152,19 +186,36 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Registrado") {
+      this.stepsCount = 5;
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
+    }
+    else if(
+      this.selectedEstado?.nombre === "EP Tratamiento en domicilio" ||
+      this.selectedEstado?.nombre === "EP Ambulatorio" ||
+      this.selectedEstado?.nombre === "EP Intrahospitalario" ||
+      this.selectedEstado?.nombre === "EP Trasplante" ||
+      this.selectedEstado?.nombre === "Valoración por oncología"
+    ) {
       this.stepsCount = 5;
       this.estadoFallecido = false;
       this.estadoEnTratamiento = true;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Diagnóstico confirmado") {
       this.estadoFallecido = false;
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = true;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Sin diagnóstico") {
       this.stepsCount = 3;
@@ -172,20 +223,37 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = true;
+      this.estadoDefault = false;
+    } else {
+      this.estadoDefault = true;
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
     }
+
   }
 
-  onAlertasChange(alertas: AlertasTratamiento[]) {
-    this.diagnostico.alertas = alertas;
+  onAlertasChange(alertas: AlertasTratamiento[]) {    
+    this.alertas = alertas; // Guardar la lista emitida por el hijo
   }
 
   validarCamposRequeridos(): boolean {
     this.nna.diagnosticoId = this.selectedDiagnostico?.id ?? 0;
     this.nna.estadoId = this.selectedEstado?.id ?? 0;
 
-    const camposAValidar = [
-      this.nna.estadoId,
-    ];
+    let camposAValidar: any[] = [];
+
+    if(this.selectedEstado?.nombre === "Sin tratamiento"){
+      camposAValidar = [
+        this.nna.estadoId,
+        this.nna.RazonesSinIniciarTratamiento,
+      ];
+    } else {
+      camposAValidar = [
+        this.nna.estadoId
+      ];
+    }
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
     for (const campo of camposAValidar) {
@@ -202,26 +270,38 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.saving = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
-      if(this.estadoSinDiagnostico) {
-        this.router.navigate([`/gestion/seguimientos/sin-diagnostico-seguimiento/${this.id}`], {
-          state: { diagnostico: this.diagnostico }
+      if(this.estadoDefault) {
+        this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto }
+        }).then(() => {
+          window.scrollTo(0, 0);
+        });
+      }else if(this.estadoSinDiagnostico || this.estadoSinTratamiento) {
+        this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto }
         }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoFallecido) {
-        this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-      }else if(this.estadoEnTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-      }else if(this.estadoSinTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/sin-tratamiento-seguimiento/${this.id}`], {
-          state: { diagnostico: this.diagnostico }
+        this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`], {
+          state: { idContacto: this.idContacto }
         }).then(() => {
           window.scrollTo(0, 0);
         });
+      }else if(this.estadoEnTratamiento) {
+        if (this.cnt > 1) {
+          this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+            state: { alertas: this.alertas, idContacto: this.idContacto }
+          }).then(() => {
+            window.scrollTo(0, 0);
+          });
+        } else {
+          this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`], {
+            state: { idContacto: this.idContacto }
+          }).then(() => {
+            window.scrollTo(0, 0);
+          });
+        }
       }
     }
     this.saving = false;

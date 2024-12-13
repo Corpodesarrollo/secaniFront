@@ -43,7 +43,7 @@
                     <p-inputIcon styleClass="pi pi-search" />
                     <input class="col-12 mb-3" type="text" pInputText id="buscar" name="buscar" (change)="buscar()"
                       (keyup)="buscar()" (keydown)="buscar()" placeholder="Buscar" [value]="filtroBuscar"
-                      [(ngModel)]="filtroBuscar"> 
+                      [(ngModel)]="filtroBuscar">
                   </p-iconField>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 col-12">
@@ -81,7 +81,7 @@
               </ng-template>
               <ng-template pTemplate="body" let-visualizar>
                 <tr>
-                  <td><button type="button" class="btn btn-link">{{ visualizar.noCaso }}</button></td>
+                  <td><button type="button" class="btn btn-link" (click)="redirigirDetalleNna(visualizar.noCaso)">{{ visualizar.noCaso }}</button></td>
                   <td>{{ visualizar.nombreNNA }}</td>
                   <td>{{ visualizar.noDocumento }}</td>
                   <td>{{ visualizar.ultimaActualizacion | date:'dd/MM/yyyy' }}</td>

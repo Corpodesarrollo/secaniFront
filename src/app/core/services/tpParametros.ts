@@ -23,9 +23,27 @@ export class TpParametros {
     return await this.axios.retorno_get(url, urlbase);
   }
 
+  async getEstadosIngresoEstrategia() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `EstadoIngresoEstrategia`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getCausaInasistencia() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `CausaInasistencia`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
   async getParentescos() {
     var urlbase: string = environment.url_MSParametricas;
     var url = `Parentescos`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getPlantillas() {
+    var urlbase: string = environment.url_MSSeguimiento;
+    var url = `Seguimiento/ConsultarPlantillaCorreo`;
     return await this.axios.retorno_get(url, urlbase);
   }
 

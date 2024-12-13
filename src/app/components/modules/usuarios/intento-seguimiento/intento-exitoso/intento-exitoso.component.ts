@@ -217,7 +217,7 @@ export class IntentoExitosoComponent implements OnInit {
 
   async iniciarSeguimiento(){
     await this.guardarIntentoExitoso();
-    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.ContactoNNA.nnaId]);
+    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.ContactoNNA.nnaId, this.ContactoNNA.id]);
   }
 
   getNombreParentesco(parentescoId: string): string {

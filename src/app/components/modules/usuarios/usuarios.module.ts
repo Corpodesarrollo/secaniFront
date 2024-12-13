@@ -34,10 +34,12 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { CardModule } from 'primeng/card';
+import { PaginatorModule } from 'primeng/paginator';
+import { NnaContactoListaComponent } from "./nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 
 @NgModule({
   declarations: [
-    CrearNnaComponent,
+    
     CrearNnaAgregarContactoComponent
 
   ],
@@ -45,9 +47,7 @@ import { CardModule } from 'primeng/card';
     UsuariosRoutingModule,
     FormsModule,
     CommonModule,
-
     ReactiveFormsModule,
-
     /**PrimeNG*/
     TableModule,
     ButtonModule,
@@ -67,7 +67,7 @@ import { CardModule } from 'primeng/card';
     ToastModule,
     ButtonModule,
     RippleModule,
-
+    PaginatorModule,
     /**Component standalone */
     HistoricoNnaComponent,
     BotonNotificacionComponent,
@@ -75,8 +75,9 @@ import { CardModule } from 'primeng/card';
     DialogCrearNnaMsgRolAgenteComponent,
     DialogCrearNnaMsgRolCoordinadorComponent,
     DialogNnaMsgSeguimientoComponent,
-    DialogCrearContactoComponent
-  ],
+    DialogCrearContactoComponent,
+    NnaContactoListaComponent
+],
   providers: [
     MessageService,
     DatePipe // <-- Agrega DatePipe aquí

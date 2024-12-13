@@ -119,6 +119,13 @@ export class Generico {
   }
 
 
+  async retorno_put_parametrica(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
+    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
+    const url = `${this.BASE_URL_PARAMETRICAS}${urltemp}`;
+    const request = axios.put(url, data, { headers });
+    return this.handleRequest(request);
+  }
+
   async retorno_get_parametrica(urltemp: string, baseUrl:string = this.BASE_URL_PARAMETRICAS): Promise<any> {
 
     const headers = await this.headersWithToken();

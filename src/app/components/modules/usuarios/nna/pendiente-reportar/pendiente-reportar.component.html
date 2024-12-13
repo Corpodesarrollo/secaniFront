@@ -1,0 +1,374 @@
+<body class="formato-fondo fuente-letra">
+  <div *ngIf="verCasos&&!verNuevoNNA">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h3>Reporte NNA</h3>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div class="button-group">
+                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0 " [ngClass]="{'active': filtroEstado === estadoRegistrado}" style="width: 150px;" (click)="applyFilterEstado(estadoRegistrado)">
+                    <div class="row">
+                        <div class="col">
+                            Registrado
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="fw-bold mb-0">{{contarRegistrados()}}</h3>
+                        </div>
+                    </div>
+                </button>
+                <button class="btn col-auto  bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': filtroEstado === estadoReportado}" style="width: 150px;" (click)="applyFilterEstado(estadoReportado)">
+                    <div class="row">
+                        <div class="col">
+                            Reportado
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="fw-bold mb-0">{{contarReportados()}}</h3>
+                        </div>
+                    </div>
+                </button>
+                <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': filtroEstado === estadoSolicitado}" style="width: 240px;" (click)="applyFilterEstado(estadoSolicitado)">
+                    <div class="row">
+                        <div class="col">
+                            Solicitados por cuidador
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="fw-bold mb-0">{{contarSolicitado()}}</h3>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12">
+            <p-card>
+              <div class="d-flex justify-content-end">
+                <button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center justify-content-center" style="background-color: #73b7ad; width: 150px; height: 50px;" (click)="nuevoNNA()">
+                  <span>Nuevo NNA</span>
+                </button>
+              </div>
+
+              <br>
+              <div>
+                <p-table
+                  [value]="casosNNATabla"
+                  [paginator]="true"
+                  [rows]="10"
+                  [showCurrentPageReport]="true"
+                  [rowsPerPageOptions]="[10, 25, 50]"
+                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                  >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre NNA</th>
+                      <th>Tipo Identificación</th>
+                      <th>Número Identificación</th>
+                      <th>Nombre Cuidador</th>
+                      <th>Parentesco con NNA</th>
+                      <th>Diagnóstico</th>
+                      <th>Aseguradora</th>
+                      <th>Estado</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-caso>
+                    <tr>
+                      <td><button type="button" class="btn btn-link">{{ caso.id }}</button></td>
+                      <td>{{ getNombreCompleto(caso.primerNombre, caso.segundoNombre, caso.primerApellido, caso.segundoApellido) }}</td>
+                      <td>{{ caso.tipoIdentificacionId }}</td>
+                      <td>{{ caso.numeroIdentificacion }}</td>
+                      <td>{{ caso.cuidadorNombres }}</td>
+                      <td>{{ getNombreParentescoPorId(caso.cuidadorParentescoId) }}</td>
+                      <td>{{ getNombreDiagnosticoPorId(caso.diagnosticoId) }}</td>
+                      <td>{{ caso.epsNombre }}</td>
+                      <td><span class="badge w-100" [ngClass]="getBadgeColor(caso.estadoId)" [ngStyle]="{'color': 'white'}">{{ getBadgeTexto(caso.estadoId) }}</span>
+                      <td>
+                        <button class="boton-redondo">
+                          <i class="pi pi-pencil"></i>
+                        </button>
+                      </td>
+                      <td>
+                        <button class="boton-redondo">
+                          <i class="pi pi-info"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="6" class="text-center">No se ha encontrado ningún registro de NNA</td>
+                    </tr>
+                  </ng-template>
+
+                </p-table>
+              </div>
+
+            </p-card>
+        </div>
+    </div>
+  </div>
+
+  <div *ngIf="verNuevoNNA&&!verCasos">
+    <div class="col-12">
+      <p-card>
+        <div class="row mb-3">
+          <div class="col-12 d-flex justify-content-center align-items-center">
+              <h3>Solicitar reporte SIVIGILA</h3>
+          </div>
+        </div>
+
+
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="button-group d-flex flex-wrap">
+                <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                        [ngClass]="{
+                          'active': panelSeleccionadoNuevoNNA === 1,
+                          'btn-inactivo': panelSeleccionadoNuevoNNA !== 1
+                        }"
+                        style="width: 200px; margin-top: 10px;margin-bottom: 10px;"
+                        (click)="seleccionarPanelNuevoNNA(1)">
+                  NNA
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="button-group d-flex flex-wrap">
+                <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                        [ngClass]="{
+                          'active': panelSeleccionadoNuevoNNA === 2,
+                          'btn-inactivo': panelSeleccionadoNuevoNNA !== 2
+                        }"
+                        style="width: 200px; margin-top: 10px; margin-bottom: 10px;"
+                        (click)="seleccionarPanelNuevoNNA(2)">
+                  Cuidador
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p-card *ngIf="panelSeleccionadoNuevoNNA === 1">
+            <div class="row">
+              <!-- Primera columna -->
+              <div class="col-md-6 col-left">
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Tipo de documento</label>
+                  <select class="form-select" aria-label="Default select example" name="tipodocumento" [(ngModel)]="tipoDocumentoSeleccionado">
+                    <option value="" >Seleccionar</option>
+                    <option *ngFor="let tipo of tipoDocumento" value="{{tipo.codigo}}">{{tipo.nombre}}</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Número de documento</label>
+                  <input type="text" class="form-control" name="tipodocumento" [(ngModel)]="numeroDocumento">
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Primer Nombre</label>
+                  <input type="text" class="form-control" name="primernombre" [(ngModel)]="primerNombre">
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Segundo Nombre</label>
+                  <input type="text" class="form-control" name="segundonombre" [(ngModel)]="segundoNombre">
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Primer apellido</label>
+                  <input type="text" class="form-control" name="primerapellido" [(ngModel)]="primerApellido">
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Segundo apellido</label>
+                  <input type="text" class="form-control" name="segundoapellido" [(ngModel)]="segundoApellido">
+                </div>
+                <div class="row mb-3">
+                  <label for="evidencia" class="form-label">Evidencia del diagnóstico o sospecha</label>
+                  <span *ngIf="archivoDiagnosticoSeleccionado">
+                    Archivo seleccionado: {{ archivoDiagnosticoSeleccionado }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Segunda columna -->
+              <div class="col-md-6 col-rigth">
+                <div class="row mb-3">
+                  <label for="fechaNacimiento" class="form-label fw-bold">Fecha de Nacimiento</label>
+                  <input type="date" class="form-control" name="fechanacimiento"  [(ngModel)]="fechaNAcimiento">
+                </div>
+                <div class="row mb-3">
+                  <label for="sexoAsignado" class="form-label fw-bold">Sexo asignado al nacer</label>
+                  <select class="form-select" aria-label="Default select example" name="sexoasignado" [(ngModel)]="sexoSeleccionado">
+                    <option value="" >Seleccionar</option>
+                    <option *ngFor="let sexo of sexoAnn" value="{{sexo.id}}">{{sexo.nombre}}</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                  <label for="sexoAsignado" class="form-label fw-bold">¿Tiene diagnóstico?</label>
+                  <select class="form-select" aria-label="Default select example" name="diagnostico" [(ngModel)]="tieneDiagnostico">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                  <label for="aseguradora" class="form-label fw-bold">Aseguradora</label>
+                  <select class="form-select" aria-label="Default select example" name="aseguradora" [(ngModel)]="aseguradoraSeleccionada">
+                    <option value="" >Seleccionar</option>
+                    <option *ngFor="let aseg of aseguradoras" value="{{aseg.id}}">{{aseg.nombre}}</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                  <label for="sexoAsignado" class="form-label fw-bold">Departamento procedencia</label>
+                  <select class="form-select" aria-label="Default select example" name="departamento" [(ngModel)]="deptoSeleccionado" (change)="loadMunicipios()">
+                    <option value="" >Seleccionar</option>
+                    <option *ngFor="let depto of departamentos" value="{{depto.codigo}}">{{depto.nombre}}</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                  <label for="sexoAsignado" class="form-label fw-bold">Municipio procedencia</label>
+                  <select class="form-select" aria-label="Default select example" name="municipio" [(ngModel)]="municipioSeleccionado">
+                    <option value="" >Seleccionar</option>
+                    <option *ngFor="let muni of municipios" value="{{muni.codigo}}">{{muni.nombre}}</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones finales -->
+            <div class="row mt-4">
+              <div class="col-md-6 d-flex justify-content-center">
+                <button class="btn btn-adjuntar bg-white rounded-4 text-center" style="width: 150px; min-height: 50px;" (click)="fileInput.click()">
+                  Adjuntar
+                </button>
+                <input
+                  type="file"
+                  #fileInput
+                  accept="application/pdf"
+                  style="display: none;"
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+              <div class="col-md-6 d-flex justify-content-center">
+                <button class="btn btn-guardar bg-white rounded-4 text-center" style="width: 150px; min-height: 50px;" (click)="guardarCambios()">
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </p-card>
+
+          <p-card *ngIf="panelSeleccionadoNuevoNNA === 2">
+            <div class="row">
+              <!-- Primera columna -->
+              <div class="col-md-6 col-left">
+                <div class="row mb-3">
+                  <label for="nombresapellidos" class="form-label fw-bold">Nombres y apellidos</label>
+                  <input type="text" class="form-control" name="nombresapellidos" [(ngModel)]="nombresApellidosCuidador">
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Tipo de documento</label>
+                  <select class="form-select" aria-label="Default select example" name="tipodocumento" [(ngModel)]="tipoDocumentoCuidador">
+                    <option value="" >Seleccionar</option>
+                    <option *ngFor="let tipo of tipoDocumento" value="{{tipo.codigo}}">{{tipo.nombre}}</option>
+                  </select>
+                </div>
+                <div class="row mb-3">
+                  <label for="tipodocumento" class="form-label fw-bold">Número de documento</label>
+                  <input type="text" class="form-control" name="tipodocumento" [(ngModel)]="numeroDocumentoCuidador">
+                </div>
+                <div class="row mb-3">
+                  <label for="evidencia" class="form-label">Evidencia parentesco</label>
+                  <span *ngIf="archivoParentescoSeleccionado">
+                    Archivo seleccionado: {{ archivoParentescoSeleccionado }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Segunda columna -->
+              <div class="col-md-6 col-rigth">
+                <div class="row mb-3">
+                  <label for="email" class="form-label fw-bold">Email</label>
+                  <input type="text" class="form-control" name="email" [(ngModel)]="email">
+                </div>
+                <div class="row mb-3">
+                  <label for="consfirmaremail" class="form-label fw-bold">Confirmar Email</label>
+                  <input type="text" class="form-control" name="confirmaremail" [(ngModel)]="confirmarEmail">
+                </div>
+                <div class="row mb-3">
+                  <label for="numerocelular" class="form-label fw-bold">Número de celular</label>
+                  <input type="text" class="form-control" name="numerocelular" [(ngModel)]="numeroCelular">
+                </div>
+                <div class="row mb-3">
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones finales -->
+            <div class="row mt-4">
+              <!-- Botón de Adjuntar -->
+              <div class="col-md-6 d-flex justify-content-center">
+                <button class="btn btn-adjuntar bg-white rounded-4 text-center" style="width: 150px; min-height: 50px;" (click)="fileInputParent.click()">
+                  Adjuntar
+                </button>
+                <input
+                    type="file"
+                    #fileInputParent
+                    accept="application/pdf"
+                    style="display: none;"
+                    (change)="onFileParentescoSelected($event)"
+                  />
+              </div>
+
+              <!-- Checkboxes de autorizaciones -->
+              <div class="col-md-6">
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="llamadasTelefonicas"
+                  />
+                  <label class="form-check-label" for="llamadasTelefonicas">
+                    Autorizo recibir llamadas telefónicas
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="correosElectronicos"
+                  />
+                  <label class="form-check-label" for="correosElectronicos">
+                    Autorizo recibir correos electrónicos
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 d-flex justify-content-center">
+              <button class="btn btn-guardar bg-white rounded-4 text-center" style="width: 150px; min-height: 50px; margin-top: 2%;" (click)="guardarCambios()">
+                Guardar
+              </button>
+            </div>
+          </p-card>
+        </div>
+
+
+      </p-card>
+    </div>
+
+
+  </div>
+
+</body>

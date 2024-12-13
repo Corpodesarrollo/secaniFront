@@ -17,7 +17,7 @@
                 </ng-template>
             </p-breadcrumb>
             <div>
-                Estado: <span class="badge font-semibold ms-3" [ngStyle]="{'background-color': colorBg, 'color': colorTxt, 'width': '170px'}">{{estado}}</span>
+                Estado: <app-estado-nna [nnaEstadoId]="nna.estadoId" />
             </div>
         </div>
     </div>
@@ -51,10 +51,7 @@
                                                 <label for="cuidadorNombres" class="fw-bold">Nombre*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombre" [(ngModel)]="nna.cuidadorNombres">
-                                                <div *ngIf="submitted && contactForm.get('nombre')?.invalid" class="text-danger">
-                                                    Nombre es requerido
-                                                </div>
+                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombre" [(ngModel)]="contacto.nombres" [readOnly]="true">
                                             </div>
                                         </div>
                                     </div>
@@ -74,12 +71,8 @@
                                                     [filter]="true"
                                                     filterBy="nombre"
                                                     [showClear]="true"
+                                                    [readonly]="true"
                                                     placeholder="Seleccione el parentesco" />
-                                            </div>
-                                            <div class="col-8 offset-4">
-                                                <div *ngIf="submitted && contactForm.get('parentesco')?.invalid" class="text-danger">
-                                                    Parentesco es requerido
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -90,27 +83,17 @@
                                                 <label for="telefono" class="fw-bold">Teléfono de Contacto*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="nna.cuidadorTelefono">
-                                                <div *ngIf="submitted && contactForm.get('telefono1')?.invalid" class="text-danger">
-                                                    Teléfono es requerido
-                                                </div>
+                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="contacto.telefonos" [readOnly]="true">
                                             </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-8 offset-4 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono2" [(ngModel)]="nna.cuidadorTelefono2">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-12 text-end">
-                                            <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()">
-                                                <i class="pi pi-plus"></i> Agregar Contacto
-                                            </button>
                                         </div>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <app-nna-contacto-lista [nnaId]="nna.id"/>
                             </div>
                         </div>
                         
