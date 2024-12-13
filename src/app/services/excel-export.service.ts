@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { Reporte } from '../models/reporte.model';
+import { Alerta, NotificacionAlerta } from '../models/ExportConsutarAlertas.model';
 
 export interface TableData {
   data: any[];         // Datos de la tabla (filas)
@@ -45,4 +46,59 @@ export class ExcelExportService {
 
     this.exportToExcel({ data: datosExportar, sheetName: 'Reporte' }, fileName);
   }
+
+
+
+
+
+  exportToExcelDesdeConsultarAlertas(alerta: Alerta, noCaso: string, nombreNNA: string): void {
+    const wsData: any[][] = [];
+    wsData.push([
+      'Fecha Seguimiento',
+      'Categoría',
+      'Subcategoría',
+      'Observación',
+      'Estado',
+      'Entidad notificada',
+      'Fecha notificación',
+      'Asunto notificación',
+      'Fecha de respuesta'
+    ]);
+
+    const baseRow = [
+      alerta.ultimaFechaSeguimiento ? new Date(alerta.ultimaFechaSeguimiento).toLocaleDateString() : '',
+      alerta.categoriaAlerta || '',
+      alerta.subcategoriaAlerta || '',
+      alerta.observaciones || '',
+      alerta.estadoId || ''
+    ];
+
+    alerta.notificacionesAlerta?.forEach((notificacion) => {
+      const row = [
+        ...baseRow,
+        notificacion.entidadNotificada || '',
+        notificacion.fechaNotificacion
+          ? new Date(notificacion.fechaNotificacion).toLocaleDateString()
+          : '',
+        notificacion.asuntoNotificacion || '',
+        notificacion.fechaRespuesta
+          ? new Date(notificacion.fechaRespuesta).toLocaleDateString()
+          : ''
+      ];
+      wsData.push(row);
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Alertas');
+
+    XLSX.writeFile(wb, noCaso + ' - ' + nombreNNA +'.xlsx');
+  }
+
+
+
+
+
+
 }
