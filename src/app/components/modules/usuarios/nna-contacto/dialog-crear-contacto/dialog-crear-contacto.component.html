@@ -1,7 +1,7 @@
 <p-toast  [life]="10000" />
 
 
-<p-dialog header="Crear contacto" [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false"
+<p-dialog header="contacto" [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false"
     [resizable]="false" (onHide)="close()">
     <div class="row text-left">
         <div class="col-sm-12">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-9 offset-3">
                     <div *ngIf="submitted && !contacto.nombres" class="text-danger">
-                        Parentesco es requerido
+                        Nombres y apellidos es requerido
                     </div>
                 </div>
             </div>
