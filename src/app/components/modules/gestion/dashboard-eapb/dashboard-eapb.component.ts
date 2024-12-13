@@ -9,6 +9,7 @@ import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DashboardEapbService } from './dashboard-eapb.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-eapb',
@@ -45,7 +46,7 @@ export class DashboardEapbComponent implements OnInit {
 
   hoy = new Date();
 
-  constructor( private fb: FormBuilder, public servicios: DashboardEapbService) {
+  constructor( private fb: FormBuilder, public servicios: DashboardEapbService,  public router: Router) {
 
     //TODO: ACTUALIZAR TEMAS DE USUARIO Y EL EAPBID
     this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
@@ -322,7 +323,11 @@ export class DashboardEapbComponent implements OnInit {
   }
 
 
-
+  verTodosCasosCriticos(){
+    const fechaInicio = this.formFechas.value.fechaInicio;
+    const fechaFin = this.formFechas.value.fechaFin;
+    this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
+  }
 
 
 }

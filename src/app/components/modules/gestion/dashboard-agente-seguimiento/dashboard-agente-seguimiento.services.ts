@@ -74,8 +74,8 @@ export class DashboardAgenteSeguimientoService {
     return await  this.comun.retorno_get_parametrica(url);
   }
 
-  GetEstadoAlerta = async () => {
-    let url = `${'EstadoAlerta'}`;
+  GetCategoriaAlerta = async () => {
+    let url = `${'CategoriaAlerta'}`;
     return await  this.comun.retorno_get_parametrica(url);
   }
 

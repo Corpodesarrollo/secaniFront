@@ -47,7 +47,18 @@
 
       <div class="card" style="padding:20px">
         <div class="critical-cases">
-          <h4>ALERTAS PENDIENTES DE GESTIÓN</h4>
+
+          <div class="row">
+            <div class="col-9">
+              <h4>ALERTAS PENDIENTES DE GESTIÓN</h4>
+            </div>
+            <div class="col-3">
+              <a  (click)="verTodosCasosCriticos()" style="cursor: pointer;">Ver todas ></a>
+            </div>
+          </div>
+
+
+
           <div *ngFor="let alerta of alertas" class="caso-critico">
 
 
@@ -67,6 +78,9 @@
 
                     <p style="color: {{alerta.color}}">{{ calcularTiempoTranscurrido(alerta.fechaSeguimiento, hoy) }} sin respuesta</p>
 
+                </td>
+                <td>
+                  <button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center"  style="background-color: #73b7ad;">Ver</button>
                 </td>
               </tr>
             </table>
