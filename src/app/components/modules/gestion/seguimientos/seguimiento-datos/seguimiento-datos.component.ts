@@ -128,15 +128,15 @@ export class SeguimientoDatosComponent implements OnInit {
       this.nna = new NNA();
     }
 
+    this.parentescos = await this.tpp.getParentescos();
+    this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
+    this.isLoadingParentesco = false;
+
     this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then((data: any) => {
       this.contacto = data.datos;
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
-
-    this.parentescos = await this.tpp.getParentescos();
-    this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
-    this.isLoadingParentesco = false;
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -273,7 +273,7 @@ export class SeguimientoDatosComponent implements OnInit {
     const camposAValidar = [
       this.nna.origenReporteId,
       this.nna.primerNombre,
-      this.nna.segundoApellido,
+      this.nna.primerApellido,
       this.nna.tipoIdentificacionId,
       this.nna.numeroIdentificacion,
       this.nna.fechaNacimiento,
