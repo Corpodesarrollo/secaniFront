@@ -341,7 +341,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
      /////////////////////////////////////////////////////////////
 
-     let parametrica4  = await this.servicios.GetEstadoAlerta();
+     let parametrica4  = await this.servicios.GetCategoriaAlerta();
 
      let datos4  = await this.servicios.GetEstadosAlertas(fecha_inicial, fecha_final, this.usuarioId);
 
