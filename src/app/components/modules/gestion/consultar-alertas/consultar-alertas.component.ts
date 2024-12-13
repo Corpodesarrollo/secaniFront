@@ -20,13 +20,16 @@ import { DialogModule } from 'primeng/dialog';
 import { OficioNotificacionComponent } from './oficio-notificacion/oficio-notificacion.component';
 import { VerNotificacionComponent } from '../oficio-notificacion/ver-notificacion/ver-notificacion.component';
 import { VerRespuestaComponent } from '../oficio-notificacion/ver-respuesta/ver-respuesta.component';
+import { Alerta, NotificacionAlerta } from '../../../../models/ExportConsutarAlertas.model';
+import { ToastModule } from 'primeng/toast';
+import { ExcelExportService } from '../../../../services/excel-export.service';
 
 
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
   imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule,
-    OficioNotificacionComponent, VerNotificacionComponent, VerRespuestaComponent
+    OficioNotificacionComponent, VerNotificacionComponent, VerRespuestaComponent, ToastModule
   ],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
@@ -76,11 +79,14 @@ export class ConsultarAlertasComponent implements OnInit {
 
   expandedRowKeys: { [key: string]: boolean } = {};
 
+
+
   constructor(
     private route: ActivatedRoute,
     private repos: GenericService,
     private tpp: TpParametros,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private excelExportService: ExcelExportService
   ) { }
 
   ngOnInit() {
@@ -305,11 +311,14 @@ export class ConsultarAlertasComponent implements OnInit {
 
   consultarNotificaciones(alertaId: any){
 
+    this.notificacionesAlerta = [];
+
     this.repos.get('Notificacion/GetNotificationAlerta/', `${alertaId}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.notificacionesAlerta = data;
       }
     });
+
   }
 
 
@@ -343,5 +352,67 @@ export class ConsultarAlertasComponent implements OnInit {
   closeVerRespuestas(){
     this.verRespuestas = false;
   }
+
+
+  ExportAlertas: Alerta | undefined;
+  ExportNotificacion: NotificacionAlerta[] = []; // Inicializado como arreglo vacío para evitar undefined
+  notificacionesAlertaExport: NotificacionAlerta[] = []; // Tipado más específico
+
+  async iniciarDescarga(alert: any): Promise<void> {
+    if (!alert || !alert.alertaId) {
+      console.error('Alerta inválida o sin alertaId');
+      return;
+    }
+
+    try {
+      const notifications = await this.obtenerNotificacionesExport(alert.alertaId);
+
+      this.ExportAlertas = {
+        ultimaFechaSeguimiento: alert.ultimaFechaSeguimiento || null,
+        categoriaAlerta: alert.categoriaAlerta || null,
+        subcategoriaAlerta: alert.subcategoriaAlerta || null,
+        observaciones: alert.observaciones || null,
+        estadoId: this.getDescripcionEstado(alert.estadoId) || null,
+        notificacionesAlerta: notifications
+      };
+
+      console.log(this.ExportAlertas);
+
+      this.excelExportService.exportToExcelDesdeConsultarAlertas(this.ExportAlertas, this.idNna, this.datosBasicosNNA.nombreCompleto);
+
+    } catch (error) {
+      console.error('Error durante la descarga de la alerta:', error);
+      this.messageService.add({ severity: 'warn', summary: 'Importante', detail: 'Sin notificaciones.' });
+    }
+  }
+
+
+  obtenerNotificacionesExport(alertaId: string): Promise<NotificacionAlerta[]> {
+    return new Promise((resolve, reject) => {
+      this.repos.get('Notificacion/GetNotificationAlerta/', `${alertaId}`, 'Seguimiento').subscribe({
+        next: (data) => {
+          const notifications = (data as NotificacionAlerta[]) || [];
+          if (Array.isArray(notifications) && notifications.length > 0) {
+            const processedNotifications = notifications.map((notif) => ({
+              entidadNotificada: notif.entidadNotificada || '',
+              fechaNotificacion: notif.fechaNotificacion || new Date(),
+              asuntoNotificacion: notif.asuntoNotificacion || '',
+              fechaRespuesta: notif.fechaRespuesta || new Date()
+            }));
+            resolve(processedNotifications);
+          } else {
+            console.warn('No se encontraron notificaciones para la alerta');
+            resolve([]);
+          }
+        },
+        error: (err) => {
+          console.error('Error al obtener notificaciones:', err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+
 
 }
