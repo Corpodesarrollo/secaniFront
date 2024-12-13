@@ -4,92 +4,119 @@
     <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
   </div>
   <div class="px-3" *ngIf="!isLoading">
-    <form [formGroup]="agendarForm" (ngSubmit)="onSubmit()">
-      <div
-        class="container my-3"
-        style="background-color: white; border-radius: 15px; max-width: 800px"
-      >
-        <div class="row align-items-center mb-3">
-          <div class="col-3 col-md-4 text-end fw-bold">
-            <label for="entidad" class="form-label">Fecha sugerida</label>
-          </div>
-          <div class="col-9 col-md-8 p-fluid">
-            {{ fechaSugerida | date: "dd/MM/yyyy" }}
-          </div>
-        </div>
-        <div class="row align-items-center mb-3">
-          <div class="col-3 text-end fw-bold">
-            <label for="nombreFuncionario" class="form-label"
-              >Nueva Fecha</label>
-          </div>
-          <div class="col-4 p-fluid">
-            <p-calendar
-              [iconDisplay]="'input'"
-              [showIcon]="true"
-              inputId="icondisplay"
-              [(ngModel)]="nuevaFecha"
-              [appendTo]="'body'"
-              placeholder="dd/mm/aaaa"
-            />
-          </div>
-          <div class="col-2 text-end fw-bold">
-            <label for="cargo" class="form-label">Hora*</label>
-          </div>
-          <div class="col-3 p-fluid">
-            <p-calendar
-              [showIcon]="true"
-              [(ngModel)]="nuevaHora"
-              [timeOnly]="true"
-              [hourFormat]="'12'"
-              [iconDisplay]="'input'"
-              placeholder="hh:mm am/pm"
-            >
-            </p-calendar>
-          </div>
-        </div>
-        <div class="row align-items-center mb-3">
-          
-          <div class="col-8 offset-4">
-            <div
-              *ngIf="submitted && agendarForm.get('cargo')?.invalid"
-              class="text-danger"
-            >
-              Campo requerido
+  <div class="container my-4" style="background-color: white; border-radius: 15px; max-width: 800px">
+    <div class="row align-items-center mb-3">
+      <div class="col-4 col-md-3 text-end fw-bold">
+        <label for="entidad" class="form-label">Fecha sugerida</label>
+      </div>
+      <div class="col-8 col-md-9 p-fluid">
+        {{ fechaSugerida | date: "dd/MM/yyyy" }}
+      </div>
+    </div>
+    <div class="row align-items-center mb-3">
+      <div class="col-4 col-md-3 text-end fw-bold mb-3 mb-md-0">
+        <label for="nombreFuncionario" class="form-label">Nueva Fecha</label>
+      </div>
+      <div class="col-8 col-md-3 p-fluid mb-3 mb-md-0">
+        <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nuevaFecha"  tabindex="3"
+          [appendTo]="'body'" placeholder="dd/mm/aaaa" />
+      </div>
+      <div class="col-4 col-md-1 text-end fw-bold">
+        <label for="cargo" class="form-label">Hora*</label>
+      </div>
+      <div class="col-8 col-md-5 p-fluid align-items-center row ms-1">
+        <input 
+              type="number" 
+              tabindex="1"
+              pInputText 
+              [(ngModel)]="hora" 
+              (change)="getFechaYHoraCompleta()"
+              [min]="1" 
+              [max]="12" 
+              placeholder="HH" 
+              class="col-auto me-1"
+              style="width: 65px;" />
+
+          <!-- Minutos -->
+          <input 
+            type="number" 
+            tabindex="2"
+            pInputText 
+            [(ngModel)]="minutos" 
+            (change)="getFechaYHoraCompleta()"
+            [min]="0" 
+            [max]="59" 
+            placeholder="MM" 
+            class="col-auto"
+            style="width: 65px;" />
+
+            <!-- AM/PM -->
+            <div class="col-auto button-group">
+                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'AM'}" style="width: 60px; height: 40px;" (click)="apply('AM')">AM</button>
+                <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'PM'}" style="width: 60px; height: 40px;" (click)="apply('PM')">PM</button>
             </div>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3 text-end fw-bold">
-            <label for="motivo" class="form-label">Motivo*</label>
-          </div>
-          <div class="col-9 p-fluid">
-            <textarea
-              pInputText
-              formControlName="motivo"
-              maxlength="3000"
-              rows="3"
-              [(ngModel)]="motivo"
-            ></textarea>
-          </div>
-          <div class="col-8 offset-4">
-            <div
-              *ngIf="submitted && agendarForm.get('respuesta')?.invalid"
-              class="text-danger"
-            >
-              Campo requerido
-            </div>
-          </div>
+      </div>
+      <div class="col-8 offset-4 col-md-3 offset-md-7" *ngIf="submitted && !nuevaHora">
+        <div class="text-danger">
+            Campo requerido
         </div>
       </div>
-      <div class="text-center">
-        <button
-          type="submit"
-          class="btn text-white rounded-4 btn-lg"
-          style="background-color: #ff9801; color: white; width: 150px"
-        >
-          ENVIAR
-        </button>
+    </div>
+    <div class="row mb-3" *ngIf="nuevaFecha">
+      <div class="col-4 col-md-3 text-end fw-bold">
+        <label for="motivo" class="form-label">Motivo*</label>
       </div>
-    </form>
+      <div class="col-8 col-md-9 p-fluid">
+        <textarea pInputText maxlength="3000" rows="3" [(ngModel)]="motivo"></textarea>
+      </div> 
+      <div class="col-8 offset-4 col-md-9 offset-md-3" *ngIf="submitted && !motivo">
+        <div class="text-danger">
+          Campo requerido
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <button type="submit" class="btn text-white rounded-4 btn-lg"
+      style="background-color: #ff9801; color: white; width: 150px" (click)="guardar()">
+      ENVIAR
+    </button>
+  </div>
+  </div>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogo" [modal]="true" [closable]="true" [style]="{width: '30vw'}" [header]="''" (onHide)="limpiar()">
+  <!-- Título -->
+  <div class="container my-4 text-center">
+    <i class="pi pi-question-circle mb-3" style="font-size: 4rem; color: #a1a1a1;"></i>
+    <h5 class="fw-bold">
+      ¿Está seguro que desea asignar el próximo seguimiento en una fecha diferente?
+    </h5>
+    <p class="mt-3">
+      Usted está agendando el seguimiento <b>{{ positivo(diasDiferencia) }} días {{ diasDiferencia > 0 ? 'después' : 'antes' }}</b> a lo reglamentado.
+    </p>
+  </div>
+
+  <!-- Botones -->
+  <div class="text-center">
+      <button class="btn text-white rounded-4 btn-lg me-2" type="button" 
+          style="background-color: #a1a1a1; color: white; width: 250px" (click)="cancelar()">NO, dejar fecha sugerida</button>
+      <button class="btn text-white rounded-4 btn-lg" type="button"
+          style="background-color: #73B7AD; color: white; width: 250px" (click)="continuar()">SÍ, continuar</button>
+  </div>
+</p-dialog>
+
+<p-dialog 
+  [(visible)]="mostrarMensaje" (onHide)="terminar()"
+  modal="true" 
+  dismissableMask="true" 
+  [style]="{ width: '30vw' }" 
+  [closable]="true"
+  [contentStyle]="{ 'text-align': 'center' }">
+  
+  <div>
+    <i class="pi pi-check-circle mb-3" style="font-size: 4rem; color: #4CAF50;"></i>
+    <h3>Seguimiento gestionado con éxito</h3>
+    <button class="btn text-white rounded-4 btn-lg mt-3" type="button" style="background-color: #73B7AD; color: white; width: 200px" (click)="terminar()">Aceptar</button>
   </div>
 </p-dialog>

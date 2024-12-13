@@ -10,6 +10,7 @@ import { SeguimientoHistorial } from '../../../../../models/seguimientoHistorial
 import { NNA } from '../../../../../models/nna.model';
 import { RespuestaEnviada } from '../../../../../models/respuestaEnviada.model';
 import { ButtonModule } from 'primeng/button';
+import { Seguimiento } from '../../../../../models/seguimiento.model';
 
 @Component({
   selector: 'app-seguimiento-historial',
@@ -20,7 +21,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class SeguimientoHistorialComponent {
   @Input() id!: number;
-  seguimientos: SeguimientoHistorial[] = [];
+  seguimientos: Seguimiento[] = [];
   respuesta: RespuestaEnviada[] = [
     { 
       idCaso: 1, 
@@ -68,7 +69,7 @@ export class SeguimientoHistorialComponent {
 
   CargarDatos() {
     console.log("id", this.id);
-    this.repos.get('Seguimiento/GetSeguimientosNNA/', `${this.id}`, 'Seguimiento').subscribe({
+    this.repos.get('Seguimiento/GetSeguimientosByNNA/', `${this.id}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;
       }

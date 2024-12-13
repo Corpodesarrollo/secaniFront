@@ -72,8 +72,8 @@
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="diagnosticos"
+                                    id="diagnosticos"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -113,8 +113,8 @@
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="IPS"
+                                    id="IPS"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -139,12 +139,12 @@
 
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
                             <div class="col-4">
-                                <label for="estado" class="fw-bold">Razones por las cuales el menor no tiene diagnóstico</label>
+                                <label for="razonesSinDiagnostico" class="fw-bold">Razones por las cuales el menor no tiene diagnóstico</label>
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
-                                    [(ngModel)]="selectedRazonSinDiagnostico"
                                     [options]="razonesSinDiagnostico"
+                                    [(ngModel)]="selectedRazonSinDiagnostico"
                                     [loading]="isLoadingRazonesSinDiagnostico"
                                     optionLabel="nombre"
                                     [filter]="true"
@@ -161,14 +161,15 @@
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
-                                    [(ngModel)]="selectedIPS"
-                                    [options]="IPS"
+                                    [options]="razonesSinDiagnostico"
+                                    [(ngModel)]="selectedRazonSinDiagnostico"
+                                    [loading]="isLoadingRazonesSinDiagnostico"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="razonesSinDiagnostico2"
+                                    id="razonesSinDiagnostico2"
                                     required="true"
                                     placeholder="Seleccione" />
                             </div>
@@ -190,7 +191,7 @@
                                 <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="nna.motivoNoDiagnosticoOtro">
                             </div>
                         </div>
-                        <app-seguimiento-alertas (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
+                        <app-seguimiento-alertas  (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
                     </p-card>
                 </div>
                 <div class="col-12 col-md-6">

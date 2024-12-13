@@ -1,3 +1,5 @@
+import { ContactoNNA } from "./contactoNNA.model";
+
 export class NNA {
     id!: number;
     estadoId!: number;
@@ -53,7 +55,7 @@ export class NNA {
     tipoDiagnosticoId!: string;
     diagnosticoId!: number;
     fechaDiagnostico!: Date;
-    motivoNoDiagnosticoId!: string;
+    motivoNoDiagnosticoId!: number;
     motivoNoDiagnosticoOtro!: string;
     fechaConsultaDiagnostico!: Date;
     departamentoTratamientoId!: string;
@@ -118,4 +120,7 @@ export class NNA {
     trasladosPropietarioResidenciaActualOtro!: string;
     trasladosQuienAsumioCostosTraslado!: string;
     trasladosQuienAsumioCostosVivienda!: string;
+
+    //contactos
+    contactos!: ContactoNNA[];
 }

@@ -30,8 +30,11 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <button class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;" 
-                        (click)="editarContacto(listadoContacto.id)"><i class="bi bi-pen-fill"></i></button>
+                        <button *ngIf="listadoContacto.id == 0" class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;"
+                        (click)="eliminarContacto(listadoContacto)" [disabled]="disable"><i class="bi bi-trash-fill"></i></button>
+
+                        <button *ngIf="listadoContacto.id > 0" class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;" 
+                        (click)="editarContacto(listadoContacto.id)" [disabled]="disable"><i class="bi bi-pen-fill"></i></button>
                     </td>
                 </tr>
             </ng-template>
@@ -40,10 +43,10 @@
 </div>
 <div class="row">
     <div class="col-12 text-end">
-        <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()">
+        <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()" [disabled]="disable">
             <i class="pi pi-plus"></i> Agregar Contacto
         </button>
     </div>
 </div>
 
-<app-dialog-crear-contacto [show]="displayModalContacto" [contactoId]="contactoId" [nnaId]="nnaId" (closeModal)="closeModal()"></app-dialog-crear-contacto>
+<app-dialog-crear-contacto [show]="displayModalContacto" [contactoId]="contactoId" [nnaId]="nnaId" (closeModal)="closeModal()" (dataToParent)="obtenerContacto($event)"></app-dialog-crear-contacto>

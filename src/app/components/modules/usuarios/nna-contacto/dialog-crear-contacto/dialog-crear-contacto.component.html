@@ -74,11 +74,6 @@
                     <input type="email" pInputText [(ngModel)]="contacto.email" />
                 </div>
                 <div class="col-9 offset-3">
-                    <div *ngIf="submitted && !contacto.email" class="text-danger">
-                        Correo electrónico es requerido
-                    </div>
-                </div>
-                <div class="col-9 offset-3">
                     <div *ngIf="submitted && contacto.email && !isValidEmail(contacto.email)" class="text-danger">
                         El formato del correo electrónico es inválido
                     </div>
@@ -103,7 +98,7 @@
                     <button class="btn text-white rounded-4 btn-lg fondo-color-cancelar me-2" type="button"
                         style="width: 200px;" (click)="close()">Cancelar</button>
                     <button class="btn text-white rounded-4 btn-lg fondo-color-principal" type="button"
-                        style="width: 200px;" (click)="guardar()">Guardar</button>
+                        style="width: 200px;" (click)="guardarContacto()">Guardar</button>
                 </div>
             </div>
         </div>

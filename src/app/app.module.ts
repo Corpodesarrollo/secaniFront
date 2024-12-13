@@ -43,7 +43,6 @@ import { InputIconModule } from 'primeng/inputicon';
 
   ],
   imports: [
-    UsuariosModule,
 
     RouterModule.forRoot(routes),
     BrowserModule,

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CardModule } from 'primeng/card';
@@ -18,6 +18,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { NNA } from '../../../../../models/nna.model';
 import { NotificacionComponent } from "../../../notificacion/notificacion.component";
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { NNAService } from '../../../../../core/services/nnaService';
 
 @Component({
   selector: 'app-seguimiento-fallecido',
@@ -27,6 +28,7 @@ import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
   styleUrl: './seguimiento-fallecido.component.css'
 })
 export class SeguimientoFallecidoComponent  implements OnInit {
+  
   estado:string = 'Fallecido';
   id: string | undefined;
   nna: NNA = new NNA();
@@ -68,7 +70,7 @@ export class SeguimientoFallecidoComponent  implements OnInit {
     alertas: []
   };
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private routerAct: ActivatedRoute, private nnaService: NNAService, private router: Router) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -82,7 +84,7 @@ export class SeguimientoFallecidoComponent  implements OnInit {
       }
     }
 
-    this.id = this.router.snapshot.paramMap.get('id')!;
+    this.id = this.routerAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
 
     this.items = [
@@ -96,9 +98,25 @@ export class SeguimientoFallecidoComponent  implements OnInit {
     this.isLoadingDiagnostico = false;
   }
 
-  Guardar(){
+  async Guardar(){
+    //guardar nna
+    await this.nnaService.putNNA(this.nna);
+
+    //guardar seguimiento
+    //???
+
+    //guardar INS
     this.modal.id = this.nna.id;
     this.modal.openModal();
+  }
 
+  closeModal() {
+    this.terminar();
+  }
+
+  terminar(){
+    this.router.navigate([`/gestion/seguimientos`]).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 }

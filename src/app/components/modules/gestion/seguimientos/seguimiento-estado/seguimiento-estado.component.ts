@@ -75,6 +75,9 @@ export class SeguimientoEstadoComponent  implements OnInit {
   estadoEnTratamiento: boolean = false;
   estadoSinTratamiento: boolean = false;
   estadoSinDiagnostico: boolean = false;
+  estadoDefault: boolean = false;
+
+  idContacto: string | undefined;
 
   diagnostico: InfoDiagnostico = {
     id: 0,
@@ -92,10 +95,16 @@ export class SeguimientoEstadoComponent  implements OnInit {
   colorTxt: string = 'white';	
   colorBg: string = '#73b7ad';
 
+  alertas: AlertasTratamiento[] = [];
+  cnt: number = 0;
+
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute, private gs: GenericService,) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
 
     this.validarSeguimiento(Number(this.id));
@@ -140,7 +149,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.isLoadingDiagnostico = false;
 
     this.razonesSinDiagnostico = await this.tpp.getRazonesSinDiagnostico();
-    this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.codigo == this.nna.motivoNoDiagnosticoId);
+    console.log(this.razonesSinDiagnostico);
+    this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.id == this.nna.motivoNoDiagnosticoId);
     this.isLoadingRazonesSinDiagnostico = false;
 
     //this.IPS = await this.tp.getTP('IPSCodHabilitacion');
@@ -150,14 +160,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
 
   validarSeguimiento(id: number) {
     this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
-      let cnt = Number(data);
-      console.log('cnt', cnt);
-      if (cnt > 1) {
-        this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-        return;
-      }
+      this.cnt = Number(data);
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
@@ -183,6 +186,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Registrado") {
       this.stepsCount = 5;
@@ -190,6 +194,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(
       this.selectedEstado?.nombre === "EP Tratamiento en domicilio" ||
@@ -203,12 +208,14 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = true;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
-    else if(this.selectedEstado?.nombre === "Sin tratamiento") {
+    else if(this.selectedEstado?.nombre === "Diagnóstico confirmado") {
       this.estadoFallecido = false;
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = true;
       this.estadoSinDiagnostico = false;
+      this.estadoDefault = false;
     }
     else if(this.selectedEstado?.nombre === "Sin diagnóstico") {
       this.stepsCount = 3;
@@ -216,11 +223,19 @@ export class SeguimientoEstadoComponent  implements OnInit {
       this.estadoEnTratamiento = false;
       this.estadoSinTratamiento = false;
       this.estadoSinDiagnostico = true;
+      this.estadoDefault = false;
+    } else {
+      this.estadoDefault = true;
+      this.estadoFallecido = false;
+      this.estadoEnTratamiento = false;
+      this.estadoSinTratamiento = false;
+      this.estadoSinDiagnostico = false;
     }
+
   }
 
-  onAlertasChange(alertas: AlertasTratamiento[]) {
-    this.diagnostico.alertas = alertas;
+  onAlertasChange(alertas: AlertasTratamiento[]) {    
+    this.alertas = alertas; // Guardar la lista emitida por el hijo
   }
 
   validarCamposRequeridos(): boolean {
@@ -255,26 +270,38 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.saving = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
-      if(this.estadoSinDiagnostico) {
-        this.router.navigate([`/gestion/seguimientos/sin-diagnostico-seguimiento/${this.id}`], {
-          state: { diagnostico: this.diagnostico }
+      if(this.estadoDefault) {
+        this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto }
+        }).then(() => {
+          window.scrollTo(0, 0);
+        });
+      }else if(this.estadoSinDiagnostico || this.estadoSinTratamiento) {
+        this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto }
         }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoFallecido) {
-        this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-      }else if(this.estadoEnTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`]).then(() => {
-          window.scrollTo(0, 0);
-        });
-      }else if(this.estadoSinTratamiento) {
-        this.router.navigate([`/gestion/seguimientos/sin-tratamiento-seguimiento/${this.id}`], {
-          state: { diagnostico: this.diagnostico }
+        this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`], {
+          state: { idContacto: this.idContacto }
         }).then(() => {
           window.scrollTo(0, 0);
         });
+      }else if(this.estadoEnTratamiento) {
+        if (this.cnt > 1) {
+          this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
+            state: { alertas: this.alertas, idContacto: this.idContacto }
+          }).then(() => {
+            window.scrollTo(0, 0);
+          });
+        } else {
+          this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`], {
+            state: { idContacto: this.idContacto }
+          }).then(() => {
+            window.scrollTo(0, 0);
+          });
+        }
       }
     }
     this.saving = false;

@@ -32,20 +32,21 @@ export class DialogCrearContactoComponent {
   @Input() contactoId: number = 0;
   @Input() nnaId: number = 0;
   @Output() closeModal = new EventEmitter<void>(); // Emite un evento al cerrar el modal
-  @Output() dataToParent: any = new EventEmitter<any>(); // Emitir datos al padre
+  @Output() dataToParent = new EventEmitter<any>();  // Emitir datos al padre
+
+  telefonos:string[] = [];
 
   contacto: ContactoNNA = {
     id: 0,
     nnaId: 0,
     nombres: '',
     parentescoId: 0,
+    parentesco: '',
     cuidador: false,
     telefonos: '',
     email: '',
     estado: true
-  }
-
-  telefonos:string[] = [];
+  };
 
   parentescos: Parametricas[] = [];
   selectedParentesco: Parametricas | undefined;
@@ -69,12 +70,18 @@ export class DialogCrearContactoComponent {
       console.log('contactoId', this.contactoId);
       if (this.contactoId > 0) {
         await this.cargarContacto();
-      }
+      } 
     }
 
     if (changes['nnaId'] && changes['nnaId'].currentValue) {
       this.contacto.nnaId = this.nnaId;
     }
+  }
+
+  enviarContacto(){
+    this.dataToParent.emit(this.contacto);
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto cargado exitosamente.' });
+    this.show = false;
   }
 
 
@@ -84,6 +91,7 @@ export class DialogCrearContactoComponent {
       nnaId: this.nnaId,
       nombres: '',
       parentescoId: 0,
+      parentesco: '',
       cuidador: false,
       telefonos: '',
       email: '',
@@ -98,6 +106,19 @@ export class DialogCrearContactoComponent {
   // Método para verificar si un campo está vacío
   isEmpty(value: any): boolean {
     return value === null || value === undefined || value.trim() === '';
+  }
+
+  async guardarContacto(){
+    this.contacto.parentesco = this.selectedParentesco?.nombre ?? '';
+    this.contacto.parentescoId = this.selectedParentesco?.id ?? 0;
+    this.contacto.telefonos = this.telefonos.join(',');
+
+    if(this.contacto.nnaId == 0){
+      this.enviarContacto();
+    }
+    else{
+      await this.guardar();
+    }
   }
 
   async guardar() {

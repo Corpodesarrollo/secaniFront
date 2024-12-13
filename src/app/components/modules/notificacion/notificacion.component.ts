@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { Parametricas } from '../../../models/parametricas.model';
 import { Notificacion } from '../../../models/notificacion.model';
@@ -32,6 +32,7 @@ import { apis } from '../../../models/apis.model';
 export class NotificacionComponent {
 
   @Input() id!: number;
+  @Output() closeModal = new EventEmitter<void>(); // Emite un evento al cerrar el modal
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
   isLoading: boolean = false;
@@ -166,10 +167,6 @@ export class NotificacionComponent {
 
   openModal() {
     this.showDialog = true;
-  }
-
-  closeModal() {
-    this.showDialog = false;
   }
 
   validarEmail(event: any): void {

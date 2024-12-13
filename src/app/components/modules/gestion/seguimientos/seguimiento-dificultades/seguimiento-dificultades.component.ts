@@ -75,11 +75,16 @@ export class SeguimientoDificultadesComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
 
+  idContacto: string | undefined;
+
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, 
     private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
 
@@ -188,12 +193,20 @@ export class SeguimientoDificultadesComponent implements OnInit {
 
   async Siguiente() {
     await this.Actualizar();
-      this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`]).then(() => {
-        window.scrollTo(0, 0);
-      });
+
+    this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`], {
+      state: { alertas: this.alertas, idContacto: this.idContacto }
+    }).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 
   async Actualizar() {
     await this.nnaService.putNNA(this.nna);
+  }
+
+  cargarAlertas(lista:AlertasTratamiento[]) {
+    this.alertas = lista; // Guardar la lista emitida por el hijo
+    console.log('Lista de alertas recibidas:', this.alertas);
   }
 }

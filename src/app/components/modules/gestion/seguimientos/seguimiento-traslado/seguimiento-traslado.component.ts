@@ -87,11 +87,15 @@ export class SeguimientoTrasladoComponent implements OnInit {
   submitted2: boolean = false;
   estado:string = 'Registrado';
   items: MenuItem[] = [];
+  idContacto: string | undefined;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private repos: GenericService) {
   }
 
   async ngOnInit(): Promise<void> {
+    this.routeAct.paramMap.subscribe(() => {
+      this.idContacto = history.state.idContacto;
+    });
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
     console.log(this.nna);
@@ -151,7 +155,9 @@ export class SeguimientoTrasladoComponent implements OnInit {
     if (this.validarCamposRequeridos()){
       this.saving = true;
       await this.Actualizar();
-      this.router.navigate([`/gestion/seguimientos/dificultades-seguimiento/${this.id}`]).then(() => {
+      this.router.navigate([`/gestion/seguimientos/dificultades-seguimiento/${this.id}`], {
+        state: { idContacto: this.idContacto }
+      }).then(() => {
         window.scrollTo(0, 0);
       });
     }
