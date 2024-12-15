@@ -739,7 +739,7 @@
 
                       <div class="form-group mb-3">
                         <select class="form-select" aria-label="Default select example" name="malaatencionips" [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId">
-                          <option value="" selected>Seleccionar</option>
+                          <option value="null" disabled>¿Cual?</option>
                           <option *ngFor="let tipo of tiposMalaAtencionIps" value="{{tipo.id}}">{{tipo.nombre}}</option>
                         </select>
                       </div>
