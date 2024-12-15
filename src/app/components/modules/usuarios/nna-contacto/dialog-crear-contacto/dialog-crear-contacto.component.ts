@@ -188,7 +188,6 @@ export class DialogCrearContactoComponent {
     const camposAValidar = [
       this.contacto.nombres,
       this.contacto.parentescoId,
-      this.contacto.email,
       this.telefonos
     ];
 
