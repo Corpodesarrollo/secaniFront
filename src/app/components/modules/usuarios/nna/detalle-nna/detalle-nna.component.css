@@ -37,3 +37,21 @@
   max-width: 200px;
   overflow-wrap: break-word;
 }
+
+.btn-volver-nna {
+  background-color: #FF9801;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+  padding: 12px 30px; /* Incrementa el tamaño del botón */
+  font-size: 1.2rem; /* Aumenta el tamaño del texto */
+  border-radius: 8px; /* Opcional: Redondea los bordes */
+  border: none; /* Elimina cualquier borde predeterminado */
+  transition: all 0.3s ease; /* Añade una transición suave para efectos hover */
+}
+
+.btn-volver-nna:hover {
+  background-color: #ff9901c3;
+  color: white;
+  transform: scale(1.05); /* Efecto hover para agrandar un poco */
+}
