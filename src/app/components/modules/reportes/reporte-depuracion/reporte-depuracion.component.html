@@ -28,7 +28,7 @@
             </p-inputGroup>
           </div>
           <div class="col-6 mb-3 col-sm-2 mb-sm-0">
-            <p-button type="submit" severity="success" label="Generar" styleClass="w-100"/>
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
       </form>
@@ -59,9 +59,9 @@
               <td>{{ reporte.id }}</td>
               <td>{{ reporte.fecha | date: 'dd/MM/YYYY' }}</td>
               <td>{{ reporte.hora }}</td>
-              <td>{{ reporte.registros.ingresado }}</td>
-              <td>{{ reporte.registros.nuevos }}</td>
-              <td>{{ reporte.registros.duplicados }}</td>
+              <td>{{ reporte.registrosIngresados }}</td>
+              <td>{{ reporte.registrosNuevos }}</td>
+              <td>{{ reporte.registrosDuplicados }}</td>
               <td>{{ reporte.estado }}</td>
             </tr>
           </ng-template>
