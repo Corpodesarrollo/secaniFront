@@ -61,7 +61,11 @@
           </ng-template>
           <ng-template pTemplate="body" let-reporte>
             <tr>
-              <td>{{ reporte.id }}</td>
+              <td>
+                <a [routerLink]="['/reportes/depuracion_p115', reporte.id]">
+                  {{ reporte.id }}
+                </a>
+              </td>
               <td>{{ reporte.fecha | date: 'dd/MM/YYYY' }}</td>
               <td>{{ reporte.hora }}</td>
               <td>{{ reporte.registrosIngresados }}</td>
