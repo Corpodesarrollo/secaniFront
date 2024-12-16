@@ -22,4 +22,9 @@ export class ReportesService {
     const url: string = `Reportes/ReporteDinamicoSeguimiento?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
+
+  getReporteDetalleRegDepurados(idReporteDepuracion: string, tipoRegistro: number = 1) {
+    const url: string = `Reportes/ReporteDetalleRegDepurados?IdReporteDepuracion=${idReporteDepuracion}&TipoRegistro=${tipoRegistro}`;
+    return this.generico.retorno_get(url, this.urlbase);
+  }
 }
