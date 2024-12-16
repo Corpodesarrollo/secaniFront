@@ -27,7 +27,7 @@
               </p-inputGroupAddon>
             </p-inputGroup>
           </div>
-          <div class="col-6 mb-3 col-sm-2 mb-sm-0">
+          <div class="col-12 mb-3 col-sm-2 mb-sm-0">
             <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
@@ -63,6 +63,13 @@
               <td>{{ reporte.registrosNuevos }}</td>
               <td>{{ reporte.registrosDuplicados }}</td>
               <td>{{ reporte.estado }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" class="text-center">
+                Reportes no encontrados.
+              </td>
             </tr>
           </ng-template>
         </p-table>
