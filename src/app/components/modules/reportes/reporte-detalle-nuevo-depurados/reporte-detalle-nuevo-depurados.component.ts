@@ -105,7 +105,8 @@ export class ReporteDetalleNuevoDepuradosComponent {
           "cuidadorTelefono": "005-7444214",
           "agente": "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5"
         }
-      ]
+      ];
+      this.filteredReportes = this.reportes;
     }
   }
 
