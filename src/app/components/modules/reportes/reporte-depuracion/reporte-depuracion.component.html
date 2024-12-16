@@ -34,7 +34,12 @@
       </form>
 
       <div class="mt-3">
-        <p-table #tabla [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table
+          #tabla
+          [value]="reportes"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [globalFilterFields]="['id', 'fecha', 'hora', 'registrosIngresados', 'registrosNuevos', 'registrosDuplicados', 'estado']"
+        >
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               <div class="text-center justify-content-between">
