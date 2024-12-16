@@ -45,7 +45,7 @@ export class ReporteDetalleNuevoDepuradosComponent {
       if (this.id) {
         this.reportes = await this.reportesService.getReporteDetalleRegDepurados(this.id);
 
-        if (this.reportes.length === 0) {
+        if (!this.reportes || (this.reportes && this.reportes.length == 0)) {
           this.reportes = [
             {
               "id": 1,
