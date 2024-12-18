@@ -79,7 +79,7 @@
                     <ng-template pTemplate="body" let-seguimiento>
                         <tr>
                             <td><a [routerLink]="['/gestion/detalle_seguimiento', seguimiento.noCaso]">{{ seguimiento.noCaso }}</a></td>
-                            <td>{{ seguimiento.fechaSeguimiento | date:'dd/MM/yyyy' }}</td>
+                            <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
                             <td>{{ seguimiento.nombreCompleto }}</td>
                             <td><span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.nombre }}</span></td>
                             <td>{{ seguimiento.asuntoUltimaActuacion }}</td>

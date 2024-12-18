@@ -153,8 +153,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.selectedRazonSinDiagnostico = this.razonesSinDiagnostico.find(x => x.id == this.nna.motivoNoDiagnosticoId);
     this.isLoadingRazonesSinDiagnostico = false;
 
-    //this.IPS = await this.tp.getTP('IPSCodHabilitacion');
-    //this.selectedIPS = this.IPS.find(x => x.id == this.nna.ipsId);
+    this.IPS = await this.tpp.getIPS(this.nna.municipioNacimientoId);
+    this.selectedIPS = this.IPS.find(x => x.id == this.nna.ipsId);
     this.isLoadingIPS = false;
   }
 

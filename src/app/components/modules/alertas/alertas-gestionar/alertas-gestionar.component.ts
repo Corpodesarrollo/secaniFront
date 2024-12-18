@@ -4,18 +4,24 @@ import { GenericService } from '../../../../services/generic.services';
 import { AlertasGestion } from '../../../../models/alertasGestion.model';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NotificacionVerComponent } from "../../notificacion-ver/notificacion-ver.component";
 
 @Component({
   selector: 'app-alertas-gestionar',
   standalone: true,
-  imports: [TableModule,CardModule],
+  imports: [TableModule, CardModule, CommonModule, FormsModule, NotificacionVerComponent],
   templateUrl: './alertas-gestionar.component.html',
   styleUrl: './alertas-gestionar.component.css'
 })
 export class AlertasGestionarComponent {
-
+  eapb: string = 'EPS Sanitas';
   alertas: AlertasGestion[] = [];
   user: string = 'admin';
+
+  displayModal: boolean = false;
+  alertaId: number = 0;
 
   constructor(
     private repos: GenericService
@@ -31,6 +37,17 @@ export class AlertasGestionarComponent {
         this.alertas = data;
       }
     });
+  }
+
+  verAlerta(alertaId: number) {
+    this.alertaId = alertaId;
+    console.log('ver alerta', this.displayModal);
+    this.displayModal = true;
+  }
+
+  closeModalAlerta() {
+    console.log('cerrar modal');
+    this.displayModal = false;
   }
 
   enviarRespuesta(value: any) {

@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ContentComponent } from './components/content/content.component';
 import { ContenthomeComponent } from './components/contenthome/contenthome.component';
 import { NotificacionRespuestaComponent } from './components/modules/notificacion-respuesta/notificacion-respuesta.component';
+import { AlertasGestionarComponent } from './components/modules/alertas/alertas-gestionar/alertas-gestionar.component';
 
 
 export const routes: Routes = [
@@ -121,12 +122,16 @@ export const routes: Routes = [
     loadChildren: () => import('./components/modules/reportes/reportes.module').then( m => m.ReportesModule )
   },
 
-   { path: 'respuesta-notificacion', component: NotificacionRespuestaComponent },
+  { path: 'respuesta-notificacion', component: NotificacionRespuestaComponent },
 
   {
     path: 'cuidador',
     loadChildren: () => import('./components/modules/cuidador/cuidador.module').then( m => m.CuidadorModule )
-  }
+  },
+
+  { path: 'gestionar-alertas', component: AlertasGestionarComponent },
+
+
 /*
   {
     path: 'crear-contacto',
