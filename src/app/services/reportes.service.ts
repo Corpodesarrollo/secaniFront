@@ -27,4 +27,9 @@ export class ReportesService {
     const url: string = `Reportes/ReporteDetalleRegDepurados?IdReporteDepuracion=${idReporteDepuracion}&TipoRegistro=${tipoRegistro}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
+
+  getReporteDinamicosAlertas(fechaInicial: string, fechaFinal: string) {
+    const url: string = `Reportes/ReporteDinamicoAlertas?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    return this.generico.retorno_get(url, this.urlbase);
+  }
 }
