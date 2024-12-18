@@ -94,7 +94,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
     ];
 
     //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
-    this.IPS =  await this.tp.getTP('IPSCodHabilitacion');
+    this.IPS =  await this.tpp.getIPS(this.nna.municipioNacimientoId);
     this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
 
 

@@ -128,12 +128,12 @@ export class SeguimientoDatosComponent implements OnInit {
       this.nna = new NNA();
     }
 
-    this.parentescos = await this.tpp.getParentescos();
-    this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
-    this.isLoadingParentesco = false;
 
-    this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then((data: any) => {
+    this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then(async (data: any) => {
       this.contacto = data.datos;
+      this.parentescos = await this.tpp.getParentescos();
+      this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
+      this.isLoadingParentesco = false;
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
