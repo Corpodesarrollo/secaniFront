@@ -66,7 +66,7 @@ www.minsalud.gov.co`,
     if (this.paginaActual > 0) {
       this.paginaActual--;
     } else {
-      this.paginaActual = this.notificaciones.length - 1; // Ir a la última página si está en la primera
+      this.paginaActual = this.notificaciones.length - 1;
     }
   }
 
@@ -74,12 +74,12 @@ www.minsalud.gov.co`,
     if (this.paginaActual < this.notificaciones.length - 1) {
       this.paginaActual++;
     } else {
-      this.paginaActual = 0; // Ir a la primera página si está en la última
+      this.paginaActual = 0;
     }
   }
 
   close() {
-    this.closeModal.emit(); // Emite evento para cerrar el modal
+    this.closeModal.emit();
   }
 
 }

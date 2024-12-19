@@ -257,26 +257,18 @@
 
 
 
-  <p-dialog
-    header="Oficio de notificación"
-    [modal]="true"
-    [(visible)]="visible"
-    [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    [maximizable]="true">
-
-    <app-oficio-notificacion
-      [alerta]="alertaSeleccionada"
-      [NNAdatos]="datosNNA"
-      [nombreNNA]="datosBasicosNNA.nombreCompleto"
-      [edadNNA]="tiempoTranscurrido"
-      [diagnosticoNNA]="datosBasicosNNA.diagnostico">
-    </app-oficio-notificacion>
-
-  </p-dialog>
 
 </body>
 
 
-<app-ver-notificacion [show]="verNotificaciones" (closeModal)="closeVerNotificaciones()"></app-ver-notificacion>
-<app-ver-respuesta [show]="verRespuestas" (closeModal)="closeVerRespuestas()"></app-ver-respuesta>
+<app-ver-notificacion *ngIf="verNotificaciones" [show]="verNotificaciones" (closeModal)="closeVerNotificaciones()"></app-ver-notificacion>
+<app-ver-respuesta *ngIf="verRespuestas" [show]="verRespuestas" (closeModal)="closeVerRespuestas()"></app-ver-respuesta>
+<app-crear-oficio *ngIf="verCrearOficio"
+  [show]="verCrearOficio"
+  [alerta]="alertaSeleccionada"
+  [NNAdatos]="datosNNA"
+  [nombreNNA]="datosBasicosNNA.nombreCompleto"
+  [edadNNA]="tiempoTranscurrido"
+  [diagnosticoNNA]="datosBasicosNNA.diagnostico"
+  (closeModal)="closeCrearOficio()"
+  ></app-crear-oficio>

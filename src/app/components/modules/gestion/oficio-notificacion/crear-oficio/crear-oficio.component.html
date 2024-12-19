@@ -1,6 +1,6 @@
 <p-toast  [life]="10000" />
 
-<p-dialog header="Crear oficio de notificación" [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false"
+<p-dialog header="Crear oficio de notificación" [(visible)]="show" [modal]="true" [style]="{ width: '900px' }" [draggable]="false"
     [resizable]="false" (onHide)="close()">
 
     <div class="row align-items-center">
@@ -8,19 +8,19 @@
       <p-card>
         <!--form-->
           <div class="row">
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Ciudad y fecha</div>
               <div class="col">
                 <p>{{ city }}, {{ formattedDate }}</p>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Membrete</div>
               <div class="col">
                 <input type="text" class="form-control" placeholder="" [(ngModel)]="membrete" />
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Entidad*</div>
               <div class="col">
                 <select class="form-select" aria-label="entidadId" id="entidadId" name="entidadId" [(ngModel)]="nombreEntidad">
@@ -31,38 +31,37 @@
                 </select>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Ciudad</div>
               <div class="col">
                 <input type="text" class="form-control" placeholder="" [(ngModel)]="ciudad" />
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Asunto*</div>
               <div class="col">
                 <textarea class="form-control" rows="2" placeholder="" [(ngModel)]="asunto"></textarea>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Mensaje*</div>
               <div class="col">
                 <textarea class="form-control" rows="8" placeholder="" [(ngModel)]="mensaje"></textarea>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Alerta</div>
               <div class="col">
                 <b>{{ alerta?.categoriaAlerta }} - {{ alerta?.subcategoriaAlerta }}</b>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Comentario 1</div>
               <div class="col">
-                <!--p-editor [(ngModel)]="comentario1" [style]="{ height: '320px' }" /-->
                 <textarea class="form-control" rows="6" placeholder="" [(ngModel)]="comentario1"></textarea>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">NNA</div>
               <div class="col">
                 <div class="row">
@@ -82,13 +81,13 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Cierre*</div>
               <div class="col">
                 <textarea class="form-control" rows="5" placeholder="" [(ngModel)]="cierre"></textarea>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-2" style="font-weight: bold;">Firma*</div>
               <div class="col" id="elementToCapture">
                 <p-editor [(ngModel)]="firma" [style]="{ height: '320px' }" />
