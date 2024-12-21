@@ -106,6 +106,12 @@ export class TpParametros {
     var url = "CategoriaAlerta/Subcategorias/" + id;
     return await this.axios.retorno_get(url, urlbase);
   }
+  
+  async getIPS(municipioId: any) {
+    var urlbase: string = environment.url_MSParametricas
+    var url = "IPS/" + municipioId;
+    return await this.axios.retorno_get(url, urlbase);
+  }
 
   async getDiagnosticos() {
     var urlbase: string = environment.url_MSParametricas

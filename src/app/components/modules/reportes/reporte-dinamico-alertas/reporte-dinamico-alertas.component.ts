@@ -9,6 +9,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { ReportesService } from '../../../../services/reportes.service';
+import { ExcelExportService } from '../../../../services/excel-export.service';
 
 @Component({
   selector: 'app-reporte-dinamico-alertas',
@@ -18,11 +20,19 @@ import { TableModule } from 'primeng/table';
   styleUrl: './reporte-dinamico-alertas.component.css'
 })
 export class ReporteDinamicoAlertasComponent implements OnInit {
-  public reportes: any[] = [];
-  public columnas!: any[];
 
+  public reportes: any[] = [];
   public camposForm!: FormGroup;
-  public campos: { header: string, field: string }[] = [
+
+  public columnasObligatorios: { header: string, field: string }[] = [
+    { field: 'fechaNotificacion', header: 'Fecha notificación' },
+    { field: 'fechaResolucion', header: 'Fecha de resolución' },
+    { field: 'gestionCorreos', header: 'Gestión de correos' },
+    { field: 'nombresApellidos', header: 'Nombres y apellidos NNA' },
+    { field: 'observacion', header: 'Observación' }
+  ];
+
+  public columnasOpcionales: { header: string, field: string }[] = [
     { header: 'Nombre NNA', field: 'nombreNNA' },
     { header: 'EAPB', field: 'eapb' },
     { header: 'Categoría alerta', field: 'categoriaAlerta' },
@@ -55,31 +65,55 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     { header: 'Apoyo recibido por fundación', field: 'apoyoRecibidoFundacion' }
   ];
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private reportesService: ReportesService,
+    private excelExportService: ExcelExportService
+  ) {
     this.camposForm = this.formBuilder.group({
-      buscador: [''], // Campo de búsqueda
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
       fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
       camposSeleccionados: this.formBuilder.array([])
     });
   }
 
-  ngOnInit(): void {
-    this.columnas = [
-      { field: 'fechaNotificacion', header: 'Fecha notificación' },
-      { field: 'fechaResolucion', header: 'Fecha de resolución' },
-      { field: 'gestionConrreos', header: 'Gestión de correos' },
-      { field: 'nombresApellidos', header: 'Nombres y apellidos NNA' },
-      { field: 'observacion', header: 'Observación' }
-    ];
+  ngOnInit(): void { }
+
+  onCheckboxChange(e: any, columna: { header: string, field: string }) {
+    const camposSeleccionadosArray = this.camposForm.get('camposSeleccionados') as FormArray;
+    if (e.checked.length != 0) {
+      camposSeleccionadosArray.push(this.formBuilder.control(columna));
+    } else {
+      const index = camposSeleccionadosArray.controls.findIndex(x => x.value === columna);
+      if (index >= 0) camposSeleccionadosArray.removeAt(index);
+    }
   }
 
-  get camposSeleccionados() {
-    return this.camposForm.get('camposSeleccionados') as FormArray;
+  get columnas() {
+    const columnasSeleccionadas = this.camposForm.value.camposSeleccionados;
+    return [ ...this.columnasObligatorios, ...columnasSeleccionadas ];
   }
 
-  onSubmit(): void {
-    if ( this.camposForm.invalid ) return;
-    console.log(this.camposForm.value);
+  get columnasFiltroGlobal() {
+    const fieldsColumnasOpcionales = this.columnasOpcionales.map(campo => campo.field);
+    const fieldsColumnasObligatorias = this.columnasObligatorios.map(campo => campo.field);
+    return [ ...fieldsColumnasOpcionales, ...fieldsColumnasObligatorias ];
+  }
+
+  async onSubmit() {
+    if (this.camposForm.invalid) return;
+    const { fechaInicio, fechaFin } = this.camposForm.value;
+
+    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
+    const fechaFinalString = fechaFin.toISOString().split('T')[0];
+
+    this.reportes = await this.reportesService
+      .getReporteDinamicosAlertas(fechaInicialString, fechaFinalString);
+  }
+
+  exportExcel() {
+    this.excelExportService.exportReporteToExcel(
+      this.reportes, this.columnas, 'Reporte dinámico alertas'
+    );
   }
 }

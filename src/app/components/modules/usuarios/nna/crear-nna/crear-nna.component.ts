@@ -324,7 +324,7 @@ export class CrearNnaComponent {
       camposAValidar = [
         this.nna.origenReporteId,
         this.nna.primerNombre,
-        this.nna.segundoApellido,
+        this.nna.primerApellido,
         this.nna.tipoIdentificacionId,
         this.nna.numeroIdentificacion,
         this.nna.fechaNacimiento,
@@ -344,7 +344,7 @@ export class CrearNnaComponent {
       camposAValidar = [
         this.nna.origenReporteId,
         this.nna.primerNombre,
-        this.nna.segundoApellido,
+        this.nna.primerApellido,
         this.nna.tipoIdentificacionId,
         this.nna.numeroIdentificacion,
         this.nna.fechaNacimiento,
