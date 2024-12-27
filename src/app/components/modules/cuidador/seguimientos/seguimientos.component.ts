@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -20,7 +20,7 @@ import { ReportesSIVIGILAService } from '../../../../services/reportes-sivigila.
   styleUrl: './seguimientos.component.css',
   providers: [MessageService]
 })
-export class SeguimientosComponent {
+export class SeguimientosComponent implements OnInit {
 
   public seguimientoForm: FormGroup;
   public recaidaForm: FormGroup;
@@ -51,8 +51,13 @@ export class SeguimientosComponent {
     });
   }
 
-  getSeguimientos() {
-    this.reportesSIVIGILAService.getReportes();
+  async ngOnInit() {
+    await this.getSeguimientos();
+  }
+
+  async getSeguimientos() {
+    const reportes = await this.reportesSIVIGILAService.getReportes();
+    console.log(reportes);
   }
 
   showDialog(): void {
