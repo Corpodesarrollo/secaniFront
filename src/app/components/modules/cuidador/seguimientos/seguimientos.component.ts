@@ -10,6 +10,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 
+import { ReportesSIVIGILAService } from '../../../../services/reportes-sivigila.service';
+
 @Component({
   selector: 'app-seguimientos',
   standalone: true,
@@ -37,7 +39,7 @@ export class SeguimientosComponent {
 
   public nnaInfo: { nombre: string, identificacion: string } = { nombre: '', identificacion: '' };
 
-  constructor( private formBuilder: FormBuilder, private messageService: MessageService ) {
+  constructor( private formBuilder: FormBuilder, private messageService: MessageService, private reportesSIVIGILAService: ReportesSIVIGILAService) {
     this.seguimientoForm = this.formBuilder.group({
       parentesco: [null, Validators.required],
       tipoIdentificacion: [null, Validators.required],
@@ -47,6 +49,10 @@ export class SeguimientosComponent {
     this.recaidaForm = this.formBuilder.group({
       recaida: [null, Validators.required]
     });
+  }
+
+  getSeguimientos() {
+    this.reportesSIVIGILAService.getReportes();
   }
 
   showDialog(): void {
