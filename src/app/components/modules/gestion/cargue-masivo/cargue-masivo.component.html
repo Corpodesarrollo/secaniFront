@@ -33,9 +33,11 @@
 
     @if (selectedFile) {
       <div class="mt-4">
-        <button pButton label="Cargar" class="p-button-success me-2" (click)="uploadFile()"></button>
-        <button pButton label="Cancelar" class="p-button-secondary" (click)="cancelUpload()"></button>
+        <button pButton [loading]="cargando" [label]="cargando ? 'Cargando': 'Cargar'" class="p-button-success me-2" (click)="uploadFile()"></button>
+        <button pButton [disabled]="cargando" label="Cancelar" class="p-button-secondary" (click)="cancelUpload()"></button>
       </div>
     }
   </div>
 </div>
+
+<p-toast />
