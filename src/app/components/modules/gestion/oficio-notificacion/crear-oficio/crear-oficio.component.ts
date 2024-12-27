@@ -59,6 +59,17 @@ export class CrearOficioComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.loadAlertaData();
+  }
+
+  ver(){
+    console.log('inicia');
+    console.log(this.alerta);
+    console.log(this.NNAdatos);
+    console.log(this.nombreNNA);
+    console.log(this.edadNNA);
+    console.log(this.diagnosticoNNA);
+    console.log('termina');
   }
 
   formatDate(date: Date): string {
@@ -71,8 +82,6 @@ export class CrearOficioComponent implements OnInit {
   }
 
   loadAlertaData(){
-
-
     this.repos.get_withoutParameters(`Entidades/Entidades`, 'TablaParametrica').subscribe({
       next: (data: any) => {
         this.listaEndidades = data;

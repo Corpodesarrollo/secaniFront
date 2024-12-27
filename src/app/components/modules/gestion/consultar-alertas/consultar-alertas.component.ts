@@ -17,19 +17,18 @@ import { TpParametros } from '../../../../core/services/tpParametros';
 import { from, map, Observable } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
-import { OficioNotificacionComponent } from './oficio-notificacion/oficio-notificacion.component';
 import { VerNotificacionComponent } from '../oficio-notificacion/ver-notificacion/ver-notificacion.component';
 import { VerRespuestaComponent } from '../oficio-notificacion/ver-respuesta/ver-respuesta.component';
 import { Alerta, NotificacionAlerta } from '../../../../models/ExportConsutarAlertas.model';
 import { ToastModule } from 'primeng/toast';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { CrearOficioComponent } from '../oficio-notificacion/crear-oficio/crear-oficio.component';
 
 
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule,
-    OficioNotificacionComponent, VerNotificacionComponent, VerRespuestaComponent, ToastModule
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, VerNotificacionComponent, VerRespuestaComponent, ToastModule, CrearOficioComponent
   ],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
@@ -327,10 +326,15 @@ export class ConsultarAlertasComponent implements OnInit {
 
 
   visible: boolean = false;
-  showDialog(alerta:any) {
+  verCrearOficio: boolean = false;
 
+  showDialog(alerta:any) {
     this.alertaSeleccionada = alerta;
-    this.visible = true;
+    this.verCrearOficio = true;
+  }
+
+  closeCrearOficio(){
+    this.verCrearOficio = false;
   }
 
   verNotificaciones: boolean = false;
