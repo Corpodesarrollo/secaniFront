@@ -61,7 +61,7 @@ export class PlantillasCorreoComponent implements OnInit {
       accept: async () => {
         if (this.plantillaCorreoSeleccionada) {
           try {
-            await this.eliminarPlantillaCorreo(this.plantillaCorreoSeleccionada.id);
+            await this.plantillaCorreoSeleccionada.eliminarPlantillaCorreo(this.plantillaCorreoSeleccionada.id);
             this.messageService.add({
               severity: 'success',
               summary: 'Eliminación exitosa',
