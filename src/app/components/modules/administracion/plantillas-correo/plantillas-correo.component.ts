@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
 
 
 @Component({
@@ -23,16 +24,14 @@ export class PlantillasCorreoComponent implements OnInit {
   public plantillaCorreoSeleccionada: any | null = null;
   public mostrarDetallesModal: boolean = false;
 
-  constructor(private confirmationService: ConfirmationService) {}
+  constructor(
+    private plantillasCorreoService: PlantillasCorreoService,
+    private confirmationService: ConfirmationService
+  ) {}
 
-  ngOnInit(): void {
-    this.plantillasCorreo = [
-      { id: '1', fechaCreacion: new Date(), nombre: 'EABP 1', asunto: 'Registro inicial', tipo: 'Correo de Notificación', firmante: 'Maia Zabala', estado: 'Activo' },
-      { id: '2', fechaCreacion: new Date(), nombre: 'EABP 2', asunto: 'Registro inicial', tipo: 'Oficio de Notificación', firmante: 'Maia Zabala', estado: 'Inactivo' },
-      { id: '3', fechaCreacion: new Date(), nombre: 'EABP 3', asunto: 'Registro inicial', tipo: 'Oficio de Notificación', firmante: 'Maia Zabala', estado: 'Activo' },
-      { id: '4', fechaCreacion: new Date(), nombre: 'EABP 4', asunto: 'Registro inicial', tipo: 'Correo de Notificación', firmante: 'Maia Zabala', estado: 'Activo' },
-      { id: '5', fechaCreacion: new Date(), nombre: 'EABP 5', asunto: 'Registro inicial', tipo: 'Correo de Notificación', firmante: 'Maia Zabala', estado: 'Activo' }
-    ];
+  async ngOnInit() {
+    this.plantillasCorreo = await this.plantillasCorreoService.obtenerPlantillasCorreo();
+    console.log(this.plantillasCorreo);
   }
 
   openViewModal( plantillaCorreo: any ): void {
