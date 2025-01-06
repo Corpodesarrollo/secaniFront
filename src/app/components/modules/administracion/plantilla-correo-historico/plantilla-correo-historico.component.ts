@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { TableModule } from 'primeng/table';
 
+import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-plantilla-correo-historico',
   standalone: true,
@@ -11,17 +14,21 @@ import { TableModule } from 'primeng/table';
   styleUrl: './plantilla-correo-historico.component.css'
 })
 export class PlantillaCorreoHistoricoComponent implements OnInit {
+  public id!: string;
   public historicos: any[] = [];
 
-  constructor() {}
+  constructor(
+    private plantillasCorreoService: PlantillasCorreoService,
+    private route: ActivatedRoute
+  ) {}
 
-  ngOnInit(): void {
-    this.historicos = [
-      { fechaCreacion: new Date(), transaccion: 'Editar', usuarioOrigen: 'Juan Carlos Bernal', usuarioRol: 'Coordinador', comentario: 'Mensaje' },
-      { fechaCreacion: new Date(), transaccion: 'Editar', usuarioOrigen: 'Juan Carlos Bernal', usuarioRol: 'Coordinador', comentario: 'Asunto' },
-      { fechaCreacion: new Date(), transaccion: 'Editar', usuarioOrigen: 'Juan Carlos Bernal', usuarioRol: 'Coordinador', comentario: 'Cierre' },
-      { fechaCreacion: new Date(), transaccion: 'Editar', usuarioOrigen: 'Juan Carlos Bernal', usuarioRol: 'Coordinador', comentario: 'Firmante' },
-      { fechaCreacion: new Date(), transaccion: 'Editar', usuarioOrigen: 'Juan Carlos Bernal', usuarioRol: 'Coordinador', comentario: 'Mensaje' }
-    ];
+  async ngOnInit() {
+    this.route.paramMap.subscribe(async params => {
+      this.id = params.get('id')!;
+
+      if (this.id) {
+        this.historicos = await this.plantillasCorreoService.historioPlantillaCorreo(this.id);
+      }
+    });
   }
 }

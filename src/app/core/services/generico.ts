@@ -154,4 +154,15 @@ export class Generico {
     return this.handleRequest(request);
   }
 
+  async retorno_delete_custom(
+    urltemp: string,
+    baseUrl: string,
+    withToken: boolean = true
+  ): Promise<any> {
+    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
+    const url = `${baseUrl}${urltemp}`;
+    const request = axios.delete(url, { headers });
+    return this.handleRequest(request);
+  }
+
 }

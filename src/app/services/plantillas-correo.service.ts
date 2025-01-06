@@ -27,4 +27,9 @@ export class PlantillasCorreoService {
     const url: string = `ConsultarPlantillaCorreo/${id}`;
     return this.generico.retorno_get(url, this.urlbase);
   }
+
+  eliminarPlantillaCorreo(id: string) {
+    const url: string = `EliminarPlantillaCorreo/${id}`;
+    return this.generico.retorno_delete_custom(url, this.urlbase);
+  }
 }

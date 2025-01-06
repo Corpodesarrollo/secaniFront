@@ -2,21 +2,24 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
 
 
 @Component({
   selector: 'app-plantillas-correo',
   standalone: true,
-  imports: [ButtonModule, ConfirmDialogModule, CommonModule, DialogModule, RouterModule, TableModule],
+  imports: [ButtonModule, ConfirmDialogModule, CommonModule, DialogModule, RouterModule, TableModule, ToastModule],
   templateUrl: './plantillas-correo.component.html',
   styleUrl: './plantillas-correo.component.css',
-  providers: [ConfirmationService]
+  providers: [ConfirmationService, MessageService]
 })
 export class PlantillasCorreoComponent implements OnInit {
 
@@ -26,7 +29,8 @@ export class PlantillasCorreoComponent implements OnInit {
 
   constructor(
     private plantillasCorreoService: PlantillasCorreoService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   async ngOnInit() {
@@ -34,8 +38,8 @@ export class PlantillasCorreoComponent implements OnInit {
     console.log(this.plantillasCorreo);
   }
 
-  openViewModal( plantillaCorreo: any ): void {
-    this.plantillaCorreoSeleccionada = plantillaCorreo;
+  async openViewModal(plantillaCorreoId: string): void {
+    this.plantillaCorreoSeleccionada = await this.plantillasCorreoService.obtenerPlantillaCorreo(plantillaCorreoId);
     this.mostrarDetallesModal = true;
   }
 
@@ -54,11 +58,34 @@ export class PlantillasCorreoComponent implements OnInit {
       rejectButtonStyleClass: "p-button-secondary p-button-text",
       acceptIcon: "none",
       rejectIcon: "none",
-      accept: () => {
-          // Acción al aceptar
+      accept: async () => {
+        if (this.plantillaCorreoSeleccionada) {
+          try {
+            await this.plantillaCorreoSeleccionada.eliminarPlantillaCorreo(this.plantillaCorreoSeleccionada.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Eliminación exitosa',
+              detail: `La plantilla "${this.plantillaCorreoSeleccionada.nombre}" fue eliminada correctamente.`,
+              life: 3000
+            });
+            this.plantillasCorreo = await this.plantillasCorreoService.obtenerPlantillasCorreo(); // Refresca la lista
+          } catch (error) {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Hubo un problema al eliminar la plantilla. Inténtalo de nuevo.',
+              life: 3000
+            });
+          }
+        }
       },
       reject: () => {
-          // Acción al rechazar
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Cancelado',
+          detail: 'La eliminación de la plantilla fue cancelada.',
+          life: 3000
+        });
       }
     });
   }
