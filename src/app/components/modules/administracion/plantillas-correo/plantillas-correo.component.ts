@@ -38,8 +38,8 @@ export class PlantillasCorreoComponent implements OnInit {
     console.log(this.plantillasCorreo);
   }
 
-  async openViewModal(plantillaCorreoId: string): void {
-    this.plantillaCorreoSeleccionada = await this.plantillasCorreoService.obtenerPlantillaCorreo(plantillaCorreoId);
+  async openViewModal(plantillaCorreoId: string) {
+    this.plantillaCorreoSeleccionada = await this.plantillasCorreoService.obtnenerPlantillaCorreoPorId(plantillaCorreoId);
     this.mostrarDetallesModal = true;
   }
 
