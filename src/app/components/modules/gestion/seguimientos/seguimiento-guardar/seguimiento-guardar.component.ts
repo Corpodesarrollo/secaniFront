@@ -11,7 +11,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { Seguimiento } from '../../../../../models/seguimiento.model';
 import { apis } from '../../../../../models/apis.model';
 import { Router } from '@angular/router';
-import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-seguimiento-guardar',
@@ -123,13 +122,6 @@ export class SeguimientoGuardarComponent {
   }
 
   enviar(){
-    if (this.seguimiento) {
-      const fechaBogota = moment(this.seguimiento.fechaSeguimiento)
-        .tz('America/Bogota', true) // Mantén la hora y solo ajusta la zona horaria.
-        .format(); // Devuelve en formato ISO 8601
-      this.seguimiento.fechaSeguimiento = new Date(fechaBogota);
-      console.log('Fecha de seguimiento:', this.seguimiento.fechaSeguimiento);
-    }
     this.gs.post('Seguimiento/SetSeguimiento', this.seguimiento, apis.seguimiento).subscribe(
       response => {
         this.mostrarMensaje = true;

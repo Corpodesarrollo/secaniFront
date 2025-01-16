@@ -36,7 +36,7 @@
                             <td>{{alerta.subcategoria}}</td>
                             <td><span class="badge bg-{{alerta.colorEstado}} text-white p-2 ">{{alerta.textoEstado}}</span></td>
                             <td class="text-center"><i class="bi bi-eye-fill" style="font-size: large; color: #73b7ad; cursor: pointer;"></i></td>
-                            <td class="text-center"><i class="bi bi-send-plus" style="font-size: large; color: #73b7ad; cursor: pointer;"></i></td>
+                            <td class="text-center"><i class="bi bi-send-plus" style="font-size: large; color: #73b7ad; cursor: pointer;" (click)="enviarRespuesta(alerta)"></i></td>
                         </tr>
                     </ng-template>
                 </p-table>
@@ -44,4 +44,10 @@
         </div>
     </div>
     <app-notificacion-ver [show]="displayModal" [alertaId]="alertaId" (closeModal)="closeModalAlerta()" />
+    <app-alertas-enviar-respuesta [show]="displayModalEnviarRespuesta"  (closeModal)="closeModalEnviarRespuesta()"
+        [alertaId]="alertaId"
+        [nombreNNA]="nombreNNA"
+        [documentoNNA]="documentoNNA"
+        [alerta]="alerta"
+        />
 </body>

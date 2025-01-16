@@ -1,0 +1,31 @@
+.datos-usuario p {
+  margin: 2px 0;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.datos-usuario p:first-child {
+  font-weight: bold;
+}
+
+.file-upload-icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-color:  #73b7ad;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.file-upload-icon:hover {
+  background-color: #61b9ab;
+}
+
+input[type="file"] {
+  display: none; /* Oculta el input de archivo */
+}
+

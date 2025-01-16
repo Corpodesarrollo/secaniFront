@@ -36,7 +36,6 @@
     "chart.js": "^4.4.4",
     "chartjs-plugin-datalabels": "^2.2.0",
     "fullcalendar": "^6.1.15",
-    "moment-timezone": "^0.5.46",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.5",
     "quill": "^2.0.2",
