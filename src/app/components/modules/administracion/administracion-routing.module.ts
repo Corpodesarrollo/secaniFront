@@ -11,6 +11,8 @@ import { PlantillasCorreoComponent } from './plantillas-correo/plantillas-correo
 import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/plantilla-correo-historico.component';
 import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-plantilla-correo.component';
 
+import { AsignacionSeguimientoComponent } from '../administracion/asignacion-seguimiento/asignacion-seguimiento.component';
+
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
@@ -33,6 +35,7 @@ const routes: Routes = [
       { path: '**', redirectTo: '' }
     ]
   },
+  { path: 'asignacion_de_seguimiento', component: AsignacionSeguimientoComponent },
   { path: '**', redirectTo: 'permisos' }
 ];
 

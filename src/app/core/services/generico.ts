@@ -146,6 +146,23 @@ export class Generico {
     const request = axios.get(url, { headers });
     return this.handleRequest(request);
   }
-  // Método para verificar si un campo está vacío
+
+  async retorno_post_cargue_archivo(urltemp: string, data: any, withToken: boolean = true, baseUrl:string = this.BASE_URL): Promise<any> {
+    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
+    const url = `${baseUrl}${urltemp}`;
+    const request = axios.post(url, data, { headers: { ...headers, 'Content-Type': 'multipart/form-data' } });
+    return this.handleRequest(request);
+  }
+
+  async retorno_delete_custom(
+    urltemp: string,
+    baseUrl: string,
+    withToken: boolean = true
+  ): Promise<any> {
+    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
+    const url = `${baseUrl}${urltemp}`;
+    const request = axios.delete(url, { headers });
+    return this.handleRequest(request);
+  }
 
 }

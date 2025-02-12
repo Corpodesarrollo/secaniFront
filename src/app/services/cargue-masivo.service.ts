@@ -8,7 +8,11 @@ export class CargueMasivoService {
   constructor(private generico: Generico) { }
 
   cargarArchivo(file: File) {
-    const url: string = `CargarArchivoNNA`;
-    return this.generico.retorno_post(url, file, true, this.urlbase);
+    const url: string = `NNA/CargarArchivoNNA`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.generico.retorno_post_cargue_archivo(url, formData, true, this.urlbase);
   }
 }

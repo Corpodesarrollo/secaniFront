@@ -13,7 +13,6 @@ import { DetalleSeguimientosComponent } from './detalle-seguimientos/detalle-seg
 import { SeguimientoGestionarComponent } from './seguimientos/seguimiento-gestionar/seguimiento-gestionar.component';
 import { ConsultarAlertasComponent } from './consultar-alertas/consultar-alertas.component';
 import { CargueMasivoComponent } from './cargue-masivo/cargue-masivo.component';
-import { AsignacionSeguimientoComponent } from './asignacion-seguimiento/asignacion-seguimiento.component';
 
 const routes: Routes = [
   { path: 'cargue_masivo', component: CargueMasivoComponent},
@@ -28,8 +27,7 @@ const routes: Routes = [
   { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent },
   { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent },
   { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
-  { path: 'consultar-alertas/:id', component: ConsultarAlertasComponent },
-  { path: 'asignacion-seguimientos', component: AsignacionSeguimientoComponent }
+  { path: 'consultar-alertas/:id', component: ConsultarAlertasComponent }
 ];
 
 @NgModule({

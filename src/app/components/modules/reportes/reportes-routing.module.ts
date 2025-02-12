@@ -9,9 +9,11 @@ import { ReporteDinamicoNnaComponent } from './reporte-dinamico-nna/reporte-dina
 import { ReporteDinamicoSeguimientoComponent } from './reporte-dinamico-seguimiento/reporte-dinamico-seguimiento.component';
 import { ReporteDinamicoEapbComponent } from './reporte-dinamico-eapb/reporte-dinamico-eapb.component';
 import { ReporteGeneralLlamadasComponent } from './reporte-general-llamadas/reporte-general-llamadas.component';
+import { IndicadoresComponent } from './indicadores/indicadores.component';
 
 const routes: Routes = [
-  { path: 'reporte-inconsistencia', component: ReporteInconsistenciaComponent },
+  { path: 'indicadores', component: IndicadoresComponent },
+  { path: 'agentes_de_seguimiento', component: ReporteInconsistenciaComponent },
   {
     path: 'depuracion_p115',
     children: [
@@ -20,10 +22,10 @@ const routes: Routes = [
       { path: '**', redirectTo: '' }
     ]
   },
-  { path: 'reporte-dinamico-alertas', component: ReporteDinamicoAlertasComponent },
+  { path: 'alertas', component: ReporteDinamicoAlertasComponent },
   { path: 'nna', component: ReporteDinamicoNnaComponent },
   { path: 'seguimientos', component: ReporteDinamicoSeguimientoComponent },
-  { path: 'reporte-dinamico-eapb', component: ReporteDinamicoEapbComponent },
+  { path: 'actiaciones_de_entidades_externas', component: ReporteDinamicoEapbComponent },
   { path: 'llamadas', component: ReporteGeneralLlamadasComponent },
   { path: '**', redirectTo: 'reporte-inconsistencia' }
 ];
