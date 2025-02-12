@@ -11,7 +11,7 @@
       <div class="col-sm-12 col-md-12 valor w-100 h-100" style="padding-top:5px">
         {{ data.valor }}
       </div>
-      <div class="col-sm-12 col-md-12 porcentaje"   style="padding-top:10px">
+      <div class="col-sm-12 col-md-12 porcentaje"   style="padding-top:10px" *ngIf="crecimiento == true">
 
         <span *ngIf="estilo" class="porcentaje_1">&#8679; {{ data.porcentaje }}% </span>
         <span *ngIf="!estilo" class="porcentaje_2">&#8681; {{ data.porcentaje }}% </span>

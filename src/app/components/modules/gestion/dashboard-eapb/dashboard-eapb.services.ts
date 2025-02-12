@@ -35,8 +35,8 @@ export class DashboardEapbService {
     return await  this.comun.retorno_get(url);
   }
 
-  GetCasosCriticosEAPB= async (EntidadId: string) => {
-    let url = `${'Dashboard/GetCasosCriticosEAPB?EntidadId='+EntidadId}`;
+  GetCasosCriticosEAPB= async (EntidadId: string, FechaInicial: Date, FechaFinal: Date,) => {
+    let url = `${'Dashboard/GetCasosCriticosEAPB?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&EntidadId='+EntidadId}`;
     return await  this.comun.retorno_get(url);
   }
 

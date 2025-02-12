@@ -14,6 +14,7 @@ export class TarjetaKPIComponent implements OnInit {
   estilo: any;
 
   @Input() data: any;
+  @Input() crecimiento: any = true;
 
 
 
