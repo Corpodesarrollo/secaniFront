@@ -15,7 +15,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { TableModule } from 'primeng/table';
 import { ContentComponent } from './components/content/content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -31,6 +31,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { HealthCheckInterceptor } from './interceptors/health-check.service';
 
 @NgModule({
   declarations: [
@@ -67,8 +68,10 @@ import { InputIconModule } from 'primeng/inputicon';
     /**Component standalone */
 
 
-],
-  providers: [TablasParametricas],
+  ],
+  providers: [TablasParametricas,
+    { provide: HTTP_INTERCEPTORS, useClass: HealthCheckInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

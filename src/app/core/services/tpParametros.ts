@@ -133,7 +133,7 @@ export class TpParametros {
 
   async getTPEAPB() {
     var urlbase: string = environment.url_MSParametricas
-    var url = "TablaParametrica/CodigoEAPByNit";
+    var url = "EAPB";
     return await this.axios.retorno_get(url, urlbase);
   }
 

@@ -48,7 +48,9 @@ export class SeguimientoGuardarComponent {
 
   async ngOnInit(): Promise<void>{
     setTimeout(() => {
-      this.inputCampo.nativeElement.focus();
+      if (this.inputCampo){
+        this.inputCampo.nativeElement.focus();
+      }
     }, 0);
   }
 

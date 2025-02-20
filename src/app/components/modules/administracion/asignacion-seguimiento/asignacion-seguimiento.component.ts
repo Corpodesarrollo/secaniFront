@@ -115,7 +115,7 @@ export class AsignacionSeguimientoComponent implements OnInit {
       this.CalcularEdad();
 
       this.parentescos = await this.tp.getTP('RLCPDParentesco');
-      this.parentesco = this.parentescos.find(x => x.codigo == this.nna.cuidadorParentescoId);
+      this.parentesco = this.parentescos.find(x => x.id == this.nna.cuidadorParentescoId);
 
       this.diagnosticos =  await this.tpp.getDiagnosticos();
       this.diagnostico = this.diagnosticos.find(x => x.id == this.nna.diagnosticoId);

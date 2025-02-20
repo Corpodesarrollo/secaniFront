@@ -2,49 +2,49 @@
 
 <div class="row container-fluid" *ngIf="opcion_1">
   <div class="col-6">
-    <div class="tajetaBlanca">
+    <div class="tajetaBlanca m-3">
       <p class="titulo">Contacto</p>
       <br>
       <div class="row">
-        <div class="col-6">
+        <div class="col-4">
           <b>Nombre: </b>
         </div>
-        <div class="col-6">
+        <div class="col-8">
           {{ContactoNNA.nombres}}
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div class="col-4">
           <b>Parentesco: </b>
         </div>
-        <div class="col-6">
+        <div class="col-8">
           {{getNombreParentesco(ContactoNNA.parentescoId)}}
         </div>
       </div>
       <hr>
       <div class="row" >
-        <div class="col-5">
+        <div class="col-4">
           <b>¿Se encuentra?</b>
         </div>
-        <div class="col-7">
-          <div class="row" style="padding-bottom:10px">
-            <div class="col-2">
-              <a (click) = operarOpcion2()><img src="iconos/intento-exitoso-opc1.svg" alt="opcion" /></a>
+        <div class="col-8">
+          <div class="row">
+            <div class="col-3 pe-0">
+              <button class="btn-fallido btn btn-lg text-white fw-bold w-100 h-100" style="width: 250px" (click)="operarOpcion2()">NO</button>
             </div>
-            <div class="col-10" style="text-align: left; padding-left: 20px">
-              <a (click) = iniciarSeguimiento()><img src="iconos/intento-exitoso-opc2.svg" alt="opcion"  /></a>
-            </div>
-          </div>
-
-          <div class="row" style="padding-bottom:10px">
-            <div class="col-12">
-              <a (click) = operarOpcion3()><img src="iconos/intento-exitoso-opc3.svg" alt="opcion" /></a>
+            <div class="col-9">
+              <button class="btn-exitoso btn btn-success btn-lg btn-lg text-white fw-bold w-100" style="width: 250px" (click)="iniciarSeguimiento()">Sí, iniciar seguimiento</button>
             </div>
           </div>
 
           <div class="row">
             <div class="col-12">
-              <a (click) = operarOpcion4()><img src="iconos/intento-exitoso-opc4.svg" alt="opcion" /></a>
+              <button class="btn-fallido btn btn-lg text-white fw-bold w-100" style="width: 250px" (click)="operarOpcion3()">Sí, no puede atender la llamada</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button class="btn-fallido btn btn-lg text-white fw-bold w-100" style="width: 250px" (click)="operarOpcion4()">Sí, no desea el seguimiento</button>
             </div>
           </div>
         </div>

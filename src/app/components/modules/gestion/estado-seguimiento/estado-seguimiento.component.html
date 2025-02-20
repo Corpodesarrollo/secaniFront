@@ -1,0 +1,210 @@
+<body class="formato-fondo fuente-letra">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h3>Seguimientos</h3>
+            <button class="btn btn-exitoso" (click)="showDialog()"  style="font-weight: bold; background-color: #73b7ad;color: white; cursor: pointer; width: 180px; height: 41px;" >SOLICITAR</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="header-th text-center" [width]="100">ID</th>
+                            <th class="header-th" [width]="100">Nombre</th>
+                            <th class="header-th" [width]="50">Tipo Identificación</th>
+                            <th class="header-th" [width]="100">Número Identificación</th>
+                            <th class="header-th" [width]="100">Parentesco con NNA</th>
+                            <th class="header-th" [width]="100">Diagnóstico</th>
+                            <th class="header-th" [width]="100">Aseguradora</th>
+                            <th class="header-th" [width]="100">Estado</th>
+                            <th class="header-th text-center" [width]="100">Consultar Seguimiento</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-seguimiento>
+                        <tr>
+                            <td>{{ seguimiento.id }}</td>
+                            <td>{{ seguimiento.nombreCompleto }}</td>
+                            <td>{{ seguimiento.tipoIdentificacion }}</td>
+                            <td>{{ seguimiento.numeroIdentificacion }}</td>
+                            <td>{{ seguimiento.parentesco }}</td>
+                            <td>{{ seguimiento.diagnostico }}</td>
+                            <td>{{ seguimiento.aseguradora }}</td>
+                            <td>{{ seguimiento.estadoSeguimiento }}</td>
+                            <td class="text-center">
+                                <button class="btn" style="background-color: #73b7ad;color: white; cursor: pointer;" (click)="consultarSeguimiento(seguimiento)">Consultar</button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</body>
+
+<p-dialog [(visible)]="show" [modal]="true" [style]="{width: '700px'}">
+    <div *ngIf="isLoading" class="spinner">
+      <p class="{{colorMensaje}}">{{mensajeCarga}}</p>
+    </div>
+    <div class="px-3" *ngIf="!isLoading">
+        <div class="row mb-2">
+            <div class="col-12 text-center">
+                <h4 class="fw-bold">{{data?.nombreCompleto}}</h4>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <p class="mb-0">{{data?.tipoIdentificacion}} {{data?.numeroIdentificacion}}</p>
+                <p class="mb-0">{{data?.sexo}}</p>
+                <p class="mb-0">{{data?.fechaNacimiento | date:'dd/MM/yyyy' }}</p>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="steps-container">
+                    <p-steps class="mb-0"
+                        [model]="itemsStep"
+                        [readonly]="true"
+                        [activeIndex]="activeIndex">
+                    </p-steps>
+                    <div class="steps-dates mt-0">
+                        <div class="step-date" style="position: relative; left: -5px;">{{data?.fechaSolicitud | date:'dd/MM/yyyy'}}</div>
+                        <div class="step-date">{{data?.fechaAsignacion| date:'dd/MM/yyyy'}}</div>
+                        <div class="step-date" style="position: relative; left: 10px;">{{data?.fechaSeguimiento| date:'dd/MM/yyyy'}}</div>
+                        <div class="step-date">{{data?.fechaUltimaActuacion| date:'dd/MM/yyyy'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="mb-0 fw-bold">Fecha estimada de llamada</p>
+                <p class="mb-0">{{data?.fechaSolicitud| date:'dd/MM/yyyy'}}</p>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+  <p-dialog
+    header="Solicitar seguimiento"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [(visible)]="visible"
+    (onHide)="hiddenDialog()"
+  >
+    @if (!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado) {
+      <div class="p-4">
+        <!-- Parentesco -->
+        <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+          <div class="col-12">
+              <label for="tipoDocumento" class="fw-bold mb-1">Parentesco*</label>
+              <p-dropdown
+                [(ngModel)]="selectedParentesco"
+                [options]="parentescos"
+                [loading]="isLoadingParentesco"
+                optionLabel="nombre"
+                [filter]="true"
+                filterBy="nombre"
+                [showClear]="true"
+                appendTo="body"
+                placeholder="Seleccione el parentesco" />
+          </div>
+        </div>
+        <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+          <div class="col-12">
+              <label for="tipoDocumento" class="fw-bold mb-1">Tipo de identificación del menor*</label>
+              <p-dropdown
+                [(ngModel)]="selectedTipoID"
+                [options]="tipoID"
+                [loading]="isLoadingTipoID"
+                optionLabel="nombre"
+                [filter]="true"
+                filterBy="nombre"
+                [showClear]="true"
+                name="tipoID"
+                appendTo="body"
+                placeholder="Seleccione el tipo de documento" />
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-5 flex flex-wrap p-fluid">
+          <div class="col-12">
+              <label for="tipoDocumento" class="fw-bold mb-1">Número de identificación del menor*</label>
+              <input id="numeroIdentificacion" type="text" pInputText [(ngModel)]="nna.segundoApellido">
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-cancelar me-2 button" (click)="hiddenDialog()">Cancelar</button>
+          <button type="button" class="btn btn-exitoso button" (click)="onSubmitSeguimiento()">Solicitar</button>
+        </div>
+      </div>
+    }
+
+    @if ((estaFallecido || esMenorEdad) && !hayRecaida) {
+      <div class="text-center px-4 my-4">
+        <p class="mb-3">
+          @if (esMenorEdad ) {
+            La solicitud no puede ser generada dado que el seguimiento solicitado es para un Mayor de edad.
+          }
+          @if (estaFallecido) {
+            La solicitud no puede ser generada debido a que el menor se encuentra reportado como fallecido.
+          }
+        </p>
+        <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
+        <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3">
+        <p-button type="button" (click)="closeInformacionDialog()" severity="secondary" label="Volver"></p-button>
+      </div>
+    }
+
+    @if (!estaRegistrado) {
+      <div class="text-center px-4 my-4">
+        <p class="mb-1">El menor no ha sido registrado en el sistema.</p>
+        <p class="mb-3">¿Esta seguro que los datos son correctos?</p>
+
+        <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
+        <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
+      </div>
+
+      <div class="d-flex justify-content-center mt-4">
+        <p-button type="button" styleClass="me-1" (click)="closeInformacionDialog()" severity="secondary" label="No, corregir"></p-button>
+        <p-button type="button" severity="success" [routerLink]="['/cuidador/seguimientos/nuevo']" label="Si, continuar"></p-button>
+      </div>
+    }
+
+    @if (hayRecaida && !(estaFallecido || esMenorEdad)) {
+      <div class="px-5 mt-4">
+        <div class="text-center mb-4">
+          <p class="fw-bold mb-1">Ana María Ruiz Bolaños</p>
+          <p class="fw-bold">R.C. 1.035.201.226</p>
+        </div>
+
+        <!-- Recaída -->
+        <div class="mb-3">
+          <label class="mb-1" for="recaida">¿Tuvo recaída?</label>
+          <p-dropdown
+            [options]="recaidadOpciones"
+            formControlName="recaida"
+            placeholder="Seleccione"
+            id="recaida"
+            styleClass="w-100"
+          ></p-dropdown>
+        </div>
+
+        <!-- Botón Siguiente -->
+        <div class="d-flex justify-content-center mt-4">
+          <p-button type="button" severity="success" label="Siguiente" (onClick)="onSubmitRecaida()"></p-button>
+        </div>
+      </div>
+    }
+  </p-dialog>
+
+  <p-toast />

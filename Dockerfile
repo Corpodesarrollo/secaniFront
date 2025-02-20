@@ -54,4 +54,4 @@ WORKDIR /app
 
 
 # Ejecutar el comando para iniciar el servidor de desarrollo en 0.0.0.0
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+CMD ["ng", "serve", "--host", "0.0.0.0", "--proxy-config", "proxy.conf.json"]

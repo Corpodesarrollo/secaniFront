@@ -50,6 +50,6 @@ export const environment = {
 //    url_MSSeguimiento: 'http://192.168.110.12/seguimiento/',
 //    url_MSParametricas: 'http://192.168.110.12/tablas/',
 //    url_MSUsuarioyRoles: 'http://192.168.110.12/auth/',
-//};
+// };
 
 

@@ -91,17 +91,18 @@ export class SeguimientoGestionarComponent {
   alertas: AlertasTratamiento[] = [];
   alertasPendientes: EstadoAlerta[] = [];
   nna: NNA = new NNA();
-  id: string | undefined;
+  id: number | undefined;
   idContacto: string | undefined;
   idEstadoSeguimiento: number = 0;
   cntDias: number = 0;
+  saving: boolean = false;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute, private gs: GenericService) {
   }
   
   async ngOnInit(): Promise<void> {
-    this.id = this.router.snapshot.paramMap.get('id')!;
-    this.nna = await this.tpp.getNNA(this.id);
+    let id = this.router.snapshot.paramMap.get('id')!;
+    this.nna = await this.tpp.getNNA(id?.toString() || '');
 
     this.router.paramMap.subscribe(() => {
       this.alertas = history.state.alertas;
@@ -128,7 +129,7 @@ export class SeguimientoGestionarComponent {
     ];
 
     //alertas pendientes
-    this.gs.getAsync('Alerta/ConsultarAlertasUltimoSeguimiento', `/${this.id}`, apis.seguimiento).then((data: any) => {
+    this.gs.getAsync('Alerta/ConsultarAlertasUltimoSeguimiento', `/${id}`, apis.seguimiento).then((data: any) => {
       this.alertasPendientes = data;
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
@@ -182,6 +183,7 @@ export class SeguimientoGestionarComponent {
   }
 
   guardar() {
+    this.saving = true;
     this.seguimiento = {
       nnaId: this.nna.id,
       fechaSeguimiento: this.seguimiento.fechaSeguimiento,
@@ -213,6 +215,7 @@ export class SeguimientoGestionarComponent {
 
     console.log('Datos del seguimiento:', this.seguimiento);
     this.showDialog = true;
+    this.saving = false;
   }
 
   getBadgeColor(estadoAlerta: number): string {

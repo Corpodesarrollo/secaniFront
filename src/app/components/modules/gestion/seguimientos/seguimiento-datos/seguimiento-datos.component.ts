@@ -95,6 +95,7 @@ export class SeguimientoDatosComponent implements OnInit {
   gruposPoblacionales: Parametricas[] = [];
   regimenAfiliacion: Parametricas[] = [];
   EAPB: Parametricas[] = [];
+  saving: boolean | undefined;
 
   constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, private gs: GenericService,
   private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService, private ss: SeguimientoDatosService) {
@@ -128,7 +129,6 @@ export class SeguimientoDatosComponent implements OnInit {
       this.nna = new NNA();
     }
 
-
     this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then(async (data: any) => {
       this.contacto = data.datos;
       this.parentescos = await this.tpp.getParentescos();
@@ -152,7 +152,7 @@ export class SeguimientoDatosComponent implements OnInit {
     this.isLoadingTipoID = false;
 
     let estadoIngresoResult = await this.tpp.getEstadoIngresoEstrategia(this.nna.estadoIngresoEstrategiaId);
-    this.estadoIngreso = estadoIngresoResult.nombre;
+    this.estadoIngreso = estadoIngresoResult?.nombre ?? '';
 
     this.origenReporte = await this.tpp.getTPOrigenReporte();
     this.selectedOrigenReporte = this.origenReporte.find(x => x.id == this.nna.origenReporteId);
@@ -174,8 +174,8 @@ export class SeguimientoDatosComponent implements OnInit {
     this.selectedRegimenAfiliacion = this.regimenAfiliacion.find(x => x.codigo == this.nna.tipoRegimenSSId);
     this.isLoadingRegimenAfiliacion = false;
 
-    this.EAPB = await this.tp.getTP('CodigoEAPByNit');
-    this.selectedEAPB = this.EAPB.find(x => x.codigo == this.nna.eapbId);
+    this.EAPB = await this.tpp.getTPEAPB();
+    this.selectedEAPB = this.EAPB.find(x => x.id == this.nna.eapbId);
     this.isLoadingEAPB = false;
 
     this.CalcularEdad();
@@ -250,6 +250,7 @@ export class SeguimientoDatosComponent implements OnInit {
 
   async Siguiente() {
     this.submitted2 = true;
+    this.saving = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
       this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
@@ -258,16 +259,17 @@ export class SeguimientoDatosComponent implements OnInit {
         window.scrollTo(0, 0);
       });
     }
+    this.saving = false;
   }
 
   validarCamposRequeridos(): boolean {
-    this.nna.cuidadorParentescoId = this.selectedParentesco?.codigo ?? '';
+    this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
     this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
     this.nna.paisId = this.selectedPaisNacimiento?.codigo ?? '';
     this.nna.etniaId = this.selectedEtnia?.codigo ?? '';
     this.nna.grupoPoblacionId = this.selectedGrupoPoblacional?.codigo ?? '';
     this.nna.tipoRegimenSSId = this.selectedRegimenAfiliacion?.codigo ?? '';
-    this.nna.eapbId = this.selectedEAPB?.codigo ?? '';
+    this.nna.eapbId = this.selectedEAPB?.id ?? 0;
     this.nna.origenReporteId = this.selectedOrigenReporte?.id ?? 0;
 
     const camposAValidar = [
@@ -285,8 +287,11 @@ export class SeguimientoDatosComponent implements OnInit {
     ];
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    let pos = 0;
     for (const campo of camposAValidar) {
-      if (!campo || campo.toString().trim() === '') {
+      pos++;
+      if (!campo || campo.toString().trim() === '' || campo === '0') {
+        console.log('Campo requerido vacío', pos);
         return false;
       }
     }

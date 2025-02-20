@@ -1,4 +1,4 @@
-<body class="formato-fondo fuente-letra pe-4">
+<div class="m-3">
   <div class="row mb-3 align-items-center">
     <div class="col-12 d-flex justify-content-between">
       <p-breadcrumb class="" [model]="items">
@@ -194,24 +194,30 @@
         <div class="row align-items-center">
           <div class="col-md-4">
             <label>
-              Etnia
+              Etnia<span *ngIf="selectedPaisNacimiento?.codigo == '170'">*</span>
             </label>
           </div>
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedEtnia" [options]="etnias" optionLabel="nombre" [filter]="true"
               filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+              <div class="text-danger" *ngIf="selectedPaisNacimiento?.codigo == '170' && submitted && (!nna.etniaId || nna.etniaId.trim() === '')">
+                Etnia es requerido.
+              </div>
           </div>
         </div>
         <div class="row align-items-center">
           <div class="col-md-4">
             <label>
-              Grupo poblacional
+              Grupo poblacional<span *ngIf="selectedPaisNacimiento?.codigo == '170'">*</span>
             </label>
           </div>
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedGrupoPoblacional" [options]="gruposPoblacionales" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
               [readonly]="nnaFormCrearSinActivar" />
+              <div class="text-danger" *ngIf="selectedPaisNacimiento?.codigo == '170' && submitted && (!nna.grupoPoblacionId || nna.grupoPoblacionId.trim() === '')">
+                Grupo poblacional es requerido.
+              </div>
           </div>
         </div>
       </div>
@@ -240,7 +246,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedEAPB" [options]="EAPB" optionLabel="nombre" [filter]="true"
               filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
-            <div class="text-danger" *ngIf="submitted && (!nna.eapbId || nna.eapbId.trim() === '')">
+            <div class="text-danger" *ngIf="submitted && (!nna.eapbId || nna.eapbId === 0)">
               EAPB es requerido.
             </div>
           </div>
@@ -256,7 +262,7 @@
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
               [readonly]="nnaFormCrearSinActivar" />
             <div class="text-danger"
-              *ngIf="submitted && (!nna.tipoRegimenSSId || nna.tipoRegimenSSId === '')">
+              *ngIf="submitted && (!nna.estadoIngresoEstrategiaId || nna.estadoIngresoEstrategiaId === 0)">
               Estado de ingreso a la estrategia es requerido.
             </div>
           </div>
@@ -307,7 +313,7 @@
     <app-dialog-crear-nna-msg-rol-agente [visible]="visibleDialogRolAgente" [nnaId]="nnaId" [agenteId]="agenteId"
       [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"></app-dialog-crear-nna-msg-rol-agente>
 
-    <app-dialog-crear-nna-msg-rol-coordinador [visible]="visibleDialogRolCoordinador" [nnaId]="nnaId"
+    <app-dialog-crear-nna-msg-rol-coordinador [visible]="visibleDialogRolCoordinador" [nnaId]="nnaId" (onHide)="terminar()"
       [agenteId]="agenteId" [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId">
     </app-dialog-crear-nna-msg-rol-coordinador>
 
@@ -315,7 +321,7 @@
     <br />
     <br />
   </div>
-</body>
+</div>
 
 <p-dialog header="" [(visible)]="visible" [modal]="true" [style]="{ width: '500px' }" [draggable]="false"
   [resizable]="false">

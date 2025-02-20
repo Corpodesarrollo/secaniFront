@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                                                                                                                                                                                           
+                        
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="alertas && alertas.length > 0">
                             <div class="col-12">
                                 <label class="fw-bold mb-2">Alertas Identificadas</label>
@@ -115,12 +115,12 @@
             </div>
             <div class="row mt-3">
                 <div class="col-12">
-                    <app-seguimiento-historial [id]="9" />
+                    <app-seguimiento-historial [id]="id || 0" />
                 </div>
             </div>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" (click)="guardar()">GUARDAR Y GESTIONAR ALERTAS</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" (click)="guardar()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR Y GESTIONAR ALERTAS</button>
                 </div>
             </div>
         </div>

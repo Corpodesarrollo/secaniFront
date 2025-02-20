@@ -51,6 +51,7 @@ export class SeguimientoFallecidoComponent  implements OnInit {
   estadoSinTratamiento: boolean = false;
   estadoSinDiagnostico: boolean = false;
   concatenatedAlertas: string = '';
+  saving: boolean = false;
 
   @ViewChild('notificacionModal') modal!: NotificacionComponent;
 
@@ -99,15 +100,11 @@ export class SeguimientoFallecidoComponent  implements OnInit {
   }
 
   async Guardar(){
-    //guardar nna
-    await this.nnaService.putNNA(this.nna);
-
-    //guardar seguimiento
-    //???
-
-    //guardar INS
+    this.saving = true;
+    await this.nnaService.putNNA(this.nna);    
     this.modal.id = this.nna.id;
     this.modal.openModal();
+    this.saving = false;
   }
 
   closeModal() {

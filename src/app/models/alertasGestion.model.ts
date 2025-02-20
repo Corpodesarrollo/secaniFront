@@ -6,6 +6,7 @@ export interface AlertasGestion {
     colorEstado: string;
     fechaNotificacion: Date;
     nombreNNA: string;
+    nombreEAPB: string;
     documentoNNA: string;
     categoria: string;
     subcategoria: string;

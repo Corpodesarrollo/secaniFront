@@ -20,3 +20,9 @@
 ::ng-deep .ng-star-inserted{
     text-decoration: none;
 }
+
+/* Si el borde azul persiste, aplicar a todos los elementos dentro del p-steps */
+::ng-deep .p-steps .p-steps-item .p-menuitem-link:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}

@@ -332,7 +332,7 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione el EPBA" />
-                                <div *ngIf="submitted2 && (!nna.eapbId || nna.eapbId.toString().trim() === '')" class="text-danger">
+                                <div *ngIf="submitted2 && (!nna.eapbId || nna.eapbId === 0)" class="text-danger">
                                     Campo requerido
                                 </div>
                             </div>
@@ -343,7 +343,7 @@
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
                     <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> SIGUIENTE</button>
                 </div>
             </div>
         </div>

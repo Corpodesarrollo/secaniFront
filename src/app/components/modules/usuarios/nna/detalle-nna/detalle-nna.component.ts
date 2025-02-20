@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, NgZone, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -32,7 +32,8 @@ export class DetalleNnaComponent implements OnInit {
   datosBasicosNNA: NNAInfoDiagnostico = {
     diagnostico: '',
     nombreCompleto: '',
-    fechaNacimiento: ''
+    fechaNacimiento: '',
+    idEstado: 0,
   };
   fechaInicio!: Date; // Fecha de nacimiento
   fechaFin: Date = new Date(); // Fecha actual
@@ -71,7 +72,9 @@ export class DetalleNnaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private repos: GenericService,
-    private tpp: TpParametros
+    private tpp: TpParametros,
+    private renderer: Renderer2, private el: ElementRef,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit() {
@@ -148,7 +151,6 @@ export class DetalleNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
-
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
@@ -200,7 +202,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreSexoPorId(id: any): string | undefined {
     const resultado = this.sexoAnn.find(item => item.id === Number(id));
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadPaisesNacimiento(){
@@ -214,7 +217,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombrePaisPorId(id: any): string | undefined {
     const resultado = this.listadoPais.find(item => item.codigo === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadEtnias(){
@@ -228,7 +232,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreEtniaPorId(id: any): string | undefined {
     const resultado = this.etnias.find(item => item.codigo === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadDepartamentos(){
@@ -246,7 +251,8 @@ export class DetalleNnaComponent implements OnInit {
     };
     let codDepto: string = extraerDosPrimeros.toString();
     const resultado = this.listaDepartamentos.find(item => item.codigo === codDepto);
-    return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
+    console.log('No se encuentra el ID: ' + codigo);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadMunicipios(){
@@ -264,7 +270,8 @@ export class DetalleNnaComponent implements OnInit {
     };
     let codigoCompleto: string = completarCodigo.toString();
     const resultado = this.listaMunicipios.find(item => item.codigo === codigoCompleto);
-    return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
+    console.log('No se encuentra el ID: ' + codigo);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadGruposPobla(){
@@ -278,7 +285,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreGrupoPoblaPorId(id: any): string | undefined {
     const resultado = this.gruposponlacional.find(item => item.codigo === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadAreas(){
@@ -292,7 +300,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreAreaPorId(id: any): string | undefined {
     const resultado = this.areas.find(item => item.codigo === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadEstratos(){
@@ -306,7 +315,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreEstratoPorId(id: any): string | undefined {
     const resultado = this.estratos.find(item => item.codigo === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadTiposOrigen(){
@@ -320,7 +330,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreOrigenReportePorId(id: any): string | undefined {
     const resultado = this.tiposOrigenReporte.find(item => item.id === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadEstadosNNA(){
@@ -334,7 +345,8 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreEstadoNNAPorId(id: any): string | undefined {
     const resultado = this.estadosNNA.find(item => item.id === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
   loadRegimenes(){
@@ -348,8 +360,21 @@ export class DetalleNnaComponent implements OnInit {
 
   getNombreTipoAfiliacionPorId(id: any): string | undefined {
     const resultado = this.regimenesAfiliacion.find(item => item.codigo === id);
-    return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
+    console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
+  ngAfterViewInit(): void {
+    setInterval(() => {
+      this.aplicarEstilos();
+    }, 5000);
+  }
 
+  aplicarEstilos(): void {
+    document.querySelectorAll('div.col span').forEach((span) => {
+      if (span.textContent?.trim() === 'Dato no encontrado') {
+        span.classList.add('highlight');
+      }
+    });
+  }
 }

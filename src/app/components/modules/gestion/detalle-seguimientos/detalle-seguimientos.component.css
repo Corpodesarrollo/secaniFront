@@ -4,7 +4,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 10px;
 }
 
 .header-left,
@@ -16,17 +15,18 @@
     text-align: right;
 }
 
-.title {
-    margin-top: 3ch;
-}
-
 /*Estilos para las tarjetas de la vista*/
 
-.header-th {
+th {
     color: gray;
     font-weight: normal;
     font-size: 14px;
     background-color: white;
+    border-bottom: 1px solid #dee2e6; /* Solo muestra la línea inferior */
+}
+
+td {
+  border-bottom: 1px solid #f0f2f4;
 }
 
 /*Estilos de lso botones inferiores*/
@@ -43,9 +43,10 @@
     color: white;
 }
 
-.header-th {
-    text-align: center;
-    /* Centramos el texto */
-    vertical-align: middle;
-    /* Centrar verticalmente en caso de que haya altura adicional */
+.card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }

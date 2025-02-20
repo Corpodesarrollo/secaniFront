@@ -169,12 +169,12 @@ export class CrearNnaComponent {
     );
     this.isLoadingRegimenAfiliacion = false;
 
-    this.EAPB = await this.tp.getTP('CodigoEAPByNit');
-    this.selectedEAPB = this.EAPB.find((x) => x.codigo == this.nna.eapbId);
+    this.EAPB = await this.tpParametros.getTPEAPB();
+    this.selectedEAPB = this.EAPB.find((x) => x.id == this.nna.eapbId);
     this.isLoadingEAPB = false;
 
     this.estadosIngresoEstrategia = await this.tpParametros.getEstadosIngresoEstrategia();
-    this.selectedEstadoIngresoEstrategia = this.estadosIngresoEstrategia.find(x => x.id == this.nna.estadoId);
+    this.selectedEstadoIngresoEstrategia = this.estadosIngresoEstrategia.find(x => x.id == this.nna.estadoIngresoEstrategiaId);
     this.isLoadingEstadosIngresoEstrategia = false;
 
     this.departamentos = await this.tp.getTP('Departamento');
@@ -259,6 +259,7 @@ export class CrearNnaComponent {
     this.selectedTipoID = undefined;
     this.nna = new NNA();
     this.nna.edad = '';
+    this.listaContactos = [];
     this.submitted2 = false;
   }
 
@@ -281,6 +282,7 @@ export class CrearNnaComponent {
     this.submitted = true;
     if (this.validarCamposRequeridos()) {
       let result = await this.nnaService.postNNA(this.nna);
+      console.log('Resultado de guardar el NNA:', result);
       if (result.estado) {
         this.nnaId = result.datos.id;
         if (this.rolIdGeneral == '14CDDEA5-FA06-4331-8359-036E101C5046') {
@@ -297,7 +299,7 @@ export class CrearNnaComponent {
           this.agenteId = null;
         }
       } else {
-        console.log('Error en la validación de los campos');
+        console.log('Error al guardar el NNA:', result.descripcion);
       }
     }
     else {
@@ -306,13 +308,13 @@ export class CrearNnaComponent {
   }
 
   validarCamposRequeridos(): boolean {
-    this.nna.cuidadorParentescoId = this.selectedParentesco?.codigo ?? '';
+    this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
     this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
     this.nna.paisId = this.selectedPaisNacimiento?.codigo ?? '';
     this.nna.etniaId = this.selectedEtnia?.codigo ?? '';
     this.nna.grupoPoblacionId = this.selectedGrupoPoblacional?.codigo ?? '';
     this.nna.tipoRegimenSSId = this.selectedRegimenAfiliacion?.codigo ?? '';
-    this.nna.eapbId = this.selectedEAPB?.codigo ?? '';
+    this.nna.eapbId = this.selectedEAPB?.id ?? 0;
     this.nna.origenReporteId = this.selectedOrigenReporte?.id ?? 0;
     this.nna.municipioNacimientoId = this.selectedMunicipio?.codigo ?? '';
     this.nna.estadoIngresoEstrategiaId = this.selectedEstadoIngresoEstrategia?.id ?? 0;
@@ -327,7 +329,7 @@ export class CrearNnaComponent {
         this.nna.primerApellido,
         this.nna.tipoIdentificacionId,
         this.nna.numeroIdentificacion,
-        this.nna.fechaNacimiento,
+        this.nna.fechaNacimiento ?? '',
         this.nna.sexoId,
         this.nna.paisId,
         this.nna.municipioNacimientoId,
@@ -336,7 +338,6 @@ export class CrearNnaComponent {
         this.nna.eapbId,
         this.nna.grupoPoblacionId,
         this.nna.estadoIngresoEstrategiaId,
-        this.nna.tipoRegimenSSId,
         this.nna.contactos,
       ];
     }
@@ -347,29 +348,35 @@ export class CrearNnaComponent {
         this.nna.primerApellido,
         this.nna.tipoIdentificacionId,
         this.nna.numeroIdentificacion,
-        this.nna.fechaNacimiento,
+        this.nna.fechaNacimiento ?? '',
         this.nna.sexoId,
         this.nna.paisId,
-        this.nna.etniaId,
         this.nna.tipoRegimenSSId,
         this.nna.eapbId,
-        this.nna.grupoPoblacionId,
         this.nna.estadoIngresoEstrategiaId,
-        this.nna.tipoRegimenSSId,
         this.nna.contactos,
       ];
     }
 
+    console.log('Campos a validar:', this.selectedRegimenAfiliacion);
+
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    let pos = 0;
     for (const campo of camposAValidar) {
-      if (!campo || campo.toString().trim() === '') {
+      pos++;
+      if (!campo || campo.toString().trim() === '' || campo.toString() === '0') {
         console.log('Campo requerido vacío:', campo);
+        console.log('Posición:', pos);
         return false;
       }
     }
 
     return true;
+  }
+
+  terminar(){
+    this.cancelarExistencia();
   }
 
   btn_ver_detalle_nna() {

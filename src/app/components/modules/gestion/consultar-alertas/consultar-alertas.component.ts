@@ -44,7 +44,8 @@ export class ConsultarAlertasComponent implements OnInit {
   datosBasicosNNA: NNAInfoDiagnostico = {
     diagnostico: '',
     nombreCompleto: '',
-    fechaNacimiento: ''
+    fechaNacimiento: '',
+    idEstado: 0,
   };
   nombreDeptoOrigen: string = '';
   nombreDeptoActual: string = '';
@@ -112,7 +113,9 @@ export class ConsultarAlertasComponent implements OnInit {
     this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
-        this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
+        if (this.datosNNA.fechaNacimiento) {
+          this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
+        }
         this.calcularTiempoTranscurrido();
 
         try {

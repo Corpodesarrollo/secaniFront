@@ -1,9 +1,51 @@
-.titulo_intento {
-  font-family: Montserrat;
-font-size: 20px;
-font-weight: 700;
-line-height: 24.38px;
-text-align: center;
-color: #4D4D4D;
+* {
+  font-family: 'Montserrat', sans-serif;
+}
 
+.titulo_intento {
+  color: #4D4D4D;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #73b7ad;
+  font-size: medium;
+  font-weight: 12px;
+}
+
+.btn-fallido {
+  background-color: #c0c0c0;
+  color: #fff;
+}
+
+.btn-fallido:focus-visible {
+  outline: none;
+}
+
+.btn-fallido:hover {
+  background-color: #a9a9a9;
+}
+
+.btn-fallido:active {
+  background-color: #808080;
+}
+
+.btn-exitoso {
+  background-color: #73b7ad;
+  color: #fff;
+}
+
+.btn-exitoso:focus-visible {
+  outline: none;
+}
+
+.btn-exitoso:hover {
+  background-color: #5f9e94;
+}
+
+.btn-exitoso:active {
+  background-color: #4c7d76;
 }

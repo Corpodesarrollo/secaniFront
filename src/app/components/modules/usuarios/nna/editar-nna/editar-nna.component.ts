@@ -22,6 +22,7 @@ import { GenericService } from '../../../../../services/generic.services';
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { NnaContactoListaComponent } from '../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component';
+import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 
 @Component({
   selector: 'app-editar-nna',
@@ -37,7 +38,8 @@ export class EditarNnaComponent implements OnInit {
   datosBasicosNNA: NNAInfoDiagnostico = {
     diagnostico: '',
     nombreCompleto: '',
-    fechaNacimiento: ''
+    fechaNacimiento: '',
+    idEstado: 0,
   };
   fechaInicio!: Date; // Fecha de nacimiento
   fechaFin: Date = new Date(); // Fecha actual
@@ -73,7 +75,7 @@ export class EditarNnaComponent implements OnInit {
   departamentos: any[] = [];
   municipios: any[] = [];
 
-
+  listaContactos: ContactoNNA[] = [];
 
   tiposMalaAtencionIps: any[] = [];
   categoriasAlerta: any[] = [];
@@ -615,31 +617,14 @@ export class EditarNnaComponent implements OnInit {
       return false;
     }
 
-    // Validar nombre del cuidador obligatorio y tamaño máximo
-    if (!this.datosNNA.cuidadorNombres || this.datosNNA.cuidadorNombres.trim() === '') {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El nombre del cuidador es obligatorio.' });
-      return false;
-    }
-
-    if (this.datosNNA.cuidadorNombres.length > 255) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El nombre del cuidador no puede exceder los 255 caracteres.' });
+    if (this.contactosNna.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar al menos un contacto.' });
       return false;
     }
 
     // Validar parentesco obligatorio
-    if (!this.datosNNA.cuidadorParentescoId || this.datosNNA.cuidadorParentescoId.trim() === '') {
+    if (!this.datosNNA.cuidadorParentescoId || this.datosNNA.cuidadorParentescoId === 0) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El parentesco es obligatorio.' });
-      return false;
-    }
-
-    // Validar número de teléfono obligatorio y tamaño máximo
-    if (!this.datosNNA.cuidadorTelefono || this.datosNNA.cuidadorTelefono.trim() === '') {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El número de teléfono es obligatorio.' });
-      return false;
-    }
-
-    if (this.datosNNA.cuidadorTelefono.length > 30) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El número de teléfono no puede exceder los 30 caracteres.' });
       return false;
     }
 
@@ -693,30 +678,6 @@ export class EditarNnaComponent implements OnInit {
     // Validar estrato de residencia de procedencia/ocurrencia obligatorio
     if (!this.datosNNA.residenciaOrigenEstratoId || this.datosNNA.residenciaOrigenEstratoId.trim() === '') {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El estrato de residencia de procedencia/ocurrencia es obligatorio.' });
-      return false;
-    }
-
-    // Validar teléfono de residencia de procedencia/ocurrencia, máximo 10 caracteres
-    if (this.datosNNA.residenciaOrigenTelefono.length > 10) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El teléfono de residencia de procedencia/ocurrencia no puede exceder los 10 caracteres.' });
-      return false;
-    }
-
-    // Validar barrio de residencia actual, obligatorio y máximo 100 caracteres
-    if (this.datosNNA.residenciaActualBarrio.length > 100) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El barrio de residencia actual no puede exceder los 100 caracteres.' });
-      return false;
-    }
-
-    // Validar dirección de residencia actual, obligatorio y máximo 100 caracteres
-    if (this.datosNNA.residenciaActualDireccion.length > 100) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La dirección de residencia actual no puede exceder los 100 caracteres.' });
-      return false;
-    }
-
-    // Validar teléfono de residencia actual, obligatorio y máximo 10 caracteres
-    if (this.datosNNA.residenciaActualTelefono.length > 10) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El teléfono de residencia actual no puede exceder los 10 caracteres.' });
       return false;
     }
 
@@ -819,7 +780,10 @@ export class EditarNnaComponent implements OnInit {
     return true; // Si pasa todas las validaciones
   }
 
-
+  obtenerLista(lista: ContactoNNA[]) {
+      this.contactosNna = lista; // Guardar la lista emitida por el hijo
+      console.log('Lista de alertas recibidas:', this.listaContactos);
+    }
 
   async guardarCambios(){
 
@@ -827,10 +791,11 @@ export class EditarNnaComponent implements OnInit {
       return;
     }
 
-    (await this.repos.postAsync(`https://localhost:7291/NNA/LogRequest`, 'NNA', this.datosNNA)).subscribe({
+    (await this.repos.put('NNA/Actualizar', this.datosNNA, 'NNA')).subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
         this.fechaConsultaDiagnosticoInput = this.formatDate(this.datosNNA.fechaConsultaDiagnostico);
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Los datos del NNA han sido actualizados correctamente.' });
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });

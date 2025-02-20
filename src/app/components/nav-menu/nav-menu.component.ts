@@ -29,7 +29,7 @@ export class NavMenuComponent implements OnInit {
     //Agente seguimiento
     //sessionStorage.setItem('roleId','14CDDEA5-FA06-4331-8359-036E101C5046');
     //Es requerido para crear un nna es el usuario createdByUserId
-    // sessionStorage.setItem('userId','12413');
+    //  sessionStorage.setItem('userId','12413');
 
     //Parametro ejemplo agente de seguimiento
     var parameters = {

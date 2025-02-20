@@ -5,10 +5,11 @@ import { ContentComponent } from './components/content/content.component';
 import { ContenthomeComponent } from './components/contenthome/contenthome.component';
 import { NotificacionRespuestaComponent } from './components/modules/notificacion-respuesta/notificacion-respuesta.component';
 import { AlertasGestionarComponent } from './components/modules/alertas/alertas-gestionar/alertas-gestionar.component';
-
+import { EstadoSeguimientoComponent } from './components/modules/gestion/estado-seguimiento/estado-seguimiento.component';
+import { HealthComponent } from './components/health/health.component';
 
 export const routes: Routes = [
-
+ { path: 'health', component: HealthComponent },
   { path: '', component: ContenthomeComponent },
   { path: 'home', component: ContenthomeComponent },
   { path: 'login', component: LoginComponent },
@@ -131,6 +132,7 @@ export const routes: Routes = [
 
   { path: 'gestionar-alertas', component: AlertasGestionarComponent },
 
+  { path: 'estado-seguimiento', component: EstadoSeguimientoComponent },
 
 /*
   {

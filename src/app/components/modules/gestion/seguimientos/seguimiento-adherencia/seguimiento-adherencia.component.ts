@@ -62,6 +62,7 @@ export class SeguimientoAdherenciaComponent implements OnInit {
 
   estado:string = 'Registrado';
   items: MenuItem[] = [];
+  saving!: boolean;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
@@ -112,20 +113,14 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   }
 
   async Siguiente() {
-    //1.- Guardar datos nna
+    this.saving = true;
     await this.Actualizar();
-    //2.- validar si hay alertas
-    
-    //3.- si no hay alertas
-
-    // this.router.navigate(['/gestion/seguimiento/dificultades-seguimiento']).then(() => {
-    //   window.scrollTo(0, 0);
-    // });
     this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
       state: { alertas: this.alertas, idContacto: this.idContacto }
     }).then(() => {
       window.scrollTo(0, 0);
     });
+    this.saving = false;
   }
 
   async Actualizar() {

@@ -6,20 +6,21 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <p-card>
+            <div class="card">
                 <div class="row">
                     <div class="col-12 d-flex justify-content-between align-items-center">
-                        <h3>Gestionar Alertas</h3>
+                        <h3 class="ms-4 mt-3">Gestionar Alertas</h3>
                     </div>
                 </div>
                 <p-table [value]="alertas" [paginator]="true" [rows]="10" [responsive]="true">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th class="header-th" [width]="100">ID Alerta</th>
+                            <th class="header-th text-center" [width]="100">ID Alerta</th>
                             <th class="header-th" [width]="100">Fecha Notificación</th>
                             <th class="header-th" [width]="120">Nombre NNA</th>
+                            <th class="header-th" [width]="200">Nombre EAPB</th>
                             <th class="header-th" [width]="200">Categoría</th>
-                            <th class="header-th" [width]="300">Subcategoría</th>
+                            <th class="header-th">Subcategoría</th>
                             <th class="header-th" [width]="120">Estado</th>
                             <th class="header-th text-center" [width]="100">Ver respuesta</th>
                             <th class="header-th text-center" [width]="100">Enviar respuesta</th>
@@ -27,11 +28,12 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-alerta>
                         <tr>
-                            <td>
+                            <td class="text-center">
                                 <a href="#" (click)="verAlerta(alerta.idAlerta); $event.preventDefault();">{{alerta.idAlerta}}</a>
                             </td>
                             <td>{{alerta.fechaNotificacion | date:'dd/MM/yyyy'}}</td>
                             <td>{{alerta.nombreNNA}}</td>
+                            <td>{{alerta.nombreEAPB}}</td>
                             <td>{{alerta.categoria}}</td>
                             <td>{{alerta.subcategoria}}</td>
                             <td><span class="badge bg-{{alerta.colorEstado}} text-white p-2 ">{{alerta.textoEstado}}</span></td>
@@ -40,7 +42,7 @@
                         </tr>
                     </ng-template>
                 </p-table>
-            </p-card>
+            </div>
         </div>
     </div>
     <app-notificacion-ver [show]="displayModal" [alertaId]="alertaId" (closeModal)="closeModalAlerta()" />

@@ -76,6 +76,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
   items: MenuItem[] = [];
 
   idContacto: string | undefined;
+  saving!: boolean;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, 
     private routeAct: ActivatedRoute, private nnaService: NNAService) {
@@ -192,6 +193,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
   }
 
   async Siguiente() {
+    this.saving = true;
     await this.Actualizar();
 
     this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`], {
@@ -199,6 +201,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
     }).then(() => {
       window.scrollTo(0, 0);
     });
+    this.saving = false;
   }
 
   async Actualizar() {

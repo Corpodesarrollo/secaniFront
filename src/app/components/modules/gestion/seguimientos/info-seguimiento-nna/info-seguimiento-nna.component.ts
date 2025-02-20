@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { GenericService } from '../../../../../services/generic.services';
 import { DatosBasicosNNA } from '../../../../../models/datosBasicosNNA.model';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-info-seguimiento-nna',
@@ -33,7 +34,7 @@ export class InfoSeguimientoNnaComponent {
   };
 
   constructor(
-    private repos: GenericService,
+    private repos: GenericService, private router: Router,
   ) { }
 
   ngOnInit(): void {    
@@ -56,5 +57,9 @@ export class InfoSeguimientoNnaComponent {
         this.mensajeCarga = 'Error al cargar los datos del NNA';
       },
     });
+  }
+
+  verDetalle() {
+    this.router.navigate(["/usuarios/detalle_nna/", this.idNNA]);
   }
 }

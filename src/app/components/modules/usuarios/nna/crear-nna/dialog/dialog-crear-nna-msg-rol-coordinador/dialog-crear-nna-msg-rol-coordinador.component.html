@@ -1,16 +1,16 @@
-<app-dialog-nna-msg-seguimiento [visible]="visibleDialogSeguimiento" [nnaId]="nnaId" [agenteId]="agenteId"
+<app-dialog-nna-msg-seguimiento [visible]="visibleDialogSeguimiento" [nnaId]="nnaId" [agenteId]="agenteId" (onHide)="close()"
   [coordinadorId]="coordinadorId" [contactoNNAId]="contactoNNAId"></app-dialog-nna-msg-seguimiento>
 
 <p-dialog header="" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-  [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  [style]="{ width: '30vw' }" [draggable]="false" [resizable]="false">
   <div class="text-center">
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-12 mb-3">
         <span class="text-color-blanco fondo-color-principal rondear-full circulo_check">
           <i class="pi pi-check"></i>
         </span>
       </div>
-      <div class="col-sm-12">
+      <div class="col-sm-12 mb-3">
         <label>NNA creado con éxito</label>
       </div>
       <div class="col-sm-12">

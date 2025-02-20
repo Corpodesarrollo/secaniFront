@@ -19,7 +19,7 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 @Component({
   selector: 'app-intento-exitoso',
   templateUrl: './intento-exitoso.component.html',
-  styleUrls: ['./intento-exitoso.component.css'],
+  styleUrls: ['../../general.component.css', './intento-exitoso.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
     CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule],

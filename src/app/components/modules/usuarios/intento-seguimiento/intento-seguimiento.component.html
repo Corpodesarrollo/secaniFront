@@ -1,5 +1,5 @@
 <!--- CODIGO NUEVO A INSERTAR EN COMPONENTE -->
-<p-dialog  [(visible)]="displayModalIntento" [modal]="true"  (onHide)="onModalHide()">
+<p-dialog  [(visible)]="displayModalIntento" [modal]="true"  (onHide)="onModalHide()" [style]="{ width: '700px' }">
   <div style="text-align:center" *ngIf="ContactoNNA != {}">
     <app-intento
 
@@ -15,81 +15,83 @@
   </div>
 </p-dialog>
 
-<app-info-seguimiento-nna [idNNA]="nnaId" *ngIf="nnaId > 0" />
+<div class="m-3">
+  <app-info-seguimiento-nna [idNNA]="nnaId" *ngIf="nnaId > 0" />
 
-<br>
-<div style="text-align:right">
-  <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()">
-    <i class="pi pi-plus"></i> Agregar Contacto
-  </button>
-
+  <div style="text-align:right" class="mb-3">
+    <button class="btn text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()">
+      <i class="pi pi-plus"></i> Agregar Contacto
+    </button>
+  </div>
+  
+  <div class="card mb-3">
+    <p-table [value]="contactos" [tableStyle]="{ 'min-width': '50rem' }"
+      [paginator]="true"
+      [rows]="10"
+      [paginatorPosition]="'bottom'"
+      [alwaysShowPaginator]="true"
+      [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th id="a1">Contacto</th>
+                <th id="a2">Parentesco</th>
+                <th id="a3">Cuidador</th>
+                <th id="a4">Correo electrónico</th>
+                <th id="a5">Teléfono</th>
+                <th class="text-center" id="a6">Intentos fallidos</th>
+                <th class="text-center" id="a7">Intentos exitosos</th>
+                <th class="text-center" id="a8">Agregar intento</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-contactos>
+            <tr class="custom-row-border">
+                <td>{{ contactos.nombres }}</td>
+                <td>{{ getNombreParentesco(contactos.parentescoId) }}</td>
+                <td>{{ valor_cuidador(contactos.cuidador) }}</td>
+                <td>{{ contactos.email }}</td>
+                <td>{{ contactos.telefonos }}</td>
+                <td class="text-center">{{ contactos.tipoResultadoIntento1 }}</td>
+                <td class="text-center">{{ contactos.tipoResultadoIntento2 }}</td>
+                <td class="text-center"><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo" *ngIf="contactos.telefonos != ''"/></a></td>
+            </tr>
+        </ng-template>
+    </p-table>
+  </div>
+  <h3 class="mb-3">Historial de intentos</h3>
+  <div class="card">
+    <p-table [value]="intentos" [tableStyle]="{ 'min-width': '50rem' }"
+      [paginator]="true"
+      [rows]="10"
+      [paginatorPosition]="'bottom'"
+      [alwaysShowPaginator]="true"
+      [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th id="a1">Contacto</th>
+                <th id="a2">Parentesco</th>
+                <th id="a3">Correo electrónico</th>
+                <th id="a4">Teléfono</th>
+                <th id="a5">Fecha y hora</th>
+                <th id="a6">Tipo de intento</th>
+                <th id="a7">Tipo de falla</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-intentos>
+            <tr class="custom-row-border">
+                <td>{{ intentos.nombres }}</td>
+                <td>{{ getNombreParentesco(intentos.parentescoId) }}</td>
+                <td>{{ intentos.email }}</td>
+                <td>{{ intentos.telefonos }}</td>
+                <td>{{ intentos.fechaIntento | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>{{ valor_tipoIntento(intentos.tipoFallaIntentoId) }}</td>
+                <td>{{ intentos.tipoFallaIntentoNombre }}</td>
+            </tr>
+        </ng-template>
+      </p-table>
+    </div>
 </div>
-<br>
 
-<p-table [value]="contactos" [tableStyle]="{ 'min-width': '50rem' }"
-[paginator]="true"
-[rows]="10"
-[paginatorPosition]="'bottom'"
-[alwaysShowPaginator]="true"
-[rowsPerPageOptions]="[5, 10, 20]">
-  <ng-template pTemplate="header">
-      <tr>
-          <th id="a1">Contacto</th>
-          <th id="a2">Parentesco</th>
-          <th id="a3">Cuidador</th>
-          <th id="a4">Correo electrónico</th>
-          <th id="a5">Teléfono</th>
-          <th id="a6">Intentos fallidos</th>
-          <th id="a7">Intentos exitosos</th>
-          <th id="a8">Agregar intento</th>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-contactos>
-      <tr class="custom-row-border">
-          <td>{{ contactos.nombres }}</td>
-          <td>{{ getNombreParentesco(contactos.parentescoId) }}</td>
-          <td>{{ valor_cuidador(contactos.cuidador) }}</td>
-          <td>{{ contactos.email }}</td>
-          <td>{{ contactos.telefonos }}</td>
-          <td>{{ contactos.tipoResultadoIntento1 }}</td>
-          <td>{{ contactos.tipoResultadoIntento2 }}</td>
-          <td><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo" *ngIf="contactos.telefonos != ''"/></a></td>
-      </tr>
-  </ng-template>
-</p-table>
 
-<br>
-<p class="titulo">Historial intentos</p>
-<p-table [value]="intentos" [tableStyle]="{ 'min-width': '50rem' }"
-[paginator]="true"
-[rows]="10"
-[paginatorPosition]="'bottom'"
-[alwaysShowPaginator]="true"
-[rowsPerPageOptions]="[5, 10, 20]">
-  <ng-template pTemplate="header">
-      <tr>
-          <th id="a1">Contacto</th>
-          <th id="a2">Parentesco</th>
-          <th id="a3">Correo electrónico</th>
-          <th id="a4">Teléfono</th>
-          <th id="a5">Fecha y hora</th>
-          <th id="a6">Tipo de intento</th>
-          <th id="a7">Tipo de falla</th>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-intentos>
-      <tr class="custom-row-border">
-          <td>{{ intentos.nombres }}</td>
-          <td>{{ getNombreParentesco(intentos.parentescoId) }}</td>
-          <td>{{ intentos.email }}</td>
-          <td>{{ intentos.telefonos }}</td>
-          <td>{{ intentos.fechaIntento | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-          <td>{{ valor_tipoIntento(intentos.tipoFallaIntentoId) }}</td>
-          <td>{{ intentos.tipoFallaIntentoNombre }}</td>
-
-      </tr>
-  </ng-template>
-</p-table>
 
 
 
