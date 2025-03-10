@@ -135,9 +135,10 @@
         [value]="alertas"
         dataKey="alertaId"
         selectionMode="single"
-        [paginator]="true"
-        [rows]="10"
         [responsive]="true"
+        [paginator]="true" [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
         [expandedRowKeys]="expandedRowKeys"
         (onRowExpand)="onRowExpand($event)"
         (onRowCollapse)="onRowCollapse($event)">
@@ -199,7 +200,11 @@
                   dataKey="entidadNotificada"
                   class="p-table expanded-table"
                   [tableStyle]="{ 'min-width': '50rem' }"
-                  [styleClass]="'p-datatable-sm'">
+                  [styleClass]="'p-datatable-sm'"
+                  [paginator]="true" [rows]="5"
+                  [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                >
 
                   <ng-template pTemplate="header">
                     <tr>

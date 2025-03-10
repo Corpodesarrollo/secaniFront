@@ -26,11 +26,11 @@
   
   <div class="card mb-3">
     <p-table [value]="contactos" [tableStyle]="{ 'min-width': '50rem' }"
-      [paginator]="true"
-      [rows]="10"
-      [paginatorPosition]="'bottom'"
       [alwaysShowPaginator]="true"
-      [rowsPerPageOptions]="[5, 10, 20]">
+      [paginator]="true" [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+      >
         <ng-template pTemplate="header">
             <tr>
                 <th id="a1">Contacto</th>

@@ -67,8 +67,11 @@
         </div>
         <div class="row" *ngIf="mostrar">
           <div class="col-12">
-            <p-table [value]="visualizars" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-              [rowsPerPageOptions]="[10, 25, 50]">
+            <p-table [value]="visualizars" 
+              [paginator]="true" [rows]="5"
+              [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+            >
               <ng-template pTemplate="header">
                 <tr>
                   <th>No. caso</th>

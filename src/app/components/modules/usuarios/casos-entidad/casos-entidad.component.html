@@ -4,12 +4,12 @@
 
 <p-table [value]="casos" [tableStyle]="{ 'min-width': '50rem' }"
 [paginator]="true"
-[rows]="10"
+[rows]="5"
 [paginatorPosition]="'bottom'"
 [alwaysShowPaginator]="true"
-[rowsPerPageOptions]="[5, 10, 20]"
+[rowsPerPageOptions]="[5, 10, 25, 50]"
 [showCurrentPageReport]="true"
-currentPageReportTemplate="Mostrando {first} a {last} resultados de un total de {totalRecords} registros"
+currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
 >
   <ng-template pTemplate="header">
       <tr>

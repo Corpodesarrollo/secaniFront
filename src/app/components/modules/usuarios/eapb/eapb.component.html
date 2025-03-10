@@ -42,10 +42,12 @@
         <br>
 
         <div>
-            <p-table [value]="data" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+            <p-table [value]="data" [first]="first"
                 [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
-                [rowsPerPageOptions]="[10, 25, 50]"
-                currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
+                [paginator]="true" [rows]="5"
+                [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+            >
                 <ng-template pTemplate="header">
                     <tr>
                         <th>EAPB</th>

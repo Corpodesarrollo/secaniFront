@@ -14,7 +14,11 @@
     <app-info-seguimiento-nna [idNNA]="idNNA" />
 
     <div class="card">
-        <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
+        <p-table [value]="seguimientos" [responsive]="true"
+            [paginator]="true" [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+        >
             <ng-template pTemplate="header">
                 <tr>
                     <th class="header-th">Fecha Seguimiento</th>

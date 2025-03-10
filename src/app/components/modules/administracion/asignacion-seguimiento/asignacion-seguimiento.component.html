@@ -67,10 +67,10 @@
           <p-card>
               <p-table
               [value]="seguimientos"
-              [paginator]="true"
-              [rows]="20"
               [responsive]="true"
-              [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+              [paginator]="true" [rows]="5"
+              [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
               [(selection)]="selectedRecords"
               (selectionChange)="onSelectionChange($event)"
               >
@@ -263,11 +263,11 @@
 
   <div class="flex items-center gap-4 mb-4">
     <p-table
-    [value]="selectedRecords"
-    [paginator]="true"
-    [rows]="20"
-    [responsive]="true"
-    [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+        [responsive]="true"
+        [value]="selectedRecords"
+        [paginator]="true" [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
     >
         <ng-template pTemplate="header">
             <tr>
