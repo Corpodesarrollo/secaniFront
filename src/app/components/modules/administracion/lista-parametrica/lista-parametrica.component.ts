@@ -56,6 +56,7 @@ export class ListaParametricaComponent {
     const rawItems = await this.listasParametricasService.getItemListaParametricas(this.listaParametrica.nombre);
     this.itemsListaParamtreicas = rawItems.map((item: any) => ({
       ...item,
+      fechaCreacion: new Date(item.fechaCreacion),
       nombre: item.nombre || item.festivo || item.subCategoriaAlerta || 'Sin nombre',
     }));
   }
