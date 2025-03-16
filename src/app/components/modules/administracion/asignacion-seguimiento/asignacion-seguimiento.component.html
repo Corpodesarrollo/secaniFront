@@ -65,7 +65,104 @@
   <div class="row">
       <div class="col-12">
           <p-card>
-              <p-table
+            <p-table
+                #dt
+                [value]="seguimientos"
+                [paginator]="true"
+                [rows]="20"
+                [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+                [globalFilterFields]="['noCaso', 'fechaNotificacion', 'nombreCompleto', 'estado.nombre', 'asuntoUltimaActuacion', 'fechaUltimaActuacion', 'agenteAcutal']"
+            >
+                <!--ng-template pTemplate="caption">
+                    <div class="flex justify-between">
+                        <p-button label="Limpiar Filtros" icon="pi pi-filter-slash" (click)="dt.clear()" outlined="true" />
+                        <p-inputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." />
+                    </div>
+                </ng-template-->
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <div class="flex items-center">
+                                No. Caso
+                                <p-columnFilter type="text" field="noCaso" display="menu" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center">
+                                Fecha Notificación
+                                <p-columnFilter type="date" field="fechaNotificacion" display="menu" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center">
+                                Nombre
+                                <p-columnFilter type="text" field="nombreCompleto" display="menu" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center">
+                                Estado
+                                <p-columnFilter field="estado.nombre" matchMode="equals" display="menu">
+                                    <ng-template #filter let-value let-filter="filterCallback">
+                                        <!--p-dropdown [(ngModel)]="value" [options]="estados" optionLabel="nombre" placeholder="Seleccione un estado" (onChange)="filter($event.value)">
+                                        </p-dropdown-->
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center">
+                                Asunto Última Actuación
+                                <p-columnFilter type="text" field="asuntoUltimaActuacion" display="menu" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center">
+                                Fecha Última Actuación
+                                <p-columnFilter type="date" field="fechaUltimaActuacion" display="menu" />
+                            </div>
+                        </th>
+                        <th>
+                          <div class="flex items-center">
+                            Agente Actual
+                            <p-columnFilter type="text" field="agenteAcutal" display="menu" />
+                          </div>
+                        </th>
+                        <th>
+                            Alertas
+                        </th>
+                        <th>
+                            Acción
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-seguimiento>
+                    <tr>
+                        <td><a [routerLink]="">{{ seguimiento.noCaso }}</a></td>
+                        <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ seguimiento.nombreCompleto }}</td>
+                        <td>
+                            <span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.nombre }}</span>
+                        </td>
+                        <td>{{ seguimiento.asuntoUltimaActuacion }}</td>
+                        <td>{{ seguimiento.fechaUltimaActuacion | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ seguimiento.agenteAcutal }}</td>
+                        <td>
+                            <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
+                            {{ alerta.nombre }}
+                            </span>
+                        </td>
+                        <td>
+                            <p-tableCheckbox [value]="seguimiento" />
+                            <i *ngIf="seguimiento.asuntoUltimaActuacion?.toLowerCase() == 'solicitado por cuidador'" class="bi bi-eye-fill" style="color: #73b7ad; cursor: pointer;" (click)="solicitudCuidador(seguimiento.noCaso)"></i>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+              <!--p-table
               [value]="seguimientos"
               [paginator]="true"
               [rows]="20"
@@ -105,47 +202,7 @@
                           </td>
                       </tr>
                   </ng-template>
-              </p-table>
-              <!--p-table
-  [value]="seguimientos"
-  [paginator]="true"
-  [rows]="20"
-  [responsive]="true"
-  [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
-  [(selection)]="selectedRecords"
-  (selectionChange)="onSelectionChange($event)"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th class="header-th" [width]="100">
-        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-      </th>
-      <th class="header-th" [width]="100">No. Caso</th>
-      <th class="header-th" [width]="120">Fecha Notificación</th>
-      <th class="header-th">Nombre</th>
-      <th class="header-th" [width]="200">Estado</th>
-      <th class="header-th" [width]="100">Acción</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-seguimiento>
-    <tr>
-      <td>
-        <p-tableCheckbox [value]="seguimiento"></p-tableCheckbox>
-      </td>
-      <td>{{ seguimiento.noCaso }}</td>
-      <td>{{ seguimiento.fechaNotificacion | date: 'dd/MM/yyyy' }}</td>
-      <td>{{ seguimiento.nombreCompleto }}</td>
-      <td>{{ seguimiento.estado.nombre }}</td>
-      <td class="accion-container">
-        <i
-          class="bi bi-eye-fill accion-item"
-          style="color: #73b7ad; cursor: pointer;"
-          (click)="solicitudCuidador(seguimiento.noCaso)"
-        ></i>
-      </td>
-    </tr>
-  </ng-template>
-</p-table-->
+              </p-table-->
 
           </p-card>
       </div>
