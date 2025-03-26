@@ -17,7 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 export class NuevoSeguimientoComponent {
 
   reporteForm: FormGroup;
-  sexoOptions = [{ label: 'Masculino', value: 'M' }, { label: 'Femenino', value: 'F' }];
+  sexoOptions = [{ label: 'Masculino', value: 'H' }, { label: 'Femenino', value: 'M' }];
   diagnosticoOptions = [{ label: 'Sí', value: true }, { label: 'No', value: false }];
   aseguradoraOptions = [{ label: 'EPS1', value: 'EPS1' }, { label: 'EPS2', value: 'EPS2' }];
   departamentoOptions = [{ label: 'Departamento1', value: 'Dep1' }, { label: 'Departamento2', value: 'Dep2' }];

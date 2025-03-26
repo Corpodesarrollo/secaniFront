@@ -61,7 +61,7 @@ export class ReporteDetalleNuevoDepuradosComponent {
               "diagnostico": "Tumores óseos malignos",
               "fechaNacimiento": "2007-11-11T03:14:52.8061867",
               "edad": 17,
-              "sexoId": "1",
+              "sexoId": "H",
               "sexo": null,
               "tipoIdentificacionId": "CC",
               "tipoIdentificacion": "Cédula Ciudadanía",

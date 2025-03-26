@@ -125,8 +125,8 @@
                     <i class="bi bi-person-circle foto-perfil"></i>
                     <div class="datos-usuario">
                         <p><strong>{{nna.primerNombre}} {{nna.segundoNombre}} {{nna.primerApellido}} {{nna.segundoApellido}}</strong></p>
-                        <p *ngIf="nna.sexoId == '2'">Femenino</p>
-                        <p *ngIf="nna.sexoId == '1'">Masculino</p>
+                        <p *ngIf="nna.sexoId == 'M'">Femenino</p>
+                        <p *ngIf="nna.sexoId == 'H'">Masculino</p>
                         <p>{{nna.edad}}</p>
                     </div>
                 </div>

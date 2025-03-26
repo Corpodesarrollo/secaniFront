@@ -85,8 +85,8 @@ export class EditarNnaComponent implements OnInit {
   unidadesMedida: any[] = [];
   cuasasInasistencia: any[] = [];
   sexoAnn: any[] = [
-    {"id" : 1, "nombre" : "Masculino"},
-    {"id" : 2, "nombre" : "Femenino"}
+    {"id" : "H", "nombre" : "Masculino"},
+    {"id" : "M", "nombre" : "Femenino"}
   ];
   estadosIngresoEstrategia: any[] = [];
   departamentosOrigen: any[] = [];
@@ -476,7 +476,7 @@ export class EditarNnaComponent implements OnInit {
   }
 
   getNombreSexoPorId(id: any): string | undefined {
-    const resultado = this.sexoAnn.find(item => item.id === Number(id));
+    const resultado = this.sexoAnn.find(item => item.id === id);
     return resultado ? resultado.nombre : 'No se encuentra el ID: ' + id;
   }
 

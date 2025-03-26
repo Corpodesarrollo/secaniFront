@@ -139,10 +139,10 @@
             <label for="sexo" class="fw-bold">Sexo*</label>
           </div>
           <div class="col-8 button-group">
-            <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '2'}"
-              style="width: 150px;" (click)="applySexo('2')" [disabled]="nnaFormCrearSinActivar">Femenino</button>
-            <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === '1'}"
-              style="width: 150px;" (click)="applySexo('1')" [disabled]="nnaFormCrearSinActivar">Masculino</button>
+            <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === 'M'}"
+              style="width: 150px;" (click)="applySexo('M')" [disabled]="nnaFormCrearSinActivar">Femenino</button>
+            <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === 'H'}"
+              style="width: 150px;" (click)="applySexo('H')" [disabled]="nnaFormCrearSinActivar">Masculino</button>
           </div>
         </div>
         <div class="row align-items-center">

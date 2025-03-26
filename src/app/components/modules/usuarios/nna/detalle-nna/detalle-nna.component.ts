@@ -55,8 +55,8 @@ export class DetalleNnaComponent implements OnInit {
   ];
 
   sexoAnn: any[] = [
-    {"id" : 1, "nombre" : "Masculino"},
-    {"id" : 2, "nombre" : "Femenino"}
+    {"id" : "H", "nombre" : "Masculino"},
+    {"id" : "M", "nombre" : "Femenino"}
   ];
   listadoPais: Parametricas[] = [];
   etnias: Parametricas[] = [];
@@ -201,7 +201,7 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreSexoPorId(id: any): string | undefined {
-    const resultado = this.sexoAnn.find(item => item.id === Number(id));
+    const resultado = this.sexoAnn.find(item => item.id === id);
     console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
