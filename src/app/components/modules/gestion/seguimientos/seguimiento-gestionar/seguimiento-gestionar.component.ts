@@ -73,7 +73,8 @@ export class SeguimientoGestionarComponent {
     nombreRechazo: '',
     parentescoRechazo: '',
     razonesRechazo: '',
-    alertas: []
+    alertas: [],
+    alertasPendientes: []
   };
 
   contacto: ContactoNNA = {
@@ -131,6 +132,7 @@ export class SeguimientoGestionarComponent {
     //alertas pendientes
     this.gs.getAsync('Alerta/ConsultarAlertasUltimoSeguimiento', `/${id}`, apis.seguimiento).then((data: any) => {
       this.alertasPendientes = data;
+      console.log('Alertas pendientes:', this.alertasPendientes);
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
@@ -201,17 +203,18 @@ export class SeguimientoGestionarComponent {
       nombreRechazo: '',
       parentescoRechazo: '',
       razonesRechazo: '',
-      alertas: this.alertas.map(alerta => alerta.idSubcategoriaAlerta as number)
+      alertas: this.alertas.map(alerta => alerta.idSubcategoriaAlerta as number),
+      alertasPendientes: this.alertasPendientes
     };
 
-    let alertasGestionadas = this.alertasPendientes.filter(alerta => alerta.resuelta != true);
-    if (alertasGestionadas.length > 0) {
-      alertasGestionadas.forEach(alerta => {
-        if (!this.seguimiento.alertas.includes(alerta.idAlerta as number)) {
-          this.seguimiento.alertas.push(alerta.idAlerta as number);
-        }
-      });
-    }
+    // let alertasGestionadas = this.alertasPendientes.filter(alerta => alerta.resuelta != true);
+    // if (alertasGestionadas.length > 0) {
+    //   alertasGestionadas.forEach(alerta => {
+    //     if (!this.seguimiento.alertas.includes(alerta.idAlerta as number)) {
+    //       this.seguimiento.alertas.push(alerta.idAlerta as number);
+    //     }
+    //   });
+    // }
 
     console.log('Datos del seguimiento:', this.seguimiento);
     this.showDialog = true;

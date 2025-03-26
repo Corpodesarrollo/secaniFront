@@ -55,7 +55,6 @@ export class NnaContactoListaComponent {
     console.log("editarContacto",data);
     this.listadoContacto.push(data);
     this.enviarLista();
-    
   }
 
   pageChange(event: any) {

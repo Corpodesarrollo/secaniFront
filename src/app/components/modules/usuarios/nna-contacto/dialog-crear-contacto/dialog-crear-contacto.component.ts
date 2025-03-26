@@ -79,9 +79,13 @@ export class DialogCrearContactoComponent {
   }
 
   enviarContacto(){
-    this.dataToParent.emit(this.contacto);
-    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto cargado exitosamente.' });
-    this.show = false;
+    this.submitted = true;
+
+    if (this.validarCamposRequeridos()){
+      this.dataToParent.emit(this.contacto);
+      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto cargado exitosamente.' });
+      this.show = false;
+    }
   }
 
 

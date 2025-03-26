@@ -1,4 +1,5 @@
 
+import { EstadoAlerta } from '../models/estadoAlerta.model';
 export interface SeguimientoGestion {
     id?: number;
     nnaId: number;
@@ -18,4 +19,5 @@ export interface SeguimientoGestion {
     parentescoRechazo: string;
     razonesRechazo: string;
     alertas: number[];
+    alertasPendientes: EstadoAlerta[];
 }

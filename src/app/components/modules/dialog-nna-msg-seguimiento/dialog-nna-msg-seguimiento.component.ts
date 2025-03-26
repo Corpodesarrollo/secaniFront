@@ -9,11 +9,14 @@ import { Generico } from '../../../core/services/generico';
 import { DatePipe } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { CalendarModule } from 'primeng/calendar';
+import { Parametricas } from '../../../models/parametricas.model';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-dialog-nna-msg-seguimiento',
   standalone: true,
-  imports: [DialogModule, CommonModule, ButtonModule, FormsModule, CalendarModule],
+  imports: [DialogModule, CommonModule, ButtonModule, FormsModule, CalendarModule, DropdownModule, InputTextModule],
   templateUrl: './dialog-nna-msg-seguimiento.component.html',
   styleUrls: ['./dialog-nna-msg-seguimiento.component.css'],
   encapsulation: ViewEncapsulation.Emulated // Esto es por defecto
@@ -41,11 +44,15 @@ export class DialogNnaMsgSeguimientoComponent {
   msg: any = '';
   userId = '';
 
-  public agenteAsignadoListado: any;
+  public agenteAsignadoListado: Parametricas[] = [];
   rolIdGeneral = sessionStorage.getItem('roleId');
 
   minDate: Date | undefined;
-
+  mostrarMensaje: boolean = false;
+  submitted: boolean = false;
+  hora: number | null = null;     // Horas
+  minutos: number | null = null;  // Minutos
+  periodo: string = 'AM';         // AM o PM
 
   constructor(
     private router: Router,
@@ -172,6 +179,9 @@ export class DialogNnaMsgSeguimientoComponent {
   }
 
   async guardar() {
+    
+    this.mostrarMensaje = true;
+
     console.log(
       "this.formFecha,", this.formFecha,
       "this.formHora,", this.formHora,
@@ -220,5 +230,27 @@ export class DialogNnaMsgSeguimientoComponent {
 
   isEmpty(value: any): boolean {
     return value === null || value === undefined || value === '';
+  }
+
+  ///////////////////////////////
+  getFechaYHoraCompleta(): void {
+    if (this.hora !== null && this.minutos !== null) {
+      let fechaConHora = new Date();
+      fechaConHora.setHours(this.periodo === 'PM' ? this.hora + 12 : this.hora);
+      fechaConHora.setMinutes(this.minutos);
+    } else {
+      console.log('Datos incompletos para fecha y hora');
+    }
+  }
+
+  apply(p: string) {
+    this.periodo = p;
+    this.getFechaYHoraCompleta();
+  }
+
+  terminar(){
+    this.router.navigate([`/gestion/seguimientos`]).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 }

@@ -1,7 +1,6 @@
 <p-toast  [life]="10000" />
 
-
-<p-dialog header="Contacto" [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false"
+<p-dialog header="Contacto" [(visible)]="show" [modal]="true" [style]="{ width: '700px', height: '520px' }" [draggable]="false" [appendTo]="'body'" [baseZIndex]="10000"
     [resizable]="false" (onHide)="close()">
     <div class="row text-left">
         <div class="col-sm-12">

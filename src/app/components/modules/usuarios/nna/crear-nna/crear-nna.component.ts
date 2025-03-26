@@ -46,6 +46,7 @@ import { NNAService } from '../../../../../core/services/nnaService';
   encapsulation: ViewEncapsulation.Emulated, // Esto es por defecto
 })
 export class CrearNnaComponent {
+
   nna: NNA = new NNA();
 
   maxDate: Date = new Date();
@@ -384,4 +385,8 @@ export class CrearNnaComponent {
       window.scrollTo(0, 0);
     });
   }
+
+  Probar() {
+  this.visibleDialogRolAgente = true;
+}
 }

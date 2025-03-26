@@ -91,12 +91,6 @@
     </div>
 </div>
 
-
-
-
-
 <p-dialog  [(visible)]="displayModalContacto" [modal]="true"  (onHide)="onModalHide()">
-
-  <app-crear-nna-agregar-contacto [nnaFormCrearSinActivar]="nnaFormCrearSinActivar"
-                    (dataToParent)="handleDataContacto($event)"></app-crear-nna-agregar-contacto>
+  <app-nna-contacto-lista [nnaId]="nnaId"/>
 </p-dialog>

@@ -16,7 +16,7 @@
                 >
                     <ng-template pTemplate="header">
                         <tr>
-                            <th class="header-th text-center" [width]="100">ID</th>
+                            <th class="header-th text-center" [width]="50">ID</th>
                             <th class="header-th" [width]="100">Nombre</th>
                             <th class="header-th" [width]="50">Tipo Identificación</th>
                             <th class="header-th" [width]="100">Número Identificación</th>
@@ -29,7 +29,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-seguimiento>
                         <tr>
-                            <td>{{ seguimiento.id }}</td>
+                            <td class="text-center">{{ seguimiento.id }}</td>
                             <td>{{ seguimiento.nombreCompleto }}</td>
                             <td>{{ seguimiento.tipoIdentificacion }}</td>
                             <td>{{ seguimiento.numeroIdentificacion }}</td>

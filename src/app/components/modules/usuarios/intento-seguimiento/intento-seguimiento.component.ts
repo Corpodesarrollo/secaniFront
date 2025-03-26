@@ -16,14 +16,15 @@ import { InfoSeguimientoNnaComponent } from '../../gestion/seguimientos/info-seg
 
 import { UsuariosModule } from '../usuarios.module';
 import { TpParametros } from '../../../../core/services/tpParametros';
+import { NnaContactoListaComponent } from "../nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 
 @Component({
   selector: 'app-intento-seguimiento',
   templateUrl: './intento-seguimiento.component.html',
   styleUrls: ['./intento-seguimiento.component.css'],
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule,InfoSeguimientoNnaComponent, UsuariosModule]
+  imports: [CommonModule, ReactiveFormsModule,
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule, InfoSeguimientoNnaComponent, UsuariosModule, NnaContactoListaComponent]
 })
 export class IntentoSeguimientoComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
