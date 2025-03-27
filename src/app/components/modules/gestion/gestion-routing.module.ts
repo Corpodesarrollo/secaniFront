@@ -13,19 +13,20 @@ import { DetalleSeguimientosComponent } from './detalle-seguimientos/detalle-seg
 import { SeguimientoGestionarComponent } from './seguimientos/seguimiento-gestionar/seguimiento-gestionar.component';
 import { ConsultarAlertasComponent } from './consultar-alertas/consultar-alertas.component';
 import { CargueMasivoComponent } from './cargue-masivo/cargue-masivo.component';
+import { confirmExitGuard } from './seguimientos/guards/confirm-exit.guard';
 
 const routes: Routes = [
   { path: 'cargue_masivo', component: CargueMasivoComponent},
   { path: 'seguimientos', component: ConsultarSeguimientosComponent },
-  { path: 'seguimientos/datos-seguimiento/:idNNA/:idContacto', component: SeguimientoDatosComponent },
-  { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent },
-  { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent },
-  { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent },
-  { path: 'seguimientos/adherencia-seguimiento/:id', component: SeguimientoAdherenciaComponent },
-  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent },
-  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent },
-  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent },
-  { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent },
+  { path: 'seguimientos/datos-seguimiento/:idNNA/:idContacto', component: SeguimientoDatosComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/adherencia-seguimiento/:id', component: SeguimientoAdherenciaComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent, canDeactivate: [confirmExitGuard] },
   { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
   { path: 'consultar-alertas/:id', component: ConsultarAlertasComponent }
 ];
