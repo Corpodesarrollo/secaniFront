@@ -32,6 +32,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { HealthCheckInterceptor } from './interceptors/health-check.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { HealthCheckInterceptor } from './interceptors/health-check.service';
 
   ],
   providers: [TablasParametricas,
+    DialogService,
     { provide: HTTP_INTERCEPTORS, useClass: HealthCheckInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
