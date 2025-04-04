@@ -9,13 +9,15 @@ import { TarjetaCabeceraComponent } from "../../shared/tarjeta-cabecera/tarjeta-
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DashboardCoordinadorService } from './dashboard-coordinador.services';
 import { SpinnerComponent } from './../../shared/spinner/spinner.component';
+import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-dashboard-coordinador',
   templateUrl: './dashboard-coordinador.component.html',
   styleUrls: ['./dashboard-coordinador.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, ReactiveFormsModule, SpinnerComponent],
+  imports: [ChartModule, CalendarModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, ReactiveFormsModule, SpinnerComponent],
 })
 export class DashboardCoordinadorComponent implements OnInit {
 
@@ -42,7 +44,7 @@ export class DashboardCoordinadorComponent implements OnInit {
 
   cargado = false;
 
-  constructor(public servicios: DashboardCoordinadorService, private fb: FormBuilder) {
+  constructor(public servicios: DashboardCoordinadorService, private fb: FormBuilder,  public router: Router) {
 
     this.diasLimite(this.currentDate);
     this.formFechas = this.fb.group({
@@ -90,18 +92,18 @@ export class DashboardCoordinadorComponent implements OnInit {
 
   async dataBarra(){
 
-    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal, '');
-    let dataP1 =  ((dataT1.totalCasosActual - dataT1.totalCasosAnterior)/dataT1.totalCasosAnterior)*100;
+    let dataT1 = await this.servicios.GetTotalCasos(this.fechaInicial, this.fechaFinal);
+    let dataP1 =  this.calculoPorcentaje(dataT1);
 
     this.data_1 = {
       imagen:1,
       titulo: 'Total Casos',
-      valor: dataT1.totalCasosActual,
+      valor: dataT1.totalCasosGeneral,
       porcentaje: dataP1.toFixed(2)
     }
 
-    let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, '1');
-    let dataP2 =  ((dataT2.totalCasosActual - dataT2.totalCasosAnterior)/dataT2.totalCasosAnterior)*100;
+    let dataT2 = await this.servicios.GetTotalRegistros(this.fechaInicial, this.fechaFinal, '');
+    let dataP2 =  this.calculoPorcentaje(dataT2);
 
     this.data_2 = {
       imagen:2,
@@ -110,25 +112,36 @@ export class DashboardCoordinadorComponent implements OnInit {
       porcentaje: dataP2.toFixed(2)
     }
 
-    let dataT3 = await this.servicios.GetTotalMisCasos(this.fechaInicial, this.fechaFinal, '1');
-    let dataP3 =  ((dataT3.totalCasosActual - dataT3.totalCasosAnterior)/dataT3.totalCasosAnterior)*100;
+    let dataT3 = await this.servicios.GetTotalSeguimientosCuidador(this.fechaInicial, this.fechaFinal);
+    let dataP3 =  this.calculoPorcentaje(dataT3);
 
     this.data_3 = {
       imagen:3,
-      titulo: 'Mis Casos',
-      valor: dataT3.totalCasosActual,
+      titulo: 'Solicitudes de Seguimiento',
+      valor: dataT3.totalCasosGeneral,
       porcentaje: dataP3.toFixed(2)
     }
 
     let dataT4 = await this.servicios.GetTotalAlertas(this.fechaInicial, this.fechaFinal, '1');
-    let dataP4 =  ((dataT4.totalCasosActual - dataT4.totalCasosAnterior)/dataT4.totalCasosAnterior)*100;
+    let dataP4 =  this.calculoPorcentaje(dataT4);
 
     this.data_4 = {
       imagen:4,
       titulo: 'Alertas',
-      valor: dataT4.totalCasosActual,
+      valor: dataT4.totalCasosGeneral,
       porcentaje: dataP4.toFixed(2)
     }
+  }
+
+  calculoPorcentaje(data: any){
+    let totalCasosActual = Number(data?.totalCasosActual) || 0;
+    let totalCasosAnterior = Number(data?.totalCasosAnterior) || 0;
+
+    let dataP = totalCasosAnterior > 0
+      ? ((totalCasosActual - totalCasosAnterior) / totalCasosAnterior) * 100
+      : 0;
+
+    return dataP;
   }
 
 
@@ -137,6 +150,41 @@ export class DashboardCoordinadorComponent implements OnInit {
     const fechaFin = this.formFechas.value.fechaFin;
 
     this.filtroFechas(fechaInicio, fechaFin);
+  }
+
+  async consultar() {
+    // Obtén los valores de las fechas del formulario
+    const fechaInicioValue = this.formFechas.get('fechaInicio')?.value;
+    const fechaFinValue = this.formFechas.get('fechaFin')?.value;
+
+    // Convierte los valores a objetos Date
+    const fechaInicio: Date = new Date(fechaInicioValue);
+    const fechaFin: Date = new Date(fechaFinValue);
+
+    // Asegúrate de que las fechas sean válidas antes de continuar
+    if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
+      console.error("Una o ambas fechas no son válidas");
+      return;
+    }
+
+    // Extrae año, mes y día para formar las cadenas en el formato deseado
+    const year = fechaInicio.getFullYear();
+    const month = ('0' + (fechaInicio.getMonth() + 1)).slice(-2); // Añadir 1 al mes ya que empieza desde 0
+    const day = ('0' + fechaInicio.getDate()).slice(-2);
+
+    const fechaInicioForma = `${year}-${month}-${day}`;
+
+    const year2 = fechaFin.getFullYear();
+    const month2 = ('0' + (fechaFin.getMonth() + 1)).slice(-2);
+    const day2 = ('0' + fechaFin.getDate()).slice(-2);
+
+    const fechaFinForma = `${year2}-${month2}-${day2}`;
+
+    // Imprime las fechas formateadas
+    console.log("Las fechas ", fechaInicioForma, fechaFinForma);
+
+    // Llama a la función filtroFechas con las fechas formateadas
+    await this.filtroFechas(fechaInicioForma, fechaFinForma);
   }
 
   async filtroFechas(fecha_inicial: any, fecha_final: any){
@@ -312,8 +360,8 @@ export class DashboardCoordinadorComponent implements OnInit {
     };
 
     /////////////////////////////////////
-    let infoCritica = await this.servicios.GetCasosCriticos(this.fechaInicial, this.fechaFinal);
-console.log("infoCritica", infoCritica);
+    let infoCritica = await this.servicios.GetCasosCriticos(fecha_inicial, fecha_final);
+    //console.log("infoCritica", infoCritica);
 
     let infoAlerta = await this.servicios.GetTpEstadoAlerta();
 
@@ -378,6 +426,13 @@ console.log("infoCritica", infoCritica);
 
     console.log(this.casosCriticos);
 
+  }
+
+
+  verTodosCasosCriticos(){
+    const fechaInicio = this.formFechas.value.fechaInicio;
+    const fechaFin = this.formFechas.value.fechaFin;
+    this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
   }
 
 }

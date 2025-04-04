@@ -24,4 +24,19 @@ export class NNAService {
             });
         });
     }
+
+    public async postNNA(nna: NNA): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.repos.post('NNA/crear', nna, 'NNA').subscribe({
+                next: (data: any) => {
+                    console.log(data);
+                resolve(data);
+                },
+                error: (err) => {
+                console.error(err);
+                reject(err);
+                }
+            });
+        });
+    }
 }

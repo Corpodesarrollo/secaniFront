@@ -1,75 +1,96 @@
-<p-dialog header="" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-  [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-  <div class="col-sm-12 text-center">
-    <label>Agendar seguimiento</label>
-  </div>
-  <div class="col-sm-12 text-left">
-    <div class="row">
-      <div class="col-sm-3">
-        <label>Agente de seguimiento*:</label>
-      </div>
-      <div class="col-sm-9 ">
-        <select class="form-select" [(ngModel)]="formAgenteSeguimiento" id="Agentes" name="Agentes">
-          <option selected value="">Seleccione</option>
-          <option *ngFor="let agente of agenteAsignadoListado" [value]="agente.id">
-            {{ agente.fullName }}
-          </option>
-
-        </select>
-      </div>
+<p-dialog header="Agendar seguimiento" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '45vw' }" [draggable]="false" [resizable]="false">
+  <div class="row align-items-center mt-3 mb-3">
+    <div class="col-4 col-md-3 text-end fw-bold">
+      <label for="entidad" class="form-label">Agente de seguimiento*</label>
+    </div>
+    <div class="col-8 col-md-9 p-fluid">
+      <p-dropdown
+        [(ngModel)]="formAgenteSeguimiento"
+        [options]="agenteAsignadoListado"
+        optionLabel="nombre"
+        filterBy="nombre"
+        placeholder="Seleccione" />
     </div>
   </div>
-  <div class="col-sm-12 text-left">
-    <div class="row">
-      <div class="col-sm-3">
-        <label>Fecha*:</label>
-      </div>
-      <div class="col-sm-3">
-        <div class="row">
-          <div class="col-sm-12">
-            <p-calendar appendTo="body" [iconDisplay]="'input'" [(ngModel)]="formFecha" [showIcon]="true"
-              inputId="icondisplay" [minDate]="minDate" [readonlyInput]="true" />
-          </div>
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-sm-5">
-                <button [class]="'btn text-color-blanco '+buttonHoy" (click)="cargarHoy()">Hoy</button>
-              </div>
-              <div class="col-sm-5">
-                <button [class]="'btn text-color-blanco '+buttonManana" (click)="cargarManana()">Mañana</button>
-              </div>
+
+  <div class="row align-items-center mb-3">
+    <div class="col-4 col-md-3 text-end fw-bold">
+      <label for="entidad" class="form-label">Fecha*</label>
+    </div>
+    <div class="col-8 col-md-9 p-fluid">
+      <div class="row align-items-center mb-3">
+        <div class="col-8 col-md-5 p-fluid mb-3 mb-md-0">
+          <div class="row mb-1">
+            <div class="col-12">
+              <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" tabindex="3"
+                [appendTo]="'body'" placeholder="dd/mm/aaaa" />
             </div>
           </div>
+          <div class="row">
+              <div class="col-12 button-group">
+                  <button class="btn col-4 rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'AM'}"  (click)="apply('AM')">Hoy</button>
+                  <button class="btn col-8 rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'PM'}"  (click)="apply('PM')">Mañana</button>
+              </div>
+          </div>
         </div>
-      </div>
-      <div class="col-sm-1 text-right">
-        <label>Hora*:</label>
-      </div>
-      <div class="col-sm-5">
-        <div class="row">
-          <div class="col-sm-3">
-            <input type="number" class="form-control col-sm-2" placeholder="HH" [(ngModel)]="formHora" />
-          </div>
-          <div class="col-sm-3">
-            <input type="number" class="form-control col-sm-2" placeholder="MM" [(ngModel)]="formMinuto" />
-          </div>
-          <div class="col-sm-2">
-            <button [class]="'btn text-color-blanco '+buttonAm" (click)="cargarAmPM('AM')">AM</button>
-          </div>
-          <div class="col-sm-2">
-            <button [class]="'btn text-color-blanco '+buttonPm" (click)="cargarAmPM('PM')">PM</button>
+        <div class="col-4 col-md-1 text-end fw-bold">
+          <label for="cargo" class="form-label">Hora*</label>
+        </div>
+        <div class="col-8 col-md-6 p-fluid align-items-center row ms-1">
+          <input 
+                type="number" 
+                tabindex="1"
+                pInputText 
+                [(ngModel)]="hora" 
+                (change)="getFechaYHoraCompleta()"
+                [min]="1" 
+                [max]="12" 
+                placeholder="HH" 
+                class="col-auto me-1"
+                style="width: 65px;" />
+
+            <!-- Minutos -->
+            <input 
+              type="number" 
+              tabindex="2"
+              pInputText 
+              [(ngModel)]="minutos" 
+              (change)="getFechaYHoraCompleta()"
+              [min]="0" 
+              [max]="59" 
+              placeholder="MM" 
+              class="col-auto"
+              style="width: 65px;" />
+
+              <!-- AM/PM -->
+              <div class="col-auto button-group">
+                  <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'AM'}" style="width: 60px; height: 40px;" (click)="apply('AM')">AM</button>
+                  <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'PM'}" style="width: 60px; height: 40px;" (click)="apply('PM')">PM</button>
+              </div>
+        </div>
+        <div class="col-8 offset-4 col-md-3 offset-md-7" *ngIf="submitted">
+          <div class="text-danger">
+              Campo requerido
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-sm-12" *ngIf="!axios.isEmpty(msg)">
-    <br />
-    <small class="errors" *ngIf="!axios.isEmpty(msg)">{{msg}}</small>
+  <div class="text-center">
+    <button type="submit" class="btn text-white rounded-3 btn-lg"
+      style="background-color: #73b7ad; color: white; width: 150px" (click)="guardar()">
+      GUARDAR
+    </button>
   </div>
-  <div class="col-sm-12 text-center">
-    <br />
-    <button class="btn text-color-blanco fondo-color-principal" (click)="guardar()">GUARDAR</button>
-  </div>
+</p-dialog>
 
+<p-dialog 
+  [(visible)]="mostrarMensaje" (onHide)="terminar()" modal="true" dismissableMask="true" [style]="{ width: '500px' }"
+  [closable]="true" [appendTo]="'body'" [baseZIndex]="10000" [contentStyle]="{ 'text-align': 'center' }">
+  <div>
+    <i class="pi pi-check-circle mb-3" style="font-size: 4rem; color: #4CAF50;"></i>
+    <h3>Seguimiento almacenado correctamente</h3>
+    <button class="btn text-white rounded-3 btn-lg mt-3" type="button" style="background-color: #73B7AD; color: white; width: 200px" (click)="terminar()">Aceptar</button>
+  </div>
 </p-dialog>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -18,9 +18,16 @@ export class DialogCrearNnaMsgRolCoordinadorComponent {
   @Input() agenteId: any;
   @Input() coordinadorId: any;
   @Input() contactoNNAId:any;
+  @Output() closeModal = new EventEmitter<void>();
 
   rolId = sessionStorage.getItem('roleId');
   visibleDialogSeguimiento: boolean = false;
+
+  constructor() { }
+
+  close() {
+    this.closeModal.emit(); // Emite evento para cerrar el modal
+  }
 
 
   onSeguimiento(){

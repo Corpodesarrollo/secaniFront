@@ -2,49 +2,49 @@
 
 <div class="row container-fluid" *ngIf="opcion_1">
   <div class="col-6">
-    <div class="tajetaBlanca">
+    <div class="tajetaBlanca m-3">
       <p class="titulo">Contacto</p>
       <br>
       <div class="row">
-        <div class="col-6">
+        <div class="col-4">
           <b>Nombre: </b>
         </div>
-        <div class="col-6">
+        <div class="col-8">
           {{ContactoNNA.nombres}}
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div class="col-4">
           <b>Parentesco: </b>
         </div>
-        <div class="col-6">
+        <div class="col-8">
           {{getNombreParentesco(ContactoNNA.parentescoId)}}
         </div>
       </div>
       <hr>
       <div class="row" >
-        <div class="col-5">
+        <div class="col-4">
           <b>¿Se encuentra?</b>
         </div>
-        <div class="col-7">
-          <div class="row" style="padding-bottom:10px">
-            <div class="col-2">
-              <a (click) = operarOpcion2()><img src="iconos/intento-exitoso-opc1.svg" alt="opcion" /></a>
+        <div class="col-8">
+          <div class="row">
+            <div class="col-3 pe-0">
+              <button class="btn-fallido btn btn-lg text-white fw-bold w-100 h-100" style="width: 250px" (click)="operarOpcion2()">NO</button>
             </div>
-            <div class="col-10" style="text-align: left; padding-left: 20px">
-              <a (click) = iniciarSeguimiento()><img src="iconos/intento-exitoso-opc2.svg" alt="opcion"  /></a>
-            </div>
-          </div>
-
-          <div class="row" style="padding-bottom:10px">
-            <div class="col-12">
-              <a (click) = operarOpcion3()><img src="iconos/intento-exitoso-opc3.svg" alt="opcion" /></a>
+            <div class="col-9">
+              <button class="btn-exitoso btn btn-success btn-lg btn-lg text-white fw-bold w-100" style="width: 250px" (click)="iniciarSeguimiento()">Sí, iniciar seguimiento</button>
             </div>
           </div>
 
           <div class="row">
             <div class="col-12">
-              <a (click) = operarOpcion4()><img src="iconos/intento-exitoso-opc4.svg" alt="opcion" /></a>
+              <button class="btn-fallido btn btn-lg text-white fw-bold w-100" style="width: 250px" (click)="operarOpcion3()">Sí, no puede atender la llamada</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button class="btn-fallido btn btn-lg text-white fw-bold w-100" style="width: 250px" (click)="operarOpcion4()">Sí, no desea el seguimiento</button>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
       <img src="iconos/icono-intentoExitoso.svg" alt="icono"/>
       <br><br>
       <span class="parrafo">
-        <b>Buenos días</b>, mi nombre es NOMBRE_USUARIO estoy llamando del Ministerio de Salud y Protección Social.
+        <b>{{obtenerSaludo()}}</b>, mi nombre es NOMBRE_USUARIO estoy llamando del Ministerio de Salud y Protección Social.
         Estoy buscando al padre, madre o acudiente de
         <b>{{NNA.primerNombre}} {{NNA.segundoNombre}} {{NNA.primerApellido}} {{NNA.segundoApellido}}</b>, dado que desde el Ministerio se realiza seguimiento de los niños y niñas que están en proceso de diagnóstico
         o ya se encuentran diagnosticados con leucemia en todo el país, con la finalidad de que el menor tenga un tratamiento integral y oportuno,
@@ -96,11 +96,16 @@
           <div class="col-4">
             <p-calendar
               inputId="calendar-12h"
+              id = "FechaIntento"
               formControlName = "FechaIntento"
               [showTime]="true"
               dateFormat="yy-mm-dd"
               hourFormat="12"
               [minDate]="fechaHoy" />
+
+              <div *ngIf="formGroup2.get('FechaIntento')?.invalid && formGroup2.get('FechaIntento')?.touched" class="invalid-feedback">
+                Por favor ingrese una fecha
+              </div>
           </div>
           <div class="col-4">
 
@@ -244,7 +249,10 @@
             <b>Nombre</b>
           </div>
           <div class="col-7">
-            <input type="text" class="form-control" placeholder="" formControlName="nombreRechazo" />
+            <input type="text" class="form-control" placeholder="" formControlName="nombreRechazo" id="nombreRechazo" [ngClass]="{'is-invalid': formGroup4.get('nombreRechazo')?.invalid && formGroup4.get('nombreRechazo')?.touched}"/>
+            <div *ngIf="formGroup4.get('nombreRechazo')?.invalid && formGroup4.get('nombreRechazo')?.touched" class="invalid-feedback">
+              Por favor ingrese el nombre.
+            </div>
           </div>
 
         </div>
@@ -254,7 +262,10 @@
             <b>Parentesco</b>
           </div>
           <div class="col-7">
-            <input type="text" class="form-control" placeholder="" formControlName="parentescoRechazo" />
+            <input type="text" class="form-control" placeholder="" formControlName="parentescoRechazo" id="parentescoRechazo" [ngClass]="{'is-invalid': formGroup4.get('parentescoRechazo')?.invalid && formGroup4.get('parentescoRechazo')?.touched}"/>
+            <div *ngIf="formGroup4.get('parentescoRechazo')?.invalid && formGroup4.get('parentescoRechazo')?.touched" class="invalid-feedback">
+              Por favor ingrese el parentezco.
+            </div>
           </div>
 
         </div>
@@ -264,7 +275,10 @@
             <b>Razones</b>
           </div>
           <div class="col-7">
-            <textarea class="form-control" formControlName="razonesRechazo"></textarea>
+            <textarea class="form-control" formControlName="razonesRechazo" id="razonesRechazo" [ngClass]="{'is-invalid': formGroup4.get('razonesRechazo')?.invalid && formGroup4.get('razonesRechazo')?.touched}"></textarea>
+            <div *ngIf="formGroup4.get('razonesRechazo')?.invalid && formGroup4.get('razonesRechazo')?.touched" class="invalid-feedback">
+              Por favor ingrese las razones
+            </div>
           </div>
 
         </div>

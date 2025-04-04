@@ -19,7 +19,7 @@ import { SubcategoriaAlerta } from '../../../../models/subcategoriaAlerta.model'
 export class SeguimientoAlertasComponent implements OnInit {
   constructor(private tpp: TpParametros) {}
 
-  @Output() alertasChange = new EventEmitter<AlertasTratamiento[]>();
+  @Output() alertasChange = new EventEmitter<any[]>();
   
   selectedCategoriaAlerta: Parametricas | undefined;
   selectedSubcategoriaAlerta: SubcategoriaAlerta | undefined;
@@ -72,6 +72,7 @@ export class SeguimientoAlertasComponent implements OnInit {
     this.selectedSubcategoriaAlerta = undefined;
 
     this.alertasChange.emit(this.alertas);
+    console.log("Carga de alertas", this.alertas);
   }
 
   CargarSubcategorias() {

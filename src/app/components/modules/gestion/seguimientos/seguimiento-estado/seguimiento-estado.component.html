@@ -17,7 +17,7 @@
                 </ng-template>
             </p-breadcrumb>
             <div>
-                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">{{estado}}</span>
+                Estado: <app-estado-nna [nnaEstadoId]="nna.estadoId" />
             </div>
         </div>
     </div>
@@ -72,8 +72,8 @@
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="diagnosticos"
+                                    id="diagnosticos"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -113,8 +113,8 @@
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="IPS"
+                                    id="IPS"
                                     placeholder="Seleccione" />
                             </div>
                         </div>
@@ -136,14 +136,15 @@
                                 <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaUltimaRecaida"  />
                             </div>
                         </div>
+
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
                             <div class="col-4">
-                                <label for="estado" class="fw-bold">Razones por las cuales el menor no tiene diagnóstico</label>
+                                <label for="razonesSinDiagnostico" class="fw-bold">Razones por las cuales el menor no tiene diagnóstico</label>
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
-                                    [(ngModel)]="selectedRazonSinDiagnostico"
                                     [options]="razonesSinDiagnostico"
+                                    [(ngModel)]="selectedRazonSinDiagnostico"
                                     [loading]="isLoadingRazonesSinDiagnostico"
                                     optionLabel="nombre"
                                     [filter]="true"
@@ -160,15 +161,29 @@
                             </div>
                             <div class="col-8 flex-auto">
                                 <p-dropdown
-                                    [(ngModel)]="selectedIPS"
-                                    [options]="IPS"
+                                    [options]="razonesSinDiagnostico"
+                                    [(ngModel)]="selectedRazonSinDiagnostico"
+                                    [loading]="isLoadingRazonesSinDiagnostico"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"
                                     [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    name="razonesSinDiagnostico2"
+                                    id="razonesSinDiagnostico2"
+                                    required="true"
                                     placeholder="Seleccione" />
+                            </div>
+                        </div>
+                        <div class="row mb-2" *ngIf="estadoSinTratamiento">
+                            <div class="col-8 offset-4">
+                                <div *ngIf="submitted2 && !nna.RazonesSinIniciarTratamiento" class="text-danger">
+                                    Campo requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinTratamiento">
+                            <div class="col-8 offset-4">
+                                <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="nna.RazonesSinIniciarTratamientoOtros">
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoSinDiagnostico">
@@ -176,7 +191,7 @@
                                 <input id="otrasRazones" type="text" placeholder="Otro, ¿Cuál?" pInputText [(ngModel)]="nna.motivoNoDiagnosticoOtro">
                             </div>
                         </div>
-                        <app-seguimiento-alertas (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
+                        <app-seguimiento-alertas  (alertasChange)="onAlertasChange($event)" *ngIf="estadoSinDiagnostico || estadoSinTratamiento" />
                     </p-card>
                 </div>
                 <div class="col-12 col-md-6">
@@ -207,7 +222,7 @@
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
                     <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" ><i *ngIf="saving" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> SIGUIENTE</button>
                 </div>
             </div>
         </div>

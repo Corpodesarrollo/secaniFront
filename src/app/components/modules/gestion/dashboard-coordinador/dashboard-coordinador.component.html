@@ -29,22 +29,42 @@
   <br>
 
   <div class="row">
-    <div class="col-6">
-      <form [formGroup]="formFechas" (ngSubmit)="onSubmit()">
-        <div class="filters">
-          <label for="fechaInicio">Fecha inicio</label>
-          &nbsp;
-          <input id="fechaInicio" type="date" formControlName="fechaInicio">
-          &nbsp;
-          <label for="fechaFin">Fecha fin</label>
-          &nbsp;
-          <input id="fechaFin" type="date" formControlName="fechaFin">
-          &nbsp;
-          <button type="submit" style="border: none;">
-            <img src="iconos/aplicar.svg" />
-          </button>
+    <div class="col-sm-12 col-md-6">
+      <form [formGroup]="formFechas">
+        <div class="row">
+
+          <div class="col-sm-12 col-md-5 ">
+            <label for="fechaInicio">Fecha inicio</label>
+            <br>
+            <p-calendar
+                inputId="icondisplay"
+                formControlName = "fechaInicio"
+                dateFormat="yy-mm-dd"
+                [iconDisplay]="'input'"
+               [showIcon]="true"
+                 />
+          </div>
+          <div class="col-sm-12 col-md-5">
+            <label for="fechaFin">Fecha fin</label>
+            <br>
+            <p-calendar
+                inputId="icondisplay"
+                formControlName = "fechaFin"
+                dateFormat="yy-mm-dd"
+                [iconDisplay]="'input'"
+               [showIcon]="true"
+                 />
+          </div>
+          <div class="col-sm-12 col-md-2">
+            <br>
+            <button type="button" (click)="consultar()"  class="btn text-color-blanco" style="background-color: rgb(255, 152, 1); color: white; border-radius: 8px; border-color: transparent;">
+              <span>Aplicar</span>
+            </button>
+
+          </div>
+
         </div>
-      </form>
+        </form>
       <br>
 
       <div class="card" style="padding:20px">
@@ -75,10 +95,13 @@
       </div>
 
     </div>
-    <div class="col-6">
+    <div class="col-sm-12 col-md-6">
       <div class="card" style="padding:20px">
         <div class="critical-cases">
-          <h4>CASOS CRÍTICOS</h4>
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>CASOS CRÍTICOS</h4>
+            <a  (click)="verTodosCasosCriticos()" style="cursor: pointer;">Ver todos ></a>
+          </div>
           <div *ngFor="let caso of casosCriticos" class="caso-critico">
             <app-tarjeta-caso-critico [caso] = caso ></app-tarjeta-caso-critico>
           </div>

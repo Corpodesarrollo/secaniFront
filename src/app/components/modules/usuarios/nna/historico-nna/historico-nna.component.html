@@ -1,19 +1,17 @@
-<div class="row container-fluid d-flex">
-  <div class="col-12 hnna-titulo-menu">
-    <div class="row">
-      <div class="col-6">
-        <span class="hnna-titulo">Histórico NNA</span>
-      </div>
-      <div class="col-6 text-end">
-        <button class="btn btn-crear" *ngIf="permisos_nna.canAdd==true" (click)="btn_crear_nna()">CREAR NNA</button>
-        <app-boton-notificacion></app-boton-notificacion>
-      </div>
+<div class="m-3">
+  <div class="row mb-2">
+    <div class="col-6 d-flex">
+      <h3>Histórico NNA</h3>
+    </div>
+    <div class="col-6 text-end pe-0">
+      <button class="btn btn-crear" *ngIf="permisos_nna.canAdd==true" (click)="btn_crear_nna()">CREAR NNA</button>
+      <app-boton-notificacion></app-boton-notificacion>
     </div>
   </div>
-  <div class="card">
-    <div class="row container-fluid">
-      <div class="col-12">
-        <div class="row">
+  <div class="row mt-0">
+    <div class="col-12">
+      <div class="card">
+        <div class="row mx-3 mb-3">
           <div class="col-12 col-lg-12 col-sm-12">
             <form>
               <div class="row">
@@ -57,19 +55,23 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12 d-flex mt-3">
-                  <button class="btn-principal ms-auto p-2" (click)="limpiar()">
+                <div class="col-12 text-end">
+                  <button class="btn btn-principal" (click)="limpiar()">
                     <i class="pi pi-trash"></i>
-                    <span>Limpiar filtros</span>
+                    <span>Limpiar Filtros</span>
                   </button>
                 </div>
               </div>
             </form>
           </div>
-          <div class="col-12 mt-3 mb-3 text-left">
-            <p-table [value]="visualizars" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
-              [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
-              currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}" *ngIf="mostrar">
+        </div>
+        <div class="row" *ngIf="mostrar">
+          <div class="col-12">
+            <p-table [value]="visualizars" 
+              [paginator]="true" [rows]="5"
+              [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+            >
               <ng-template pTemplate="header">
                 <tr>
                   <th>No. caso</th>
@@ -77,21 +79,17 @@
                   <th>No. documento</th>
                   <th>Último segumiento</th>
                   <th>Agente asignado</th>
-                  <th>Estado</th>
+                  <th class="text-center" width="200">Estado</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-visualizar>
                 <tr>
-                  <td><button type="button" class="btn btn-link">{{ visualizar.noCaso }}</button></td>
+                  <td><button type="button" class="btn btn-link" (click)="redirigirDetalleNna(visualizar.idNNA)">{{ visualizar.noCaso }}</button></td>
                   <td>{{ visualizar.nombreNNA }}</td>
                   <td>{{ visualizar.noDocumento }}</td>
                   <td>{{ visualizar.ultimaActualizacion | date:'dd/MM/yyyy' }}</td>
                   <td>{{ visualizar.agenteAsignado }}</td>
-                  <td>
-                    <div class="filter-estado"
-                      [ngStyle]="{ 'background-color': visualizar.estadoColorBG, 'color': visualizar.estadoColorText }">
-                      {{ visualizar.estado }}</div>
-                  </td>
+                  <td class="text-center"><span class="badge w-100" [ngStyle]="{'font-weight': 'normal', 'font-size': '14px', 'background-color': visualizar.estadoColorBG, 'color': visualizar.estadoColorText}">{{ visualizar.estado }}</span></td>
                 </tr>
               </ng-template>
               <ng-template pTemplate="emptymessage">
@@ -99,14 +97,16 @@
                   <td colspan="6" class="text-center">No se ha encontrado ningún registro de NNA</td>
                 </tr>
               </ng-template>
-
             </p-table>
+          </div>
+        </div>
+        <div class="row m-5" *ngIf="mostrar==false">
+          <div class="col-12 text-center">
             <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
-              animationDuration=".5s" *ngIf="mostrar==false" />
+              animationDuration=".5s" />
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>

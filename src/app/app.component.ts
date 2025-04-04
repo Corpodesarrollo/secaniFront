@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { MenuService } from './services/menu.service';
 import { GenericService } from './services/generic.services';
-
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ export class AppComponent {
   constructor(private primengConfig: PrimeNGConfig, private menuService: MenuService, private repos: GenericService) {}
 
   ngOnInit() {
-    //this.loadAuth();
+    this.loadAuth();
 
     this.primengConfig.setTranslation({
       startsWith: 'Empieza con',
@@ -52,8 +52,8 @@ export class AppComponent {
       dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
       dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
       dayNamesMin: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
-      monthNames: [ "enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre" ],
-      monthNamesShort: [ "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic" ],
+      monthNames: [ "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre" ],
+      monthNamesShort: [ "Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic" ],
       dateFormat: 'dd/mm/yy',
       firstDayOfWeek: 1,
       today: 'Hoy',
@@ -150,17 +150,39 @@ export class AppComponent {
   }
 
   loadAuth() {
-    this.repos.get('auth', ``, 'Authentication').subscribe({
-      next: (data: any) => {
-        console.log("data", data);
-        if (data != null) {
-          localStorage.setItem('user', JSON.stringify(data));
-        }
-      },
-      error: (err) => {
-        console.log("Error", err);
-      },
-    });
+    if (environment.cookie){
+      this.repos.get('auth', ``, 'Authentication').subscribe({
+        next: (data: any) => {
+          console.log("data", data);
+          if (data != null) {
+            localStorage.setItem('user', JSON.stringify(data));
+          }
+        },
+        error: (err) => {
+          console.log("Error", err);
+        },
+      });
+    }else{
+      localStorage.setItem('user', `
+        {
+          "Id":"48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5",
+          "Alias":"CC51644243",
+          "Email":"claumartinb@gmail.com",
+          "Name":"CLAUDIA MARTINEZ",
+          "State":true,
+          "RolCode":[
+            "Perfil PISIS Neo",
+            "SINTRA-ENT"
+          ],
+          "EnterpriseCode":"NI 800114312",
+          "EnterpriseDeptoCode":"80",
+          "EnterpriseEmail":"lidertic@saluddecaldas.gov.co",
+          "EnterpriseName":"DIRECCION TERRITORIAL DE SALUD DE CALDAS",
+          "EnterpriseIdentification":"800114312",
+          "IsMinSalud":false,
+          "IsAuth":true
+        }`);
+    }
   }
 }
 

@@ -1,0 +1,107 @@
+<div class="container-fluid">
+  <div class="mt-5 mb-4">
+    <h1>Lista Paramétrica</h1>
+    <p>Items de lista</p>
+  </div>
+
+  <div class="card border border-0 pt-2">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-4 sm-col-12">
+          <form [formGroup]="itemsListaParametricaForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label class="fw-semibold mb-1" for="id">Id del Item</label>
+              <input id="id" class="w-100" type="text" pInputText formControlName="id" />
+            </div>
+            <div class="mb-3">
+              <label class="fw-semibold mb-1" for="nombre">Nombre del Item</label>
+              <input id="nombre" class="w-100" type="text" pInputText formControlName="nombre" />
+            </div>
+            <div class="mb-3">
+              <label class="fw-semibold mb-1" for="indicador">Identificador del item</label>
+              <input id="indicador" class="w-100" type="text" pInputText formControlName="indicador" />
+            </div>
+            <div class="mb-3">
+              <label class="fw-semibold mb-1" for="orden">Orden en la lista</label>
+              <input id="orden" class="w-100" type="text" pInputText formControlName="orden" />
+            </div>
+            <div class="mb-3">
+              <label class="fw-semibold mb-1" for="itemListaPadre">Item lista padre</label>
+              <p-dropdown
+                id="itemListaPadre"
+                styleClass="w-100"
+                formControlName="itemListaPadre"
+                placeholder="N/A"
+              ></p-dropdown>
+            </div>
+
+            <div class="d-flex justify-content-center mt-5">
+              <p-button type="button"
+                styleClass="me-3" severity="success"
+                (onClick)="clearForm()"
+              >
+                <i class="pi pi-plus me-1"></i>
+                Nuevo Item
+              </p-button>
+              <p-button type="submit" severity="success">Guardar</p-button>
+            </div>
+          </form>
+        </div>
+        <div class="col-8 sm-col-12">
+          <p-table
+            [value]="items"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            [paginator]="true"
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 25, 50]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="nombre">
+                  Nombre
+                </th>
+                <th pSortableColumn="indicador">
+                  Identificador
+                </th>
+                <th pSortableColumn="ordenLista">
+                  Orden de la lista
+                </th>
+                <th pSortableColumn="itemListaPadre">
+                  Item lista padre
+                </th>
+                <th>Acciones</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.indicador || 'No aplica' }}</td>
+                <td>{{ item.orden || 'No aplica' }}</td>
+                <td>{{ item.itemListaPadre || 'No aplica' }}</td>
+                <td>
+                  <div>
+                    <p-button
+                      icon="pi pi-pencil"
+                      [rounded]="true"
+                      [text]="true"
+                      severity="secondary"
+                      (click)="openItemForEdit(item)"
+                    />
+                    <p-button
+                      icon="pi pi-trash"
+                      [rounded]="true"
+                      [text]="true"
+                      severity="secondary"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 <br>
 <app-spinner *ngIf="!cargado"></app-spinner>
 <div class="container-fluid" *ngIf="cargado">
-  <app-tarjeta-cabecera [usuario] = usuario></app-tarjeta-cabecera>
+  <app-tarjeta-cabecera [usuario] = usuario [visible]="false"></app-tarjeta-cabecera>
 
 
   <div class="card" style=" display: grid; place-items: center;">
@@ -14,7 +14,7 @@
         <app-tarjetaKPI [data] = "data_2"></app-tarjetaKPI>
       </div>
       <div class="col-4">
-        <app-tarjetaKPI [data] = "data_3"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_3" [crecimiento] = false></app-tarjetaKPI>
       </div>
 
 
@@ -24,8 +24,44 @@
 
   <br>
   <div class="row">
-    <div class="col-6">
+    <div class="col-sm-12 col-md-6">
 
+      <form [formGroup]="formFechas">
+        <div class="row">
+
+          <div class="col-sm-12 col-md-5 ">
+            <label for="fechaInicio">Fecha inicio</label>
+            <br>
+            <p-calendar
+                inputId="icondisplay"
+                formControlName = "fechaInicio"
+                dateFormat="yy-mm-dd"
+                 [iconDisplay]="'input'"
+                 [showIcon]="true"
+                 />
+          </div>
+          <div class="col-sm-12 col-md-5">
+            <label for="fechaFin">Fecha fin</label>
+            <br>
+            <p-calendar
+                inputId="icondisplay"
+                formControlName = "fechaFin"
+                dateFormat="yy-mm-dd"
+                 [iconDisplay]="'input'"
+                 [showIcon]="true"
+                 />
+          </div>
+          <div class="col-sm-12 col-md-2">
+            <br>
+            <button type="button" (click)="consultar()"  class="btn text-color-blanco" style="background-color: rgb(255, 152, 1); color: white; border-radius: 8px; border-color: transparent;">
+              <span>Aplicar</span>
+            </button>
+
+          </div>
+
+        </div>
+      </form>
+      <br>
       <div class="card" style="padding:20px">
         <div class="chart">
           <h4>Alertas</h4>
@@ -43,11 +79,22 @@
       </div>
 
     </div>
-    <div class="col-6">
+    <div class="col-sm-12 col-md-6">
 
       <div class="card" style="padding:20px">
         <div class="critical-cases">
-          <h4>ALERTAS PENDIENTES DE GESTIÓN</h4>
+
+          <div class="row">
+            <div class="col-9">
+              <h4>ALERTAS PENDIENTES DE GESTIÓN</h4>
+            </div>
+            <div class="col-3">
+              <a  (click)="verTodosCasosCriticos()" style="cursor: pointer;">Ver todas ></a>
+            </div>
+          </div>
+
+
+
           <div *ngFor="let alerta of alertas" class="caso-critico">
 
 
@@ -60,13 +107,16 @@
                 </td>
                 <td>
 
-                  <strong>{{ alerta.nombre }}</strong>
-                  <strong>{{ alerta.tiempo }}</strong><br>
+                  <strong>{{ alerta.primerNombre }} {{ alerta.segundoNombre }} {{ alerta.primerApellido }} {{ alerta.segundoApellido }}</strong>
+                  <strong>{{ calcularTiempoTranscurrido(alerta.fechaNacimiento, hoy) }}</strong><br>
 
-                  <span class="enfermedad">{{alerta.enfermedad}}</span>
+                  <span class="enfermedad">{{alerta.diagnostico}}</span>
 
-                    <p style="color: {{alerta.color}}">{{ alerta.sinRespuesta }} días sin respuesta</p>
+                    <p style="color: {{alerta.color}}">{{ calcularTiempoTranscurrido(alerta.fechaSeguimiento, hoy) }} sin respuesta</p>
 
+                </td>
+                <td>
+                  <button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center"  style="background-color: #73b7ad;">Ver</button>
                 </td>
               </tr>
             </table>

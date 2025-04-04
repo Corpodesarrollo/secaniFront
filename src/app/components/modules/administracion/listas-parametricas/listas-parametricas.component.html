@@ -1,0 +1,95 @@
+<div class="container-fluid">
+  <h1 class="mt-5 mb-4">Listas Paramétricas</h1>
+
+  <div class="card border border-0 pt-2">
+    <div class="card-body">
+      <p-table [value]="listasParametricas" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
+        <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="id">
+                ID Lista
+              </th>
+              <th pSortableColumn="nombre">
+                Nombre de la lista
+              </th>
+              <th pSortableColumn="tablaPadre">
+                Lista padre
+              </th>
+              <th pSortableColumn="descripcion">
+                Descripción
+              </th>
+            <th>Editar</th>
+            <th>Items</th>
+            <th>Histórico</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-listaParametrica>
+          <tr>
+            <td>
+              <a [routerLink]="['/administracion/lista_parametricas', listaParametrica.id]">
+                {{ listaParametrica.id }}
+              </a>
+            </td>
+            <td>{{ titulos[listaParametrica.nombre] }}</td>
+            <td>{{ listaParametrica.nombreTablaPadre || 'No aplica' }}</td>
+            <td>{{ listaParametrica.descripcion }}</td>
+            <th>
+              <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                (click)="openEditModal(listaParametrica)"
+              />
+            </th>
+            <th>
+              <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                [routerLink]="['/administracion/lista_parametricas', listaParametrica.id, 'items']"
+              />
+            </th>
+            <th>
+              <p-button icon="pi pi-info-circle" [rounded]="true" [link]="true" severity="secondary"
+                [routerLink]="['/administracion/lista_parametricas', listaParametrica.id, 'historico']"
+              />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center">Listas parametricas no encotradas.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Editar lista paramétrica" [modal]="true" [(visible)]="mostrarModalEditar"
+  [style]="{ width: '45rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+>
+  <form [formGroup]="listaParametricaForm" class="container-fluid py-3 pt-3 pb-2" (ngSubmit)="onSubmit()">
+    <div class="row mb-3">
+      <label class="col-12 col-sm-3 mb-2 mb-sm-0 fw-semibold" for="nombre">Nombre</label>
+      <div class="col-12 col-sm-9">
+        <input id="nombre" class="w-100" type="text" pInputText formControlName="nombre" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label class="col-12 col-sm-3 mb-2 mb-sm-0 fw-semibold" for="description">Descripción</label>
+      <div class="col-12 col-sm-9">
+        <textarea id="description" class="w-100" rows="4" pInputTextarea formControlName="descripcion"></textarea>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label class="col-12 col-sm-3 mb-2 mb-sm-0 fw-semibold" for="tablaPadre">Lista padre</label>
+      <div class="col-12 col-sm-9">
+        <p-dropdown id="tablaPadre" styleClass="w-100" formControlName="tablaPadre" placeholder="N/A"></p-dropdown>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-5">
+      <p-button type="button" styleClass="me-3" severity="secondary" (click)="closeEditModal()">Cancelar</p-button>
+      <p-button type="submit" severity="success">Guardar</p-button>
+    </div>
+  </form>
+</p-dialog>

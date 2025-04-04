@@ -1,15 +1,25 @@
 import { Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import estadosNNA from './json/estadosNNA.json';
 import { GenericService } from '../../../../../services/generic.services';
 import { environment } from '../../../../../../environments/environment';
-import { NgModule } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { Route, Router } from '@angular/router';
+import { Route, Router, RouterModule } from '@angular/router';
 import { TpParametros } from '../../../../../core/services/tpParametros';
+import { CommonModule } from '@angular/common';
+import { BadgeModule } from 'primeng/badge';
+import { CardModule } from 'primeng/card';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { BotonNotificacionComponent } from "../../../boton-notificacion/boton-notificacion.component";
+import { NNA } from '../../../../../models/nna.model';
+import { apis } from '../../../../../models/apis.model';
 
 @Component({
   selector: 'app-historico-nna',
+  standalone: true,
+  imports: [TableModule, BadgeModule, CardModule, ProgressSpinnerModule, CommonModule, IconFieldModule, InputIconModule, InputTextModule, ReactiveFormsModule, FormsModule, BotonNotificacionComponent],
   templateUrl: './historico-nna.component.html',
   styleUrls: ['../../general.component.css', './historico-nna.component.css']
 })
@@ -38,7 +48,7 @@ export class HistoricoNnaComponent {
   }
 
   constructor(private service: GenericService, private router: Router, private tpParametro: TpParametros) {
-    this.limpiar();
+    //this.limpiar();
   }
 
   async ngOnInit() {
@@ -64,8 +74,11 @@ export class HistoricoNnaComponent {
       buscar: this.filtroBuscar,
       orden: this.filtroOrganizar
     };
-    this.visualizars = await this.service.postAsync(url, 'NNA/ConsultarNNAFiltro', parameter) ?? [];
-    //console.log("HU Visualizar", this.visualizars);
+    this.service.post('NNA/ConsultarNNAFiltro', parameter, apis.nna).subscribe({
+      next: (data: any) => {
+        this.visualizars = data;
+      }
+    });
     this.mostrar = true;
   }
 
@@ -93,34 +106,12 @@ export class HistoricoNnaComponent {
     this.buscar(); // Llama a la función de búsqueda
   }
 
-  /**Paginador */
-  next() {
-    this.first = this.first + this.rows;
-  }
-
-  prev() {
-    this.first = this.first - this.rows;
-  }
-
-  reset() {
-    this.first = 0;
-  }
-
-  pageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
-  }
-
-  isLastPage(): boolean {
-    return this.visualizars ? this.first === this.visualizars.length - this.rows : true;
-  }
-
-  isFirstPage(): boolean {
-    return this.visualizars ? this.first === 0 : true;
-  }
-
   btn_crear_nna() {
     this.router.navigate(["/usuarios/crear_nna"]);
+  }
+
+  redirigirDetalleNna(idNna: string): void {
+    this.router.navigate(["/usuarios/detalle_nna/", idNna]);
   }
 
 }

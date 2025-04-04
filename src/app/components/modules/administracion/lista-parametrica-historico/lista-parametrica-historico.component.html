@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <h1 class="mt-5 mb-4">Histórico</h1>
+
+  <div class="card border border-0 pt-2">
+    <div class="card-body">
+      <p-table [value]="historicos" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
+          [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
+          <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="fecha">
+                  <div class="d-flex align-items-center justify-content-between">
+                    Fecha
+                    <p-sortIcon field="fecha" />
+                    <p-columnFilter type="text" field="fecha" display="menu" class="ms-auto"/>
+                  </div>
+                </th>
+                <th pSortableColumn="transaccion">
+                  <div class="d-flex align-items-center justify-content-between">
+                    Transaccion
+                    <p-sortIcon field="transaccion" />
+                    <p-columnFilter type="text" field="transaccion" display="menu" class="ms-auto"/>
+                  </div>
+                </th>
+                <th pSortableColumn="usuarioOrigen">
+                  <div class="d-flex align-items-center justify-content-between">
+                    Usuario Origen
+                    <p-sortIcon field="usuarioOrigen" />
+                    <p-columnFilter type="text" field="usuarioOrigen" display="menu" class="ms-auto"/>
+                  </div>
+                </th>
+                <th pSortableColumn="comentario">
+                  <div class="d-flex align-items-center justify-content-between">
+                    Comentario
+                    <p-sortIcon field="comentario" />
+                    <p-columnFilter type="text" field="comentario" display="menu" class="ms-auto"/>
+                  </div>
+                </th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-historico>
+              <tr>
+                <td>{{ historico.fecha | date:'dd/MM/yyyy'}}</td>
+                <td>{{ historico.transaccion }}</td>
+                <td>{{ historico.usuarioOrigen }}</td>
+                <td>{{ historico.comentario }}</td>
+              </tr>
+          </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

@@ -16,14 +16,15 @@ import { InfoSeguimientoNnaComponent } from '../../gestion/seguimientos/info-seg
 
 import { UsuariosModule } from '../usuarios.module';
 import { TpParametros } from '../../../../core/services/tpParametros';
+import { NnaContactoListaComponent } from "../nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 
 @Component({
   selector: 'app-intento-seguimiento',
   templateUrl: './intento-seguimiento.component.html',
   styleUrls: ['./intento-seguimiento.component.css'],
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule,InfoSeguimientoNnaComponent, UsuariosModule]
+  imports: [CommonModule, ReactiveFormsModule,
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule, InfoSeguimientoNnaComponent, UsuariosModule, NnaContactoListaComponent]
 })
 export class IntentoSeguimientoComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
@@ -34,7 +35,7 @@ export class IntentoSeguimientoComponent implements OnInit {
   displayModalContacto: boolean = false;
 
   parentesco: any;
-  nnaId = 0;
+  nnaId: number = 0;
 
   constructor(public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
 
@@ -60,6 +61,7 @@ export class IntentoSeguimientoComponent implements OnInit {
     console.log("data", this.seguimiento, this.contactos)
     console.log("intentos", this.intentos)
     console.log('nnaId enviada', this.nnaId);
+    console.log("ver 06/11/2024")
   }
 
 

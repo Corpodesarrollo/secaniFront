@@ -17,7 +17,7 @@
                 </ng-template>
             </p-breadcrumb>
             <div>
-                Estado: <span class="badge font-semibold ms-3" style="background-color: #ff9801; width: 150px;">{{estado}}</span>
+                Estado: <app-estado-nna [nnaEstadoId]="diagnostico.idEstado" />
             </div>
         </div>
     </div>
@@ -40,7 +40,11 @@
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="diagnostico && diagnostico.alertas && diagnostico.alertas.length > 0">
                             <div class="col-12">
                                 <label class="fw-bold">Alertas Identificadas</label>
-                                <p-table [value]="diagnostico.alertas" [paginator]="true" [rows]="10" [responsive]="true">
+                                <p-table [value]="diagnostico.alertas" [responsive]="true"
+                                    [paginator]="true" [rows]="5"
+                                    [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                                >
                                     <ng-template pTemplate="header">
                                         <tr>
                                             <th class="header-th">Categoria</th>

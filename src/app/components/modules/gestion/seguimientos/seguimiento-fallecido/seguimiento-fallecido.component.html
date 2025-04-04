@@ -16,8 +16,9 @@
                     </ng-template>
                 </ng-template>
             </p-breadcrumb>
+            
             <div>
-                Estado: <span class="badge font-semibold ms-3 bg-secondary" style="width: 150px;">{{estado}}</span>
+                Estado: <app-estado-nna [nnaEstadoId]="nna.estadoId" />
             </div>
         </div>
     </div>
@@ -41,7 +42,7 @@
                                 <label for="fechaDefuncion" class="fw-bold">Fecha de defunción</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="diagnostico.fechaDefuncion"  />
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [(ngModel)]="nna.fechaDefuncion"  />
                             </div>
                         </div>
                         <div class="row mb-2 flex flex-wrap p-fluid">
@@ -49,13 +50,13 @@
                                 <label for="causaMuerte" class="fw-bold">Causas de la muerte</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <textarea id="causaMuerte" pInputText rows="2" [(ngModel)]="diagnostico.causaMuerte"></textarea>
+                                <textarea id="causaMuerte" pInputText rows="2" [(ngModel)]="nna.motivoDefuncion"></textarea>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid">
                             <div class="col-12">
                                 <label for="observaciones" class="fw-bold">¿Desea agregar algo más a la entrevista realizada? / Observaciones</label>
-                                <textarea id="observaciones" pInputText rows="3" maxlength="5000" [(ngModel)]="diagnostico.observaciones" placeholder="Escriba aquí"></textarea>
+                                <textarea id="observaciones" pInputText rows="3" maxlength="5000" [(ngModel)]="nna.tratamientoObservaciones" placeholder="Escriba aquí"></textarea>
                             </div>
                         </div>
                     </p-card>
@@ -79,12 +80,12 @@
             </div>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" (click)="Guardar()">GUARDAR Y NOTIFICAR A INS</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" (click)="Guardar()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR Y NOTIFICAR A INS</button>
                 </div>
             </div>
         </div>
     </div>
 </body>
 
-<app-notificacion #notificacionModal [id]="nna.id"  />
+<app-notificacion #notificacionModal [id]="nna.id"  (closeModal)="closeModal()" />
 

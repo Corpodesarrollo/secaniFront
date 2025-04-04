@@ -1,0 +1,27 @@
+<p-card>
+  <h3 class="mb-4">Solicitud de seguimiento</h3>
+  <div class="row mb-2">
+    <div class="col-12 col-md-6 d-flex align-items-center gap-1">
+      <p class="fw-bold m-0" style="min-width: 150px;">Solicitante:</p>
+      <p class="m-0">{{ solicitante.nombre }} - {{ solicitante.telefono }}</p>
+    </div>
+    <div class="col-12 col-md-6 d-flex align-items-center gap-1">
+      <p class="fw-bold m-0" style="min-width: 150px;">Fecha de solicitud:</p>
+      <p class="m-0">{{ fechaSolicitud | date: 'dd/MM/yyyy' }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-6 d-flex gap-1">
+      <p class="fw-bold m-0" style="min-width: 150px;">Observación:</p>
+      <p class="m-0">{{ observacion }}</p>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="d-flex gap-1 mb-1">
+        <p class="fw-bold m-0" style="min-width: 150px;">¿Con diagnóstico?</p>
+        <p class="m-0">{{ conDiagnostico ? 'Sí' : 'No' }}</p>
+      </div>
+
+      <a class="m-0 p-0" [href]="anexoUrl" target="_blank">Anexo-Diagnóstico.pdf</a>
+    </div>
+  </div>
+</p-card>

@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <body class="formato-fondo fuente-letra">
   <div class="title">
       <h1>Alertas</h1>
@@ -133,9 +135,10 @@
         [value]="alertas"
         dataKey="alertaId"
         selectionMode="single"
-        [paginator]="true"
-        [rows]="10"
         [responsive]="true"
+        [paginator]="true" [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
         [expandedRowKeys]="expandedRowKeys"
         (onRowExpand)="onRowExpand($event)"
         (onRowCollapse)="onRowCollapse($event)">
@@ -165,7 +168,10 @@
             </td>
             <td>
               <div class="icon-container">
-                <i class="pi pi-file-pdf icon-style"></i>
+                <button class="icon-button" (click)="iniciarDescarga(alerta)">
+                  <i class="pi pi-file-pdf icon-style"></i>
+                </button>
+
                 <button class="icon-button" (click)="showDialog(alerta)">
                   <i class="pi pi-envelope"></i>
                 </button>
@@ -194,7 +200,11 @@
                   dataKey="entidadNotificada"
                   class="p-table expanded-table"
                   [tableStyle]="{ 'min-width': '50rem' }"
-                  [styleClass]="'p-datatable-sm'">
+                  [styleClass]="'p-datatable-sm'"
+                  [paginator]="true" [rows]="5"
+                  [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                >
 
                   <ng-template pTemplate="header">
                     <tr>
@@ -214,12 +224,12 @@
                       <td>{{ notificaciones.asuntoNotificacion }}</td>
                       <td>
                         <div class="icon-container">
-                          <i class="pi pi-eye icon-style-eye"></i>
+                          <i class="pi pi-eye icon-style-eye" (click)="showNotificaciones()"></i>
                         </div>
                       </td>
                       <td>
                         <div class="icon-container">
-                          <i class="pi pi-eye icon-style-eye"></i>
+                          <i class="pi pi-eye icon-style-eye" (click)="showRespuestas()"></i>
                         </div>
                       </td>
                       <td>{{ notificaciones.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
@@ -252,16 +262,18 @@
 
 
 
-  <p-dialog
-    header="Oficio de notificación"
-    [modal]="true"
-    [(visible)]="visible"
-    [style]="{ width: '50rem' }"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    [maximizable]="true">
-
-    <app-oficio-notificacion [alerta]="alertaSeleccionada" [NNAdatos]="datosNNA"  [nombreNNA]="datosBasicosNNA.nombreCompleto" [edadNNA]="tiempoTranscurrido" [diagnosticoNNA]="datosBasicosNNA.diagnostico"></app-oficio-notificacion>
-
-  </p-dialog>
 
 </body>
+
+
+<app-ver-notificacion *ngIf="verNotificaciones" [show]="verNotificaciones" (closeModal)="closeVerNotificaciones()"></app-ver-notificacion>
+<app-ver-respuesta *ngIf="verRespuestas" [show]="verRespuestas" (closeModal)="closeVerRespuestas()"></app-ver-respuesta>
+<app-crear-oficio *ngIf="verCrearOficio"
+  [show]="verCrearOficio"
+  [alerta]="alertaSeleccionada"
+  [NNAdatos]="datosNNA"
+  [nombreNNA]="datosBasicosNNA.nombreCompleto"
+  [edadNNA]="tiempoTranscurrido"
+  [diagnosticoNNA]="datosBasicosNNA.diagnostico"
+  (closeModal)="closeCrearOficio()"
+  ></app-crear-oficio>

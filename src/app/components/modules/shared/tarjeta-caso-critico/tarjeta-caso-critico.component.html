@@ -8,19 +8,17 @@
       </td>
       <td class="text-align:left">
 
-
-
-          <span class="badge text-bg-{{badge}}"><strong>{{ caso.alertaId }} - {{ caso.nombre }}</strong></span>
+          <span class="badge" style="background-color:{{badge}}; color:white"><strong>{{ caso.subcategoriaId }}. {{ caso.alias }}</strong></span>
 
           <br><br>
-        <strong>{{ caso.primerNombre }}{{ caso.segundoNombre }}{{ caso.primerApellido }}{{ caso.segundoApellido }}</strong><br>
+        <strong>{{ caso.primerNombre }} {{ caso.segundoNombre }} {{ caso.primerApellido }} {{ caso.segundoApellido }}</strong><br>
         <strong>{{ calcularTiempoTranscurrido(caso.fechaNacimiento, hoy) }}</strong><br>
 
         <span class="enfermedad">{{caso.diagnostico}}</span>
         <br>
         <span class="inferior" style="color: {{color}}; text-align:left">
-          Ubicación: {{ caso.DepartamentoActual }}  {{ caso.MunicipioActual }}<br>
-          &nbsp;&nbsp;Fecha de notificación: {{ caso.fechaNotificacionSIVIGILA }}<br>
+          Ubicación: {{ caso.departamentoActual }}  {{ caso.municipioActual }}<br>
+          &nbsp;&nbsp;Fecha de notificación: {{ caso.fechaNotificacionSIVIGILA |  date: 'yyyy/MM/dd'}}<br>
           &nbsp;&nbsp;Entidades: {{ caso.entidad }}<br>
 
           <span *ngIf="caso.agente != ''">&nbsp;&nbsp;<strong>Agente de seguimiento: {{caso.fullName}}</strong></span>

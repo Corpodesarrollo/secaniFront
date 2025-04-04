@@ -1,3 +1,5 @@
+import { ContactoNNA } from "./contactoNNA.model";
+
 export class NNA {
     id!: number;
     estadoId!: number;
@@ -15,19 +17,21 @@ export class NNA {
     residenciaOrigenDireccion!: string;
     residenciaOrigenEstratoId!: string;
     residenciaOrigenTelefono!: string;
-    fechaNotificacionSIVIGILA!: Date;
+    fechaNotificacionSIVIGILA: Date | null = null;
     primerNombre!: string;
     segundoNombre!: string;
     primerApellido!: string;
     segundoApellido!: string;
+    nombreCompleto!: string;
     tipoIdentificacionId!: string;
     numeroIdentificacion!: string;
-    fechaNacimiento!: Date;
+    fechaNacimiento: Date | null = null;
     edad!: string;
     municipioNacimientoId!: string;
     sexoId!: string;
+    sexo!: string;
     tipoRegimenSSId!: string;
-    eapbId!: string;
+    eapbId!: number;
     eapbNombre!: string;
     epsId!: number;
     epsNombre!: string;
@@ -45,13 +49,15 @@ export class NNA {
     fechaDefuncion!: Date;
     motivoDefuncion!: string;
     fechaInicioTratamiento!: Date;
+    RazonesSinIniciarTratamiento!: number;
+    RazonesSinIniciarTratamientoOtros!: string;
     recaida!: boolean;
     cantidadRecaidas!: number;
     fechaUltimaRecaida!: Date;
     tipoDiagnosticoId!: string;
     diagnosticoId!: number;
     fechaDiagnostico!: Date;
-    motivoNoDiagnosticoId!: string;
+    motivoNoDiagnosticoId!: number;
     motivoNoDiagnosticoOtro!: string;
     fechaConsultaDiagnostico!: Date;
     departamentoTratamientoId!: string;
@@ -62,7 +68,7 @@ export class NNA {
     trasladoEAPBSuministroApoyo!: boolean;
     trasladosServiciosdeApoyoOportunos!: boolean;
     trasladosServiciosdeApoyoCobertura!: boolean;
-    trasladosHaSolicitadoApoyoFundacion!: string;
+    trasladosHaSolicitadoApoyoFundacion!: boolean;
     trasladosNombreFundacion!: string;
     trasladosApoyoRecibidoxFundacion!: string;
     difAutorizaciondeMedicamentos!: boolean;
@@ -83,7 +89,7 @@ export class NNA {
     trasladosIPSId!: number;
     trasladosHaRecurridoAccionLegal!: boolean;
     trasladosTipoAccionLegalId!: string;
-    tratamientoRequirioCambiodeCiudad!: boolean;
+    tratamientoRequirioCambiodeCiudad!: boolean | undefined;
     tratamientoHaDejadodeAsistir!: boolean;
     tratamientoCuantoTiemposinAsistir!: number;
     tratamientoUnidadMedidaIdTiempoId!: string;
@@ -96,7 +102,7 @@ export class NNA {
     tratamientoHaSidoInformadoClaramente!: boolean;
     tratamientoObservaciones!: string;
     cuidadorNombres: string | undefined;
-    cuidadorParentescoId!: string;
+    cuidadorParentescoId!: number;
     cuidadorEmail!: string;
     cuidadorTelefono!: string;
     cuidadorTelefono2!: string;
@@ -116,4 +122,7 @@ export class NNA {
     trasladosPropietarioResidenciaActualOtro!: string;
     trasladosQuienAsumioCostosTraslado!: string;
     trasladosQuienAsumioCostosVivienda!: string;
+
+    //contactos
+    contactos!: ContactoNNA[];
 }

@@ -1,22 +1,24 @@
-<body class="formato-fondo fuente-letra">
+<div class="m-3">
     <div class="header-container">
         <div class="header-left">
             <a  [routerLink]="['/gestion/seguimientos']">Seguimientos</a> > {{datosNNA.nombreCompleto}}
         </div>
         <div class="header-right">
-            Estado: <span class="badge w-30" [ngStyle]="{'background-color': '#73b7ad', 'color': '#ffffff'}"> {{datosNNA.diagnostico}}</span>
+            Estado: <app-estado-nna [nnaEstadoId]="datosNNA.idEstado" />
         </div>
     </div>
-    <div class="title">
-        <h1>Detalle Seguimiento</h1>
+    <div class="my-3">
+        <h3>Detalle Seguimiento</h3>
     </div>
 
     <app-info-seguimiento-nna [idNNA]="idNNA" />
 
-    <br/>
-
-    <p-card>
-        <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
+    <div class="card">
+        <p-table [value]="seguimientos" [responsive]="true"
+            [paginator]="true" [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+        >
             <ng-template pTemplate="header">
                 <tr>
                     <th class="header-th">Fecha Seguimiento</th>
@@ -51,7 +53,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </p-card>
+    </div>
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
         <div>
@@ -60,4 +62,4 @@
         </div>
     </div>
 
-</body>
+</div>

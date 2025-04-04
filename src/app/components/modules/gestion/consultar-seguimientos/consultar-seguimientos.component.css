@@ -1,34 +1,28 @@
 .header-th {
-    color: gray;
-    font-weight: normal;
-    font-size: 14px;
-    background-color: white;
+  color: gray;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: white;
+  border-bottom: 1px solid #dee2e6;
 }
 
-/* Aplicar la fuente a todos los textos del componente */
-app-consultar-seguimientos {
-  font-family: 'Montserrat', sans-serif;
-}
-
-.p-card .p-card-content {
-    padding-top: 0px !important;
-}
-
-/* Estilos de tabla */
-.p-datatable table {
+::ng-deep .p-datatable table {
   border-collapse: collapse;
   width: 100%;
   border-radius: 5px;
   overflow: hidden;
 }
 
-.p-datatable th, .p-datatable td {
-  padding: 8px;
-  text-align: left;
-  vertical-align: middle;
-  color: #333;
-  background-color: #ffffff;
-  border-bottom: 1px solid #dee2e6; /* Solo muestra la línea inferior */
+td {
+  border-bottom: 1px solid #f0f2f4;
+}
+
+.card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .button-group button {

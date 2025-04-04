@@ -4,10 +4,13 @@
 
 <p-table [value]="casos" [tableStyle]="{ 'min-width': '50rem' }"
 [paginator]="true"
-[rows]="10"
+[rows]="5"
 [paginatorPosition]="'bottom'"
 [alwaysShowPaginator]="true"
-[rowsPerPageOptions]="[5, 10, 20]">
+[rowsPerPageOptions]="[5, 10, 25, 50]"
+[showCurrentPageReport]="true"
+currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+>
   <ng-template pTemplate="header">
       <tr>
           <th id="a1">ID Caso</th>
@@ -23,7 +26,7 @@
   <ng-template pTemplate="body" let-casos>
       <tr class="custom-row-border">
           <td>{{ casos.nnaId }}</td>
-          <td>{{ casos.fechaNotificacionSIVIGILA }}</td>
+          <td>{{ casos.fechaNotificacionSIVIGILA  | date:'yyyy-MM-dd HH:mm:ss'}}</td>
           <td>{{ casos.nombre }}</td>
           <td>ENTIDAD_17</td>
           <td>

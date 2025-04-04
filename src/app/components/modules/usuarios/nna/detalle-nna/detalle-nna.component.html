@@ -1,0 +1,1010 @@
+<div class="m-3">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6 menu">
+        <a href="/usuarios/historico_nna" >Histórico NNA</a> > Detalle NNA
+      </div>
+      <div class="col-6 text-end">
+        <!--app-boton-notificacion></app-boton-notificacion-->
+      </div>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-stretch">
+      <div class="button-group d-flex flex-wrap">
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': panelSeleccionado === 1}"
+                style="width: 200px; margin-top: 10px;"
+                (click)="seleccionarPanel(1)">
+          Informacion del NNA
+        </button>
+
+        <button class="btn  bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': panelSeleccionado === 2}"
+                style="width: 200px; margin-top: 10px;"
+                (click)="seleccionarPanel(2)">
+          Información del tratamiento
+        </button>
+
+        <button class="btn bg-white rounded-4 text-center me-2 flex-grow-1"
+                [ngClass]="{'active': panelSeleccionado === 3}"
+                style="width: 200px; margin-top: 10px;"
+                (click)="seleccionarPanel(3)">
+          Trazabilidad/ Seguimiento
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-auto me-auto">
+      <div class="row">
+        <div class="col-auto">
+          <i class="pi pi-user user-icon"></i>
+        </div>
+        <div class="col-9">
+          <div class="row">
+            <div class="col-auto">
+              <div class="row">
+                <span class="fs-5 fw-bold">{{datosBasicosNNA.nombreCompleto}}</span>
+                <span class="fs-5">{{ tiempoTranscurrido }}</span>
+                <span class="fs-5">{{ datosBasicosNNA.diagnostico }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+      <span [ngClass]="['bg-info', 'fixed-width-badge', 'text-wrap', 'fs-6', 'p-3']" class="badge text-white me-2">
+        Estado del seguimiento
+      </span>
+    </div>
+  </div>
+
+  <div class="card p-4" *ngIf="panelSeleccionado == 1"><!--Informacion del NNA-->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Fecha de notificación:</div>
+              <div class="col"><span>{{datosNNA.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy' }}</span></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Sexo: <br></div>
+              <div class="col"><span>{{datosNNA.sexo}}</span></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Tipo identificación: <br></div>
+              <div class="col"><span>{{datosNNA.tipoIdentificacionId}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Número identificación: <br></div>
+              <div class="col"><span>{{datosNNA.numeroIdentificacion}}</span><br><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Fecha de nacimiento: <br></div>
+              <div class="col"><span>{{datosNNA.fechaNacimiento | date:'dd/MM/yyyy' }}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">País de nacimiento: <br></div>
+              <div class="col"><span>{{getNombrePaisPorId(datosNNA.paisId)}}</span></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Etnia: <br></div>
+              <div class="col"><span>{{getNombreEtniaPorId(datosNNA.etniaId)}}</span></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Departamento de nacimiento: <br></div>
+              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.residenciaOrigenMunicipioId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Ciudad de nacimiento: <br></div>
+              <div class="col"><span>{{getNombreMuniPorId(datosNNA.residenciaOrigenMunicipioId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Grupo poblacional*: <br></div>
+              <div class="col"><span>{{getNombreGrupoPoblaPorId(datosNNA.grupoPoblacionId)}}</span></div>
+            </div>
+            <p-divider />
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Residencia de procedencia/ocurrencia<br></div>
+              <div class="col"></div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Departamento: <br></div>
+              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Municipio: <br></div>
+              <div class="col"><span>{{getNombreMuniPorId(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Barrio: <br></div>
+              <div class="col"><span>{{datosNNA.residenciaActualBarrio}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Área: <br></div>
+              <div class="col"><span>{{getNombreAreaPorId(datosNNA.residenciaActualAreaId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Dirección: <br></div>
+              <div class="col"><span>{{datosNNA.residenciaActualDireccion}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Estrato: <br></div>
+              <div class="col"><span>{{getNombreEstratoPorId(datosNNA.residenciaActualEstratoId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Teléfono: <br></div>
+              <div class="col"><span>{{datosNNA.residenciaActualTelefono}}</span><br></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Origen del reporte: <br></div>
+              <div class="col"><span>{{getNombreOrigenReportePorId(datosNNA.origenReporteId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Departamento donde actualmente recibe el tratamiento: <br></div>
+              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.departamentoTratamientoId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Estado de ingreso a la estrategia: <br></div>
+              <div class="col"><span>{{getNombreEstadoNNAPorId(datosNNA.estadoIngresoEstrategiaId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Fecha de ingreso a la estrategia: <br></div>
+              <div class="col"><span>{{datosNNA.fechaIngresoEstrategia | date:'dd/MM/yyyy' }}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Régimen de afiliación: <br></div>
+              <div class="col"><span>{{getNombreTipoAfiliacionPorId(datosNNA.tipoRegimenSSId)}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Asegurador: <br></div>
+              <div class="col"><span>{{datosNNA.epsNombre}}</span><br></div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">IPS: <br></div>
+              <div class="col"><span>{{datosNNA.ipsNombre}}</span><br></div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col">
+                <p-table [value]="contactosNna" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm"
+                  [paginator]="true" [rows]="5"
+                  [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                >
+                  <ng-template pTemplate="header">
+                      <tr>
+                          <th>Contacto</th>
+                          <th>Parentesco</th>
+                          <th>Correo electrónico</th>
+                          <th>Télefono de contacto</th>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-contacto>
+                      <tr>
+                          <td>{{ contacto.nombres }}</td>
+                          <td>{{ contacto.parentesco }}</td>
+                          <td class="correo-column">{{ contacto.email }}</td>
+                          <td>{{ contacto.telefonos }}</td>
+                      </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+  <div class="card p-4" *ngIf="panelSeleccionado == 2">
+    <p-accordion [multiple]="true">
+      <p-accordionTab header="DIAGNÓSTICO Y TRATAMIENTO" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
+        <div class="col-6">
+          <div class="row">
+            <div class="col" style="font-weight: bold;">Razones por las cuales el menor no tiene diagnóstico:<br></div>
+            <div class="col">
+              <div class="row" style="margin-bottom: 10px;">
+                <p-dropdown  placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoId"></p-dropdown>
+              </div>
+              <div class="row">
+                <input type="text" class="form-control" placeholder="Otro, ¿cuál?" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoOtro">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p-divider />
+
+        <div class="row">
+          <div class="col-6">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col" style="font-weight: bold;">Diagnóstico:<br></div>
+              <div class="col">
+                <p-dropdown   placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.diagnosticoId" [options]="optionsDiagnostico"></p-dropdown>
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col" style="font-weight: bold;">Fecha de consulta:<br></div>
+              <div class="col">
+                <input type="date" class="form-control"  [(ngModel)]="datosNNA.fechaConsultaDiagnostico" [disabled]="true">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Fecha de diagnóstico:<br></div>
+              <div class="col">
+                <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaDiagnostico" [disabled]="true">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col" style="font-weight: bold;">Fecha de inicio de tratamiento:<br></div>
+              <div class="col">
+                <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaInicioTratamiento" [disabled]="true">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
+              <div class="col">
+                <p-dropdown  placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.ipsId" [options]="optionsIps"></p-dropdown>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </p-accordionTab>
+      <p-accordionTab header="RECAÍDAS" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
+
+        <div class="row">
+          <!-- Recidiva options (Sí / No) -->
+          <div class="col-6">
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Recaídas:</div>
+              <div class="col d-flex align-items-center">
+                <!-- Radio buttons for Si / No -->
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input"  type="radio"  id="recSi"  name="recaida"  value="true"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === true" [disabled]="true">
+                  <label class="form-check-label" for="recSi">Sí</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input"  type="radio"  id="recNo"  name="recaida"  value="false"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === false" [disabled]="true">
+                  <label class="form-check-label" for="recNo">No</label>
+                </div>
+
+                <!-- Number input -->
+                <input type="number" class="form-control mx-2" style="width: 70px;"  [(ngModel)]="datosNNA.cantidadRecaidas" [disabled]="true">
+              </div>
+            </div>
+          </div>
+
+          <!-- Fecha de recaída -->
+          <div class="col-6">
+            <div class="row">
+              <div class="col" style="font-weight: bold;">Fecha de recaída:</div>
+              <div class="col">
+                <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaUltimaRecaida" [disabled]="true">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </p-accordionTab>
+      <p-accordionTab header="RESIDENCIA Y TRASLADOS" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
+
+        <div class="container">
+          <!-- Primera fila: Requerimiento de traslado -->
+          <div class="row">
+            <div class="col-6">
+              <label for="trasladoTratamiento" class="form-label fw-bold">¿Requirió trasladarse de ciudad para acceder al tratamiento?</label>
+            </div>
+            <div class="col-6">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input"  type="radio"  id="traslSi"  name="traslados"  value="true"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === true" [disabled]="true">
+                <label class="form-check-label" for="trasladoSi">Sí</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input"  type="radio"  id="traslNo"  name="traslados"  value="false"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === false" [disabled]="true">
+                <label class="form-check-label" for="trasladoNo">No</label>
+              </div>
+            </div>
+          </div>
+
+          <p-divider />
+
+          <!-- Residencia procedencia/ocurrencia y residencia actual -->
+          <div class="row mt-4">
+            <div class="col-6">
+              <h5>Residencia procedencia/ocurrencia</h5>
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="departamentoProce" class="form-label fw-bold">Departamento:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="departamentoProce" [(ngModel)]="datosNNA.residenciaOrigenMunicipioId" [disabled]="true">
+                      <option>Antioquia</option>
+                      <!-- Más opciones -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="municipio" class="form-label fw-bold">Municipio:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="municipio" [(ngModel)]="datosNNA.residenciaOrigenMunicipioId" [disabled]="true">
+                      <option>Apartadó</option>
+                      <!-- Más opciones -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="barrioProce" class="form-label fw-bold">Barrio:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="barrioProce" [(ngModel)]="datosNNA.residenciaOrigenBarrio" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="areaProce" class="form-label fw-bold">Área:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="areaProce" [(ngModel)]="datosNNA.residenciaOrigenAreaId" [disabled]="true">
+                    <!--select class="form-select" id="area">
+                      <option selected>Rural</option>
+                    </select-->
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="direccionProce" class="form-label fw-bold">Dirección:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="direccionProce" [(ngModel)]="datosNNA.residenciaOrigenDireccion" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="estratoProce" class="form-label fw-bold">Estrato:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="number" class="form-control" id="estratoProce" [(ngModel)]="datosNNA.residenciaOrigenEstratoId" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="telefonoProce" class="form-label fw-bold">Teléfono:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="tel" class="form-control" id="telefonoProce" [(ngModel)]="datosNNA.residenciaOrigenTelefono" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna derecha: Residencia actual -->
+            <div class="col-6">
+              <h5>Residencia actual</h5>
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="departamentoActual" class="form-label fw-bold">Departamento:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="departamentoActual" [(ngModel)]="datosNNA.residenciaActualMunicipioId" [disabled]="true">
+                      <option selected>Antioquia</option>
+                      <!-- Más opciones -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="municipioActual" class="form-label fw-bold">Municipio:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="municipioActual" [(ngModel)]="datosNNA.residenciaActualMunicipioId" [disabled]="true">
+                      <option selected>Apartadó</option>
+                      <!-- Más opciones -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="barrioActual" class="form-label fw-bold">Barrio:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="barrioActual" [(ngModel)]="datosNNA.residenciaActualBarrio" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="areaActual" class="form-label fw-bold">Área:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="areaActual" [(ngModel)]="datosNNA.residenciaActualAreaId" [disabled]="true">
+                      <option>Rural</option>
+                      <!-- Más opciones -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="direccionActual" class="form-label fw-bold">Dirección:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="direccionActual" [(ngModel)]="datosNNA.residenciaActualDireccion" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="estratoActual" class="form-label fw-bold">Estrato:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="number" class="form-control" id="estratoActual" [(ngModel)]="datosNNA.residenciaActualEstratoId" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="telefonoActual" class="form-label fw-bold">Teléfono:</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="tel" class="form-control" id="telefonoActual" [(ngModel)]="datosNNA.residenciaActualTelefono" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p-divider />
+
+          <div class="row mt-4">
+            <div class="col-6">
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-9">
+                    <label for="capacidadEconomica" class="form-label fw-bold">Cuenta con la capacidad económica para asumir el traslado del menor: </label>
+                  </div>
+                  <div class="col-3">
+                    <select class="form-select" id="capacidadEconomica" [(ngModel)]="datosNNA.trasladoTieneCapacidadEconomica" [disabled]="true">
+                      <option value="true">Si</option>
+                      <option value="flase">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-9">
+                    <label for="apoyoEAPB" class="form-label fw-bold">La EAPB le ha suministrado servicios sociales de apoyo (alojamiento, alimentación y desplazamiento) para el traslado: </label>
+                  </div>
+                  <div class="col-3">
+                    <select class="form-select" id="apoyoEAPB" [(ngModel)]="datosNNA.trasladoEAPBSuministroApoyo" [disabled]="true">
+                      <option value="true">Si</option>
+                      <option value="flase">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-9">
+                    <label for="apoyoSocialOportuno" class="form-label fw-bold">¿Los servicios sociales de apoyo fueron entregados con oportunidad? </label>
+                  </div>
+                  <div class="col-3">
+                    <select class="form-select" id="apoyoSocialOportuno" [(ngModel)]="datosNNA.trasladosServiciosdeApoyoOportunos" [disabled]="true">
+                      <option value="true">Si</option>
+                      <option value="flase">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-9">
+                    <label for="trasladoOportuno" class="form-label fw-bold">¿Los servicios sociales de apoyo logran dar cobertura al traslado del menor?: </label>
+                  </div>
+                  <div class="col-3">
+                    <select class="form-select" id="trasladoOportuno" [(ngModel)]="datosNNA.trasladosServiciosdeApoyoCobertura" [disabled]="true">
+                      <option value="true">Si</option>
+                      <option value="flase">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-9">
+                    <label for="solicitoApoyoFundacion" class="form-label fw-bold">¿Ha solicitado apoyo de alguna fundación?: </label>
+                  </div>
+                  <div class="col-3">
+                    <select class="form-select" id="solicitoApoyoFundacion" [(ngModel)]="datosNNA.trasladosHaSolicitadoApoyoFundacion" [disabled]="true">
+                      <option value="true">Si</option>
+                      <option value="flase">No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="nombreFundacion" class="form-label fw-bold">Nombre de la fundación: </label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="nombreFundacion" [(ngModel)]="datosNNA.trasladosNombreFundacion" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="apoyoRecibidoFundacion" class="form-label fw-bold">Apoyo recibido por la fundación: </label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="apoyoRecibidoFundacion" [(ngModel)]="datosNNA.trasladosApoyoRecibidoxFundacion" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-6">
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="sitioResidencia" class="form-label fw-bold">El sitio de residencia actual es:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="sitioResidencia" [(ngModel)]="datosNNA.propietarioResidenciaActualOtro" [disabled]="true">
+                      <option>De un familiar</option>
+                      <option>Otro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="costoTraslado" class="form-label fw-bold">¿Quién asumió los costos del traslado?</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="costoTraslado" [(ngModel)]="datosNNA.trasladosQuienAsumioCostosTraslado" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="costoVivienda" class="form-label fw-bold">¿Quién asumió los costos de la vivienda?</label>
+                  </div>
+                  <div class="col-8"><input type="text" class="form-control" id="costoVivienda" [(ngModel)]="datosNNA.trasladosQuienAsumioCostosVivienda" [disabled]="true"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+      </p-accordionTab>
+      <p-accordionTab header="DIFICULTADES Y TRASLADOS HOSPITALARIOS" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
+
+        <div class="container">
+          <!-- Primera fila: Dificultades en procesos -->
+          <div class="row">
+            <div class="col-6">
+              <h5>¿Ha presentado dificultades en los siguientes procesos?</h5>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="autorizacionMedicamentos" [(ngModel)]="datosNNA.difAutorizaciondeMedicamentos" [disabled]="true">
+                <label class="form-check-label" for="autorizacionMedicamentos">Autorización de medicamentos</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="entregaLAP" [(ngModel)]="datosNNA.difEntregaMedicamentosLAP" [disabled]="true">
+                <label class="form-check-label" for="entregaLAP">Entrega de medicamentos LAP</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="entregaNoLAP" [(ngModel)]="datosNNA.difEntregaMedicamentosNoLAP" [disabled]="true">
+                <label class="form-check-label" for="entregaNoLAP">Entrega de medicamentos no LAP</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="asignacionCitas" [(ngModel)]="datosNNA.difAsignaciondeCitas" [disabled]="true">
+                <label class="form-check-label" for="asignacionCitas">Asignación de citas</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="copagos" [(ngModel)]="datosNNA.difHanCobradoCuotasoCopagos" [disabled]="true">
+                <label class="form-check-label" for="copagos">Le han cobrado copagos o cuotas moderadoras</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="autorizacionProcedimientos" [(ngModel)]="datosNNA.difAutorizacionProcedimientos" [disabled]="true">
+                <label class="form-check-label" for="autorizacionProcedimientos">Autorización de procedimientos</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remisionInstituciones" [(ngModel)]="datosNNA.difRemisionInstitucionesEspecializadas" [disabled]="true">
+                <label class="form-check-label" for="remisionInstituciones">Remisión a instituciones especializadas</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="malaAtencion" [(ngModel)]="datosNNA.difMalaAtencionIPS" [disabled]="true">
+                <label class="form-check-label" for="malaAtencion">Mala atención en la IPS</label>
+              </div>
+
+              <div class="form-group mb-3">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="cualIPS">¿Cuál?</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="cualIPS" [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId" [disabled]="true">
+                      <option value="1">IPS A</option>
+                      <option value="2">IPS B</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="fallasMIPRES" [(ngModel)]="datosNNA.difFallasenMIPRES" [disabled]="true">
+                <label class="form-check-label" for="fallasMIPRES">Fallas en MIPRES</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="fallasConvenioEAPB" [(ngModel)]="datosNNA.difFallaConvenioEAPBeIPSTratante" [disabled]="true">
+                <label class="form-check-label" for="fallasConvenioEAPB">Falla en el convenio entre la EAPB e IPS tratante</label>
+              </div>
+
+              <!-- Categoría y subcategoría de alerta -->
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="categoriaAlerta" class="form-label fw-bold">Categoría alerta:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="categoriaAlerta" [(ngModel)]="datosNNA.categoriaAlertaId" [disabled]="true">
+                      <option value="1">Categoría 1</option>
+                      <option value="2">Categoría 2</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="subcategoriaAlerta" class="form-label fw-bold">Subcategoría alerta:</label>
+                  </div>
+                  <div class="col-8">
+                    <select class="form-select" id="subcategoriaAlerta" [(ngModel)]="datosNNA.subcategoriaAlertaId" [disabled]="true">
+                      <option value="1">Subcategoría 1</option>
+                      <option value="2">Subcategoría 2</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Segunda fila: Información de traslados -->
+            <div class="col-6">
+              <h5>Información de traslados</h5>
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-8">
+                    <label for="trasladoInstitucion" class="form-label fw-bold">¿Ha sido trasladado de institución?</label>
+                  </div>
+                  <div class="col-4">
+                    <select class="form-select" id="trasladoInstitucion" [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [disabled]="true">
+                      <option>Si</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-6">
+                    <label for="numTraslados" class="form-label fw-bold">Número de traslados:</label>
+                  </div>
+                  <div class="col-6">
+                    <input type="number" class="form-control" id="numTraslados" [(ngModel)]="datosNNA.trasladosNumerodeTraslados" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-6">
+                    <label for="ipsTraslados" class="form-label fw-bold">IPS:</label>
+                  </div>
+                  <div class="col-6">
+                    <select class="form-select" id="ipsTraslados" [(ngModel)]="datosNNA.trasladosIPSId" [disabled]="true">
+                      <option>Clínica oncológica</option>
+                      <option>Otro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-8">
+                    <label for="accionLegal" class="form-label fw-bold">¿Ha tenido que recurrir a algún tipo de acción legal para acceder a la atención?</label>
+                  </div>
+                  <div class="col-4">
+                    <select class="form-select" id="accionLegal" [(ngModel)]="datosNNA.trasladosHaRecurridoAccionLegal" [disabled]="true">
+                      <option>Si</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-6">
+                    <label for="motivoAccionLegal" class="form-label fw-bold">Motivo:</label>
+                  </div>
+                  <div class="col-6">
+                    <textarea class="form-control" id="motivoAccionLegal" rows="3" [(ngModel)]="datosNNA.trasladosMotivoAccionLegal" [disabled]="true"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-6">
+                    <label for="tipoRecursoLegal" class="form-label fw-bold">Tipo de recurso:</label>
+                  </div>
+                  <div class="col-6">
+                    <select class="form-select" id="tipoRecursoLegal" [(ngModel)]="datosNNA.trasladosTipoAccionLegalId" [disabled]="true">
+                      <option selected>Tutela</option>
+                      <option>Otro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </p-accordionTab>
+      <p-accordionTab header="ADHERENCIA AL TRATAMIENTO Y CALENDARIO ESCOLAR" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
+
+        <div class="container">
+          <div class="row">
+            <div class="col-6">
+              <h5>Información relacionada con la adherencia el tratamiento</h5>
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-8">
+                    <label for="haDejadoAsistir" class="form-label fw-bold">¿Ha dejado de asistir al tratamiento?</label>
+                  </div>
+                  <div class="col-4">
+                    <select class="form-select" id="haDejadoAsistir" [(ngModel)]="datosNNA.tratamientoHaDejadodeAsistir" [disabled]="true">
+                      <option>Si</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-7">
+                    <label for="tiempoDejadoAsistir" class="form-label fw-bold">¿Por cuánto tiempo ha dejado de asistir?</label>
+                  </div>
+                  <div class="col-5">
+                    <input type="number" class="form-control" id="tiempoDejadoAsistir" [(ngModel)]="datosNNA.tratamientoCuantoTiemposinAsistir" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-7">
+                    <label for="unidadMedidaTiempo" class="form-label fw-bold">Unidad de medida del tiempo:</label>
+                  </div>
+                  <div class="col-5">
+                    <select class="form-select" id="unidadMedidaTiempo" [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId" [disabled]="true">
+                      <option selected>Semanas</option>
+                      <option>Días</option>
+                      <option>Meses</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-7">
+                    <label for="causasInasistencia" class="form-label fw-bold">Causas de inasistencia:</label>
+                  </div>
+                  <div class="col-5">
+                    <select class="form-select" id="causasInasistencia" [(ngModel)]="datosNNA.tratamientoCausasInasistenciaId" [disabled]="true">
+                      <option selected>Otra</option>
+                      <option>Motivo 1</option>
+                      <option>Motivo 2</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <input type="text" class="form-control" id="otraCausa" placeholder="Otra ¿cuál?" [(ngModel)]="datosNNA.tratamientoCausasInasistenciaOtra" [disabled]="true">
+              </div>
+            </div>
+
+            <!-- Sección derecha: Información relacionada con la posibilidad de dar continuidad al calendario escolar -->
+            <div class="col-6">
+              <h5>Información relacionada con la posibilidad de dar continuidad al calendario escolar</h5>
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-8">
+                    <label for="estudiandoActualmente" class="form-label fw-bold">¿Está estudiando actualmente?</label>
+                  </div>
+                  <div class="col-4">
+                    <select class="form-select" id="estudiandoActualmente" [(ngModel)]="datosNNA.tratamientoEstudiaActualmente" [disabled]="true">
+                      <option>Si</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-8">
+                    <label for="dejadoAsistirColegio" class="form-label fw-bold">¿En algún momento ha dejado de asistir al colegio?</label>
+                  </div>
+                  <div class="col-4">
+                    <select class="form-select" id="dejadoAsistirColegio" [(ngModel)]="datosNNA.tratamientoHaDejadodeAsistirColegio" [disabled]="true">
+                      <option>Si</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-7">
+                    <label for="tiempoDejadoAsistirColegio" class="form-label fw-bold">¿Por cuánto tiempo ha dejado de asistir?</label>
+                  </div>
+                  <div class="col-5">
+                    <input type="number" class="form-control" id="tiempoDejadoAsistirColegio" [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaColegio" [disabled]="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-7">
+                    <label for="unidadMedidaTiempoColegio" class="form-label fw-bold">Unidad de medida del tiempo:</label>
+                  </div>
+                  <div class="col-5">
+                    <select class="form-select" id="unidadMedidaTiempoColegio" [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId" [disabled]="true">
+                      <option>Semanas</option>
+                      <option>Días</option>
+                      <option>Meses</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="informacionCompleta" class="form-label fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
+                <textarea class="form-control" id="informacionCompleta" rows="3" [(ngModel)]="datosNNA.tratamientoHaSidoInformadoClaramente" [disabled]="true"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+      <p-accordionTab header="OBSERVACIONES" [headerStyle]="{'background-color': '#73b7ad', 'color': 'white', 'text-decoration': 'none'}">
+        <div class="col">
+          <textarea class="form-control" id="observacion" rows="3" placeholder="Escriba aquí" [(ngModel)]="datosNNA.tratamientoObservaciones" [disabled]="true"></textarea>
+        </div>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+
+  <div class="card" *ngIf="panelSeleccionado == 3"><!--Trazabilidad / Seguimiento-->
+    <div class="row">
+      <p-table [value]="seguimientos" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Fecha seguimiento</th>
+                <th>Categoria alerta</th>
+                <th>Subcategoria alerta</th>
+                <th>Descripción</th>
+                <th>Entidad sobre la que genera alerta</th>
+                <th>Fecha notificación</th>
+                <th>Respuesta entidad</th>
+                <th>Fecha de respuesta</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-seguimiento>
+            <tr>
+                <td>{{ seguimiento.fechaSeguimiento | date:'dd/MM/yyyy' }}</td>
+                <td>{{ seguimiento.categoriaAlerta }}</td>
+                <td>{{ seguimiento.subcategoriaAlerta }}</td>
+                <td class="descripcion-column">{{ seguimiento.descripcion }}</td>
+                <td>{{ seguimiento.entidad }}</td>
+                <td>{{ seguimiento.fechaNotifi | date:'dd/MM/yyyy' }}</td>
+                <td></td>
+                <td>{{ seguimiento.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
+            </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
+    <div>
+        <a href="/usuarios/historico_nna" class="btn btn-volver-nna" >VOLVER</a>
+    </div>
+  </div>
+</div>

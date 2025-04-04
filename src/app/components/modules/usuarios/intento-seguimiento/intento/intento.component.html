@@ -1,56 +1,55 @@
 <div class="row" *ngIf="verMenu">
-  <h3>
-    Tipo de Intento
-  </h3>
   <div class="col-md-12">
-    <a (click) = "intentoFallido()" ><img src = "/iconos/intento_fallido.svg" alt="Intento Fallido"/></a>
-  </div>
-  <div class="col-md-12">
-    <a (click) = "intentoExitoso()"><img src = "/iconos/intento_exitoso.svg"  alt="Intento Exitoso"/> </a>
+    <h3 class="mb-3">Tipo de Intento</h3>
+    <button class="btn-fallido btn btn-lg mb-3 text-white fw-bold" style="width: 250px" (click)="intentoFallido()">FALLIDO</button><br>
+    <button class="btn-exitoso btn btn-success btn-lg btn-lg text-white fw-bold" style="width: 250px" (click)="intentoExitoso()">EXITOSO, Iniciar llamada</button>
   </div>
 </div>
 
 <div class="row" *ngIf="verFormularioFallido">
-  <h3>
-    <b>Intento fallido</b>
-  </h3>
-  <br><br>
-  <form [formGroup]="formFallido" (ngSubmit)="guardarFallido()">
-    <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8" style="text-align:left">
-        {{NNaCargado.primerNombre}}
-        {{NNaCargado.segundoNombre}}
-        {{NNaCargado.primerApellido}}
-        {{NNaCargado.segundoApellido}}
-        - Seguimiento No. {{totalSeguimientos.seguimientosRealizados}}
+  <div class="col-md-12">
+    <h3 class="mb-5">Intento fallido</h3>
+    <form [formGroup]="formFallido">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align:left">
+          {{NNaCargado.primerNombre}}
+          {{NNaCargado.segundoNombre}}
+          {{NNaCargado.primerApellido}}
+          {{NNaCargado.segundoApellido}}
+          - Seguimiento No. {{totalSeguimientos.seguimientosRealizados}}
+        </div>
+        <div class="col-md-2"></div>
       </div>
-      <div class="col-md-2"></div>
-    </div>
-    <br>
-    <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8" style="text-align:left">
-        <label for="TipoFallaIntentoId"><h5>Tipo de falla en la llamada</h5></label>
-        <select id="TipoFallaIntentoId" class="form-select" formControlName="TipoFallaIntentoId">
-          <option value="" disabled selected>Seleccione...</option>
-          <option *ngFor="let doc of tiposFallas" [value]="doc.id">{{ doc.nombre }}</option>
-        </select>
+      <br>
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align:left">
+          <label for="TipoFallaIntentoId"><h5>Tipo de falla en la llamada</h5></label>
+          <select id="TipoFallaIntentoId" class="form-select" formControlName="TipoFallaIntentoId" [ngClass]="{'is-invalid': formFallido.get('TipoFallaIntentoId')?.invalid && formFallido.get('TipoFallaIntentoId')?.touched}">
+            <option value="" selected>Seleccione...</option>
+            <option *ngFor="let doc of tiposFallas" [value]="doc.id">{{ doc.nombre }}</option>
+          </select>
+
+          <div *ngIf="formFallido.get('TipoFallaIntentoId')?.invalid && formFallido.get('TipoFallaIntentoId')?.touched" class="invalid-feedback">
+            Por favor seleccione el tipo de falla en la llamada
+          </div>
+        </div>
+        <div class="col-md-2"></div>
       </div>
-      <div class="col-md-2"></div>
-    </div>
-    <br>
-    <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-4">
-        <a (click) = "regresar()" ><img src = "/iconos/cancelar.svg" alt="Cancelar"/></a>
+      <br>
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+          <button class="btn-fallido btn btn-lg mb-3 text-white w-100 fw-bold" (click)="regresar()">Cancelar</button>
+        </div>
+        <div class="col-md-4">
+          <button class="btn-exitoso btn btn-success btn-lg btn-lg text-white w-100 fw-bold" (click)="guardarFallido()">Guardar</button>
+        </div>
+        <div class="col-md-2"></div>
       </div>
-      <div class="col-md-4">
-        <a (click) = "guardarFallido()" ><img src = "/iconos/guardar.svg" alt="Guardar"/></a>
-      </div>
-      <div class="col-md-2"></div>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
 
 

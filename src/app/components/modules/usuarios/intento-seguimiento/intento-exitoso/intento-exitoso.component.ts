@@ -19,7 +19,7 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 @Component({
   selector: 'app-intento-exitoso',
   templateUrl: './intento-exitoso.component.html',
-  styleUrls: ['./intento-exitoso.component.css'],
+  styleUrls: ['../../general.component.css', './intento-exitoso.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
     CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule],
@@ -150,7 +150,7 @@ export class IntentoExitosoComponent implements OnInit {
 
 
     if (form.valid) {
-      console.log(form.value);
+      //console.log(form.value);
 
       //TODO: AJUSTAR PARA ENVIAR EL ID DEL USUARIO
 
@@ -167,7 +167,9 @@ export class IntentoExitosoComponent implements OnInit {
       this.router.navigate(['intento-seguimiento'], { state: { id_seguimiento: this.seguimiento.id } });
     }
     else {
+      form.markAllAsTouched();
       alert("Debe Ingresar la fecha");
+
     }
   }
 
@@ -215,7 +217,7 @@ export class IntentoExitosoComponent implements OnInit {
 
   async iniciarSeguimiento(){
     await this.guardarIntentoExitoso();
-    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.ContactoNNA.nnaId]);
+    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.ContactoNNA.nnaId, this.ContactoNNA.id]);
   }
 
   getNombreParentesco(parentescoId: string): string {
@@ -243,13 +245,27 @@ export class IntentoExitosoComponent implements OnInit {
         "RazonesRechazo": form.get('razonesRechazo')?.value,
       }
 
-      console.log("data2", data2)
+      //console.log("data2", data2)
       await this.servicio.PutActualizarSeguimientoRechazo(data2);
       alert("Almacenamiento correcto");
-      this.router.navigate(['intento-seguimiento'], { state: { id_seguimiento: this.seguimiento.id } });
+      this.router.navigate(['gestion/seguimientos'], { state: { id_seguimiento: this.seguimiento.id } });
     }
     else {
-      alert("Debe Ingresar la fecha");
+
+      this.formGroup4.markAllAsTouched();
+    }
+  }
+
+  obtenerSaludo(): string {
+    const ahora = new Date();
+    const hora = ahora.getHours();
+
+    if (hora >= 0 && hora < 12) {
+      return 'Buenos días';
+    } else if (hora >= 12 && hora < 18) {
+      return 'Buenas tardes';
+    } else {
+      return 'Buenas noches';
     }
   }
 

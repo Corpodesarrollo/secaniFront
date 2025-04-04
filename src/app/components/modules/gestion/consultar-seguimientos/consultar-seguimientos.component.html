@@ -1,10 +1,11 @@
-<body class="formato-fondo fuente-letra">
+<div class="m-3">
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h3>Seguimientos</h3>
             <app-boton-notificacion></app-boton-notificacion>
         </div>
     </div>
+    
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <div class="button-group">
@@ -62,8 +63,11 @@
 
     <div class="row">
         <div class="col-12">
-            <p-card>
-                <p-table [value]="seguimientos" [paginator]="true" [rows]="10" [responsive]="true">
+            <div class="card m-0 p-0">
+                <p-table [value]="seguimientos" [paginator]="true" [rows]="5"
+                    [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}" [responsive]="true"
+                >
                     <ng-template pTemplate="header">
                         <tr>
                             <th class="header-th" [width]="100">No. Caso</th>
@@ -96,10 +100,10 @@
                         </tr>
                     </ng-template>
                 </p-table>
-            </p-card>
+            </div>
         </div>
     </div>
-</body>
+</div>
 
 <p-dialog [(visible)]="showDialog" [modal]="true" [style]="{width: '600px'}">
     <div *ngIf="isLoading" class="spinner">
@@ -121,8 +125,8 @@
                     <i class="bi bi-person-circle foto-perfil"></i>
                     <div class="datos-usuario">
                         <p><strong>{{nna.primerNombre}} {{nna.segundoNombre}} {{nna.primerApellido}} {{nna.segundoApellido}}</strong></p>
-                        <p *ngIf="nna.sexoId == '2'">Femenino</p>
-                        <p *ngIf="nna.sexoId == '1'">Masculino</p>
+                        <p *ngIf="nna.sexoId == 'M'">Femenino</p>
+                        <p *ngIf="nna.sexoId == 'H'">Masculino</p>
                         <p>{{nna.edad}}</p>
                     </div>
                 </div>

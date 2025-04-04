@@ -2,16 +2,18 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// RUTAS DE MINISTERIO
 export const environment = {
+  cookie : false,
   production: false,
-  url: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-  url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-  url_MSEntidad: 'https://msentidad-bhh8bufwd4gngead.eastus2-01.azurewebsites.net/',
-  url_MSPermisos: 'https://mspermisos-arbtcacfbcb2akes.eastus2-01.azurewebsites.net/api/',
-  url_Parametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
-  url_MSTablasParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
-  url_MsNna: 'https://msnna-bjdgg4h5b0duh0gz.eastus-01.azurewebsites.net/',
-  url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
-  url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/api/',
-  url_MSUsuarioyRoles: 'https://msusuariosyroles-dcb4d2cqbkccgxaf.eastus2-01.azurewebsites.net/api/',
+  url: 'http://192.168.110.12/auth/',
+  url_MsAuthention: 'http://192.168.110.12/auth/',
+   url_MSEntidad: 'http://192.168.110.12/auth/',
+   url_MSPermisos: 'http://192.168.110.12/auth/',
+   url_Parametricas: 'http://192.168.110.12/tablas/',
+   url_MSTablasParametricas: 'http://192.168.110.12/tablas/',
+   url_MsNna: 'http://192.168.110.12/nna/',
+   url_MSSeguimiento: 'http://192.168.110.12/seguimiento/',
+   url_MSParametricas: 'http://192.168.110.12/tablas/',
+   url_MSUsuarioyRoles: 'http://192.168.110.12/auth/',
 };

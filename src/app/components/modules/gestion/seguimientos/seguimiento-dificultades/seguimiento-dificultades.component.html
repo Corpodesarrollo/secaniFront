@@ -17,13 +17,13 @@
                 </ng-template>
             </p-breadcrumb>
             <div>
-                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">&nbsp;</span>
+                Estado: <app-estado-nna [nnaEstadoId]="nna.estadoId" />
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            <app-seguimiento-steps [stepsCount]="5" [activeIndex]="3" />
+            <app-seguimiento-steps [stepsCount]="6" [activeIndex]="3" />
         </div>
     </div>
     <div class="row">
@@ -128,7 +128,7 @@
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="nna.difMalaAtencionIPS">
                             <div class="col-8 flex-auto" style="padding-left: 40px;">
                                 <p-dropdown
-                                    [(ngModel)]="selectedIPS"
+                                    [(ngModel)]="selectedIPSCual"
                                     [options]="IPS"
                                     optionLabel="nombre"
                                     [filter]="true"
@@ -138,11 +138,6 @@
                                     id="estado"
                                     [disabled]="!nna.difMalaAtencionIPS"
                                     placeholder="¿Cuál?" />
-                            </div>
-                        </div>
-                        <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="nna.difMalaAtencionIPS">
-                            <div class="col-8 flex-auto" style="padding-left: 40px;">
-                                <input id="malaAtencionIPSCual" type="text" pInputText [(ngModel)]="nna.difMalaAtencionNombreIPSId" placeholder="¿Cuál?" [disabled]="!dificultades.malaAtencionIPS">
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -167,7 +162,7 @@
                                 </div>
                             </div>
                         </div>
-                        <app-seguimiento-alertas />
+                        <app-seguimiento-alertas (alertasChange)="cargarAlertas($event)" />
                     </div>
                     <div class="col-12 col-md-6  pe-5">
                         <div class="row mb-3">
@@ -249,7 +244,7 @@
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
                     <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> SIGUIENTE</button>
                 </div>
             </div>
         </div>

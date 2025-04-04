@@ -1,0 +1,98 @@
+.header-th {
+    color: gray;
+    font-weight: normal;
+    font-size: 14px;
+    background-color: white;
+    border-bottom: 1px solid #dee2e6; /* Solo muestra la línea inferior */
+}
+
+::ng-deep .p-datatable th, .p-datatable td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: middle;
+  color: #333;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6; /* Solo muestra la línea inferior */
+}
+
+::ng-deep .p-datatable-thead th {
+  color: gray;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: white;
+}
+
+td {
+  border-bottom: 1px solid #f0f2f4;
+}
+
+.card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.user-icon {
+  font-size: 48px;
+  color: #708090;
+  border: 3px solid #708090;
+  border-radius: 50%;
+  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-group button {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.button-group button.active {
+  background-color: #73b7ad !important;
+  color: white;
+}
+
+.correo-column {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 100px;
+  overflow-wrap: break-word;
+}
+
+.descripcion-column {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 200px;
+  overflow-wrap: break-word;
+}
+
+.btn-volver-nna {
+  background-color: #FF9801;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+  padding: 12px 30px; /* Incrementa el tamaño del botón */
+  font-size: 1.2rem; /* Aumenta el tamaño del texto */
+  border-radius: 8px; /* Opcional: Redondea los bordes */
+  border: none; /* Elimina cualquier borde predeterminado */
+  transition: all 0.3s ease; /* Añade una transición suave para efectos hover */
+}
+
+.btn-volver-nna:hover {
+  background-color: #ff9901c3;
+  color: white;
+  transform: scale(1.05); /* Efecto hover para agrandar un poco */
+}
+
+.highlight {
+  opacity: 0.5;
+  font-style: italic;
+}

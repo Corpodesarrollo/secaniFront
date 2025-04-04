@@ -1,0 +1,156 @@
+<body class="formato-fondo fuente-letra">
+  <div>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h3>NNA pendientes por reportar a SIVIGILA</h3>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12">
+            <p-card>
+              <div>
+                <p-table
+                  [value]="casos"
+                  [paginator]="true" [rows]="5"
+                  [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Nombres y apellidos NNA</th>
+                      <th>¿Tiene diagnóstico?</th>
+                      <th>Diagnóstico</th>
+                      <th>Nombres y apellidos REPORTANTE</th>
+                      <th>Parentesco</th>
+                      <th>Aseguradora</th>
+                      <th>Departamento procedencia</th>
+                      <th>Municipio procedencia</th>
+                      <th>VALIDAR ingreso a SIVIGILA</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-caso>
+                    <tr>
+                      <td>
+                        <button type="button" class="btn btn-link" (click)="mostrarNNA(caso.noCaso)">{{ caso.nombreNnaCompleto }}</button>
+                      </td>
+                      <td>{{ caso.diagnosticoSiNo }}</td>
+                      <td>
+                        <button class="icon-button" (click)="descargarDiagnostico(caso.noCaso)">
+                          <i class="pi pi-file-pdf icon-style"></i>
+                        </button>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-link" (click)="mostrarReportante(caso.noCaso)">{{ caso.nombreReportanteCompleto }}</button>
+                      </td>
+                      <td>
+                        <button class="icon-button" (click)="descargarParentesco(caso.noCaso)">
+                          <i class="pi pi-file-pdf icon-style"></i>
+                        </button>
+                      </td>
+                      <td>{{ caso.aseguradora }}</td>
+                      <td>{{getNombreDeptoPorId(caso.municipio)}}</td>
+                      <td>{{getNombreMuniPorId(caso.municipio)}}</td>
+                      <td>
+                        <button class="vali-button" (click)="validarCaso(caso.noCaso)">
+                          VALIDAR
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="6" class="text-center">No se ha encontrado ningún registro de NNA</td>
+                    </tr>
+                  </ng-template>
+
+                </p-table>
+              </div>
+
+            </p-card>
+        </div>
+    </div>
+  </div>
+
+
+
+  <p-dialog [(visible)]="verNNA" [modal]="true" [draggable]="false" [resizable]="false" (onHide)="closeNNA()">
+    <div class="row mb-6">
+      <h1 class="dialog-title">NNA pendiente por reportar en SIVIGILA</h1>
+    </div>
+    <br>
+    <div class="contenedor">
+      <div class="row">
+        <div class="col-5"><span class="titulo">Nombres y apellidos:</span></div>
+        <div class="col">{{ datosNNA.nombreCompletoNNA }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Sexo asignado al nacer:</span></div>
+        <div class="col">{{ datosNNA.sexoAlNacer }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Fecha de nacimiento:</span></div>
+        <div class="col">{{ datosNNA.fechaNacimiento }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Tipo de identificación:</span></div>
+        <div class="col">{{ datosNNA.tipoIdentificacion }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Número de identificación:</span></div>
+        <div class="col">{{ datosNNA.identificacion }}</div>
+      </div>
+
+    </div>
+  </p-dialog>
+
+
+  <p-dialog [(visible)]="verReportante" [modal]="true" [draggable]="false" [resizable]="false" (onHide)="closeReportante()">
+    <div class="row mb-6">
+      <h1 class="dialog-title">REPORTANTE - NNA pendiente por reportar en SIVIGILA</h1>
+    </div>
+    <br>
+    <div class="contenedor">
+      <div class="row">
+        <div class="col-5"><span class="titulo">Nombres y apellidos:</span></div>
+        <div class="col">{{ datosReportante.nombreCompleto }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Tipo de identificación:</span></div>
+        <div class="col">{{ datosReportante.tipoIdentificacion }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Número de identificación:</span></div>
+        <div class="col">{{ datosReportante.identificacion }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Número de celular:</span></div>
+        <div class="col">{{ datosReportante.numeroCelular }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5"><span class="titulo">Email:</span></div>
+        <div class="col">{{ datosReportante.correo }}</div>
+      </div>
+
+    </div>
+  </p-dialog>
+
+
+  <p-dialog [(visible)]="verValidacion" [modal]="true" [draggable]="false" [resizable]="false" (onHide)="closeValidacion()">
+    <div *ngIf="validar" style="text-align: center; padding: 5px;">
+      <i class="pi pi-check-circle icon-success"></i>
+      <div class="text-icon-check">
+        NNA registrado con éxito en SIVIGILA
+      </div>
+    </div>
+
+    <div *ngIf="!validar" style="text-align: center; padding: 5px;">
+      <i class="pi pi-exclamation-triangle icon-error"></i>
+      <div class="text-icon-check">
+        Por favor intente la opción de registro más tarde
+      </div>
+    </div>
+  </p-dialog>
+
+</body>

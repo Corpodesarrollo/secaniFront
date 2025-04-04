@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tarjeta-cabecera',
@@ -8,10 +9,12 @@ import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notif
 
 
   standalone: true,
-  imports: [BotonNotificacionComponent],
+  imports: [BotonNotificacionComponent, CommonModule],
 })
 export class TarjetaCabeceraComponent implements OnInit {
   @Input() usuario: any;
+  @Input() visible: any = 'true';
+
   constructor() { }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
@@ -41,6 +41,7 @@ export class DialogValidarExistenciaComponent {
   async validarExistencia() {
     this.mostrar = false;
     const baseUrl = environment.url_MsNna;
+    console.log("validarExistencia :: ", this.tipoId, this.numeroId);
     if (!this.isEmpty(this.numeroId) && !this.isEmpty(this.tipoId)) {
       const url = `NNA/ConsultarNNAsByTipoIdNumeroId/${this.tipoId}/${this.numeroId}`;
 
@@ -53,7 +54,7 @@ export class DialogValidarExistenciaComponent {
           this.showDialog();
         } else {
           // Handle the case where the response is empty
-          //console.log('Response is empty or invalid');
+          console.log('Response is empty or invalid');
         }
 
         this.dataToParentValidarExistencia.emit(response); // Ensure this is an EventEmitter

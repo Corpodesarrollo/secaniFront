@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between mt-5 mb-4">
+    <h1>Cargue masivo reporte SIVIGILA</h1>
+    <app-boton-notificacion></app-boton-notificacion>
+  </div>
+
+  <div class="card border border-0 p-5">
+    <div>
+      <p class="fw-bold">En el momento de cargar el archivo debe tener en cuenta las siguientes recomendaciones:</p>
+      <ul>
+        <li>Formato <strong>.csv</strong>, <strong>.xlsx</strong></li>
+        <li>Máximo 500 registros</li>
+        <li>Debe cumplir con los campos predefinidos <a href="#">(ver ejemplo)</a></li>
+      </ul>
+    </div>
+
+    <div class="custom-file-upload">
+      <div>
+        <input type="file" id="fileInput" class="d-none" (change)="onFileSelect($event)" accept=".csv, .xlsx, .xls" [disabled]="selectedFile"/>
+        <label for="fileInput"
+          [class.p-button-success]="!selectedFile" [class.p-button-secondary]="selectedFile" [attr.disabled]="selectedFile ? true : null"
+          [ngStyle]="selectedFile ? {'pointer-events': 'none'} : {}">
+          Examinar
+        </label>
+      </div>
+
+      @if (selectedFile) {
+        <div class="mt-3">
+          <span>{{ selectedFile.name }}</span>
+        </div>
+      }
+    </div>
+
+    @if (selectedFile) {
+      <div class="mt-4">
+        <button pButton [loading]="cargando" [label]="cargando ? 'Cargando': 'Cargar'" class="p-button-success me-2" (click)="uploadFile()"></button>
+        <button pButton [disabled]="cargando" label="Cancelar" class="p-button-secondary" (click)="cancelUpload()"></button>
+      </div>
+    }
+  </div>
+</div>
+
+<p-toast />

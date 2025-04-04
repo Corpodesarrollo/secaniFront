@@ -3,10 +3,13 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { ContentComponent } from './components/content/content.component';
 import { ContenthomeComponent } from './components/contenthome/contenthome.component';
-
+import { NotificacionRespuestaComponent } from './components/modules/notificacion-respuesta/notificacion-respuesta.component';
+import { AlertasGestionarComponent } from './components/modules/alertas/alertas-gestionar/alertas-gestionar.component';
+import { EstadoSeguimientoComponent } from './components/modules/gestion/estado-seguimiento/estado-seguimiento.component';
+import { HealthComponent } from './components/health/health.component';
 
 export const routes: Routes = [
-
+ { path: 'health', component: HealthComponent },
   { path: '', component: ContenthomeComponent },
   { path: 'home', component: ContenthomeComponent },
   { path: 'login', component: LoginComponent },
@@ -115,6 +118,21 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/modules/gestion/dashboard-eapb/dashboard-eapb.component').then((c) => c.DashboardEapbComponent),
   },
+  {
+    path: 'reportes',
+    loadChildren: () => import('./components/modules/reportes/reportes.module').then( m => m.ReportesModule )
+  },
+
+  { path: 'respuesta-notificacion', component: NotificacionRespuestaComponent },
+
+  {
+    path: 'cuidador',
+    loadChildren: () => import('./components/modules/cuidador/cuidador.module').then( m => m.CuidadorModule )
+  },
+
+  { path: 'gestionar-alertas', component: AlertasGestionarComponent },
+
+  { path: 'estado-seguimiento', component: EstadoSeguimientoComponent },
 
 /*
   {

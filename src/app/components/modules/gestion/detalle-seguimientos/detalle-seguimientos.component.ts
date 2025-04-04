@@ -9,11 +9,12 @@ import { RouterModule } from '@angular/router';
 import { NNAInfoDiagnostico } from '../../../../models/nnaInfoDiagnostico.model';
 import { InfoSeguimientoNnaComponent } from "../seguimientos/info-seguimiento-nna/info-seguimiento-nna.component";
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
+import { EstadoNnaComponent } from "../../estado-nna/estado-nna.component";
 
 @Component({
   selector: 'app-detalle-seguimientos',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, InfoSeguimientoNnaComponent, BotonNotificacionComponent],
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, InfoSeguimientoNnaComponent, BotonNotificacionComponent, EstadoNnaComponent],
   templateUrl: './detalle-seguimientos.component.html',
   styleUrl: './detalle-seguimientos.component.css'
 })

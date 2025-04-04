@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -16,21 +16,53 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
 import { SeguimientoHistorialComponent } from "../seguimiento-historial/seguimiento-historial.component";
+import { Seguimiento } from '../../../../../models/seguimiento.model';
+import { SeguimientoDatosService } from './seguimiento-datos.service';
+import { DialogModule } from 'primeng/dialog';
+import { IntentoComponent } from '../../../usuarios/intento-seguimiento/intento/intento.component';
+import { UsuariosModule } from "../../../usuarios/usuarios.module";
+import { DialogCrearContactoComponent } from "../../../usuarios/nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component";
+import { NnaContactoListaComponent } from "../../../usuarios/nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
+import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { apis } from '../../../../../models/apis.model';
+import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, 
-  DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
+    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent, NnaContactoListaComponent, EstadoNnaComponent],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })
 
 export class SeguimientoDatosComponent implements OnInit {
+  @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
   nna: NNA = new NNA();
   id: string | undefined;
+  contacto: ContactoNNA = {
+    id: 0,
+    nnaId: 0,
+    nombres: '',
+    parentescoId: 0,
+    parentesco: '',
+    cuidador: false,
+    telefonos: '',
+    email: '',
+    estado: false
+  };
+  
+  idContacto: string | undefined;
   fechaMaxima: Date;
   estadoIngreso: string = '';
+  estado: string = '';
+  colorTxt: string = 'white';
+  colorBg: string = '#73b7ad';
+  cntSeguimientos: number = 0;
+
+  listadoContacto: any[] = [];
+  displayModalContacto: boolean = false;
+  nnaFormCrearSinActivar = false;
 
   selectedTipoID: Parametricas | undefined;
   selectedPaisNacimiento: Parametricas | undefined;
@@ -63,9 +95,10 @@ export class SeguimientoDatosComponent implements OnInit {
   gruposPoblacionales: Parametricas[] = [];
   regimenAfiliacion: Parametricas[] = [];
   EAPB: Parametricas[] = [];
+  saving: boolean | undefined;
 
-  constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, 
-  private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService) {
+  constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, private gs: GenericService,
+  private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService, private ss: SeguimientoDatosService) {
     this.contactForm = this.fb.group({
       nombre: ['', [Validators.required]],
       parentesco: ['', [Validators.required]],
@@ -86,8 +119,24 @@ export class SeguimientoDatosComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.id = this.routeAct.snapshot.paramMap.get('id')!;
+    this.id = this.routeAct.snapshot.paramMap.get('idNNA')!;
+    this.idContacto = this.routeAct.snapshot.paramMap.get('idContacto')!;
+
+    this.validarSeguimiento(Number(this.id));
+
     this.nna = await this.tpp.getNNA(this.id);
+    if (!this.nna){
+      this.nna = new NNA();
+    }
+
+    this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then(async (data: any) => {
+      this.contacto = data.datos;
+      this.parentescos = await this.tpp.getParentescos();
+      this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
+      this.isLoadingParentesco = false;
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -98,16 +147,12 @@ export class SeguimientoDatosComponent implements OnInit {
       this.nna.fechaNacimiento = new Date(this.nna.fechaNacimiento);
     }
 
-    this.parentescos = await this.tp.getTP('RLCPDParentesco');
-    this.selectedParentesco = this.parentescos.find(x => x.codigo == this.nna.cuidadorParentescoId);
-    this.isLoadingParentesco = false;
-
     this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
     this.selectedTipoID = this.tipoID.find(x => x.codigo == this.nna.tipoIdentificacionId);
     this.isLoadingTipoID = false;
 
     let estadoIngresoResult = await this.tpp.getEstadoIngresoEstrategia(this.nna.estadoIngresoEstrategiaId);
-    this.estadoIngreso = estadoIngresoResult.nombre;
+    this.estadoIngreso = estadoIngresoResult?.nombre ?? '';
 
     this.origenReporte = await this.tpp.getTPOrigenReporte();
     this.selectedOrigenReporte = this.origenReporte.find(x => x.id == this.nna.origenReporteId);
@@ -129,11 +174,51 @@ export class SeguimientoDatosComponent implements OnInit {
     this.selectedRegimenAfiliacion = this.regimenAfiliacion.find(x => x.codigo == this.nna.tipoRegimenSSId);
     this.isLoadingRegimenAfiliacion = false;
 
-    this.EAPB = await this.tp.getTP('CodigoEAPByNit');
-    this.selectedEAPB = this.EAPB.find(x => x.codigo == this.nna.eapbId);
+    this.EAPB = await this.tpp.getTPEAPB();
+    this.selectedEAPB = this.EAPB.find(x => x.id == this.nna.eapbId);
     this.isLoadingEAPB = false;
 
     this.CalcularEdad();
+  }
+
+  validarSeguimiento(id: number) {
+    this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
+      let cnt = Number(data);
+      console.log('cnt', cnt);
+      if (cnt > 1) {
+        this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
+          state: { idContacto: this.idContacto }
+        }).then(() => {
+          window.scrollTo(0, 0);
+        });
+        return;
+      }
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
+  }
+
+  onModalHide(){
+    this.resetChildState();
+  }
+
+  closeModal() {
+    this.displayModalContacto = false; // Cierra el modal
+  }
+
+  resetChildState() {
+    if (this.intentoComponent) {
+      this.intentoComponent.resetFormState();
+    }
+  }
+
+  nuevoContacto(){
+    this.displayModalContacto = true;
+  }
+
+  async handleDataContacto(data: any) {
+    this.listadoContacto = data;
+    console.log('Data received from child handleDataContacto:', 'Crear nna contacto', data);
   }
 
   applySexo(sexo: string) {
@@ -165,28 +250,32 @@ export class SeguimientoDatosComponent implements OnInit {
 
   async Siguiente() {
     this.submitted2 = true;
+    this.saving = true;
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
-      this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`]).then(() => {
+      this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
+        state: { idContacto: this.idContacto }
+      }).then(() => {
         window.scrollTo(0, 0);
       });
     }
+    this.saving = false;
   }
 
   validarCamposRequeridos(): boolean {
-    this.nna.cuidadorParentescoId = this.selectedParentesco?.codigo ?? '';
+    this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
     this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
     this.nna.paisId = this.selectedPaisNacimiento?.codigo ?? '';
     this.nna.etniaId = this.selectedEtnia?.codigo ?? '';
     this.nna.grupoPoblacionId = this.selectedGrupoPoblacional?.codigo ?? '';
     this.nna.tipoRegimenSSId = this.selectedRegimenAfiliacion?.codigo ?? '';
-    this.nna.eapbId = this.selectedEAPB?.codigo ?? '';
+    this.nna.eapbId = this.selectedEAPB?.id ?? 0;
     this.nna.origenReporteId = this.selectedOrigenReporte?.id ?? 0;
 
     const camposAValidar = [
       this.nna.origenReporteId,
       this.nna.primerNombre,
-      this.nna.segundoApellido,
+      this.nna.primerApellido,
       this.nna.tipoIdentificacionId,
       this.nna.numeroIdentificacion,
       this.nna.fechaNacimiento,
@@ -198,8 +287,11 @@ export class SeguimientoDatosComponent implements OnInit {
     ];
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    let pos = 0;
     for (const campo of camposAValidar) {
-      if (!campo || campo.toString().trim() === '') {
+      pos++;
+      if (!campo || campo.toString().trim() === '' || campo === '0') {
+        console.log('Campo requerido vacío', pos);
         return false;
       }
     }

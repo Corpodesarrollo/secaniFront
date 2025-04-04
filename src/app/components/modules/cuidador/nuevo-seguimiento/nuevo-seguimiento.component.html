@@ -1,0 +1,66 @@
+<div class="container">
+  <h1 class="mt-5 mb-4">Solicitar reporte por SIVIGILA</h1>
+  <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <!-- Columna izquierda -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="primerNombre" class="mb-1">Primer nombre</label>
+          <input pInputText type="text" class="w-100" id="primerNombre" formControlName="primerNombre" placeholder="Ingrese" />
+        </div>
+        <div class="mb-3">
+          <label for="segundoNombre" class="mb-1">Segundo nombre</label>
+          <input pInputText type="text" class="w-100" id="segundoNombre" formControlName="segundoNombre" placeholder="Ingrese" />
+        </div>
+        <div class="mb-3">
+          <label for="primerApellido" class="mb-1">Primer apellido</label>
+          <input pInputText type="text" class="w-100" id="primerApellido" formControlName="primerApellido" placeholder="Ingrese" />
+        </div>
+        <div class="mb-3">
+          <label for="segundoApellido" class="mb-1">Segundo apellido</label>
+          <input pInputText type="text" class="w-100" id="segundoApellido" formControlName="segundoApellido" placeholder="Ingrese" />
+        </div>
+        <div class="mb-3">
+          <label for="fechaNacimiento" class="mb-1">Fecha de nacimiento</label>
+          <p-calendar formControlName="fechaNacimiento" styleClass="w-100" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" ></p-calendar>
+        </div>
+        <div class="mb-3">
+          <label for="evidenciaDiagnostico" class="mb-1">Evidencia del diagnóstico o sospecha</label>
+          <p-fileUpload name="diagnostico" customUpload="true" (uploadHandler)="onUpload($event)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+        </div>
+      </div>
+
+      <!-- Columna derecha -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="sexoAsignado" class="mb-1">Sexo asignado al nacer</label>
+          <p-dropdown [options]="sexoOptions" formControlName="sexoAsignado" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+        </div>
+        <div class="mb-3">
+          <label for="tieneDiagnostico" class="mb-1">¿Tiene diagnóstico?</label>
+          <p-dropdown [options]="diagnosticoOptions" formControlName="tieneDiagnostico" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+        </div>
+        <div class="mb-3">
+          <label for="aseguradora" class="mb-1">Aseguradora</label>
+          <p-dropdown [options]="aseguradoraOptions" formControlName="aseguradora" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+        </div>
+        <div class="mb-3">
+          <label for="departamento" class="mb-1">Departamento procedencia</label>
+          <p-dropdown [options]="departamentoOptions" formControlName="departamento" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+        </div>
+        <div class="mb-3">
+          <label for="municipio" class="mb-1">Municipio procedencia</label>
+          <p-dropdown [options]="municipioOptions" formControlName="municipio" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+        </div>
+        <div class="mb-3">
+          <label for="evidenciaParentesco" class="mb-1">Evidencia parentesco</label>
+          <p-fileUpload name="parentesco" customUpload="true" (uploadHandler)="onUpload($event)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <p-button label="FINALIZAR" type="submit" severity="success"></p-button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,66 @@
+<p-dialog [(visible)]="show" [modal]="true" [style]="{ width: '700px' }" [draggable]="false" [resizable]="false" (onHide)="close()">
+  <ng-template pTemplate="header">
+    <h1 class="dialog-title">Notificación</h1>
+  </ng-template>
+  <div class="contenedor-notificaciones">
+      <!-- Carrusel -->
+      <p-carousel
+          [value]="notificaciones"
+          [numVisible]="1"
+          [numScroll]="1"
+          [circular]="true"
+          [showIndicators]="false"
+          [page]="paginaActual"
+          >
+
+          <ng-template let-notificacion pTemplate="item">
+            <div class="notificacion">
+              <div class="row">
+                <div class="col-4"><span class="titulo">Fecha de notificación</span></div>
+                <div class="col">{{ notificacion.fecha }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">De</span></div>
+                <div class="col">{{ notificacion.de }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">Para</span></div>
+                <div class="col">{{ notificacion.para }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">Con copia</span></div>
+                <div class="col">{{ notificacion.conCopia }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">Asunto</span></div>
+                <div class="col">{{ notificacion.asunto }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">Mensaje</span></div>
+                <div class="col">{{ notificacion.mensaje }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">Firma</span></div>
+                <div class="col">{{ notificacion.firma }}</div>
+              </div>
+              <div class="row">
+                <div class="col-2"><span class="titulo">Adjuntos</span></div>
+                <div class="col"><a [href]="notificacion.adjunto.url" target="_blank">{{ notificacion.adjunto.nombre }}</a></div>
+              </div>
+            </div>
+
+          </ng-template>
+      </p-carousel>
+
+      <div class="carousel-controls">
+        <button class="control-btn" (click)="prevPage()">
+          <i class="pi pi-angle-left"></i>
+        </button>
+        <span>{{ paginaActual + 1 }}/{{ notificaciones.length }}</span>
+        <button class="control-btn" (click)="nextPage()">
+          <i class="pi pi-angle-right"></i>
+        </button>
+      </div>
+
+  </div>
+</p-dialog>

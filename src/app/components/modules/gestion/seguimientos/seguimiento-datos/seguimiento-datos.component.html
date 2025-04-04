@@ -17,7 +17,7 @@
                 </ng-template>
             </p-breadcrumb>
             <div>
-                Estado: <span class="badge font-semibold ms-3" style="background-color: #73b7ad; width: 100px;">&nbsp;</span>
+                Estado: <app-estado-nna [nnaEstadoId]="nna.estadoId" />
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label class="fw-bold pe-3">Fecha notificación SIVIGILA: </label>
-                                <label>{{nna.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy'}}</label>
+                                <label>{{ nna ? (nna.fechaNotificacionSIVIGILA | date:'dd/MM/yyyy') : 'No disponible' }}</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -51,10 +51,7 @@
                                                 <label for="cuidadorNombres" class="fw-bold">Nombre*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombre" [(ngModel)]="nna.cuidadorNombres">
-                                                <div *ngIf="submitted && contactForm.get('nombre')?.invalid" class="text-danger">
-                                                    Nombre es requerido
-                                                </div>
+                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombre" [(ngModel)]="contacto.nombres" [readOnly]="true">
                                             </div>
                                         </div>
                                     </div>
@@ -74,12 +71,8 @@
                                                     [filter]="true"
                                                     filterBy="nombre"
                                                     [showClear]="true"
+                                                    [readonly]="true"
                                                     placeholder="Seleccione el parentesco" />
-                                            </div>
-                                            <div class="col-8 offset-4">
-                                                <div *ngIf="submitted && contactForm.get('parentesco')?.invalid" class="text-danger">
-                                                    Parentesco es requerido
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -90,30 +83,20 @@
                                                 <label for="telefono" class="fw-bold">Teléfono de Contacto*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="nna.cuidadorTelefono">
-                                                <div *ngIf="submitted && contactForm.get('telefono1')?.invalid" class="text-danger">
-                                                    Teléfono es requerido
-                                                </div>
+                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="contacto.telefonos" [readOnly]="true">
                                             </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-8 offset-4 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono2" [(ngModel)]="nna.cuidadorTelefono2">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-12 text-end">
-                                            <button class="btn  btn-sm text-white rounded-3" type="submit" style="background-color: #73b7ad;">
-                                                <i class="pi pi-plus"></i> Agregar Contacto
-                                            </button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-12">
+                                <app-nna-contacto-lista [nnaId]="nna.id"/>
+                            </div>
+                        </div>
+                        
                         <div class="row mb-2">
                             <div class="col-12">
                                 <label class="fw-bold pe-3">Estado de ingreso a la estrategia: </label>
@@ -307,8 +290,8 @@
                                 <label for="sexo" class="fw-bold">Sexo*</label>
                             </div>
                             <div class="col-8 button-group">
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexoId === '2'}" style="width: 150px;" (click)="applySexo('2')">Femenino</button>
-                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexoId === '1'}" style="width: 150px;" (click)="applySexo('1')">Masculino</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexoId === 'M'}" style="width: 150px;" (click)="applySexo('M')">Femenino</button>
+                                <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': nna.sexoId === 'H'}" style="width: 150px;" (click)="applySexo('H')">Masculino</button>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -349,7 +332,7 @@
                                     filterBy="nombre"
                                     [showClear]="true"
                                     placeholder="Seleccione el EPBA" />
-                                <div *ngIf="submitted2 && (!nna.eapbId || nna.eapbId.toString().trim() === '')" class="text-danger">
+                                <div *ngIf="submitted2 && (!nna.eapbId || nna.eapbId === 0)" class="text-danger">
                                     Campo requerido
                                 </div>
                             </div>
@@ -360,7 +343,7 @@
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
                     <button class="btn text-white rounded-4 btn-lg me-3" type="button" style="background-color: #fac87e; width: 320px;">GUARDAR Y REAGENDAR</button>
-                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" >SIGUIENTE</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 200px;" (click)="Siguiente()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> SIGUIENTE</button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,8 @@
+import { Attachment } from "./attachmentFile.model";
+
 export interface Notificacion {
     id: number;
-    idEntidad: number;
+    idEntidad: string;
     para: string[];
     conCopia: string[];
     plantillaId: number;
@@ -8,6 +10,6 @@ export interface Notificacion {
     mensaje: string;
     agregarComentario: boolean;
     comentario: string;
-    adjunto: string;
+    adjunto: Attachment | null;
     firma: string;
 }

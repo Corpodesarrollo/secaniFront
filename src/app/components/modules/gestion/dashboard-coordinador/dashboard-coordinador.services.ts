@@ -6,27 +6,27 @@ import { Generico } from '../../../../core/services/generico';
   providedIn: 'root'
 })
 export class DashboardCoordinadorService {
-  constructor(private comun: Generico) {}
+  constructor(private readonly comun: Generico) {}
 
 
 
-  GetTotalCasos = async ( FechaInicial: Date, FechaFinal: Date, EntidadId: string) => {
-    let url = `${'Dashboard/GetTotalCasos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&EntidadId='+EntidadId}`;
+  GetTotalCasos = async ( FechaInicial: Date, FechaFinal: Date) => {
+    let url = `${'Dashboard/GetTotalCasos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
   GetTotalRegistros= async ( FechaInicial: Date, FechaFinal: Date, EntidadId: string) => {
-    let url = `${'Dashboard/GetTotalRegistros?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&EntidadId='+EntidadId}`;
+    let url = `${'Dashboard/GetTotalRegistros?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
   GetTotalMisCasos= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
-    let url = `${'Dashboard/GetTotalMisCasos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
+    let url = `${'Dashboard/GetTotalMisCasos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
   GetTotalAlertas= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
-    let url = `${'Dashboard/GetTotalAlertas?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
+    let url = `${'Dashboard/GetTotalAlertas?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
@@ -36,7 +36,7 @@ export class DashboardCoordinadorService {
   }
 
   GetEstadosSeguimientos= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
-    let url = `${'Dashboard/GetEstadosSeguimientos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
+    let url = `${'Dashboard/GetEstadosSeguimientos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
@@ -46,12 +46,17 @@ export class DashboardCoordinadorService {
   }
 
   GetEstadosAlertas= async ( FechaInicial: Date, FechaFinal: Date, UsuarioId: string) => {
-    let url = `${'Dashboard/GetEstadosAlertas?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal+'&UsuarioId='+UsuarioId}`;
+    let url = `${'Dashboard/GetEstadosAlertas?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 
   GetCasosCriticos= async ( FechaInicial: Date, FechaFinal: Date) => {
     let url = `${'Dashboard/GetCasosCriticos?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
+    return await  this.comun.retorno_get(url);
+  }
+
+  GetTotalSeguimientosCuidador= async ( FechaInicial: Date, FechaFinal: Date) => {
+    let url = `${'Dashboard/GetTotalSeguimientosCuidador?FechaInicial='+FechaInicial+'&FechaFinal='+FechaFinal}`;
     return await  this.comun.retorno_get(url);
   }
 

@@ -1,0 +1,56 @@
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <p-table [value]="listadoContacto" [first]="first" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '10mrem; font-size:5px' }" (onPage)="pageChange($event)"
+            [paginator]="true" [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"    
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Contacto</th>
+                    <th>Parantesco</th>
+                    <th>Correo electrónico</th>
+                    <th>Teléfono de contacto</th>
+                    <th>Acción</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-listadoContacto>
+                <tr>
+                    <td *ngIf="listadoContacto.cuidador" style="color: #73b7ad; font-weight: bold;">{{ listadoContacto.nombres }}</td>
+                    <td *ngIf="!listadoContacto.cuidador">{{ listadoContacto.nombres }}</td>
+                    <td *ngIf="listadoContacto.cuidador" style="color: #73b7ad; font-weight: bold;">{{ listadoContacto.parentesco }}</td>
+                    <td *ngIf="!listadoContacto.cuidador">{{ listadoContacto.parentesco }}</td>
+                    <td *ngIf="listadoContacto.cuidador" style="color: #73b7ad; font-weight: bold;">{{ listadoContacto.email }}</td>
+                    <td *ngIf="!listadoContacto.cuidador">{{ listadoContacto.email }}</td>
+                    <td *ngIf="listadoContacto.cuidador" style="color: #73b7ad; font-weight: bold;">
+                        <div *ngFor="let telefono of listadoContacto.telefonos.split(',')">
+                            {{ telefono }}
+                        </div>
+                    </td>
+                    <td *ngIf="!listadoContacto.cuidador">
+                        <div *ngFor="let telefono of listadoContacto.telefonos.split(',')">
+                            {{ telefono }}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button *ngIf="listadoContacto.id == 0" class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;"
+                        (click)="eliminarContacto(listadoContacto)" [disabled]="disable"><i class="bi bi-trash-fill"></i></button>
+
+                        <button *ngIf="listadoContacto.id > 0" class="btn fondo-color-principal text-white rondear-full" style="background-color: #73b7ad;border-radius: 50%; padding: 0; width: 30px; height: 30px;" 
+                        (click)="editarContacto(listadoContacto.id)" [disabled]="disable"><i class="bi bi-pen-fill"></i></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 text-end">
+        <button class="btn  btn-sm text-white rounded-3" type="button" style="background-color: #73b7ad;" (click)="nuevoContacto()" [disabled]="disable">
+            <i class="pi pi-plus"></i> Agregar Contacto
+        </button>
+    </div>
+</div>
+
+<app-dialog-crear-contacto [show]="displayModalContacto" [contactoId]="contactoId" [nnaId]="nnaId" (closeModal)="closeModal()" (dataToParent)="obtenerContacto($event)"></app-dialog-crear-contacto>

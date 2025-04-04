@@ -1,0 +1,115 @@
+<body class="formato-fondo fuente-letra">
+  <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+          <h3>Mi territorio</h3>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-12">
+          <p-card>
+              <p-table
+                [value]="casos"
+                [responsive]="true"
+                [paginator]="true" [rows]="5"
+                [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+              >
+                  <ng-template pTemplate="header">
+                      <tr>
+                          <th class="header-th" [width]="100">ID Caso</th>
+                          <th class="header-th" [width]="120">Fecha Notificación</th>
+                          <th class="header-th">Nombre NNA</th>
+                          <th class="header-th">Nombre EAPB</th>
+                          <th class="header-th">Régimen afiliación</th>
+                          <th class="header-th" [width]="100">Alertas</th>
+                          <th class="header-th" [width]="100">Observaciones</th>
+                          <th class="header-th" [width]="100">Respuesta</th>
+                          <th class="header-th" [width]="100">Enviar respuesta</th>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-caso>
+                      <tr>
+                          <td><a [routerLink]="">{{ caso.noCaso }}</a></td>
+                          <td>{{ caso.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
+                          <td>{{ caso.nombreNnaCompleto }}</td>
+                          <td>{{ caso.nombreEAPB }}</td>
+                          <td>{{ caso.nombreRegimenAfiliacion }}</td>
+                          <td>
+                            <span *ngFor="let alerta of caso.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
+                            {{ alerta.nombre }}
+                            </span>
+                          </td>
+                          <td>{{ caso.observacion }}</td>
+                          <td style="text-align: center; vertical-align: middle;">
+                            <i class="bi bi-eye-fill"
+                              [class.disabled]="!caso.respuesta"
+                              [style.cursor]="caso.respuesta ? 'pointer' : 'not-allowed'"
+                              style="color: #73b7ad; font-size: 1.2rem;"
+                              (click)="caso.respuesta && verRespuesta(caso.noCaso)">
+                            </i>
+                          </td>
+                          <td style="text-align: center; vertical-align: middle;">
+                            <i class="bi bi-send-fill"
+                              [class.disabled]="!caso.respuesta"
+                              [style.cursor]="caso.respuesta ? 'pointer' : 'not-allowed'"
+                              style="color: #73b7ad; font-size: 1.2rem;">
+                            </i>
+                          </td>
+                      </tr>
+                  </ng-template>
+              </p-table>
+          </p-card>
+      </div>
+  </div>
+
+
+  <p-dialog
+    header="Respuesta notificación de alerta"
+    [modal]="true"
+    [(visible)]="visibleModalRta"
+    [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [maximizable]="true">
+
+    <ng-template pTemplate="content">
+      <div class="container">
+        <div class="header">
+          {{ respuesta.infoAlerta }}
+        </div>
+        <div class="row">
+          <span class="label">Para:</span>
+          <span class="value">{{ respuesta.para }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Con copia:</span>
+          <span class="value">{{ respuesta.conCopia }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Asunto:</span>
+          <span class="value">{{ respuesta.asunto }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Mensaje:</span>
+          <span class="value">{{ respuesta.mensaje }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Firma:</span>
+          <span class="value" style="white-space: pre-line;">{{ respuesta.firma }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Adjuntos:</span>
+          <span class="value">
+            <a [href]="'data:application/pdf;base64,' + respuesta.adjuntos.archivoB64"
+               download="{{ respuesta.adjuntos.nombre }}"
+               class="link">
+              {{ respuesta.adjuntos.nombre }}
+            </a>
+          </span>
+        </div>
+      </div>
+    </ng-template>
+
+  </p-dialog>
+
+</body>

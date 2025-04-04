@@ -15,7 +15,6 @@ import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { BotonNotificacionComponent } from '../boton-notificacion/boton-notificacion.component';
-import { OficioNotificacionComponent } from './consultar-alertas/oficio-notificacion/oficio-notificacion.component';
 
 
 @NgModule({
@@ -31,8 +30,7 @@ import { OficioNotificacionComponent } from './consultar-alertas/oficio-notifica
     SeguimientoAdherenciaComponent,
     SeguimientoSinDiagnosticoComponent,
     SeguimientoSinTratamientoComponent,
-    SeguimientoFallecidoComponent,
-    OficioNotificacionComponent
+    SeguimientoFallecidoComponent
   ]
 })
 export class GestionModule { }

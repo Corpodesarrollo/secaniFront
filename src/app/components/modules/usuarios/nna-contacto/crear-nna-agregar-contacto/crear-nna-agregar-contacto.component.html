@@ -1,171 +1,57 @@
-<form [formGroup]="formNNA">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-sm-12">
-                    <label>
-                        Identificación del cuidador o representante legal*
-                    </label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <label>
-                        Nombre*:
-                    </label>
-                </div>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" formControlName="nombreCompletoCuidador"
-                        [readonly]="nnaFormCrearSinActivar" />
-                </div>
-                <div class="col-sm-12"
-                    *ngIf="formNNA.get('nombreCompletoCuidador')?.invalid && formNNA.get('nombreCompletoCuidador')?.touched">
-                    <small class="errors" *ngIf="isEmpty(formNNA.get('nombreCompletoCuidador')?.value)">Nombre
-                        cuidador
-                        o representante legal es requerido.</small>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <label>
-                        Parentesco*:
-                    </label>
-                </div>
-                <div class="col-sm-9">
-                    <select class="form-select" formControlName="parentescoCuidador">
-                        <option value="">Seleccione</option>
-                        <option *ngFor="let parentescoCuidador of listadoParentesco" [value]="parentescoCuidador.codigo"
-                            [disabled]="nnaFormCrearSinActivar">
-                            {{ parentescoCuidador.nombre }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col-sm-12"
-                    *ngIf="formNNA.get('parentescoCuidador')?.invalid && formNNA.get('parentescoCuidador')?.touched">
-                    <small class="errors" *ngIf="isEmpty(formNNA.get('parentescoCuidador')?.value)">Parentesco
-                        es
-                        requerido.</small>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <label>
-                        Cuidador*:
-                    </label>
-                </div>
-                <div class="col-sm-9">
-                    <select class="form-select" formControlName="cuidadorCuidador">
-                        <option value="">Seleccione</option>
-                        <option *ngFor="let cuidadorCuidador of listadoCuidador" [value]="cuidadorCuidador.id"
-                            [disabled]="nnaFormCrearSinActivar">
-                            {{ cuidadorCuidador.name }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col-sm-12"
-                    *ngIf="formNNA.get('cuidadorCuidador')?.invalid && formNNA.get('cuidadorCuidador')?.touched">
-                    <small class="errors" *ngIf="isEmpty(formNNA.get('cuidadorCuidador')?.value)">Cuidador
-                        es
-                        requerido.</small>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <label>
-                        Correo electrónico*:
-                    </label>
-                </div>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" formControlName="correoElectronicoCuidador"
-                        [readonly]="nnaFormCrearSinActivar" />
-                </div>
-                <div class="col-sm-12"
-                    *ngIf="formNNA.get('correoElectronicoCuidador')?.invalid && formNNA.get('correoElectronicoCuidador')?.touched">
-                    <small class="errors"
-                        *ngIf="formNNA.get('correoElectronicoCuidador')?.hasError('email') && formNNA.get('correoElectronicoCuidador')?.touched">El
-                        formato del correo electrónico es inválido.</small>
-                </div>
-                <div class="col-sm-12"
-                    *ngIf="formNNA.get('correoElectronicoCuidador')?.invalid && formNNA.get('correoElectronicoCuidador')?.touched">
-                    <small class="errors" *ngIf="isEmpty(formNNA.get('correoElectronicoCuidador')?.value)">Correo
-                        electrónico es requerido.</small>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <label>
-                        Teléfono de contacto*:
-                    </label>
-                </div>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control" formControlName="numeroTelefonoCuidador" [readonly]="nnaFormCrearSinActivar" />
-                </div>
-                <div class="col-sm-12">
-                    <button *ngFor="let telefono of telefonosAcumulados" class="btn">
-                        <span>{{ telefono }}</span>
-                        <i class="pi pi-times text-color-rojo" (click)="eliminarTelefono(telefono)"></i>
-                    </button>
-                </div>
-                <div class="col-sm-12"
-                    *ngIf="formNNA.get('numeroTelefonoCuidador')?.invalid && formNNA.get('numeroTelefonoCuidador')?.touched">
-                    <small class="errors" *ngIf="isEmpty(formNNA.get('numeroTelefonoCuidador')?.value)">Teléfono
-                        de
-                        contacto es requerido.</small>
-                </div>
-                <div class="col-sm-12 text-end">
-                    <button class="btn text-color-azul" (click)="agregarNuevoTelefonoContacto()">
-                        <i class="pi pi-plus"></i>
-                        <span>teléfono</span>
-                    </button>
-                </div>
-            </div>
-
-
-        </div>
-        <div class="col-sm-12">
-            <div class="text-end">
-                <button class="btn fondo-color-principal text-color-blanco col-sm-3" (click)="guardar()"
-                    [disabled]="!formNNA.valid">
-                    <i class="pi pi-plus"></i>
-                    <span>Agregar contacto</span>
-                </button>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <label>
+                    Identificación del cuidador o representante legal*
+                </label>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <p-table [value]="listadoContacto" [paginator]="false" [first]="first" [showCurrentPageReport]="true"
-                [tableStyle]="{ 'min-width': '10mrem; font-size:5px' }" (onPage)="pageChange($event)">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Contacto</th>
-                        <th>Parantesco</th>
-                        <th>Correo electrónico</th>
-                        <th>Teléfono de contacto</th>
-                        <th>Acción</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-listadoContacto>
-                    <tr>
-                        <td>{{ listadoContacto.nombreCompletoCuidador }}</td>
-                        <td>{{ listadoContacto.parentescoCuidador }}</td>
-                        <td>{{ listadoContacto.correoElectronicoCuidador }}</td>
-                        <td>{{ listadoContacto.numeroTelefonoCuidador }}</td>
-                        <td>
-                            <button class="btn fondo-color-principal text-color-blanco rondear-full"
-                                (click)="editarContacto(listadoContacto)">
-                                <i class="pi pi-pencil"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
+<div class="row">
+    <div class="col-sm-12">
+        <p-table [value]="listadoContacto" [first]="first" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '10mrem; font-size:5px' }" (onPage)="pageChange($event)"
+            [paginator]="true" [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"    
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Contacto</th>
+                    <th>Parantesco</th>
+                    <th>Correo electrónico</th>
+                    <th>Teléfono de contacto</th>
+                    <th>Acción</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-listadoContacto>
+                <tr>
+                    <td>{{ listadoContacto.nombreCompletoCuidador }}</td>
+                    <td>{{ listadoContacto.parentescoCuidador }}</td>
+                    <td>{{ listadoContacto.correoElectronicoCuidador }}</td>
+                    <td>{{ listadoContacto.numeroTelefonoCuidador }}</td>
+                    <td>
+                        <button class="btn fondo-color-principal text-color-blanco rondear-full"
+                            (click)="editarContacto(listadoContacto)">
+                            <i class="pi pi-pencil"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="text-end">
+            <button class="btn fondo-color-principal text-color-blanco col-sm-3" (click)="guardar()"
+                [disabled]="!formNNA.valid">
+                <i class="pi pi-plus"></i>
+                <span>Agregar contacto</span>
+            </button>
         </div>
     </div>
-</form>
+</div>

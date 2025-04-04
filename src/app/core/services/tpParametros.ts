@@ -23,6 +23,30 @@ export class TpParametros {
     return await this.axios.retorno_get(url, urlbase);
   }
 
+  async getEstadosIngresoEstrategia() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `EstadoIngresoEstrategia`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getCausaInasistencia() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `CausaInasistencia`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getParentescos() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = `Parentescos`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getPlantillas() {
+    var urlbase: string = environment.url_MSSeguimiento;
+    var url = `Seguimiento/ConsultarPlantillaCorreo`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
   async getTpEstadosNNA() {
     var urlbase: string = environment.url_MSTablasParametricas
     var url = "EstadoNNA";
@@ -82,6 +106,12 @@ export class TpParametros {
     var url = "CategoriaAlerta/Subcategorias/" + id;
     return await this.axios.retorno_get(url, urlbase);
   }
+  
+  async getIPS(municipioId: any) {
+    var urlbase: string = environment.url_MSParametricas
+    var url = "IPS/" + municipioId;
+    return await this.axios.retorno_get(url, urlbase);
+  }
 
   async getDiagnosticos() {
     var urlbase: string = environment.url_MSParametricas
@@ -103,7 +133,7 @@ export class TpParametros {
 
   async getTPEAPB() {
     var urlbase: string = environment.url_MSParametricas
-    var url = "TablaParametrica/CodigoEAPByNit";
+    var url = "EAPB";
     return await this.axios.retorno_get(url, urlbase);
   }
 
@@ -122,6 +152,12 @@ export class TpParametros {
   async getRazonesSinDiagnostico() {
     var urlbase: string = environment.url_MSParametricas;
     var url = "RazonesSinDiagnostico";
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getEntidades() {
+    var urlbase: string = environment.url_MSParametricas;
+    var url = "Entidades/Entidades";
     return await this.axios.retorno_get(url, urlbase);
   }
 }
