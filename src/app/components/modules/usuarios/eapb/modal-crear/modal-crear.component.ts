@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
-import { FormsModule, FormBuilder, FormGroup, Validators  } from '@angular/forms'; 
+import { FormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EAPB } from '../../../../../models/eapb.model';
@@ -23,16 +23,22 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   listaEAPB: EAPB[] = [];
 
+  listaContactos: any[] = [];
+
   constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {}
 
   ngOnInit(): void {
-    this.dataService.get('TablaParametrica/', 'CodigoEAPByNit', 'TablaParametrica').subscribe({
+    this.dataService.get_withoutParameters('EAPB', 'TablaParametrica').subscribe({
       next: (data: any) => {
         this.listaEAPB = data
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
       },
-      error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
-      complete: () => console.info('Se lleno la lista de EAPB')
+      error: (e) => console.error('Se presento un error al llenar la lista de EAPB para creacion', e),
+      complete: () => console.info('Se lleno la lista de EAPB para creacion')
+    });
+
+    this.compartirDatosService.listaContactos$.subscribe(lista => {
+      this.listaContactos = lista;
     });
 
     this.contactForm = this.fb.group({
@@ -41,9 +47,20 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       nombres: [''],
       cargo: [''],
       telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')]],
+      email: ['', [Validators.required, 
+        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
+        this.validarEmailUnico.bind(this)]],
       estado: ['Activo']
     });
+  }
+
+  validarEmailUnico(control: AbstractControl) {
+    if (!control.value || this.listaContactos.length === 0) {
+      return null; // No validar si el campo está vacío o si la lista no está cargada aún
+    }
+
+    const emailExiste = this.listaContactos.some(contacto => contacto.email === control.value);
+    return emailExiste ? { emailRepetido: true } : null;
   }
 
   onSubmit() {
@@ -53,20 +70,23 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
       if (this.isEditing){
         this.contactForm.get('entidadId')?.enable();
-        this.dataService.put(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad').subscribe({
+        this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad').subscribe({
           next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
           error: (e) => console.error('Se presento un error al actualizar el EAPB', e),
           complete: () => console.info('Se actualizo el EAPB')
         });
-        console.log(`api/ContactoEntidad/${this.contactForm.get('id')?.value}`);
+        console.log(`ContactoEntidad/${this.contactForm.get('id')?.value}`);
       }else{
-        this.dataService.post('api/ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
+        this.dataService.post('ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
+          next: (data: any) => {
+            this.compartirDatosService.emitirNuevoContactoEAPB(data)
+            console.log("Ahora esto es lo que retorna",data)
+          },
           error: (e) => console.error('Se presento un error al crear un EAPB', e),
           complete: () => console.info('Se creo el nuevo EAPB')
         });
       }
-      
+      this.resetForm();
       this.close();
     }
   }

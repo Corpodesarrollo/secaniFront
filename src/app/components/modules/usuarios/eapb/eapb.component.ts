@@ -54,7 +54,7 @@ export class EAPBComponent implements OnInit {
   constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
   ngOnInit(): void {
-    this.dataService.get('TablaParametrica/', 'CodigoEAPByNit', 'TablaParametrica').subscribe({
+    this.dataService.get_withoutParameters('EAPB', 'TablaParametrica').subscribe({
       next: (data: any) => {
         this.listaEAPB = data
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -67,6 +67,7 @@ export class EAPBComponent implements OnInit {
       next: (data: any) => {
         this.data = data;
         this.originalData = data;
+        this.compartirDatosService.actualizarListaContactos(this.originalData);
         console.log(data)
       },
       error: (e) => console.error('Se presento un error al llenar la lista de Contactos por EAPB', e),
@@ -84,6 +85,7 @@ export class EAPBComponent implements OnInit {
           this.data.push(data);
         }
         this.originalData = this.data;
+        this.compartirDatosService.actualizarListaContactos(this.originalData);
         console.log('Array actualizado:', this.data);
       },
       error: (e) => console.error('Error al recibir el nuevo dato', e),

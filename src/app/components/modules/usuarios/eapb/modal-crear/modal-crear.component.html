@@ -52,6 +52,10 @@
                                 class="text-danger">
                                 Correo no válido
                             </div>
+                            <div *ngIf="contactForm.get('email')!.hasError('emailRepetido') && contactForm.get('email')!.touched"
+                                class="text-danger">
+                                Correo ya registrado
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3 row">
