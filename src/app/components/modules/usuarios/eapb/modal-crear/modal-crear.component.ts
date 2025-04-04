@@ -59,7 +59,10 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       return null; // No validar si el campo está vacío o si la lista no está cargada aún
     }
 
-    const emailExiste = this.listaContactos.some(contacto => contacto.email === control.value);
+    const emailExiste = this.listaContactos.some(contacto => 
+      contacto.email === control.value && (!this.item || contacto.id !== this.item.id) // 🔥 Ignora el contacto en edición
+    )
+
     return emailExiste ? { emailRepetido: true } : null;
   }
 
