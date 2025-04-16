@@ -4,11 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { NuevoSeguimientoComponent } from './nuevo-seguimiento/nuevo-seguimiento.component';
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { CuidadoresComponent } from '../usuarios/cuidadores/cuidadores.component';
+import { SeguimientosComponent } from './seguimientos/seguimientos.component';
 
 const routes: Routes = [
   {
     path: 'seguimientos',
     children: [
+      { path: '', component: SeguimientosComponent },
       { path: 'nuevo', component: NuevoSeguimientoComponent },
       { path: ':id', component: SeguimientoComponent },
       { path: '**', redirectTo: '' }

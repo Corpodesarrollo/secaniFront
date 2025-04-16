@@ -20,11 +20,15 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-asignacion-seguimiento',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule, DialogModule, CheckboxModule, ButtonModule, ToastModule, FormsModule],
+  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule, DialogModule, CheckboxModule, ButtonModule, ToastModule, FormsModule, InputTextModule, CalendarModule, DropdownModule, MultiSelectModule],
   templateUrl: './asignacion-seguimiento.component.html',
   styleUrls: ['./asignacion-seguimiento.component.css'],
   providers: [MessageService]

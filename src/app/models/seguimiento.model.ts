@@ -23,5 +23,6 @@ export interface Seguimiento {
     fechaAsignacion: Date|null;
     fechaUltimaActuacion: Date|null;
     alertas: EstadoAlerta[];
+    nombreAgenteActual: string;
 }
 
