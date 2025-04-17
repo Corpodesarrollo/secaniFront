@@ -132,3 +132,7 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
 .text-right{
   text-align: right;
 }
+
+.card {
+  overflow: visible !important;
+}
