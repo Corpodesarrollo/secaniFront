@@ -10,6 +10,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { FormUtils } from '../../../../utils/form-utils';
 
 @Component({
   selector: 'app-reporte-dinamico-eapb',
@@ -41,6 +42,8 @@ export class ReporteDinamicoEapbComponent implements OnInit {
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
       fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
       camposSeleccionados: this.formBuilder.array([])
+    }, { 
+      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
     });
   }
 

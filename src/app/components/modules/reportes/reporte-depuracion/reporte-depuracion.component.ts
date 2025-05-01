@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { FormUtils } from '../../../../utils/form-utils';
 
 @Component({
   selector: 'app-reporte-depuracion',
@@ -32,13 +33,15 @@ export class ReporteDepuracionComponent implements OnInit {
     this.camposForm = this.formBuilder.group({
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
+    }, { 
+      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
     });
   }
 
   ngOnInit(): void {}
 
   async onSubmit() {
-    if (this.camposForm.invalid) return;
+    if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     const { fechaInicio, fechaFin } = this.camposForm.value;
 
     const fechaInicialString = fechaInicio.toISOString().split('T')[0];
