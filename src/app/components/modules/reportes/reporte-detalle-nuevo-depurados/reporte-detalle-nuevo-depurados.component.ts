@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { FormUtils } from '../../../../utils/form-utils';
 
 @Component({
   selector: 'app-reporte-detalle-nuevo-depurados',
@@ -36,6 +37,8 @@ export class ReporteDetalleNuevoDepuradosComponent {
     this.camposForm = this.formBuilder.group({
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
+    }, { 
+      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
     });
   }
 

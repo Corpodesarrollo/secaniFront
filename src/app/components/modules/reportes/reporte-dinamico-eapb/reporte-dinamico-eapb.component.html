@@ -8,11 +8,25 @@
           <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
           <div class="col-12 col-sm-4 mb-2 mb-sm-0">
             <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
+            <div class="text-danger mt-1" 
+              *ngIf="camposForm.controls['fechaInicio'].invalid && camposForm.controls['fechaInicio'].touched">
+              La fecha incio es requerida
+            </div>
+            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched">
+              La fecha inicial no puede ser mayor a la fecha final
+            </div>
           </div>
 
           <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
           <div class="col-12 col-sm-4 mb-2 mb-sm-0">
             <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
+            <div class="text-danger mt-1" 
+              *ngIf="camposForm.controls['fechaFin'].invalid && camposForm.controls['fechaFin'].touched">
+              La fecha fin es requerida
+            </div>
+            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched">
+              La fecha fin no puede ser mayor a la fecha actual
+            </div>
           </div>
         </div>
 

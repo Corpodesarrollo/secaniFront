@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { FormUtils } from '../../../../utils/form-utils';
 
 @Component({
   selector: 'app-reporte-dinamico-seguimiento',
@@ -76,6 +77,8 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
       fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
       camposSeleccionados: this.formBuilder.array([])
+    }, { 
+      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
     });
   }
 

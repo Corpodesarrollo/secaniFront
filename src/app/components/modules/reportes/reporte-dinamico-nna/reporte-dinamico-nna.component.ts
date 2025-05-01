@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { ReportesService } from '../../../../services/reportes.service';
 import { Reporte } from '../../../../models/reporte.model';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { FormUtils } from '../../../../utils/form-utils';
 
 @Component({
   selector: 'app-reporte-dinamico-nna',
@@ -76,6 +77,8 @@ export class ReporteDinamicoNnaComponent {
       fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
       fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
       camposSeleccionados: this.formBuilder.array([])
+    }, { 
+      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
     });
   }
 
