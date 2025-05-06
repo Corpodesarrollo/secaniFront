@@ -100,7 +100,7 @@
     [(visible)]="visible"
     (onHide)="hiddenDialog()"
   >
-    @if (!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado) {
+    <div *ngIf="!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado && firstLoad">
       <div class="p-4">
         <!-- Parentesco -->
         <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
@@ -116,6 +116,9 @@
                 [showClear]="true"
                 appendTo="body"
                 placeholder="Seleccione el parentesco" />
+                <div *ngIf="submitted && (!nna.cuidadorParentescoId)" class="text-danger">
+                  Campo requerido
+                </div>
           </div>
         </div>
         <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
@@ -132,34 +135,40 @@
                 name="tipoID"
                 appendTo="body"
                 placeholder="Seleccione el tipo de documento" />
+                <div *ngIf="submitted && (!nna.tipoIdentificacionId)" class="text-danger">
+                  Campo requerido
+                </div>
           </div>
         </div>
 
         <div class="row align-items-center mb-5 flex flex-wrap p-fluid">
           <div class="col-12">
               <label for="tipoDocumento" class="fw-bold mb-1">Número de identificación del menor*</label>
-              <input id="numeroIdentificacion" type="text" pInputText [(ngModel)]="nna.segundoApellido">
+              <input id="numeroIdentificacion" type="text" pInputText [(ngModel)]="nna.numeroIdentificacion">
+              <div *ngIf="submitted && (!nna.numeroIdentificacion || nna.numeroIdentificacion.trim() === '')" class="text-danger">
+                Campo requerido
+              </div>
           </div>
         </div>
 
         <!-- Botones -->
         <div class="d-flex justify-content-center">
           <button type="button" class="btn btn-cancelar me-2 button" (click)="hiddenDialog()">Cancelar</button>
-          <button type="button" class="btn btn-exitoso button" (click)="onSubmitSeguimiento()">Solicitar</button>
+          <button type="button" class="btn btn-exitoso button" (click)="onSubmitSeguimiento()"><i *ngIf="validating" class="pi pi-spin pi-spinner"></i> Solicitar</button>
         </div>
       </div>
-    }
+    </div>
 
-    @if ((estaFallecido || esMenorEdad) && !hayRecaida) {
+    <div *ngIf="(estaFallecido || !esMenorEdad) && !hayRecaida && estaRegistrado && !firstLoad">
       <div class="text-center px-4 my-4">
-        <p class="mb-3">
-          @if (esMenorEdad ) {
-            La solicitud no puede ser generada dado que el seguimiento solicitado es para un Mayor de edad.
-          }
-          @if (estaFallecido) {
-            La solicitud no puede ser generada debido a que el menor se encuentra reportado como fallecido.
-          }
-        </p>
+        <div class="mb-3">
+            <div *ngIf="!esMenorEdad">
+              La solicitud no puede ser generada dado que el seguimiento solicitado es para un Mayor de edad.
+            </div>
+            <div *ngIf="estaFallecido">
+              La solicitud no puede ser generada debido a que el menor se encuentra reportado como fallecido.
+            </div>
+        </div>
         <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
         <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
       </div>
@@ -167,9 +176,9 @@
       <div class="d-flex justify-content-center mt-3">
         <p-button type="button" (click)="closeInformacionDialog()" severity="secondary" label="Volver"></p-button>
       </div>
-    }
+    </div>
 
-    @if (!estaRegistrado) {
+    <div *ngIf="!estaRegistrado">
       <div class="text-center px-4 my-4">
         <p class="mb-1">El menor no ha sido registrado en el sistema.</p>
         <p class="mb-3">¿Esta seguro que los datos son correctos?</p>
@@ -182,24 +191,28 @@
         <p-button type="button" styleClass="me-1" (click)="closeInformacionDialog()" severity="secondary" label="No, corregir"></p-button>
         <p-button type="button" severity="success" [routerLink]="['/cuidador/seguimientos/nuevo']" label="Si, continuar"></p-button>
       </div>
-    }
+    </div>
 
-    @if (hayRecaida && !(estaFallecido || esMenorEdad)) {
+    <div *ngIf="!estaFallecido && esMenorEdad && estaRegistrado">
       <div class="px-5 mt-4">
         <div class="text-center mb-4">
-          <p class="fw-bold mb-1">Ana María Ruiz Bolaños</p>
-          <p class="fw-bold">R.C. 1.035.201.226</p>
+          <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
+          <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
         </div>
 
         <!-- Recaída -->
-        <div class="mb-3">
+        <div class="mb-3 p-fluid" *ngIf="hayRecaida">
           <label class="mb-1" for="recaida">¿Tuvo recaída?</label>
           <p-dropdown
-            [options]="recaidadOpciones"
-            formControlName="recaida"
-            placeholder="Seleccione"
-            id="recaida"
-            styleClass="w-100"
+            [(ngModel)]="selectedRecaidad"
+                [options]="recaidaOpciones"
+                optionLabel="nombre"
+                [filter]="true"
+                filterBy="nombre"
+                [showClear]="true"
+                name="recaida"
+                appendTo="body"
+                placeholder="Seleccione"
           ></p-dropdown>
         </div>
 
@@ -208,7 +221,7 @@
           <p-button type="button" severity="success" label="Siguiente" (onClick)="onSubmitRecaida()"></p-button>
         </div>
       </div>
-    }
+    </div>
   </p-dialog>
 
   <p-toast />

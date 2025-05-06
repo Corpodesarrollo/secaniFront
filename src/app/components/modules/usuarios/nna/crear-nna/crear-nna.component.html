@@ -53,10 +53,10 @@
         </div>
         <div class="row align-items-center">
           <div class="col-md-12 text-end">
-            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar">VALIDAR
+            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar && !isPersona"><i *ngIf="buscando" class="pi pi-spin pi-spinner"></i> VALIDAR
               EXISTENCIA</button>
             <button class="btn botonSecundario" (click)="cancelarExistencia()"
-              *ngIf="!nnaFormCrearSinActivar">CANCELAR</button>
+              *ngIf="!nnaFormCrearSinActivar || isPersona">CANCELAR</button>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.primerNombre" [readonly]="nnaFormCrearSinActivar" />
+            <input type="text" pInputText [(ngModel)]="nna.primerNombre" [readonly]="nnaFormCrearSinActivar || isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.primerNombre || nna.primerNombre.trim() === '')">
               Primer nombre es requerido.
             </div>
@@ -83,7 +83,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.segundoNombre" [readonly]="nnaFormCrearSinActivar" />
+            <input type="text" pInputText [(ngModel)]="nna.segundoNombre" [readonly]="nnaFormCrearSinActivar || isPersona" />
           </div>
         </div>
         <div class="row align-items-center">
@@ -93,7 +93,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.primerApellido" [readonly]="nnaFormCrearSinActivar" />
+            <input type="text" pInputText [(ngModel)]="nna.primerApellido" [readonly]="nnaFormCrearSinActivar || isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.primerApellido || nna.primerApellido.trim() === '')">
               Primer apellido es requerido.
             </div>
@@ -106,7 +106,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.segundoApellido" [readonly]="nnaFormCrearSinActivar" />
+            <input type="text" pInputText [(ngModel)]="nna.segundoApellido" [readonly]="nnaFormCrearSinActivar || isPersona" />
           </div>
         </div>
         <div class="row align-items-center">
@@ -117,7 +117,7 @@
           </div>
           <div class="col-8 p-fluid">
             <p-calendar [iconDisplay]="'input'" [(ngModel)]="nna.fechaNacimiento" [showIcon]="true"
-              inputId="icondisplay" [maxDate]="maxDate" (onSelect)="CalcularEdad()" [disabled]="nnaFormCrearSinActivar"
+              inputId="icondisplay" [maxDate]="maxDate" (onSelect)="CalcularEdad()" [disabled]="nnaFormCrearSinActivar || isPersona"
               readonlyInput="nnaFormCrearSinActivar" />
             <div class="text-danger" *ngIf="submitted && (!nna.fechaNacimiento)">
               Fecha de nacimiento es requerido.
@@ -140,9 +140,9 @@
           </div>
           <div class="col-8 button-group">
             <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === 'M'}"
-              style="width: 150px;" (click)="applySexo('M')" [disabled]="nnaFormCrearSinActivar">Femenino</button>
+              style="width: 150px;" (click)="applySexo('M')" [disabled]="nnaFormCrearSinActivar || isPersona">Femenino</button>
             <button class="btn col-auto rounded-2 text-center me-2 py-0" [ngClass]="{'active': sexoId === 'H'}"
-              style="width: 150px;" (click)="applySexo('H')" [disabled]="nnaFormCrearSinActivar">Masculino</button>
+              style="width: 150px;" (click)="applySexo('H')" [disabled]="nnaFormCrearSinActivar || isPersona">Masculino</button>
           </div>
         </div>
         <div class="row align-items-center">
@@ -154,7 +154,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedPaisNacimiento" [options]="paisNacimiento" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
-              [disabled]="nnaFormCrearSinActivar" />
+              [disabled]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.paisId || nna.paisId.trim() === '')">
               País de nacimiento es requerido.
             </div>
@@ -169,7 +169,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedDepartamento" [options]="departamentos" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione" (onChange)="ciudad($event)"
-              [readonly]="nnaFormCrearSinActivar" />
+              [readonly]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger"
                 *ngIf="submitted && (!nna.municipioNacimientoId || nna.municipioNacimientoId.trim() === '')">
                 Ciudad de nacimiento es requerido.
@@ -184,7 +184,7 @@
           </div>
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedMunicipio" [options]="municipios" optionLabel="nombre" [filter]="true"
-              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar && !isPersona" />
               <div class="text-danger"
                 *ngIf="submitted && (!nna.municipioNacimientoId || nna.municipioNacimientoId.trim() === '')">
                 Ciudad de nacimiento es requerido.
@@ -199,7 +199,7 @@
           </div>
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedEtnia" [options]="etnias" optionLabel="nombre" [filter]="true"
-              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar && !isPersona" />
               <div class="text-danger" *ngIf="selectedPaisNacimiento?.codigo == '170' && submitted && (!nna.etniaId || nna.etniaId.trim() === '')">
                 Etnia es requerido.
               </div>
@@ -214,7 +214,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedGrupoPoblacional" [options]="gruposPoblacionales" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
-              [readonly]="nnaFormCrearSinActivar" />
+              [readonly]="nnaFormCrearSinActivar && !isPersona" />
               <div class="text-danger" *ngIf="selectedPaisNacimiento?.codigo == '170' && submitted && (!nna.grupoPoblacionId || nna.grupoPoblacionId.trim() === '')">
                 Grupo poblacional es requerido.
               </div>
@@ -231,7 +231,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedRegimenAfiliacion" [options]="regimenAfiliacion" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
-              [readonly]="nnaFormCrearSinActivar" />
+              [readonly]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.tipoRegimenSSId || nna.tipoRegimenSSId.trim() === '')">
               Régimen de afiliación es requerido.
             </div>
@@ -245,7 +245,7 @@
           </div>
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedEAPB" [options]="EAPB" optionLabel="nombre" [filter]="true"
-              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar" />
+              filterBy="nombre" [showClear]="true" placeholder="Seleccione" [readonly]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.eapbId || nna.eapbId === 0)">
               EAPB es requerido.
             </div>
@@ -260,7 +260,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedEstadoIngresoEstrategia" [options]="estadosIngresoEstrategia" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
-              [readonly]="nnaFormCrearSinActivar" />
+              [readonly]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger"
               *ngIf="submitted && (!nna.estadoIngresoEstrategiaId || nna.estadoIngresoEstrategiaId === 0)">
               Estado de ingreso a la estrategia es requerido.
@@ -275,7 +275,7 @@
           </div>
           <div class="col-8 p-fluid">
             <p-calendar [iconDisplay]="'input'" [(ngModel)]="nna.fechaIngresoEstrategia" [showIcon]="true"
-              inputId="icondisplay" [readonlyInput]="true"  [disabled]="nnaFormCrearSinActivar" />
+              inputId="icondisplay" [readonlyInput]="true"  [disabled]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.fechaIngresoEstrategia)">
               Fecha de ingreso a la estrategia es requerido.
             </div>
@@ -290,7 +290,7 @@
           <div class="col-md-8 p-fluid">
             <p-dropdown [(ngModel)]="selectedOrigenReporte" [options]="origenReporte" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
-              [readonly]="nnaFormCrearSinActivar" />
+              [readonly]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.origenReporteId || nna.origenReporteId === 0)">
               Origen del reporte es requerido.
             </div>
@@ -299,7 +299,7 @@
         
         <div class="row align-items-center">
           <div class="col-md-12">
-            <app-nna-contacto-lista [nnaId]="0" (lista)="obtenerLista($event)" [disable]="nnaFormCrearSinActivar" />
+            <app-nna-contacto-lista [nnaId]="0" (lista)="obtenerLista($event)" [disable]="nnaFormCrearSinActivar && !isPersona" />
             <div class="text-danger" *ngIf="submitted && listaContactos.length == 0">
               Se requiere al menos un contacto.
             </div>
@@ -309,21 +309,18 @@
     </div>
   </div>
 
-  <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" (click)="Probar()">Probar</button>
+  <!-- <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" (click)="Probar()">Probar</button> -->
 
   <div class="col-md-12 text-center">
-    <app-dialog-crear-nna-msg-rol-agente [visible]="visibleDialogRolAgente" [nnaId]="nnaId" [agenteId]="agenteId"
-      [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"></app-dialog-crear-nna-msg-rol-agente>
-
-    <app-dialog-crear-nna-msg-rol-coordinador [visible]="visibleDialogRolCoordinador" [nnaId]="nnaId" (onHide)="terminar()"
-      [agenteId]="agenteId" [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId">
-    </app-dialog-crear-nna-msg-rol-coordinador>
-
-    <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" (click)="onSubmit()">Guardar</button>
-    <br />
-    <br />
+    <button class="btn btn-guardar-nna" (click)="onSubmit()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> Guardar</button>
   </div>
 </div>
+
+<app-dialog-crear-nna-msg-rol-agente [visible]="visibleDialogRolAgente" [nnaId]="nnaId" [agenteId]="agenteId"
+      [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"/>
+
+<app-dialog-crear-nna-msg-rol-coordinador [visible]="visibleDialogRolCoordinador" [nnaId]="nnaId" (onHide)="terminar()"
+      [agenteId]="agenteId" [coordinadorId]="coordinadorId" [contactoNNAId]="ContactoNNAId"/>
 
 <p-dialog header="" [(visible)]="visible" [modal]="true" [style]="{ width: '500px' }" [draggable]="false"
   [resizable]="false">
@@ -331,5 +328,14 @@
     <span>El menor ya está registrado en SECÁNI</span>
     <br /><br />
     <button (click)="btn_ver_detalle_nna()" class="btn fondo-color-principal text-color-blanco">Ver detalle NNA</button>
+  </div>
+</p-dialog>
+
+<p-dialog header="Atención" [(visible)]="visible2" [modal]="true" [style]="{ width: '500px' }" [draggable]="false"
+  [resizable]="false">
+  <div class="text-center">
+    <span>{{msg}}</span>
+    <br /><br />
+    <button (click)="visible2 = false" class="btn fondo-color-principal text-color-blanco">Aceptar</button>
   </div>
 </p-dialog>

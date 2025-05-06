@@ -11,11 +11,12 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 
 import { ReportesSIVIGILAService } from '../../../../services/reportes-sivigila.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-seguimientos',
   standalone: true,
-  imports: [ ButtonModule, DialogModule, DropdownModule, InputTextModule, ReactiveFormsModule, RouterModule, TableModule, ToastModule],
+  imports: [CommonModule, ButtonModule, DialogModule, DropdownModule, InputTextModule, ReactiveFormsModule, RouterModule, TableModule, ToastModule],
   templateUrl: './seguimientos.component.html',
   styleUrl: './seguimientos.component.css',
   providers: [MessageService]
@@ -36,6 +37,7 @@ export class SeguimientosComponent implements OnInit {
   public hayRecaida: boolean = false;
   public esMenorEdad: boolean = false;
   public estaRegistrado: boolean = true;
+  public submitted: boolean = false;
 
   public nnaInfo: { nombre: string, identificacion: string } = { nombre: '', identificacion: '' };
 
@@ -61,6 +63,7 @@ export class SeguimientosComponent implements OnInit {
   }
 
   showDialog(): void {
+    console.log('showDialog', this.estaFallecido, this.esMenorEdad, this.hayRecaida, this.estaRegistrado);
     this.visible = true;
   }
 
@@ -80,16 +83,12 @@ export class SeguimientosComponent implements OnInit {
   }
 
   onSubmitSeguimiento(): void {
-    // if( this.seguimientoForm.invalid ) return;
-    // this.estaFallecido = true;
-    // this.esMenorEdad = true;
-    // this.hayRecaida = true;
-
-    this.estaRegistrado = false;
-    this.nnaInfo = {
-      nombre: 'Ana Maria Luiz Bolaños',
-      identificacion: 'R.C. 1.035.201.226'
-    }
+    this.submitted = true;
+      //this.estaRegistrado = false;
+      this.nnaInfo = {
+        nombre: 'Ana Maria Luiz Bolañosssssssss',
+        identificacion: 'R.C. 1.035.201.226sss'
+      }
   }
 
   onSubmitRecaida(): void {

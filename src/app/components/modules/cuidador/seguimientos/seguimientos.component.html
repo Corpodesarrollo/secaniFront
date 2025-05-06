@@ -99,7 +99,7 @@
   </div>
 
   <p-dialog
-    header="Solicitar seguimiento"
+    header="Solicitar seguimientossssssssssssssss"
     [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [style]="{ width: '40vw' }"
@@ -118,6 +118,9 @@
             id="parentesco"
             styleClass="w-100"
           ></p-dropdown>
+          <div *ngIf="submitted && (!seguimientoForm.get('parentesco')?.value || seguimientoForm.get('parentesco')?.value.trim() === '')" class="text-danger">
+            Campo requerido
+          </div>
         </div>
 
         <!-- Tipo de Identificación -->
@@ -130,6 +133,9 @@
             id="tipoIdentificacion"
             styleClass="w-100"
           ></p-dropdown>
+          <div *ngIf="submitted && (!seguimientoForm.get('tipoIdentificacion')?.value || seguimientoForm.get('tipoIdentificacion')?.value.trim() === '')" class="text-danger">
+            Campo requerido
+          </div>
         </div>
 
         <!-- Número de Identificación -->
@@ -142,6 +148,9 @@
             id="numeroIdentificacion"
             class="w-100"
           />
+          <div *ngIf="submitted && (!seguimientoForm.get('numeroIdentificacion')?.value || seguimientoForm.get('numeroIdentificacion')?.value.trim() === '')" class="text-danger">
+            Campo requerido
+          </div>
         </div>
 
         <!-- Botones -->

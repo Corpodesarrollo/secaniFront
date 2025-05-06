@@ -72,6 +72,18 @@ label{
     color: white;
 }
 
+.btn-guardar-nna {
+  background-color: #FF9801;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+  padding: 12px 30px; /* Incrementa el tamaño del botón */
+  font-size: 1.2rem; /* Aumenta el tamaño del texto */
+  border-radius: 8px; /* Opcional: Redondea los bordes */
+  border: none; /* Elimina cualquier borde predeterminado */
+  transition: all 0.3s ease; /* Añade una transición suave para efectos hover */
+}
+
 ::ng-deep .p-breadcrumb {
   background: transparent;
   padding: 0px;

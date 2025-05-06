@@ -134,6 +134,8 @@ export const routes: Routes = [
 
   { path: 'estado-seguimiento', component: EstadoSeguimientoComponent },
 
+  { path: 'mis-seguimientos', component: EstadoSeguimientoComponent },
+
 /*
   {
     path: 'crear-contacto',

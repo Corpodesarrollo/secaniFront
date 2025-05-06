@@ -10,6 +10,8 @@
 
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+@import "@ng-select/ng-select/themes/default.theme.css";
+
 :root {
     --color-base: #73b7ad; /* Reemplaza este valor por tu color */
 }

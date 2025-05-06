@@ -22,6 +22,9 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
+import { PersonaService } from '../../../../core/services/personaService';
+import { Persona } from '../../../../models/persona.model';
+import { NNAService } from '../../../../core/services/nnaService';
 
 @Component({
   selector: 'app-estado-seguimiento',
@@ -66,23 +69,34 @@ export class EstadoSeguimientoComponent {
 
   selectedTipoID: Parametricas | undefined;
   selectedParentesco: Parametricas | undefined;
+  selectedRecaidad: Parametricas | undefined;
 
   public visible: boolean = false;
   public estaFallecido: boolean = false; // Controla el diálogo de mensaje de fallecimiento
   public hayRecaida: boolean = false;
   public esMenorEdad: boolean = false;
   public estaRegistrado: boolean = true;
+  public submitted: boolean = false;
+  public validating: boolean = false;
+  public firstLoad: boolean = false;
+  public edad: number = 0;
 
   public nnaInfo: { nombre: string, identificacion: string } = { nombre: '', identificacion: '' };
-recaidadOpciones: any[]|undefined;
-  
+  //recaidadOpciones: 1 - Si, 2 -no
+  public recaidaOpciones: Parametricas[] = [
+    { id: 1, nombre: 'Sí' },
+    { id: 2, nombre: 'No' }
+  ];
+
   constructor(
       private messageService: MessageService,
       private router: Router,
       private repos: GenericService,
       private tp: TablasParametricas,
       private tpp: TpParametros,
-      private user: User
+      private user: User,
+      private personaService: PersonaService,
+      private nnaService: NNAService,
     ) {
   }
   
@@ -94,6 +108,12 @@ recaidadOpciones: any[]|undefined;
     this.isLoadingParentesco = false;
     
     this.CargarDatos('1');
+
+    //(!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado)
+    this.estaFallecido = false;
+    this.esMenorEdad = false;
+    this.hayRecaida = false;
+    this.estaRegistrado = true;
   }
 
   ngAfterViewInit() {
@@ -139,6 +159,11 @@ recaidadOpciones: any[]|undefined;
 
   showDialog(): void {
     this.visible = true;
+    this.estaFallecido = false;
+    this.esMenorEdad = false;
+    this.hayRecaida = false;
+    this.estaRegistrado = true;
+    this.firstLoad = true;
   }
 
   hiddenDialog(): void {
@@ -150,23 +175,103 @@ recaidadOpciones: any[]|undefined;
   }
 
   closeInformacionDialog() {
-    this.estaFallecido = false;
-    this.esMenorEdad = false;
-    this.hayRecaida = false;
-    this.estaRegistrado = true;
+    this.visible = false;
   }
 
-  onSubmitSeguimiento(): void {
-    // if( this.seguimientoForm.invalid ) return;
-    // this.estaFallecido = true;
-    // this.esMenorEdad = true;
-    // this.hayRecaida = true;
-
-    this.estaRegistrado = false;
-    this.nnaInfo = {
-      nombre: 'Ana Maria Luiz Bolaños',
-      identificacion: 'R.C. 1.035.201.226'
+  async onSubmitSeguimiento(): Promise<void> {
+      if(this.validating){
+        return;
+      }
+      
+      this.submitted = true;
+      this.validating = true;
+      if (this.validarCamposRequeridos()){
+  
+        await this.buscar();
+      }
+      this.validating = false;
     }
+  
+    validarCamposRequeridos(): boolean {
+      this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
+      this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
+  
+      const camposAValidar = [
+        this.nna.numeroIdentificacion,
+        this.nna.tipoIdentificacionId,
+        this.nna.cuidadorParentescoId
+      ];
+  
+      // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+      let pos = 0;
+      for (const campo of camposAValidar) {
+        pos++;
+        if (!campo || campo.toString().trim() === '' || campo === '0') {
+          console.log('Campo requerido vacío', pos);
+          return false;
+        }
+      }
+  
+      return true;
+    }
+  
+    async buscar() {
+      this.validating = true;
+      let persona : Persona | null = await this.personaService.get(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
+      if (persona) {
+        this.nnaInfo.nombre = persona.primer_nombre + ' ' + persona.segundo_nombre + ' ' + persona.primer_apellido + ' ' + persona.segundo_apellido;
+        this.nnaInfo.identificacion = this.nna.numeroIdentificacion;
+
+        this.estaRegistrado = true;
+        this.edad = this.calcularEdad(persona.fecha_nacimiento);
+        this.esMenorEdad = this.edad < 18;
+        this.estaFallecido = persona.esFallecido;
+
+        console.log("Edad: ", this.edad);
+        console.log("Es menor de edad: ", this.esMenorEdad);
+        console.log("Es fallecido: ", this.estaFallecido);
+        console.log("Esta en persona: ", true);
+
+        if (this.esMenorEdad) {
+          let nna : NNA | null = await this.nnaService.getByIdentificacion(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
+          if (nna) {
+            console.log("Esta en secani: ", true);
+            console.log("nna: ", nna);
+            if (nna.estadoId == 9 || nna.estadoId == 12) {
+              this.hayRecaida = true;
+            } else {
+              this.hayRecaida = false;
+            }
+          } else {
+            this.hayRecaida = false;
+            console.log("No se encontró el NNA con el número de identificación proporcionado.");
+          }
+        }
+        else {
+          this.hayRecaida = false;
+          console.log("No se encontró el NNA con el número de identificación proporcionado.");
+        }
+
+        console.log("Hay Recaida: ", this.hayRecaida);
+      } else {
+        this.estaRegistrado = false;
+        console.log("No se encontró la persona con el número de identificación proporcionado.");
+      }
+
+      console.log("Esta Registrado: ", this.estaRegistrado);
+      this.firstLoad = false;
+      this.validating = false;
+    }
+
+  calcularEdad(fecha_nacimiento: string): number {
+    const fechaNacimiento = new Date(fecha_nacimiento);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+      edad--;
+    }
+    return edad;
   }
 
   onSubmitRecaida(): void {

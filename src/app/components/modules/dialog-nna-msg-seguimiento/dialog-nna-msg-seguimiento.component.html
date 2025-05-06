@@ -1,16 +1,19 @@
 <p-dialog header="Agendar seguimiento" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
   [style]="{ width: '45vw' }" [draggable]="false" [resizable]="false">
-  <div class="row align-items-center mt-3 mb-3">
+  <div class="row align-items-center mt-3 mb-3 text-left">
     <div class="col-4 col-md-3 text-end fw-bold">
       <label for="entidad" class="form-label">Agente de seguimiento*</label>
     </div>
-    <div class="col-8 col-md-9 p-fluid">
+    <div class="col-8 col-md-9 p-fluid text-left">
       <p-dropdown
         [(ngModel)]="formAgenteSeguimiento"
         [options]="agenteAsignadoListado"
-        optionLabel="nombre"
-        filterBy="nombre"
+        optionLabel="fullName"
+        filterBy="fullName"
         placeholder="Seleccione" />
+    </div>
+    <div *ngIf="submitted && (!seguimiento.usuarioId || seguimiento.usuarioId.trim() === '')" class="col-8 offset-4 col-md-9 offset-md-3 text-danger">
+      Campo requerido
     </div>
   </div>
 
@@ -23,14 +26,19 @@
         <div class="col-8 col-md-5 p-fluid mb-3 mb-md-0">
           <div class="row mb-1">
             <div class="col-12">
-              <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" tabindex="3"
+              <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" tabindex="3" [(ngModel)]="fecha"  (ngModelChange)="validarFecha()"
                 [appendTo]="'body'" placeholder="dd/mm/aaaa" />
             </div>
           </div>
           <div class="row">
               <div class="col-12 button-group">
-                  <button class="btn col-4 rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'AM'}"  (click)="apply('AM')">Hoy</button>
-                  <button class="btn col-8 rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'PM'}"  (click)="apply('PM')">Mañana</button>
+                  <button class="btn col-4 rounded-2 text-center me-0 py-0" [ngClass]="{'active': tiempo === 'Hoy'}"  (click)="applyFecha('Hoy')">Hoy</button>
+                  <button class="btn col-8 rounded-2 text-center me-0 py-0" [ngClass]="{'active': tiempo === 'Mañana'}"  (click)="applyFecha('Mañana')">Mañana</button>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-12 text-danger" *ngIf="submitted && (!seguimiento.fechaSeguimiento)">
+                  Campo requerido
               </div>
           </div>
         </div>
@@ -43,7 +51,6 @@
                 tabindex="1"
                 pInputText 
                 [(ngModel)]="hora" 
-                (change)="getFechaYHoraCompleta()"
                 [min]="1" 
                 [max]="12" 
                 placeholder="HH" 
@@ -56,7 +63,6 @@
               tabindex="2"
               pInputText 
               [(ngModel)]="minutos" 
-              (change)="getFechaYHoraCompleta()"
               [min]="0" 
               [max]="59" 
               placeholder="MM" 
@@ -69,7 +75,7 @@
                   <button class="btn col-auto rounded-2 text-center me-0 py-0" [ngClass]="{'active': periodo === 'PM'}" style="width: 60px; height: 40px;" (click)="apply('PM')">PM</button>
               </div>
         </div>
-        <div class="col-8 offset-4 col-md-3 offset-md-7" *ngIf="submitted">
+        <div class="col-8 offset-4 col-md-3 offset-md-7" *ngIf="submitted && (!seguimiento.fechaSeguimiento)">
           <div class="text-danger">
               Campo requerido
           </div>
@@ -80,6 +86,7 @@
   <div class="text-center">
     <button type="submit" class="btn text-white rounded-3 btn-lg"
       style="background-color: #73b7ad; color: white; width: 150px" (click)="guardar()">
+      <i *ngIf="saving" class="pi pi-spin pi-spinner"></i> 
       GUARDAR
     </button>
   </div>

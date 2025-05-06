@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -24,6 +24,12 @@ export class DialogCrearNnaMsgRolCoordinadorComponent {
   visibleDialogSeguimiento: boolean = false;
 
   constructor() { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['nnaId']) {
+      this.nnaId = changes['nnaId'].currentValue; // Actualiza el ID si cambia
+    }
+  }
 
   close() {
     this.closeModal.emit(); // Emite evento para cerrar el modal

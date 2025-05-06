@@ -249,8 +249,12 @@ export class SeguimientoDatosComponent implements OnInit {
   }
 
   async Siguiente() {
+    if(this.saving){
+      return;
+    }
     this.submitted2 = true;
     this.saving = true;
+
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
       this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {

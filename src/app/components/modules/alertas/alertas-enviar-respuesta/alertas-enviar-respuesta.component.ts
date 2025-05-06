@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,20 +11,38 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { EditorModule } from 'primeng/editor';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
-import { TablasParametricas } from '../../../../core/services/tablasParametricas';
-import { TpParametros } from '../../../../core/services/tpParametros';
-import { Attachment } from '../../../../models/attachmentFile.model';
-import { GenericService } from '../../../../services/generic.services';
+import { ContactoEAPBService } from '../../../../core/services/contactoEAPBService';
 import { apis } from '../../../../models/apis.model';
+import { Attachment } from '../../../../models/attachmentFile.model';
+import { ContactoEAPB } from '../../../../models/contactoEapb.model';
+import { GenericService } from '../../../../services/generic.services';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { Config } from '../../../../models/config.model';
+import { ConfigService } from '../../../../core/services/configService';
 
 @Component({
   selector: 'app-alertas-enviar-respuesta',
   standalone: true,
-  imports: [CommonModule, CardModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule,
-            InputTextModule, ChipsModule, ToastModule, CheckboxModule, EditorModule, ButtonModule],
+  imports: [
+    CommonModule,
+    CardModule,
+    DropdownModule,
+    DialogModule,
+    FormsModule,
+    NgSelectModule,
+    ReactiveFormsModule,
+    MultiSelectModule,
+    InputTextModule,
+    ChipsModule,
+    ToastModule,
+    CheckboxModule,
+    EditorModule,
+    ButtonModule,
+  ],
   templateUrl: './alertas-enviar-respuesta.component.html',
   styleUrl: './alertas-enviar-respuesta.component.css',
-  providers: [MessageService]
+  providers: [MessageService],
 })
 export class AlertasEnviarRespuestaComponent {
   @Input() alertaId!: number;
@@ -46,35 +64,71 @@ export class AlertasEnviarRespuestaComponent {
   mensajeCarga: string = 'Cargando datos...';
   colorMensaje: string = 'text-primary';
 
+  contactos: ContactoEAPB[] = [];
+  selectedContactos: ContactoEAPB[] = [];
+
+  config: Config = {
+    smtpServer: '',
+    port: 0,
+    enableSsl: false,
+    userName: '',
+  };
+
   respuesta: any = {
     idAlerta: 0,
     idNNA: 0,
-    para: [] as string[],
+    para: '',
     cc: [] as string[],
     asunto: '',
     mensaje: '',
     archivo: null as Attachment | null,
-    firma: ''
+    firma: '',
   };
 
-  constructor(private messageService: MessageService, private tp: TablasParametricas, private tpp: TpParametros, private repos: GenericService,) {}
+  constructor(
+    private messageService: MessageService,
+    private repos: GenericService,
+    private contactoEAPBService: ContactoEAPBService,
+    private configService: ConfigService,
+  ) {}
 
-  enviar(){
-    this.submitted = true;
-    if (this.respuesta.para.length === 0) {
-      console.log('no funciona');
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar al menos un destinatario.' });
-      return;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['alertaId']) {
+      this.alertaId = changes['alertaId'].currentValue; // Actualiza el ID si cambia
     }
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.contactos = await this.contactoEAPBService.getAll();
+    this.config = await this.configService.get();
+    this.respuesta.para = this.config.userName; 
+  }
+
+  enviar() {
+    this.submitted = true;
 
     if (!this.respuesta.asunto) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar un asunto.' });
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Debe ingresar un asunto.',
+      });
       return;
     }
 
     if (!this.respuesta.mensaje) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar un mensaje.' });
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Debe ingresar un mensaje.',
+      });
       return;
+    }
+
+    if (this.selectedContactos.length > 0) {
+      this.respuesta.cc = this.selectedContactos.map(
+        (contacto: ContactoEAPB) => contacto.email,
+      );
     }
 
     if (this.selectedFile) {
@@ -85,7 +139,7 @@ export class AlertasEnviarRespuestaComponent {
         this.respuesta.archivo = {
           fileName: this.selectedFile?.name ?? null,
           fileExtension: this.selectedFile?.name.split('.').pop() ?? null,
-          file: Array.from(new Uint8Array(fileContent))
+          file: Array.from(new Uint8Array(fileContent)),
         };
 
         this.guardar();
@@ -97,22 +151,32 @@ export class AlertasEnviarRespuestaComponent {
     }
   }
 
-  guardar(){
-    this.repos.post("GestionarAlertas/EnviarRespuesta", this.respuesta, apis.seguimiento).subscribe({
-      next: (response: any) => {
-        if(response.estado == false){
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: response.descripcion });
-        } else {
-          this.mostrarDialogo = true;
-        }
-      },
-      error: (error) => {
-        console.error('Error al consumir el API:', error);
-      }
-    });
+  guardar() {
+    this.repos
+      .post(
+        'GestionarAlertas/EnviarRespuesta',
+        this.respuesta,
+        apis.seguimiento,
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response.estado == false) {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: response.descripcion,
+            });
+          } else {
+            this.mostrarDialogo = true;
+          }
+        },
+        error: (error) => {
+          console.error('Error al consumir el API:', error);
+        },
+      });
   }
 
-  limpiar(){
+  limpiar() {
     this.submitted = false;
     this.mostrarDialogo = false;
     this.respuesta = {
@@ -123,7 +187,7 @@ export class AlertasEnviarRespuestaComponent {
       asunto: '',
       mensaje: '',
       archivo: null as Attachment | null,
-      firma: ''
+      firma: '',
     };
     this.selectedFile = null;
   }
@@ -133,21 +197,17 @@ export class AlertasEnviarRespuestaComponent {
     this.limpiar();
     this.closeModal.emit(); // Emite evento para cerrar el modal
   }
-  
-  async ngOnChanges(changes: SimpleChanges) {
-    if (changes['show'] && changes['show'].currentValue) {
-      if (this.alertaId > 0) {
-        //await this.cargarAlerta();
-      } 
-    }
-  }
 
   validarEmail(event: any): void {
     const email = event.value;
     if (!this.isValidEmail(email)) {
       // Si no es válido, elimina el correo de la lista
       this.respuesta.para = this.respuesta.para.filter((e: any) => e !== email);
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: `${email} no es un correo valido.` });
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: `${email} no es un correo valido.`,
+      });
     }
   }
 
@@ -158,7 +218,7 @@ export class AlertasEnviarRespuestaComponent {
 
   openFileDialog(event: Event) {
     this.fileInput.nativeElement.click();
-    event.stopPropagation();  // Evita que el evento se propague dos veces
+    event.stopPropagation(); // Evita que el evento se propague dos veces
   }
 
   onFileChange(event: any) {
@@ -171,10 +231,18 @@ export class AlertasEnviarRespuestaComponent {
       const fileSize = file.size;
 
       // Validar tipos permitidos
-      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg'];
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'image/jpeg',
+      ];
 
       if (!allowedTypes.includes(fileType)) {
-        this.fileError = 'Tipo de archivo no permitido. Solo PDF, Word, Excel y JPG están permitidos.';
+        this.fileError =
+          'Tipo de archivo no permitido. Solo PDF, Word, Excel y JPG están permitidos.';
         return;
       }
 

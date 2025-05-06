@@ -18,7 +18,7 @@
                 <label for="para" class="fw-bold">Para</label>
             </div>
             <div class="col-9 flex-auto">
-                <p-chips [(ngModel)]="respuesta.para" (onAdd)="validarEmail($event)" />
+                <input type="text" placeholder="Para" pInputText [(ngModel)]="respuesta.para" disabled="true">
                 <div *ngIf="submitted && (!respuesta.para || respuesta.para.length === 0)" class="text-danger">
                     Campo requerido
                 </div>
@@ -29,7 +29,15 @@
                 <label for="para" class="fw-bold">Con copia</label>
             </div>
             <div class="col-9 flex-auto">
-                <p-chips [(ngModel)]="respuesta.cc" (onAdd)="validarEmail($event)" />
+                <ng-select
+                    [items]="contactos"
+                    bindLabel="email"
+                    bindValue="id"
+                    [(ngModel)]="selectedContactos"
+                    [multiple]="true"
+                    placeholder="Seleccione contactos"
+                    [searchable]="true">
+                </ng-select>
             </div>
         </div>
         <div class="row align-items-center mb-2 p-fluid">

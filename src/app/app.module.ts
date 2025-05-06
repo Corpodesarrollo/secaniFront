@@ -33,6 +33,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { HealthCheckInterceptor } from './interceptors/health-check.service';
 import { DialogService } from 'primeng/dynamicdialog';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { DialogService } from 'primeng/dynamicdialog';
     CalendarModule,
     IconFieldModule,
     InputIconModule,
+    MultiSelectModule,
 
     /**Component standalone */
 

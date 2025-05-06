@@ -1,66 +1,160 @@
 <div class="container">
   <h1 class="mt-5 mb-4">Solicitar reporte por SIVIGILA</h1>
-  <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
-    <div class="row">
+  <div class="row">
       <!-- Columna izquierda -->
       <div class="col-md-6">
+        <div class="mb-3 p-fluid">
+          <label for="tipoID" class="mb-1">Tipo de ID</label>
+          <p-dropdown
+            [(ngModel)]="selectedTipoID"
+            [options]="tipoID"
+            [loading]="isLoadingTipoID"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            name="tipoID"
+            placeholder="Seleccione" />
+            <div *ngIf="submitted && (!reporte.tipoIdentificacionId || reporte.tipoIdentificacionId.trim() === '')" class="text-danger">
+                Campo requerido
+            </div>
+        </div>
+        <div class="mb-3">
+          <label for="numeroID" class="mb-1">Número de ID</label>
+          <input pInputText type="text" class="w-100" id="numeroID" placeholder="Ingrese" [(ngModel)]="reporte.numeroIdentificacion" name="numeroID" />
+          <div *ngIf="submitted && (!reporte.numeroIdentificacion || reporte.numeroIdentificacion.trim() === '')" class="text-danger">
+              Campo requerido
+          </div>
+        </div>
         <div class="mb-3">
           <label for="primerNombre" class="mb-1">Primer nombre</label>
-          <input pInputText type="text" class="w-100" id="primerNombre" formControlName="primerNombre" placeholder="Ingrese" />
+          <input pInputText type="text" class="w-100" id="primerNombre" placeholder="Ingrese" [(ngModel)]="reporte.primerNombre" name="primerNombre" />
+          <div *ngIf="submitted && (!reporte.primerNombre || reporte.primerNombre.trim() === '')" class="text-danger">
+              Campo requerido
+          </div>
         </div>
         <div class="mb-3">
           <label for="segundoNombre" class="mb-1">Segundo nombre</label>
-          <input pInputText type="text" class="w-100" id="segundoNombre" formControlName="segundoNombre" placeholder="Ingrese" />
+          <input pInputText type="text" class="w-100" id="segundoNombre" placeholder="Ingrese" [(ngModel)]="reporte.segundoNombre" name="segundoNombre" />
         </div>
         <div class="mb-3">
           <label for="primerApellido" class="mb-1">Primer apellido</label>
-          <input pInputText type="text" class="w-100" id="primerApellido" formControlName="primerApellido" placeholder="Ingrese" />
+          <input pInputText type="text" class="w-100" id="primerApellido" placeholder="Ingrese" [(ngModel)]="reporte.primerApellido" name="primerApellido" />
+          <div *ngIf="submitted && (!reporte.primerApellido || reporte.primerApellido.trim() === '')" class="text-danger">
+              Campo requerido
+          </div>
         </div>
         <div class="mb-3">
           <label for="segundoApellido" class="mb-1">Segundo apellido</label>
-          <input pInputText type="text" class="w-100" id="segundoApellido" formControlName="segundoApellido" placeholder="Ingrese" />
-        </div>
-        <div class="mb-3">
-          <label for="fechaNacimiento" class="mb-1">Fecha de nacimiento</label>
-          <p-calendar formControlName="fechaNacimiento" styleClass="w-100" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" ></p-calendar>
+          <input pInputText type="text" class="w-100" id="segundoApellido" placeholder="Ingrese" [(ngModel)]="reporte.segundoApellido" name="segundoApellido" />
         </div>
         <div class="mb-3">
           <label for="evidenciaDiagnostico" class="mb-1">Evidencia del diagnóstico o sospecha</label>
-          <p-fileUpload name="diagnostico" customUpload="true" (uploadHandler)="onUpload($event)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+          <p-fileUpload #uploader name="diagnostico" customUpload="true" (uploadHandler)="onUpload($event, 'diagnostico')" (onSelect)="onFileSelect(uploader)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+          <div *ngIf="submitted && reporte.evidenciaDiagnostico == undefined " class="text-danger">
+              Campo requerido
+          </div>
         </div>
       </div>
 
       <!-- Columna derecha -->
       <div class="col-md-6">
         <div class="mb-3">
+          <label for="fechaNacimiento" class="mb-1">Fecha de nacimiento</label>
+          <p-calendar styleClass="w-100" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" [(ngModel)]="reporte.fechaNacimiento" name="fechaNacimiento"></p-calendar>
+          <div *ngIf="submitted && (!reporte.fechaNacimiento)" class="text-danger">
+              Campo requerido
+          </div>
+        </div>
+        <div class="mb-3">
           <label for="sexoAsignado" class="mb-1">Sexo asignado al nacer</label>
-          <p-dropdown [options]="sexoOptions" formControlName="sexoAsignado" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+          <p-dropdown [options]="sexoOptions" placeholder="Seleccione" styleClass="w-100" [(ngModel)]="reporte.sexoId" name="sexoAsignado"></p-dropdown>
         </div>
         <div class="mb-3">
           <label for="tieneDiagnostico" class="mb-1">¿Tiene diagnóstico?</label>
-          <p-dropdown [options]="diagnosticoOptions" formControlName="tieneDiagnostico" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+          <p-dropdown [options]="diagnosticoOptions" placeholder="Seleccione" styleClass="w-100" [(ngModel)]="reporte.tieneDiagnostico" name="tieneDiagnostico"></p-dropdown>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 p-fluid">
           <label for="aseguradora" class="mb-1">Aseguradora</label>
-          <p-dropdown [options]="aseguradoraOptions" formControlName="aseguradora" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+          <p-dropdown
+            [(ngModel)]="selectedIPS"
+            [options]="IPS"
+            [loading]="isLoadingIPS"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            name="aseguradora"
+            id="aseguradora"
+            class="w-100"
+            placeholder="Seleccione" />
+          <div *ngIf="submitted && (!reporte.aseguradora)" class="text-danger">
+              Campo requerido
+          </div>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 p-fluid">
           <label for="departamento" class="mb-1">Departamento procedencia</label>
-          <p-dropdown [options]="departamentoOptions" formControlName="departamento" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+          <p-dropdown
+            [(ngModel)]="selectedDepartamento"
+            [options]="departamentos"
+            [loading]="isLoadingDepartamento"
+            (onChange)="CargarMunicipios()"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            name="departamento"
+            id="departamento"
+            class="w-100"
+            placeholder="Seleccione" />
+          <div *ngIf="submitted && (!reporte.departamentoProcedenciaId || reporte.departamentoProcedenciaId.trim() === '')" class="text-danger">
+              Campo requerido
+          </div>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 p-fluid">
           <label for="municipio" class="mb-1">Municipio procedencia</label>
-          <p-dropdown [options]="municipioOptions" formControlName="municipio" placeholder="Seleccione" styleClass="w-100"></p-dropdown>
+          <p-dropdown
+            [(ngModel)]="selectedMunicipio"
+            [options]="municipios"
+            [loading]="isLoadingMunicipio"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            name="municipio"
+            id="municipio"
+            [disabled]="!selectedDepartamento"
+            class="w-100"
+            placeholder="Seleccione" />
+          <div *ngIf="submitted && (!reporte.municipioProcedenciaId || reporte.municipioProcedenciaId.trim() === '')" class="text-danger">
+              Campo requerido
+          </div>
         </div>
         <div class="mb-3">
           <label for="evidenciaParentesco" class="mb-1">Evidencia parentesco</label>
-          <p-fileUpload name="parentesco" customUpload="true" (uploadHandler)="onUpload($event)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+          <p-fileUpload #uploader2 name="parentesco" customUpload="true" (uploadHandler)="onUpload($event, 'parentesco')" (onSelect)="onFileSelect(uploader2)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+          <div *ngIf="submitted && reporte.evidenciaParentesco == undefined " class="text-danger">
+              Campo requerido
+          </div>
         </div>
       </div>
     </div>
 
     <div class="text-center mt-4">
-      <p-button label="FINALIZAR" type="submit" severity="success"></p-button>
+      <button class="btn text-white rounded-3 btn-lg" type="button" style="background-color: #73B7AD; width: 200px;" (click)="guardar()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> ENVIAR</button>
     </div>
-  </form>
 </div>
+<p-dialog 
+  [(visible)]="mostrarMensaje" (onHide)="terminar()"
+  modal="true" 
+  dismissableMask="true" 
+  [style]="{ width: '500px' }"
+  [closable]="true"
+  [contentStyle]="{ 'text-align': 'center' }">
+  
+  <div>
+    <i class="pi pi-check-circle mb-3" style="font-size: 4rem; color: #4CAF50;"></i>
+    <h4 class="text-center">¡Reporte creado exitosamente!</h4>
+    <button class="btn text-white rounded-4 btn-lg mt-3" type="button" style="background-color: #73B7AD; color: white; width: 200px" (click)="terminar()">Aceptar</button>
+  </div>
+</p-dialog>

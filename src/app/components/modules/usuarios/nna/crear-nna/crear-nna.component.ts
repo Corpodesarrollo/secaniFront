@@ -22,6 +22,8 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { NNAService } from '../../../../../core/services/nnaService';
+import { Persona } from '../../../../../models/persona.model';
+import { PersonaService } from '../../../../../core/services/personaService';
 
 @Component({
   selector: 'app-crear-nna',
@@ -54,6 +56,7 @@ export class CrearNnaComponent {
   items: MenuItem[] = [];
   submitted: boolean = false;
   submitted2: boolean = false;
+  buscando: boolean = false;
 
   selectedTipoID: Parametricas | undefined;
   selectedPaisNacimiento: Parametricas | undefined;
@@ -117,6 +120,11 @@ export class CrearNnaComponent {
   listaContactos: ContactoNNA[] = [];
 
   visible: boolean = false;
+  visible2: boolean = false;
+  isPersona: boolean = false;
+  saving: boolean = false;
+
+  msg: string = '';
 
   constructor(
     private router: Router,
@@ -124,7 +132,8 @@ export class CrearNnaComponent {
     private tpParametros: TpParametros,
     private axios: Generico,
     private tp: TablasParametricas,
-    private nnaService: NNAService
+    private nnaService: NNAService,
+    private personaService: PersonaService,
   ) {
     //createdByUserId
     this.userId = sessionStorage.getItem('userId');
@@ -235,6 +244,7 @@ export class CrearNnaComponent {
   async validarExistencia() {
     const baseUrl = environment.url_MsNna;
     this.submitted2 = true;
+    this.buscando = true;
     this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
     if (this.nna.numeroIdentificacion && this.nna.tipoIdentificacionId) {
       const url = `NNA/ConsultarNNAsByTipoIdNumeroId/${this.nna.tipoIdentificacionId}/${this.nna.numeroIdentificacion}`;
@@ -244,13 +254,35 @@ export class CrearNnaComponent {
           this.nna.id = response.id;
           this.visible = true;
         } else {
-          this.nnaFormCrearSinActivar = false;
-          console.log('Response is empty or invalid');
+          let persona = await this.personaService.get(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
+          if (persona) {
+            this.nna.primerNombre = persona.primer_nombre;
+            this.nna.segundoNombre = persona.segundo_nombre;
+            this.nna.primerApellido = persona.primer_apellido;
+            this.nna.segundoApellido = persona.segundo_apellido;
+            this.nna.fechaNacimiento = new Date(persona.fecha_nacimiento);
+            this.CalcularEdad();
+            if (persona.sexo == 'F') {
+              this.applySexo('M');
+            } else {
+              this.applySexo('H');
+            }
+
+            this.isPersona = true;
+          }
+          else{
+            console.log('Response is empty or invalid');
+            this.nnaFormCrearSinActivar = false;
+            this.visible2 = true;
+            this.isPersona = false;
+            this.msg = 'No se encontró información de la persona con el número de identificación proporcionado.';
+          }
         }
       } catch (error) {
         console.error('Error validating existence:', error);
       }
     }
+    this.buscando = false;
   }
 
   cancelarExistencia() {
@@ -262,6 +294,7 @@ export class CrearNnaComponent {
     this.nna.edad = '';
     this.listaContactos = [];
     this.submitted2 = false;
+    this.isPersona = false;
   }
 
   async ciudad(departamento: any) {
@@ -279,9 +312,10 @@ export class CrearNnaComponent {
   }
 
   //Guardar formulario
-  async onSubmit() {
+  async onSubmit() {    
     this.submitted = true;
-    if (this.validarCamposRequeridos()) {
+    if (this.validarCamposRequeridos() && !this.saving) {
+      this.saving = true;
       let result = await this.nnaService.postNNA(this.nna);
       console.log('Resultado de guardar el NNA:', result);
       if (result.estado) {
@@ -300,12 +334,17 @@ export class CrearNnaComponent {
           this.agenteId = null;
         }
       } else {
+        this.msg = result.descripcion;
+        this.visible2 = true;
         console.log('Error al guardar el NNA:', result.descripcion);
       }
     }
     else {
+      this.msg = 'Por favor, complete todos los campos requeridos.';
+      this.visible2 = true;
       console.log('Error en la validación de los campos');
     }
+    this.saving = false;
   }
 
   validarCamposRequeridos(): boolean {
@@ -337,7 +376,6 @@ export class CrearNnaComponent {
         this.nna.etniaId,
         this.nna.tipoRegimenSSId,
         this.nna.eapbId,
-        this.nna.grupoPoblacionId,
         this.nna.estadoIngresoEstrategiaId,
         this.nna.contactos,
       ];
@@ -387,6 +425,7 @@ export class CrearNnaComponent {
   }
 
   Probar() {
-  this.visibleDialogRolAgente = true;
-}
+    this.nnaId = 12;
+    this.visibleDialogRolCoordinador = true;
+  }
 }
