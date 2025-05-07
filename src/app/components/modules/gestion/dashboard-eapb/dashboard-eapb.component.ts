@@ -360,10 +360,45 @@ export class DashboardEapbComponent implements OnInit {
     const fechaFinForma = `${year2}-${month2}-${day2}`;
 
     // Imprime las fechas formateadas
-    console.log("Las fechas ", fechaInicioForma, fechaFinForma);
+    //console.log("Las fechas ", fechaInicioForma, fechaFinForma);
 
     // Llama a la función filtroFechas con las fechas formateadas
     await this.filtroFechas(fechaInicioForma, fechaFinForma);
+  }
+
+
+  enviarDatoNNa(nnaId: number){
+    const fechaInicioValue = this.formFechas.value.fechaInicio;
+    const fechaFinValue = this.formFechas.value.fechaFin;
+
+    // Convierte los valores a objetos Date
+    const fechaInicioT: Date = new Date(fechaInicioValue);
+    const fechaFinT: Date = new Date(fechaFinValue);
+
+    // Asegúrate de que las fechas sean válidas antes de continuar
+    if (isNaN(fechaInicioT.getTime()) || isNaN(fechaFinT.getTime())) {
+      console.error("Una o ambas fechas no son válidas");
+      return;
+    }
+
+    // Extrae año, mes y día para formar las cadenas en el formato deseado
+    const year = fechaInicioT.getFullYear();
+    const month = ('0' + (fechaInicioT.getMonth() + 1)).slice(-2); // Añadir 1 al mes ya que empieza desde 0
+    const day = ('0' + fechaInicioT.getDate()).slice(-2);
+
+    const fechaInicio = `${year}-${month}-${day}`;
+
+    const year2 = fechaFinT.getFullYear();
+    const month2 = ('0' + (fechaFinT.getMonth() + 1)).slice(-2);
+    const day2 = ('0' + fechaFinT.getDate()).slice(-2);
+
+    const fechaFin = `${year2}-${month2}-${day2}`;
+
+    // Imprime las fechas formateadas
+    //console.log("Las fechas ", fechaInicioForma, fechaFinForma);
+
+    //this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
+    this.router.navigate(['/casos-entidad'], { queryParams: { fechaInicio, fechaFin, nnaId  } });
   }
 
 }

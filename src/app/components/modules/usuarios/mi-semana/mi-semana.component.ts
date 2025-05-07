@@ -63,7 +63,7 @@ export class MiSemanaComponent {
 
   //agenteSeleccionado: any;
 
-  constructor(public servicios: MiSemanaService,  private fb: FormBuilder) {
+  constructor(public servicios: MiSemanaService,  private fb: FormBuilder,  public router: Router) {
 
 
 
@@ -397,6 +397,11 @@ export class MiSemanaComponent {
 
 
 
+  }
+
+
+  async iniciarSeguimiento(){
+    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.infoEvent.extendedProps.nnaId, this.usuarioId]);
   }
 
   async guardar(){
