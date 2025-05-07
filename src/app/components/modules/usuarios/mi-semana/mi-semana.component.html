@@ -16,7 +16,7 @@
 <p-dialog [header]="headerDialog" [(visible)]="displayModal" [modal]="true">
   <div [innerHtml] = "bodyDialog" style="text-align:center"></div>
   <p-footer>
-    <button type="button" pButton class="color-fondo">Iniciar Seguimiento</button>
+    <button type="button" pButton class="color-fondo" (click) = "iniciarSeguimiento()">Iniciar Seguimiento</button>
     &nbsp;
     <button type="button" pButton  class="color-fondo" (click) = "reasignar()">Reasignar Seguimiento</button>
   </p-footer>
