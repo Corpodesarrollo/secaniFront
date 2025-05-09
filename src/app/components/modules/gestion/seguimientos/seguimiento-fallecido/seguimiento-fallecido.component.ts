@@ -112,7 +112,7 @@ export class SeguimientoFallecidoComponent  implements OnInit {
   }
 
   terminar(){
-    this.router.navigate([`/gestion/seguimientos`]).then(() => {
+    this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true } }).then(() => {
       window.scrollTo(0, 0);
     });
   }

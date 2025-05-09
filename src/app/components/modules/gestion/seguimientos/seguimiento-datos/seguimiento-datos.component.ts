@@ -187,7 +187,7 @@ export class SeguimientoDatosComponent implements OnInit {
       console.log('cnt', cnt);
       if (cnt > 1) {
         this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
-          state: { idContacto: this.idContacto }
+          state: { idContacto: this.idContacto, skipGuard: true }
         }).then(() => {
           window.scrollTo(0, 0);
         });
@@ -254,7 +254,7 @@ export class SeguimientoDatosComponent implements OnInit {
     if (this.validarCamposRequeridos()){
       await this.Actualizar();
       this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
-        state: { idContacto: this.idContacto }
+        state: { idContacto: this.idContacto, skipGuard: true }
       }).then(() => {
         window.scrollTo(0, 0);
       });

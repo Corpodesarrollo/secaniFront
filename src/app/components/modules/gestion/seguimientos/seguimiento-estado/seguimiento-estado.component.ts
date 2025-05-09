@@ -272,32 +272,32 @@ export class SeguimientoEstadoComponent  implements OnInit {
       await this.Actualizar();
       if(this.estadoDefault) {
         this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
-          state: { alertas: this.alertas, idContacto: this.idContacto }
+          state: { alertas: this.alertas, idContacto: this.idContacto, skipGuard: true }
         }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoSinDiagnostico || this.estadoSinTratamiento) {
         this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
-          state: { alertas: this.alertas, idContacto: this.idContacto }
+          state: { alertas: this.alertas, idContacto: this.idContacto, skipGuard: true }
         }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoFallecido) {
         this.router.navigate([`/gestion/seguimientos/fallecido-seguimiento/${this.id}`], {
-          state: { idContacto: this.idContacto }
+          state: { idContacto: this.idContacto, skipGuard: true }
         }).then(() => {
           window.scrollTo(0, 0);
         });
       }else if(this.estadoEnTratamiento) {
         if (this.cnt > 1) {
           this.router.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.id}`], {
-            state: { alertas: this.alertas, idContacto: this.idContacto }
+            state: { alertas: this.alertas, idContacto: this.idContacto, skipGuard: true }
           }).then(() => {
             window.scrollTo(0, 0);
           });
         } else {
           this.router.navigate([`/gestion/seguimientos/traslado-seguimiento/${this.id}`], {
-            state: { idContacto: this.idContacto }
+            state: { idContacto: this.idContacto, skipGuard: true }
           }).then(() => {
             window.scrollTo(0, 0);
           });

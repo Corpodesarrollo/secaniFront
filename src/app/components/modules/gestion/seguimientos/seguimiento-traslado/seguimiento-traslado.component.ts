@@ -156,7 +156,7 @@ export class SeguimientoTrasladoComponent implements OnInit {
       this.saving = true;
       await this.Actualizar();
       this.router.navigate([`/gestion/seguimientos/dificultades-seguimiento/${this.id}`], {
-        state: { idContacto: this.idContacto }
+        state: { idContacto: this.idContacto, skipGuard: true }
       }).then(() => {
         window.scrollTo(0, 0);
       });
