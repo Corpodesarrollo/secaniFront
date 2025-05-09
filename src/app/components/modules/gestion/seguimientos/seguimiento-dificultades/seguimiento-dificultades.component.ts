@@ -197,7 +197,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
     await this.Actualizar();
 
     this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`], {
-      state: { alertas: this.alertas, idContacto: this.idContacto }
+      state: { alertas: this.alertas, idContacto: this.idContacto, skipGuard: true }
     }).then(() => {
       window.scrollTo(0, 0);
     });
