@@ -14,7 +14,7 @@ export class PlantillasCorreoService {
   }
 
   obtenerPlantillasCorreo() {
-    const url: string = `ConsultarPlantillasCorreo`;
+    const url: string = `ConsultarPlantillaCorreo`;
     return this.generico.retorno_get(url, this.urlbase);
   }
 
