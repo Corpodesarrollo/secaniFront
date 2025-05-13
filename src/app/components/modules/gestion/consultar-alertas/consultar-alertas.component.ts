@@ -144,27 +144,11 @@ export class ConsultarAlertasComponent implements OnInit {
     this.repos.get_withoutParameters(`NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
       next: (datosBasicosData: any) => {
         this.datosBasicosNNA = datosBasicosData;
-        this.applyFilter('0');
+        //this.applyFilter('0');
       },
       error: (err: any) => console.error('Error al cargar datos básicos del NNA', err)
     });
   }
-
-  /*loadSeguimientoAlertas() {
-    this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
-      next: async (data: any) => {
-
-        const filtradoPorIdSeguimiento = data.filter((item: any) => item.idSeguimiento === Number(this.idSeguimiento));
-
-        if (filtradoPorIdSeguimiento.length > 0 && filtradoPorIdSeguimiento[0].alertasSeguimientos) {
-          this.todasAlertas = filtradoPorIdSeguimiento[0].alertasSeguimientos;
-        } else {
-          console.warn('No se encontró el seguimiento o no hay alertas para el seguimiento');
-        }
-      },
-      error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
-    });
-  }*/
 
     loadSeguimientoAlertas() {
       this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
@@ -182,6 +166,7 @@ export class ConsultarAlertasComponent implements OnInit {
           } else {
             console.warn('No se encontraron alertas en los seguimientos');
           }
+          this.applyFilter('0');
         },
         error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
       });
@@ -263,17 +248,17 @@ export class ConsultarAlertasComponent implements OnInit {
     }
   }
 
-  getBadgeColor(estadoAlerta: string): string {
-    switch (estadoAlerta) {
-      case '1':
+  getBadgeColor(estadoAlerta: any): string {
+    switch (+estadoAlerta) {
+      case 1:
         return 'bg-info'; // Amarillo
-      case '2':
+      case 2:
         return 'bg-warning'; // Amarillo
-      case '3':
+      case 3:
         return 'bg-danger'; // Rojo
-      case '4':
+      case 4:
         return 'bg-success'; // Verde
-      case '5':
+      case 5:
         return 'bg-dark'; // Gris
       default:
         return 'bg-secondary'; // Por defecto
