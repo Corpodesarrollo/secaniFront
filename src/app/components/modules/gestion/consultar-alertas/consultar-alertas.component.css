@@ -102,6 +102,8 @@
   color: white;
   cursor: pointer;
   margin: 10px;
+  width: 120px;
+  height: 40px;
 }
 
 .btn-detalle-seguimiento:hover {
