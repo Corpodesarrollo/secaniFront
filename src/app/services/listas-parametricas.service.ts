@@ -1,46 +1,49 @@
 import { Injectable } from '@angular/core';
-import { Generico } from '../core/services/generico';
-import { environment } from '../../environments/environment';
+import { map, Observable } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+import { GenericService } from './generic.services';
+import { ListaParametrica } from '../models/listaParametrica.model';
+
+@Injectable({
+  providedIn: 'root'
+})
 export class ListasParametricasService {
-  private urlbase: string = `${environment.url_MSTablasParametricas}`;
-  constructor(private generico: Generico) { }
+  constructor(private generico: GenericService) { }
 
-  getListasParametricas(): Promise<any[]> {
+  getListasParametricas(): Observable<Object> {
     const url: string = `NombresTablaParametrica`;
-    return this.generico.retorno_get(url, this.urlbase);
+    return this.generico.get(url, '', 'TablaParametrica');
   }
 
-  getListaParametrica(id: string) {
+  getListaParametrica(id: string): Observable<Object> {
     const url: string = `NombresTablaParametrica/${id}`;
-    return this.generico.retorno_get(url, this.urlbase);
+    return this.generico.get(url, '', 'TablaParametrica');
   }
 
-  getListaParametricaPadreId(padreId: string) {
+  getListaParametricaPadreId(padreId: string): Observable<Object>{
     const url: string = `NombresTablaParametrica/padre/${padreId}`;
-    return this.generico.retorno_get(url, this.urlbase);
+    return this.generico.get(url, '', 'TablaParametrica');
   }
 
-  putListaParametrica(id: string, descripcion: any) {
+  putListaParametrica(id: string, listaParametrica: ListaParametrica): Observable<Object> {
     const url: string = `NombresTablaParametrica/${id}`;
-    return this.generico.retorno_put_parametrica(url, descripcion);
+    return this.generico.put(url, listaParametrica, 'TablaParametrica');
   }
 
   /* Editar Item de lista parametrica */
-  putItemListaParametrica(nombre: string, id: string, dato: any) {
+  putItemListaParametrica(nombre: string, id: string, dato: any): Observable<Object> {
     const url: string = `${nombre}/${id}`;
-    return this.generico.retorno_put_parametrica(url, dato);
+    return this.generico.put(url, dato, 'TablaParametrica');
   }
 
   /* Agregar Item de lista parametrica */
-  postItemListaParametrica(nombre: string, dato: any) {
+  postItemListaParametrica(nombre: string, dato: any): Observable<Object> {
     const url: string = `${nombre}`;
-    return this.generico.retorno_post(url, dato, true, this.urlbase);
+    return this.generico.post(url, dato, 'TablaParametrica');;
   }
 
-  getItemListaParametricas(nombre: string) {
+  getItemListaParametricas(nombre: string): Observable<Object> {
     const url: string = `ApiTablasParametricas/${nombre}`;
-    return this.generico.retorno_get_parametrica(url);
+    return this.generico.get(url, '', 'TablaParametrica');;
   }
 }

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, map, switchMap } from 'rxjs';
 
 import { TableModule } from 'primeng/table';
 
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-plantilla-correo-historico',
@@ -14,21 +15,24 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './plantilla-correo-historico.component.css'
 })
 export class PlantillaCorreoHistoricoComponent implements OnInit {
-  public id!: string;
   public historicos: any[] = [];
 
   constructor(
     private plantillasCorreoService: PlantillasCorreoService,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   async ngOnInit() {
-    this.route.paramMap.subscribe(async params => {
-      this.id = params.get('id')!;
-
-      if (this.id) {
-        this.historicos = await this.plantillasCorreoService.historioPlantillaCorreo(this.id);
-      }
-    });
+    this.activatedRoute.paramMap
+      .pipe(
+        map(params => params.get('id')),
+        filter((id): id is string => !!id),
+        switchMap(id => this.plantillasCorreoService.getHistorioPlantillaCorreo(id)),
+      )
+      .subscribe({
+        next: (historicos: any) => this.historicos = historicos,
+        error: (error) => this.router.navigate(['/administracion/plantilla_de_correo'])
+      });
   }
 }
