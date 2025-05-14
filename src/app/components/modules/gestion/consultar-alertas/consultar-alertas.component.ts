@@ -97,7 +97,7 @@ export class ConsultarAlertasComponent implements OnInit {
   }
 
   loadSeguimientoData() {
-    this.repos.get_withoutParameters(`Seguimiento/${this.idSeguimiento}`, 'Seguimiento').subscribe({
+    this.repos.get_withoutParameters(`Seguimiento/${this.idSeguimiento}51`, 'Seguimiento').subscribe({
       next: (seguimientoData: any) => {
         this.seguimiento = seguimientoData;
         this.idNna = this.seguimiento.nnaId;

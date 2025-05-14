@@ -12,15 +12,25 @@ import { TableModule } from 'primeng/table';
 import { GenericService } from '../../../../../services/generic.services';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
+import { Parametricas } from '../../../../../models/parametricas.model';
+import { DropdownModule } from 'primeng/dropdown';
+import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
+import { InputTextModule } from 'primeng/inputtext';
+import { NotificacionService } from '../../../../../core/services/notificacionService';
+import { Oficio } from '../../../../../models/oficio.model';
+import { NotificacionOficioComponent } from "../notificacion-oficio/notificacion-oficio.component";
+import { User } from '../../../../../core/services/userService';
+import { ContactoEAPBService } from '../../../../../core/services/contactoEAPBService';
 
 @Component({
   selector: 'app-crear-oficio',
   templateUrl: './crear-oficio.component.html',
   standalone: true,
   imports: [
-    CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, ReactiveFormsModule,
-    FormsModule, EditorModule, ToastModule, DialogModule
-  ],
+    CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, ReactiveFormsModule, DropdownModule,
+    FormsModule, EditorModule, ToastModule, DialogModule, InputTextModule,
+    NotificacionOficioComponent
+],
   styleUrls: ['./crear-oficio.component.css'],
   providers: [MessageService]
 })
@@ -28,7 +38,6 @@ export class CrearOficioComponent implements OnInit {
 
   today: Date;
   formattedDate: string;
-  city: string;
   idAlerta: any;
 
   @Input() alerta: any;
@@ -39,23 +48,47 @@ export class CrearOficioComponent implements OnInit {
   @Input() show: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
-  membrete: string ='';
-  listaEndidades: any[] = [];
-  nombreEntidad: any ='';
-  ciudad: string ='';
-  asunto: string ='';
-  mensaje: string ='';
-  comentario1: string ='';
-  cierre: string ='';
-  firma: string ="";
+  membrete: string = '';
+  entidades: Parametricas[] = [];
+  selectedEntidad: Parametricas | undefined;
+  isLoadingEntidades: boolean = true;
+  showDialog: boolean = false;
+  user = new User(); 
 
+  oficio: Oficio = {
+    id: 0,
+    ciudadEnvio: '',
+    fechaEnvio: new Date(),
+    membrete: this.membrete,
+    idEntidad: '0',
+    ciudad: '',
+    asunto: '',
+    mensaje: '',
+    idAlertaSeguimiento: 0,
+    comentario: '',
+    idNNA: 0,
+    cierre: '',
+    firma: '',
+    firmaJpg: '',
+    userName: ''
+  };
+  
+
+  submitted: boolean = false;
+  saving: boolean = false;
+  
   constructor(
-    private route: ActivatedRoute,
-    private repos: GenericService
+    private tp: TablasParametricas,
+    private notificacionService: NotificacionService,
+    private entidadesService: ContactoEAPBService, 
   ) {
     this.today = new Date();
     this.formattedDate = this.formatDate(this.today);
-    this.city = 'Bogota';
+    
+    this.oficio.fechaEnvio = this.today;
+    this.oficio.ciudad = 'Bogota';
+    this.oficio.ciudadEnvio = 'Bogota';
+    
    }
 
   ngOnInit() {
@@ -81,50 +114,119 @@ export class CrearOficioComponent implements OnInit {
     return date.toLocaleDateString('es-ES', options);
   }
 
-  loadAlertaData(){
-    this.repos.get_withoutParameters(`Entidades/Entidades`, 'TablaParametrica').subscribe({
-      next: (data: any) => {
-        this.listaEndidades = data;
-      },
-      error: (err: any) => console.error('Error al cargar seguimiento', err)
-    });
+  async loadAlertaData(){
+    if (this.alerta.idAlertaSeguimiento) {
+      let result = await this.notificacionService.getOficio(this.alerta.idAlertaSeguimiento);
+      if (result.estado){
+        this.oficio = result.datos;
+      }
+    }
+
+    this.entidades =  await this.tp.getTP('EntidadTerritorial');
+    this.isLoadingEntidades = false;
+
   }
 
-  verificarCampos(){
-    if(this.membrete.length > 100){
-      console.log("Membrete muy extenso");
-    }else if(this.nombreEntidad.length == 0){
-      console.log("Seleccionar entidad");
-    }else if(this.ciudad.length > 100){
-      console.log("Ciudad muy extensa");
-    }else if(this.asunto.length > 500){
-      console.log("Asunto muy extenso");
-    }else if(this.cierre.length > 200){
-      console.log("Cierre muy extenso");
-    }else{
-      this.crearOficio();
+  async enviar(){
+    if(this.saving){
+      return;
+    }
+    this.submitted = true;
+    this.saving = true;
+
+    if (this.validarCamposRequeridos()){
+      await this.guardar();
+    }
+    this.saving = false;
+  }
+
+  validarCamposRequeridos(): boolean {
+    this.oficio.idEntidad = this.selectedEntidad?.codigo ?? "";
+    this.oficio.userName = User.email ?? "";
+    // this.oficio.idNNA = this.NNAdatos.idNNA ?? 0;
+    // this.oficio.idAlertaSeguimiento = this.alerta.idAlertaSeguimiento ?? 0;
+    this.oficio.idNNA = 10;
+    this.oficio.idAlertaSeguimiento = 10;
+
+    const camposAValidar = [
+      this.oficio.membrete,
+      this.oficio.idEntidad,
+      this.oficio.ciudad,
+      this.oficio.asunto,
+      this.oficio.mensaje,
+      this.oficio.cierre,
+      this.oficio.firma
+    ];
+
+    // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    let pos = 0;
+    for (const campo of camposAValidar) {
+      pos++;
+      if (!campo || campo.toString().trim() === '' || campo === '0') {
+        console.log('Campo requerido vacío', pos);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  async guardar() {
+    console.log(this.user);
+    var result = await this.notificacionService.postOficio(this.oficio);
+    if (result.estado) {
+      this.showDialog = true; // Muestra el modal de notificación
+    } else {
+      console.error('Error al guardar el oficio:');
     }
   }
 
-  crearOficio(){
-
-  }
-
   close() {
-    /*this.contacto = {
+    this.submitted = false; // Reinicia el estado de envío del formulario
+    this.saving = false; // Reinicia el estado de guardado
+    this.show = false; // Oculta el modal
+    this.selectedEntidad = undefined; // Reinicia la selección de entidad
+    this.oficio = {
       id: 0,
-      nnaId: this.nnaId,
-      nombres: '',
-      parentescoId: 0,
-      cuidador: false,
-      telefonos: '',
-      email: '',
-      estado: true
-    };
-    this.telefonos = [];
-    this.selectedParentesco = undefined;*/
+      ciudadEnvio: '',
+      fechaEnvio: new Date(),
+      membrete: this.membrete,
+      idEntidad: '0',
+      ciudad: '',
+      asunto: '',
+      mensaje: '',
+      idAlertaSeguimiento: 0,
+      comentario: '',
+      idNNA: 0,
+      cierre: '',
+      firma: '',
+      firmaJpg: '',
+      userName: ''
+    }; // Reinicia el objeto oficio
 
     this.closeModal.emit(); // Emite evento para cerrar el modal
+  }
+
+  closeNotificacion() {
+    this.show = false; // Oculta el modal de notificación
+    this.selectedEntidad = undefined; // Reinicia la selección de entidad
+    this.oficio = {
+      id: 0,
+      ciudadEnvio: '',
+      fechaEnvio: new Date(),
+      membrete: this.membrete,
+      idEntidad: '0',
+      ciudad: '',
+      asunto: '',
+      mensaje: '',
+      idAlertaSeguimiento: 0,
+      comentario: '',
+      idNNA: 0,
+      cierre: '',
+      firma: '',
+      firmaJpg: '',
+      userName: ''
+    }; // Reinicia el objeto oficio
   }
 
 }
