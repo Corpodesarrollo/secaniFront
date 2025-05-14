@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
 
@@ -46,18 +47,20 @@ export class ListasParametricasComponent implements OnInit {
       id: [{ value: '', disabled: true }, Validators.required],
       nombre: [{ value: '', disabled: true }, Validators.required],
       descripcion: ['', Validators.required],
-      tablaPadre: [{ value: null, disabled: true },],
-      fuenteTabla: [{ value: 0, disabled: true },, Validators.required]
+      tablaPadre: [{ value: null, disabled: true }],
+      fuenteTabla: [{ value: 0, disabled: true }, Validators.required]
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.cargarDatos();
+  ngOnInit() {
+    this.cargarDatos();
   }
 
-  async cargarDatos() {
-    this.listasParametricas = (await this.listasParametricasService.getListasParametricas())
-      .filter( lista => lista.fuenteTabla == 1);
+  cargarDatos() {
+    this.listasParametricasService.getListasParametricas().subscribe({
+      next: (response: any) => this.listasParametricas = response.filter((lista: any) => lista.fuenteTabla == 1),
+      error: (error) => console.error('Error al cargar las listas paramétricas:', error)
+    });
   }
 
   openEditModal(listaParametrica: any): void {
@@ -69,19 +72,18 @@ export class ListasParametricasComponent implements OnInit {
     this.mostrarModalEditar = false;
   }
 
-  async onSubmit() {
-    if(this.listaParametricaForm.invalid) return;
+  onSubmit() {
+    if(this.listaParametricaForm.invalid) 
+      return this.listaParametricaForm.markAllAsTouched();
 
-    try {
-      const data = this.listaParametricaForm.getRawValue();
-      const response = await this.listasParametricasService.putListaParametrica(data.id, data);
-      this.closeEditModal();
-      await this.cargarDatos();
-    } catch(error) {
-      console.log(error);
-    } finally {
-      this.listaParametricaForm.reset();
-    }
-
+    const data = this.listaParametricaForm.getRawValue();
+    this.listasParametricasService.putListaParametrica(data.id, data).subscribe({
+      next: (response) => {
+        this.cargarDatos();
+        this.mostrarModalEditar = false;
+        this.listaParametricaForm.reset();
+      },
+      error: (error) => console.error('Error al actualizar la lista paramétrica:', error)
+    });    
   }
 }

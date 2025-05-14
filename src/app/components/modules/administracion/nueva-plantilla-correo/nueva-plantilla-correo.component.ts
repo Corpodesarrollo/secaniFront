@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
+import { filter, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-nueva-plantilla-correo',
@@ -34,7 +35,7 @@ export class NuevaPlantillaCorreoComponent {
   constructor(
     private formBuilder: FormBuilder,
     private plantillasCorreoService: PlantillasCorreoService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private messageService: MessageService
   ) {
     this.plantillaCorreoForm = this.formBuilder.group({
@@ -50,18 +51,15 @@ export class NuevaPlantillaCorreoComponent {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.plantillaId = id; // Guarda el id
-        this.obtenerPlantillaPorId(id); // Carga los datos de la plantilla si estamos editando
-      }
-    });
-  }
-
-  async obtenerPlantillaPorId(id: string) {
-    const datos = await this.plantillasCorreoService.obtnenerPlantillaCorreoPorId(id);
-    if (datos) this.plantillaCorreoForm.patchValue(datos);
+    this.activatedRoute.paramMap
+      .pipe(
+        map(params => params.get('id')),
+        filter((id): id is string => !!id),
+        switchMap(id => this.plantillasCorreoService.getPlantillaCorreo(id)),
+      )
+      .subscribe({
+        next: (plantillaCorreo: any) => this.plantillaCorreoForm.patchValue(plantillaCorreo),
+      });
   }
 
   isValidField( field: string ): boolean | null {
@@ -89,10 +87,25 @@ export class NuevaPlantillaCorreoComponent {
     if(this.plantillaCorreoForm.invalid)
       return this.plantillaCorreoForm.markAllAsTouched();;
 
-    const data = this.plantillaCorreoForm.value;
-    await this.plantillasCorreoService.crearEditarPlantillaCorreo(data);
-
-    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Plantilla de correo creada o actualizada correctamente' });
-    this.plantillaCorreoForm.reset();
+    const formData = this.plantillaCorreoForm.value;
+    this.plantillasCorreoService.crearEditarPlantillaCorreo(formData)
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Plantilla de correo guardada correctamente.',
+            life: 3000
+          });
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al guardar la plantilla de correo.',
+            life: 3000
+          });
+        } 
+      });
   }
 }

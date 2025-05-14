@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
+import { filter, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-lista-parametrica',
@@ -18,8 +19,7 @@ import { ListaParametrica } from '../../../../models/listaParametrica.model';
 export class ListaParametricaComponent {
 
   public listaParametrica?: ListaParametrica;
-  public itemsListaParamtreicas: any[] = [];
-  private id: string | null = null;
+  public itemsListaParametricas: any[] = [];
 
   public titulos: Record<string, string> = {
     "festivos": 'Festivos',
@@ -44,20 +44,28 @@ export class ListaParametricaComponent {
     private listasParametricasService: ListasParametricasService
   ) { }
 
-  async ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(params => {
-      this.id = params.get('id'); // Obtiene el parámetro 'id'
-    });
-
-    if (!this.id) return;
-    this.listaParametrica = await this.listasParametricasService.getListaParametrica(this.id);
-
-    if (!this.listaParametrica) return;
-    const rawItems = await this.listasParametricasService.getItemListaParametricas(this.listaParametrica.nombre);
-    this.itemsListaParamtreicas = rawItems.map((item: any) => ({
-      ...item,
-      fechaCreacion: new Date(item.fechaCreacion),
-      nombre: item.nombre || item.festivo || item.subCategoriaAlerta || 'Sin nombre',
-    }));
+  ngOnInit() {
+    this.activatedRoute.paramMap
+      .pipe(
+        map(params => params.get('id')),
+        filter((id): id is string => !!id),
+        switchMap(id => this.listasParametricasService.getListaParametrica(id)),
+        switchMap((lista: any) => {
+          this.listaParametrica = lista;
+          return this.listasParametricasService.getItemListaParametricas(lista.nombre);
+        })
+      )
+      .subscribe({
+        next: (rawItems: any) => {
+          this.itemsListaParametricas = rawItems.map((item: any) => ({
+            ...item,
+            fechaCreacion: new Date(item.fechaCreacion),
+            nombre: item.nombre || item.festivo || item.subCategoriaAlerta || 'Sin nombre',
+          }));
+        },
+        error: (error) => {
+          this.router.navigate(['/administracion/lista_parametricas']);
+        }
+      });
   }
 }
