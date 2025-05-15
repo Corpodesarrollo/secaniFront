@@ -94,6 +94,7 @@
                       [rounded]="true"
                       [text]="true"
                       severity="secondary"
+                      (click)="confirmDelete($event, item.id)"
                     />
                   </div>
                 </td>
@@ -105,3 +106,6 @@
     </div>
   </div>
 </div>
+
+<p-toast />
+<p-confirmDialog />

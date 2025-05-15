@@ -7,6 +7,9 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
@@ -14,9 +17,10 @@ import { ListaParametrica } from '../../../../models/listaParametrica.model';
 @Component({
   selector: 'app-lista-parametrica-items',
   standalone: true,
-  imports: [ButtonModule, DropdownModule, InputTextModule, ReactiveFormsModule, TableModule],
+  imports: [ButtonModule, DropdownModule, InputTextModule, ReactiveFormsModule, TableModule, ConfirmDialogModule, ToastModule],
   templateUrl: './lista-parametrica-items.component.html',
-  styleUrl: './lista-parametrica-items.component.css'
+  styleUrl: './lista-parametrica-items.component.css',
+  providers: [ConfirmationService, MessageService]
 })
 export class ListaParametricaItemsComponent implements OnInit {
 
@@ -29,16 +33,22 @@ export class ListaParametricaItemsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private listasParametricasService: ListasParametricasService
+    private listasParametricasService: ListasParametricasService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {
     this.itemsListaParametricaForm = this.formBuilder.group({
-      id: [{ value: '', disabled: true }, Validators.required],
+      id: [{ value: 0, disabled: true }, Validators.required],
       nombre: ['', Validators.required],
-      codigo: [{ value: null, disabled: true }],
-      descripcion: [{ value: null, disabled: true }],
-      indicador: ['', Validators.required],
-      orden: [{ value: null, disabled: true }],
-      itemListaPadre: [{ value: null, disabled: true }]
+      descripcion: [{ value: '', disabled: true }],
+      orden: [{ value: 0, disabled: true }],
+      fechaCreacion: [{ value: new Date().toISOString(), disabled: true }],
+      activo: [{ value: true, disabled: true }],
+      isDeleted: [{ value: false, disabled: true }],
+
+      itemListaPadre: [{ value: 'N/A', disabled: true }],
+      codigo: [{ value: '', disabled: true }],
+      indicador: [''],
     });
   }
 
@@ -49,11 +59,27 @@ export class ListaParametricaItemsComponent implements OnInit {
         filter((id): id is string => !!id),
         switchMap(id => this.listasParametricasService.getListaParametrica(id)),
         tap((lista: any) => this.listaParametricaPadre = lista),
-        switchMap((lista: any) => this.listasParametricasService.getItemListaParametricas(lista.nombre))
+        tap(() => this.loadItems())
       )
       .subscribe({
-        next: (rawItems: any) => this.items = this.mapItems(rawItems),
         error: () => this.router.navigate(['/administracion/lista_parametricas'])
+      });
+  }
+
+  private loadItems(): void {
+    if (!this.listaParametricaPadre) return;
+    this.listasParametricasService.getItemListaParametricas(this.listaParametricaPadre.nombre)
+      .pipe(map((items: any) => this.mapItems(items)))
+      .subscribe({
+        next: (items) => this.items = items,
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los ítems de la lista paramétrica.',
+            life: 3000
+          });
+        }
       });
   }
 
@@ -73,12 +99,26 @@ export class ListaParametricaItemsComponent implements OnInit {
       : this.listasParametricasService.postItemListaParametrica(nombreLista, formData);
 
     save$.pipe(
-      switchMap(() => this.listasParametricasService.getItemListaParametricas(nombreLista)),
-      tap(() => this.itemsListaParametricaForm.reset())
-    ).subscribe({
-      next: (items: any) => this.items = this.mapItems(items),
-      error: () => console.error('Error al guardar el item de la lista paramétrica')
-    });
+        tap(() => {
+          this.itemsListaParametricaForm.reset();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Guardado',
+            detail: 'El ítem fue guardado correctamente.',
+            life: 3000
+          });
+        }),
+        tap(() => this.loadItems())
+      ).subscribe({
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo guardar el ítem.',
+            life: 3000
+          });
+        }
+      });
   }
 
   private mapItems(rawItems: any[]): any[] {
@@ -91,5 +131,50 @@ export class ListaParametricaItemsComponent implements OnInit {
 
   clearForm(): void {
     this.itemsListaParametricaForm.reset();
+  }
+
+  confirmDelete(event: Event, itemListaParametricaId: string) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: '¿Estás seguro de que quieres eliminar el item de lista parametrica?',
+      header: 'Confirmar eliminación',
+      icon: 'none',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-secondary p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      accept: () => {
+        if (itemListaParametricaId) {
+          this.listasParametricasService.deleteItemListaParametrica(itemListaParametricaId)
+            .pipe(tap(() => this.loadItems()))
+            .subscribe({
+              next: () => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Eliminado',
+                  detail: 'El ítem fue eliminado con éxito.',
+                  life: 3000
+                });
+              },
+              error: () => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'No se pudo eliminar el ítem.',
+                  life: 3000
+                });
+              }
+            });
+        }
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Cancelado',
+          detail: 'No se pudo eliminar el item de lista parametrica fue cancelada.',
+          life: 3000
+        });
+      }
+    });
   }
 }
