@@ -15,7 +15,7 @@ import { Parametricas } from '../../../../models/parametricas.model';
 import { SubcategoriaAlerta } from '../../../../models/subcategoriaAlerta.model';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { from, map, Observable } from 'rxjs';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { VerNotificacionComponent } from '../oficio-notificacion/ver-notificacion/ver-notificacion.component';
 import { VerRespuestaComponent } from '../oficio-notificacion/ver-respuesta/ver-respuesta.component';
@@ -23,16 +23,17 @@ import { Alerta, NotificacionAlerta } from '../../../../models/ExportConsutarAle
 import { ToastModule } from 'primeng/toast';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { CrearOficioComponent } from '../oficio-notificacion/crear-oficio/crear-oficio.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, VerNotificacionComponent, VerRespuestaComponent, ToastModule, CrearOficioComponent
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, VerNotificacionComponent, VerRespuestaComponent, ToastModule, CrearOficioComponent,ConfirmDialogModule
   ],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
-  providers: [MessageService]
+  providers: [MessageService,ConfirmationService]
 })
 export class ConsultarAlertasComponent implements OnInit {
 
@@ -86,7 +87,8 @@ export class ConsultarAlertasComponent implements OnInit {
     private repos: GenericService,
     private tpp: TpParametros,
     private messageService: MessageService,
-    private excelExportService: ExcelExportService
+    private excelExportService: ExcelExportService,
+    private confirmationService: ConfirmationService,
   ) { }
 
   ngOnInit() {
@@ -347,36 +349,57 @@ export class ConsultarAlertasComponent implements OnInit {
 
 
   ExportAlertas: Alerta | undefined;
-  ExportNotificacion: NotificacionAlerta[] = []; // Inicializado como arreglo vacío para evitar undefined
-  notificacionesAlertaExport: NotificacionAlerta[] = []; // Tipado más específico
+  ExportNotificacion: NotificacionAlerta[] = [];
+  notificacionesAlertaExport: NotificacionAlerta[] = [];
 
-  async iniciarDescarga(alert: any): Promise<void> {
-    if (!alert || !alert.alertaId) {
-      console.error('Alerta inválida o sin alertaId');
-      return;
-    }
 
-    try {
-      const notifications = await this.obtenerNotificacionesExport(alert.alertaId);
+  iniciarDescarga(alert: any): void {
+    this.confirmationService.confirm({
+      message: '¿Está seguro que desea exportar esta alerta?',
+      header: 'Confirmación de Exportación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'custom-accept-btn',
+      rejectButtonStyleClass: 'custom-reject-btn',
+      accept: async () => {
+        if (!alert || !alert.alertaId) {
+          console.error('Alerta inválida o sin alertaId');
+          return;
+        }
 
-      this.ExportAlertas = {
-        ultimaFechaSeguimiento: alert.ultimaFechaSeguimiento || null,
-        categoriaAlerta: alert.categoriaAlerta || null,
-        subcategoriaAlerta: alert.subcategoriaAlerta || null,
-        observaciones: alert.observaciones || null,
-        estadoId: this.getDescripcionEstado(alert.estadoId) || null,
-        notificacionesAlerta: notifications
-      };
+        try {
+          const notifications = await this.obtenerNotificacionesExport(alert.alertaId);
 
-      console.log(this.ExportAlertas);
+          this.ExportAlertas = {
+            ultimaFechaSeguimiento: alert.ultimaFechaSeguimiento || null,
+            categoriaAlerta: alert.categoriaAlerta || null,
+            subcategoriaAlerta: alert.subcategoriaAlerta || null,
+            observaciones: alert.observaciones || null,
+            estadoId: this.getDescripcionEstado(alert.estadoId) || null,
+            notificacionesAlerta: notifications
+          };
 
-      this.excelExportService.exportToExcelDesdeConsultarAlertas(this.ExportAlertas, this.idNna, this.datosBasicosNNA.nombreCompleto);
+          this.excelExportService.exportToExcelDesdeConsultarAlertas(
+            this.ExportAlertas,
+            this.idNna,
+            this.datosBasicosNNA.nombreCompleto
+          );
 
-    } catch (error) {
-      console.error('Error durante la descarga de la alerta:', error);
-      this.messageService.add({ severity: 'warn', summary: 'Importante', detail: 'Sin notificaciones.' });
-    }
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Exportación completada',
+            detail: 'El archivo fue generado y está listo para descarga.'
+          });
+
+        } catch (error) {
+          console.error('Error durante la descarga de la alerta:', error);
+          this.messageService.add({ severity: 'warn', summary: 'Importante', detail: 'Sin notificaciones.' });
+        }
+      }
+    });
   }
+
 
 
   obtenerNotificacionesExport(alertaId: string): Promise<NotificacionAlerta[]> {

@@ -37,8 +37,8 @@
 
 .icon-container {
   display: flex;
-  gap: 10px; /* Espacio entre los íconos */
-  justify-content: center; /* Centra horizontalmente */
+  gap: 10px;
+  justify-content: center;
 }
 
 .icon-style {
@@ -75,13 +75,13 @@
 
 
 .table-contenedor {
-  border-radius: 10px; /* Ajusta el valor del radio según prefieras */
-  overflow: hidden; /* Asegura que el borde redondeado se vea correctamente */
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .expanded-table-container {
-  border-radius: 10px; /* Ajusta el valor del radio según prefieras */
-  overflow: hidden; /* Asegura que el borde redondeado se vea correctamente */
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .expanded-table th {
@@ -120,23 +120,39 @@
 
 
 .icon-button {
-  background-color: #8CC4C0;   /* Color de fondo del botón */
-  border: none;                /* Sin bordes */
-  color: white;                /* Color del ícono */
-  padding: 10px;               /* Espacio alrededor del ícono */
-  border-radius: 50%;          /* Hace el botón circular */
-  width: 40px;                 /* Ancho del botón */
-  height: 40px;                /* Altura del botón */
-  display: flex;               /* Flexbox para centrar el contenido */
-  justify-content: center;     /* Centra horizontalmente */
-  align-items: center;         /* Centra verticalmente */
-  cursor: pointer;             /* Cambia el cursor al pasar sobre el botón */
+  background-color: #8CC4C0;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .icon-button i {
-  font-size: 20px;             /* Tamaño del ícono */
+  font-size: 20px;
 }
 
 .icon-button:hover {
-  background-color: #77b0ab;   /* Cambia el color al pasar el mouse */
+  background-color: #77b0ab;
+}
+
+
+::ng-deep .custom-accept-btn {
+  background-color: #8CC4C0 !important;
+  border: none;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  margin-left: 5px !important;
+}
+
+::ng-deep .custom-reject-btn {
+  background-color: #d6d6d6 !important;
+  border: none;
+  border-radius: 8px !important;
+  color: #000000 !important;
 }
