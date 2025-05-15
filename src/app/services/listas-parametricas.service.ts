@@ -46,4 +46,14 @@ export class ListasParametricasService {
     const url: string = `ApiTablasParametricas/${nombre}`;
     return this.generico.get(url, '', 'TablaParametrica');;
   }
+
+  getHistoricoListaParametrica(nombre: string): Observable<Object> {
+    const url: string = `api/HistoricoTransaccion/tabla/${nombre}`;
+    return this.generico.get(url, '', 'TablaParametrica');
+  }
+  
+  deleteItemListaParametrica(id: string): Observable<Object> {
+    const url: string = `NombreTablaParametrica/${id}`;
+    return this.generico.get(url, '', 'TablaParametrica');
+  }
 }
