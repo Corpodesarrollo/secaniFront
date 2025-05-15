@@ -33,7 +33,7 @@
           <!-- Estado -->
           <div class="col-12 col-md-1 mb-1 mb-md-0 fw-semibold">Estado:</div>
           <div class="col-12 col-md-5">
-            <p-dropdown [options]="estados" formControlName="estado" styleClass="w-100" placeholder="Seleccione"/>
+            <p-dropdown [options]="estados" optionLabel="label" optionValue="value" formControlName="estado" styleClass="w-100" placeholder="Seleccione"/>
             <small *ngIf="isValidField('estado')" class="text-danger">{{ getFieldError('estado') }}</small>
           </div>
         </div>
