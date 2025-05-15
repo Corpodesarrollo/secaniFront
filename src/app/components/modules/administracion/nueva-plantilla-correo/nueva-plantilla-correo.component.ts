@@ -25,9 +25,16 @@ import { filter, map, switchMap } from 'rxjs';
 })
 export class NuevaPlantillaCorreoComponent {
 
-  public tiposPlantillas: any[] = [];
+  public tiposPlantillas: string[] = [
+    'Correo de notificación',
+    'Oficion de notificación',
+  ];
+
   public firmantes: any[] = [];
-  public estados: any[] = [];
+  public estados: {label: string, value: string}[] = [
+    { label: 'Activo', value: '1' },
+    { label: 'Inactivo', value: '0' }
+  ];
 
   public plantillaId: string | null = null;
   public plantillaCorreoForm: FormGroup;
