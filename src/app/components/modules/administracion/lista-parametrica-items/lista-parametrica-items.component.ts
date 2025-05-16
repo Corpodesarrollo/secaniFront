@@ -9,15 +9,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { CalendarModule } from 'primeng/calendar';
 import { ToastModule } from 'primeng/toast';
 
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-lista-parametrica-items',
   standalone: true,
-  imports: [ButtonModule, DropdownModule, InputTextModule, ReactiveFormsModule, TableModule, ConfirmDialogModule, ToastModule],
+  imports: [CommonModule, ButtonModule, DropdownModule, InputTextModule, ReactiveFormsModule, TableModule, ConfirmDialogModule, ToastModule, CalendarModule],
   templateUrl: './lista-parametrica-items.component.html',
   styleUrl: './lista-parametrica-items.component.css',
   providers: [ConfirmationService, MessageService]
