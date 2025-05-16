@@ -3,7 +3,7 @@ export interface Oficio {
     ciudadEnvio: string;
     fechaEnvio: Date;
     membrete: string;
-    idEntidad: string;
+    idEntidad: number;
     ciudad: string;
     asunto: string;
     mensaje: string;

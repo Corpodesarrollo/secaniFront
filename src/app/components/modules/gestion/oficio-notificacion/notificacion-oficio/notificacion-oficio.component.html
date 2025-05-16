@@ -105,6 +105,7 @@
                 <p-checkbox 
                     [(ngModel)]="notificacion.agregarEnlace"
                     [binary]="true"
+                    (onChange)="cambiarEstadoEnlace()"
                     label="Desea agregar enlace para recibir respuestas"
                     name="agregarEnlace" />
             </div>

@@ -56,6 +56,7 @@ export class NotificacionComponent {
 
   notificacion: Notificacion = {
     id: 0,
+    idNotificacion: 0,
     idEntidad: '',
     para: [],
     conCopia: [],
@@ -150,6 +151,7 @@ export class NotificacionComponent {
   limpiar(){
     this.notificacion = {
           id: 0,
+          idNotificacion: 0,
           idEntidad: '',
           para: [],
           conCopia: [],

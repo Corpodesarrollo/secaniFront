@@ -21,6 +21,7 @@ import { Oficio } from '../../../../../models/oficio.model';
 import { NotificacionOficioComponent } from "../notificacion-oficio/notificacion-oficio.component";
 import { User } from '../../../../../core/services/userService';
 import { ContactoEAPBService } from '../../../../../core/services/contactoEAPBService';
+import { EntidadServices } from '../../../../../core/services/entidadServices';
 
 @Component({
   selector: 'app-crear-oficio',
@@ -48,6 +49,7 @@ export class CrearOficioComponent implements OnInit {
   @Input() show: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
+  idNotificacion: number = 0;
   membrete: string = '';
   entidades: Parametricas[] = [];
   selectedEntidad: Parametricas | undefined;
@@ -60,7 +62,7 @@ export class CrearOficioComponent implements OnInit {
     ciudadEnvio: '',
     fechaEnvio: new Date(),
     membrete: this.membrete,
-    idEntidad: '0',
+    idEntidad: 0,
     ciudad: '',
     asunto: '',
     mensaje: '',
@@ -80,7 +82,7 @@ export class CrearOficioComponent implements OnInit {
   constructor(
     private tp: TablasParametricas,
     private notificacionService: NotificacionService,
-    private entidadesService: ContactoEAPBService, 
+    private entidadesService: EntidadServices, 
   ) {
     this.today = new Date();
     this.formattedDate = this.formatDate(this.today);
@@ -122,7 +124,7 @@ export class CrearOficioComponent implements OnInit {
       }
     }
 
-    this.entidades =  await this.tp.getTP('EntidadTerritorial');
+    this.entidades =  await this.entidadesService.getET();
     this.isLoadingEntidades = false;
 
   }
@@ -141,10 +143,9 @@ export class CrearOficioComponent implements OnInit {
   }
 
   validarCamposRequeridos(): boolean {
-    this.oficio.idEntidad = this.selectedEntidad?.codigo ?? "";
+    this.oficio.idEntidad = this.selectedEntidad?.id ?? 0;
     this.oficio.userName = User.email ?? "";
-    // this.oficio.idNNA = this.NNAdatos.idNNA ?? 0;
-    // this.oficio.idAlertaSeguimiento = this.alerta.idAlertaSeguimiento ?? 0;
+    
     this.oficio.idNNA = 10;
     this.oficio.idAlertaSeguimiento = 10;
 
@@ -172,10 +173,12 @@ export class CrearOficioComponent implements OnInit {
   }
 
   async guardar() {
-    console.log(this.user);
     var result = await this.notificacionService.postOficio(this.oficio);
+    console.log(result);
     if (result.estado) {
-      this.showDialog = true; // Muestra el modal de notificación
+      this.idNotificacion = Number(result.datos);
+      console.log(this.idNotificacion);
+      this.showDialog = true; // Muestra el modal de notificación.
     } else {
       console.error('Error al guardar el oficio:');
     }
@@ -191,7 +194,7 @@ export class CrearOficioComponent implements OnInit {
       ciudadEnvio: '',
       fechaEnvio: new Date(),
       membrete: this.membrete,
-      idEntidad: '0',
+      idEntidad: 0,
       ciudad: '',
       asunto: '',
       mensaje: '',
@@ -215,7 +218,7 @@ export class CrearOficioComponent implements OnInit {
       ciudadEnvio: '',
       fechaEnvio: new Date(),
       membrete: this.membrete,
-      idEntidad: '0',
+      idEntidad: 0,
       ciudad: '',
       asunto: '',
       mensaje: '',

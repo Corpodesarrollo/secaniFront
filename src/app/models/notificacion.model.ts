@@ -2,6 +2,7 @@ import { Attachment } from "./attachmentFile.model";
 
 export interface Notificacion {
     id: number;
+    idNotificacion: number;
     idEntidad: string;
     para: string[];
     conCopia: string[];

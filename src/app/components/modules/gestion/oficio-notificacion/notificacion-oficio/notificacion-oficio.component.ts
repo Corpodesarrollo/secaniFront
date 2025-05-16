@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -23,6 +23,8 @@ import { ContactoEAPB } from '../../../../../models/contactoEapb.model';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ContactoEAPBService } from '../../../../../core/services/contactoEAPBService';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { environment } from '../../../../../../environments/environment';
+import { EntidadServices } from '../../../../../core/services/entidadServices';
 
 @Component({
   selector: 'app-notificacion-oficio',
@@ -33,7 +35,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
   styleUrl: './notificacion-oficio.component.css'
 })
 export class NotificacionOficioComponent {
+
     @Input() showDialog: boolean = false;
+    @Input() idNotificacion!: number;
     @Input() idAlerta: number = 10;
     @Input() idNNA: number = 10;
     @Output() closeModal = new EventEmitter<void>();
@@ -64,6 +68,7 @@ export class NotificacionOficioComponent {
   
     notificacion: Notificacion = {
       id: 0,
+      idNotificacion: 0,
       idEntidad: '',
       para: [],
       conCopia: [],
@@ -80,25 +85,36 @@ export class NotificacionOficioComponent {
 
      mostrarDialogo: boolean = false;
   
-    constructor(private messageService: MessageService, private tp: TablasParametricas, private tpp: TpParametros, private repos: GenericService, private contactoEAPBService: ContactoEAPBService) {}
+    constructor(private messageService: MessageService, private tp: EntidadServices, private tpp: TpParametros, private repos: GenericService, private contactoEAPBService: ContactoEAPBService) {}
   
     async ngOnInit(): Promise<void> {      
       this.contactos = await this.contactoEAPBService.getAll();
       this.isLoadingContactos = false;
 
-      this.entidades =  await this.tp.getTP('EntidadTerritorial');
+      this.entidades =  await this.tp.getET();
       this.isLoadingEntidades = false;
   
       this.plantillas = await this.tpp.getPlantillas();
       this.isLoadingPLantillas = false;
     }
+
+    ngOnChanges(changes: SimpleChanges): void {
+      if (changes['idNotificacion']) {
+        this.idNotificacion = changes['idNotificacion'].currentValue; // Actualiza el ID si cambia
+        this.notificacion.idNotificacion = this.idNotificacion ?? 0;
+        console.log("ngOnChanges:", this.idNotificacion);
+      }
+    }
   
     async enviar(){
+      this.notificacion.para = this.selectedPara.map((contacto) => contacto.email);
+      this.notificacion.conCopia = this.selectedConCopia.map((contacto) => contacto.email);
       this.notificacion.idEntidad = this.selectedEntidad?.codigo ?? '';
       this.notificacion.plantillaId = this.selectedPlantilla?.id ?? 0;
+      this.notificacion.idNotificacion = this.idNotificacion ?? 0;
   
       this.submitted = true;
-      if (this.notificacion.para.length === 0) {
+      if (this.selectedPara.length === 0) {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar al menos un correo.' });
         return;
       }
@@ -148,7 +164,6 @@ export class NotificacionOficioComponent {
     }
   
     guardar(){
-
       this.repos.post("Notificacion/EnviarOficioNotificacion", this.notificacion, apis.seguimiento).subscribe({
         next: (response) => {
           this.mostrarDialogo = true;
@@ -162,6 +177,7 @@ export class NotificacionOficioComponent {
     limpiar(){
       this.notificacion = {
             id: 0,
+            idNotificacion: 0,
             idEntidad: '',
             para: [],
             conCopia: [],
@@ -175,7 +191,7 @@ export class NotificacionOficioComponent {
             adjunto: null,
             firma: "",
           };
-  
+
       this.showDialog = false;
       this.selectedPlantilla = undefined;
       this.selectedEntidad = undefined;
@@ -249,6 +265,7 @@ export class NotificacionOficioComponent {
       this.selectedEntidad = undefined; // Reinicia la selección de entidad
       this.notificacion = {
         id: 0,
+        idNotificacion: 0,
         idEntidad: '',
         para: [],
         conCopia: [],
@@ -264,5 +281,19 @@ export class NotificacionOficioComponent {
       }; // Reinicia el objeto oficio
   
       this.closeModal.emit(); // Emite evento para cerrar el modal
-  }
+    }
+
+    cambiarEstadoEnlace() {
+      if (this.notificacion.agregarEnlace) {
+        this.notificacion.enlace = `${environment.url}respuesta-notificacion/${this.stringTobase64(this.idNotificacion?.toString() ?? "")}`;
+      } else {
+        this.notificacion.enlace = '';
+      }
+    }
+
+    stringTobase64(str: string): string {
+      const buffer = new TextEncoder().encode(str);
+      const base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+      return base64String;
+    }
 }
