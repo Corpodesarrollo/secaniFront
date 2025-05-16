@@ -343,6 +343,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       parentescoRechazo: '',
       razonesRechazo: '',
       alertas: [],
+      alertasPendientes: []
     };
   }
 }
