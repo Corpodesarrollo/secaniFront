@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { GenericService } from '../../../../../services/generic.services';
@@ -23,6 +23,7 @@ export class SeguimientoGuardarComponent {
   @Input() show: boolean = false;
   @Input() seguimiento: SeguimientoGestion | undefined = undefined;
   @ViewChild('inputCampo') inputCampo!: ElementRef;
+  @Output() onClose = new EventEmitter<void>(); 
 
   submitted: boolean = false;
   fechaSugerida: Date = new Date();
@@ -121,6 +122,7 @@ export class SeguimientoGuardarComponent {
     this.mostrarMensaje = false;
     this.mostrarDialogo = false;
     this.show = false;
+    this.onClose.emit();
   }
 
   enviar(){
@@ -137,6 +139,7 @@ export class SeguimientoGuardarComponent {
 
   cancelar(){
     this.mostrarDialogo = false;
+    this.onClose.emit();
     if (this.fechaSugerida && this.nuevaHora) {
       this.fechaSugerida.setHours(this.nuevaHora.getHours());
     }
@@ -158,7 +161,8 @@ export class SeguimientoGuardarComponent {
   }
 
   terminar(){
-    this.router.navigate([`/gestion/seguimientos`]).then(() => {
+    this.onClose.emit();
+    this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true } }).then(() => {
       window.scrollTo(0, 0);
     });
   }

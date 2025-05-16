@@ -26,12 +26,14 @@ import { NnaContactoListaComponent } from "../../../usuarios/nna-contacto/nna-co
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { apis } from '../../../../../models/apis.model';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
+import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
+import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent, NnaContactoListaComponent, EstadoNnaComponent],
+    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent, NnaContactoListaComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })
@@ -96,6 +98,8 @@ export class SeguimientoDatosComponent implements OnInit {
   regimenAfiliacion: Parametricas[] = [];
   EAPB: Parametricas[] = [];
   saving: boolean | undefined;
+
+  showGuardarSeguimiento: boolean = false;
 
   constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, private gs: GenericService,
   private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService, private ss: SeguimientoDatosService) {
@@ -305,5 +309,35 @@ export class SeguimientoDatosComponent implements OnInit {
 
   async Actualizar() {
     await this.nnaService.putNNA(this.nna);
+  }
+
+  abrirGuardarYReagendar() {
+    this.showGuardarSeguimiento = true;
+  }
+
+  cerrarGuardarYReagendar() {
+    this.showGuardarSeguimiento = false;
+  }
+
+  get seguimientoActual(): SeguimientoGestion {
+    return {
+      nnaId: this.nna.id ? Number(this.nna.id): 0,
+      fechaSeguimiento: new Date(),
+      estadoId: 1,
+      contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
+      telefono: '',
+      usuarioId: 'abc',
+      solicitanteId: 1,
+      fechaSolicitud: new Date(),
+      tieneDiagnosticos: false,
+      observacionesSolicitante: '',
+      observacionAgente: '',
+      ultimaActuacionAsunto: '',
+      ultimaActuacionFecha: new Date(),
+      nombreRechazo: '',
+      parentescoRechazo: '',
+      razonesRechazo: '',
+      alertas: [],
+    };
   }
 }

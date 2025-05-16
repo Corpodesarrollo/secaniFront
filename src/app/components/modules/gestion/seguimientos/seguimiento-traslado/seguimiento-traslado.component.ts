@@ -15,11 +15,13 @@ import { InfoTraslado } from '../../../../../models/infoTraslado.model';
 import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
+import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 
 @Component({
   selector: 'app-seguimiento-traslado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule, EstadoNnaComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule, EstadoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-traslado.component.html',
   styleUrl: './seguimiento-traslado.component.css'
 })
@@ -88,6 +90,8 @@ export class SeguimientoTrasladoComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
   idContacto: string | undefined;
+
+  showGuardarSeguimiento: boolean = false;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private repos: GenericService) {
   }
@@ -207,5 +211,35 @@ export class SeguimientoTrasladoComponent implements OnInit {
         }
       });
     });
+  }
+
+  abrirGuardarYReagendar() {
+    this.showGuardarSeguimiento = true;
+  }
+
+  cerrarGuardarYReagendar() {
+    this.showGuardarSeguimiento = false;
+  }
+
+  get seguimientoActual(): SeguimientoGestion {
+    return {
+      nnaId: this.nna.id ? Number(this.nna.id): 0,
+      fechaSeguimiento: new Date(),
+      estadoId: 1,
+      contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
+      telefono: '',
+      usuarioId: 'abc',
+      solicitanteId: 1,
+      fechaSolicitud: new Date(),
+      tieneDiagnosticos: false,
+      observacionesSolicitante: '',
+      observacionAgente: '',
+      ultimaActuacionAsunto: '',
+      ultimaActuacionFecha: new Date(),
+      nombreRechazo: '',
+      parentescoRechazo: '',
+      razonesRechazo: '',
+      alertas: [],
+    };
   }
 }

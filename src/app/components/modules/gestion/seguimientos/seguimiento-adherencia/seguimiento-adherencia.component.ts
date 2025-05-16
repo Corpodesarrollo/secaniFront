@@ -18,12 +18,14 @@ import { TpParametros } from '../../../../../core/services/tpParametros';
 import { NNAService } from '../../../../../core/services/nnaService';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
+import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
+import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 
 @Component({
   selector: 'app-seguimiento-adherencia',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, EstadoNnaComponent],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, EstadoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-adherencia.component.html',
   styleUrl: './seguimiento-adherencia.component.css'
 })
@@ -63,6 +65,8 @@ export class SeguimientoAdherenciaComponent implements OnInit {
   estado:string = 'Registrado';
   items: MenuItem[] = [];
   saving!: boolean;
+
+  showGuardarSeguimiento: boolean = false;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
@@ -129,4 +133,35 @@ export class SeguimientoAdherenciaComponent implements OnInit {
     this.nna.tratamientoCausasInasistenciaId = this.selectedCausaInasistencia?.codigo  ?? '';
     await this.nnaService.putNNA(this.nna);
   }
+
+  abrirGuardarYReagendar() {
+    this.showGuardarSeguimiento = true;
+  }
+
+  cerrarGuardarYReagendar() {
+    this.showGuardarSeguimiento = false;
+  }
+
+  get seguimientoActual(): SeguimientoGestion {
+    return {
+      nnaId: this.nna.id ? Number(this.nna.id): 0,
+      fechaSeguimiento: new Date(),
+      estadoId: 1,
+      contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
+      telefono: '',
+      usuarioId: '',
+      solicitanteId: 0,
+      fechaSolicitud: new Date(),
+      tieneDiagnosticos: false,
+      observacionesSolicitante: '',
+      observacionAgente: '',
+      ultimaActuacionAsunto: '',
+      ultimaActuacionFecha: new Date(),
+      nombreRechazo: '',
+      parentescoRechazo: '',
+      razonesRechazo: '',
+      alertas: [],
+    };
+  }
+
 }
