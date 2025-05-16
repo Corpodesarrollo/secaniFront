@@ -23,10 +23,10 @@ const routes: Routes = [
   { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent, canDeactivate: [confirmExitGuard] },
   { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent, canDeactivate: [confirmExitGuard] },
   { path: 'seguimientos/adherencia-seguimiento/:id', component: SeguimientoAdherenciaComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent, canDeactivate: [confirmExitGuard] },
+  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent},
+  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent},
+  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent},
+  { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent},
   { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
   { path: 'consultar-alertas/:id', component: ConsultarAlertasComponent }
 ];

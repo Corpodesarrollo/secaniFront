@@ -20,12 +20,14 @@ import { NNA } from '../../../../../models/nna.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { NNAService } from '../../../../../core/services/nnaService';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
+import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 
 @Component({
   selector: 'app-seguimiento-dificultades',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-dificultades.component.html',
   styleUrl: './seguimiento-dificultades.component.css'
 })
@@ -77,6 +79,8 @@ export class SeguimientoDificultadesComponent implements OnInit {
 
   idContacto: string | undefined;
   saving!: boolean;
+
+  showGuardarSeguimiento: boolean = false;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, 
     private routeAct: ActivatedRoute, private nnaService: NNAService) {
@@ -211,5 +215,35 @@ export class SeguimientoDificultadesComponent implements OnInit {
   cargarAlertas(lista:AlertasTratamiento[]) {
     this.alertas = lista; // Guardar la lista emitida por el hijo
     console.log('Lista de alertas recibidas:', this.alertas);
+  }
+
+  abrirGuardarYReagendar() {
+    this.showGuardarSeguimiento = true;
+  }
+
+  cerrarGuardarYReagendar() {
+    this.showGuardarSeguimiento = false;
+  }
+
+  get seguimientoActual(): SeguimientoGestion {
+    return {
+      nnaId: this.nna.id ? Number(this.nna.id): 0,
+      fechaSeguimiento: new Date(),
+      estadoId: 1,
+      contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
+      telefono: '',
+      usuarioId: 'abc',
+      solicitanteId: 1,
+      fechaSolicitud: new Date(),
+      tieneDiagnosticos: false,
+      observacionesSolicitante: '',
+      observacionAgente: '',
+      ultimaActuacionAsunto: '',
+      ultimaActuacionFecha: new Date(),
+      nombreRechazo: '',
+      parentescoRechazo: '',
+      razonesRechazo: '',
+      alertas: [],
+    };
   }
 }

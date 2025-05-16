@@ -1,4 +1,6 @@
-<p-dialog header="Guardar y agendar seguimiento"  [(visible)]="show" [modal]="true" [style]="{ width: '800px' }">
+<p-dialog header="Guardar y agendar seguimiento"  [(visible)]="show" [modal]="true" [style]="{ width: '800px' }"
+  (onHide)="limpiar()"
+>
   <div *ngIf="isLoading" class="spinner">
     <p class="{{ colorMensaje }}">{{ mensajeCarga }}</p>
     <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
