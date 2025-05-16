@@ -40,12 +40,17 @@
           </ng-template>
           <ng-template pTemplate="body" let-historico>
               <tr>
-                <td>{{ historico.fecha | date:'dd/MM/yyyy'}}</td>
+                <td>{{ historico.fechaTransacion | date:'dd/MM/yyyy'}}</td>
                 <td>{{ historico.transaccion }}</td>
-                <td>{{ historico.usuarioOrigen }}</td>
+                <td>{{ historico.usuarioId }}</td>
                 <td>{{ historico.comentario }}</td>
               </tr>
           </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center">No se encontro historicos de la lista parametrica {{ listaParametrica?.nombre }}.</td>
+            </tr>
+        </ng-template>
       </p-table>
     </div>
   </div>

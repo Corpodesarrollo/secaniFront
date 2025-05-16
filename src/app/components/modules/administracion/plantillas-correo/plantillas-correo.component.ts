@@ -33,14 +33,43 @@ export class PlantillasCorreoComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
-  async ngOnInit() {
-    this.plantillasCorreo = await this.plantillasCorreoService.obtenerPlantillasCorreo();
-    console.log(this.plantillasCorreo);
+  ngOnInit() {
+    this.obtenerPlantillasCorreo();
   }
 
-  async openViewModal(plantillaCorreoId: string) {
-    this.plantillaCorreoSeleccionada = await this.plantillasCorreoService.obtnenerPlantillaCorreoPorId(plantillaCorreoId);
-    this.mostrarDetallesModal = true;
+  obtenerPlantillasCorreo() {
+    this.plantillasCorreoService.getPlantillasCorreo()
+      .subscribe({
+        next: (response: any) => {
+          this.plantillasCorreo = response;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar las plantillas de correo.',
+            life: 3000
+          });
+        }
+      });
+  }
+
+  openViewModal(plantillaCorreoId: string) {
+    this.plantillasCorreoService.getPlantillaCorreo(plantillaCorreoId)
+      .subscribe({
+        next: (response: any) => {
+          this.plantillaCorreoSeleccionada = response;
+          this.mostrarDetallesModal = true;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo cargar la plantilla de correo.',
+            life: 3000
+          });
+        }
+      });
   }
 
   closeViewModal(): void {
@@ -48,7 +77,7 @@ export class PlantillasCorreoComponent implements OnInit {
     this.plantillaCorreoSeleccionada = null;
   }
 
-  confirm(event: Event) {
+  confirm(event: Event, plantillaCorreoId: string) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: '¿Estás seguro de que quieres eliminar la plantilla de correo?',
@@ -58,25 +87,30 @@ export class PlantillasCorreoComponent implements OnInit {
       rejectButtonStyleClass: "p-button-secondary p-button-text",
       acceptIcon: "none",
       rejectIcon: "none",
-      accept: async () => {
-        if (this.plantillaCorreoSeleccionada) {
-          try {
-            await this.plantillaCorreoSeleccionada.eliminarPlantillaCorreo(this.plantillaCorreoSeleccionada.id);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Eliminación exitosa',
-              detail: `La plantilla "${this.plantillaCorreoSeleccionada.nombre}" fue eliminada correctamente.`,
-              life: 3000
+      accept: () => {
+        if (plantillaCorreoId) {
+          this.plantillasCorreoService.deletePlantillaCorreo(plantillaCorreoId)
+            .subscribe({
+              next: () => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Eliminado',
+                  detail: 'La plantilla de correo fue eliminada con éxito.',
+                  life: 3000
+                });
+
+                this.obtenerPlantillasCorreo();
+                this.closeViewModal();
+              },
+              error: (error) => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'No se pudo eliminar la plantilla de correo.',
+                  life: 3000
+                });
+              }
             });
-            this.plantillasCorreo = await this.plantillasCorreoService.obtenerPlantillasCorreo(); // Refresca la lista
-          } catch (error) {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Hubo un problema al eliminar la plantilla. Inténtalo de nuevo.',
-              life: 3000
-            });
-          }
         }
       },
       reject: () => {

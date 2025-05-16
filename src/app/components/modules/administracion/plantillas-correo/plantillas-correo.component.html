@@ -16,7 +16,7 @@
           <tr>
             <th pSortableColumn="id">
               <div class="d-flex align-items-center justify-content-between">
-                ID Plantilla
+                ID
                 <p-sortIcon field="id" />
                 <p-columnFilter type="text" field="id" display="menu" class="ms-auto"/>
               </div>
@@ -74,7 +74,7 @@
             <td>{{ plantillaCorreo.fechaCreacion | date: "dd/MM/yyyy" }}</td>
             <td>{{ plantillaCorreo.nombre }}</td>
             <td>{{ plantillaCorreo.asunto }}</td>
-            <td>{{ plantillaCorreo.tipo }}</td>
+            <td>{{ plantillaCorreo.tipoPlantilla }}</td>
             <td>{{ plantillaCorreo.firmante }}</td>
             <td>{{ plantillaCorreo.estado }}</td>
             <th>
@@ -86,7 +86,7 @@
                 <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary"
                   [routerLink]="['/administracion/plantilla_de_correo', plantillaCorreo.id, 'historico']"
                 />
-                <p-button (onClick)="confirm($event)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>
+                <p-button (onClick)="confirm($event, plantillaCorreo.id)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>
               </div>
             </th>
           </tr>
@@ -106,7 +106,7 @@
     <div class="col-12 col-sm-6">
       <div class="row">
         <div class="col-5 col-sm-4 mb-sm-4 fw-semibold">Tipo de plantilla:</div>
-        <div class="col-7 col-sm-8">{{ plantillaCorreoSeleccionada?.tipo }}</div>
+        <div class="col-7 col-sm-8">{{ plantillaCorreoSeleccionada?.tipoPlantilla }}</div>
       </div>
     </div>
     <div class="col-12 col-sm-6">

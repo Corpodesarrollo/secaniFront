@@ -1,17 +1,15 @@
 import { Attachment } from "./attachmentFile.model";
 
-export interface Notificacion {
-    id: number;
-    idEntidad: string;
+export interface notificacionOficio {
+    idEntidad: number;
     para: string[];
     conCopia: string[];
-    plantillaId: number;
+    plantillaId: string;
     asunto: string;
     mensaje: string;
-    agregarEnlace: boolean;
     enlace: string;
-    agregarComentario: boolean;
-    comentario: string;
     adjunto: Attachment | null;
+    comentario: string;
     firma: string;
+    idNotificacionEntidad: number;
 }

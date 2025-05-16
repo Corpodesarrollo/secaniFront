@@ -1,0 +1,18 @@
+<header>
+    <app-header></app-header>
+</header>
+
+<div class="row content-row">
+  <div class="menu-rq00-hu00 col-md-3 col-lg-2 d-flex flex-column formato-menu" [ngClass]="{'d-none': !isMenuCollapsed, 'd-lg-block': true}">
+      <app-nav-menu></app-nav-menu>
+  </div>
+
+  <main class="col-md-9 col-lg-10 main-fondo" style="padding: 0;" [ngClass]="{'col-md-12': !isMenuCollapsed, 'd-lg-block': true}">
+      <div class="container-fluid" style="padding: 10px;">
+          <router-outlet></router-outlet>
+      </div>
+  </main>
+  <footer>
+      <app-footer></app-footer>
+  </footer>
+</div>

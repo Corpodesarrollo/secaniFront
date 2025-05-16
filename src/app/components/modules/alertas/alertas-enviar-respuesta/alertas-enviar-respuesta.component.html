@@ -29,15 +29,13 @@
                 <label for="para" class="fw-bold">Con copia</label>
             </div>
             <div class="col-9 flex-auto">
-                <ng-select
-                    [items]="contactos"
-                    bindLabel="email"
-                    bindValue="id"
-                    [(ngModel)]="selectedContactos"
-                    [multiple]="true"
-                    placeholder="Seleccione contactos"
-                    [searchable]="true">
-                </ng-select>
+                <p-multiSelect 
+                    [options]="contactos" 
+                    [(ngModel)]="selectedContactos" 
+                    optionLabel="email" 
+                    placeholder="Seleccione contactos" 
+                    display="chip"
+                    styleClass="w-full md:w-80" />
             </div>
         </div>
         <div class="row align-items-center mb-2 p-fluid">

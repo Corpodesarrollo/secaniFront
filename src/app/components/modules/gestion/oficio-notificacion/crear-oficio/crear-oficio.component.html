@@ -1,105 +1,144 @@
-<p-toast  [life]="10000" />
+<p-toast [life]="10000" />
 
-<p-dialog header="Crear oficio de notificación" [(visible)]="show" [modal]="true" [style]="{ width: '900px' }" [draggable]="false"
-    [resizable]="false" (onHide)="close()">
+<p-dialog header="Crear oficio de notificación" [(visible)]="show" [modal]="true" [style]="{ width: '900px' }"
+  [draggable]="false" [resizable]="false" (onHide)="close()">
 
+  <div class="mx-3">
+    <!--form-->
     <div class="row align-items-center">
-
-      <p-card>
-        <!--form-->
-          <div class="row">
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Ciudad y fecha</div>
-              <div class="col">
-                <p>{{ city }}, {{ formattedDate }}</p>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Membrete</div>
-              <div class="col">
-                <input type="text" class="form-control" placeholder="" [(ngModel)]="membrete" />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Entidad*</div>
-              <div class="col">
-                <select class="form-select" aria-label="entidadId" id="entidadId" name="entidadId" [(ngModel)]="nombreEntidad">
-                  <option [value]=""></option>
-                  <option *ngFor="let entidad of listaEndidades" [value]="entidad.nombre">
-                      {{ entidad.nombre }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Ciudad</div>
-              <div class="col">
-                <input type="text" class="form-control" placeholder="" [(ngModel)]="ciudad" />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Asunto*</div>
-              <div class="col">
-                <textarea class="form-control" rows="2" placeholder="" [(ngModel)]="asunto"></textarea>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Mensaje*</div>
-              <div class="col">
-                <textarea class="form-control" rows="8" placeholder="" [(ngModel)]="mensaje"></textarea>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Alerta</div>
-              <div class="col">
-                <b>{{ alerta?.categoriaAlerta }} - {{ alerta?.subcategoriaAlerta }}</b>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Comentario 1</div>
-              <div class="col">
-                <textarea class="form-control" rows="6" placeholder="" [(ngModel)]="comentario1"></textarea>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">NNA</div>
-              <div class="col">
-                <div class="row">
-                  <b>Nombres y apellidos: {{ nombreNNA }}</b>
-                </div>
-                <div class="row">
-                  <b>Identificación: {{ NNAdatos?.tipoIdentificacionId}} {{ NNAdatos?.numeroIdentificacion }}</b>
-                </div>
-                <div class="row">
-                  <b>Edad: {{ edadNNA }}</b>
-                </div>
-                <div class="row">
-                  <b>Diagnostico: {{ diagnosticoNNA }}</b>
-                </div>
-                <div class="row">
-                  <b>Teléfono del acudiente: {{ NNAdatos?.cuidadorTelefono }}</b>
-                </div>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Cierre*</div>
-              <div class="col">
-                <textarea class="form-control" rows="5" placeholder="" [(ngModel)]="cierre"></textarea>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-2" style="font-weight: bold;">Firma*</div>
-              <div class="col" id="elementToCapture">
-                <p-editor [(ngModel)]="firma" [style]="{ height: '320px' }" />
-              </div>
-            </div>
-          </div>
-        <!--/form-->
-        <div class="text-center">
-          <button (click)="verificarCampos()" class="btn btn-primary">GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
+      <div class="row mb-3 align-items-center">
+        <div class="col-2">
+          <label for="ciudadFecha" style="font-weight: bold;">Ciudad y fecha</label>
         </div>
-
-      </p-card>
+        <div class="col">
+          <label for="ciudadFecha">{{ oficio.ciudad }}, {{ formattedDate }}</label>
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid align-items-center">
+        <div class="col-2">
+          <label for="membrete" style="font-weight: bold;">Membrete</label>
+        </div>
+        <div class="col-10">
+          <input id="membrete" type="text" pInputText placeholder="" [(ngModel)]="oficio.membrete" />
+        </div>
+        <div *ngIf="submitted && (!oficio.membrete || oficio.membrete.trim() === '')" class="text-danger col-10 offset-2">
+            Campo requerido
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid align-items-center">
+        <div class="col-2">
+          <label for="entidad" style="font-weight: bold;">Entidad*</label>
+        </div>
+        <div class="col-10 flex-auto">
+          <p-dropdown
+            id="entidad"
+            [(ngModel)]="selectedEntidad"
+            [options]="entidades"
+            [loading]="isLoadingEntidades"
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre"
+            [showClear]="true"
+            class="w-100"
+            placeholder="Seleccione" />
+        </div>
+        <div *ngIf="submitted && (!selectedEntidad)" class="text-danger col-10 offset-2">
+            Campo requerido
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid align-items-center">
+        <div class="col-2">
+          <label for="ciudad" style="font-weight: bold;">Ciudad</label>
+        </div>
+        <div class="col-10">
+          <input id="ciudad" type="text" pInputText placeholder="" [(ngModel)]="oficio.ciudad" />
+        </div>
+        <div *ngIf="submitted && (!oficio.ciudad || oficio.ciudad.trim() === '')" class="text-danger col-10 offset-2">
+            Campo requerido
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid">
+        <div class="col-2">
+          <label for="asunto" style="font-weight: bold;">Asunto*</label>
+        </div>
+        <div class="col-10">
+          <textarea id="asunto" pInputText rows="2" placeholder="" [(ngModel)]="oficio.asunto"></textarea>
+        </div>
+        <div *ngIf="submitted && (!oficio.asunto || oficio.asunto.trim() === '')" class="text-danger col-10 offset-2">
+            Campo requerido
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid">
+        <div class="col-2">
+          <label for="mensaje" style="font-weight: bold;">Mensaje*</label>
+        </div>
+        <div class="col-10">
+          <textarea id="mensaje" pInputText rows="8" placeholder="" [(ngModel)]="oficio.mensaje"></textarea>
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid align-items-center">
+        <div class="col-2">
+          <label for="alerta" style="font-weight: bold;">Alerta</label>
+        </div>
+        <div class="col-10">
+          <b id="alerta">{{ alerta?.categoriaAlerta }} - {{ alerta?.subcategoriaAlerta }}</b>
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid">
+        <div class="col-2">
+          <label for="comentario1" style="font-weight: bold;">Comentario 1</label>
+        </div>
+        <div class="col-10">
+          <textarea id="comentario1" pInputText rows="6" placeholder="" [(ngModel)]="oficio.comentario"></textarea>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-2">
+          <label for="nna" style="font-weight: bold;">NNA</label>
+        </div>
+        <div class="col-10" id="nna">
+          <div class="row">
+            <b>Nombres y apellidos: {{ nombreNNA }}</b>
+          </div>
+          <div class="row">
+            <b>Identificación: {{ NNAdatos?.tipoIdentificacionId}} {{ NNAdatos?.numeroIdentificacion }}</b>
+          </div>
+          <div class="row">
+            <b>Edad: {{ edadNNA }}</b>
+          </div>
+          <div class="row">
+            <b>Diagnostico: {{ diagnosticoNNA }}</b>
+          </div>
+          <div class="row">
+            <b>Teléfono del acudiente: {{ NNAdatos?.cuidadorTelefono }}</b>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3 p-fluid">
+        <div class="col-2">
+          <label for="cierre" style="font-weight: bold;">Cierre*</label>
+        </div>
+        <div class="col-10">
+          <textarea id="cierre" pInputText rows="5" placeholder="" [(ngModel)]="oficio.cierre"></textarea>
+        </div>
+        <div *ngIf="submitted && (!oficio.cierre || oficio.cierre.trim() === '')" class="text-danger col-10 offset-2">
+            Campo requerido
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-2">
+          <label for="firma" style="font-weight: bold;">Firma*</label>
+        </div>
+        <div class="col-10" id="elementToCapture">
+          <p-editor id="firma" [(ngModel)]="oficio.firma" [style]="{ height: '140px' }" />
+        </div>
+      </div>
     </div>
+    <!--/form-->
+    <div class="text-center">
+      <button (click)="enviar()" class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 400px;">GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
+    </div>
+  </div>
+</p-dialog>
 
-  </p-dialog>
+<app-notificacion-oficio [showDialog]="showDialog" [idAlerta]="alerta.id" [idNNA]="NNAdatos.id" (onClose)="closeNotificacion()"></app-notificacion-oficio>

@@ -34,6 +34,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { HealthCheckInterceptor } from './interceptors/health-check.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { LayoutComponent } from './layout/layout.component';
+import { LayoutSecondaryComponent } from './layout-secondary/layout-secondary.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
     HeaderComponent,
     FooterComponent,
     ContentComponent,
-
+    LayoutComponent,
+    LayoutSecondaryComponent
   ],
   imports: [
 

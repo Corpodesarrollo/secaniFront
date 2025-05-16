@@ -1,0 +1,36 @@
+.file-upload-icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-color:  #73b7ad;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.file-upload-icon:hover {
+  background-color: #61b9ab;
+}
+
+input[type="file"] {
+  display: none; /* Oculta el input de archivo */
+}
+
+::ng-deep .p-dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px; /* Ajusta el ancho según sea necesario */
+}
+
+::ng-deep .p-multiselect.p-multiselect-chip .p-multiselect-label {
+  flex-wrap: wrap !important;
+  height: auto !important;
+  min-height: 3rem;
+  align-items: flex-start;
+  overflow-y: auto;
+  max-height: 150px; /* límite opcional */
+}

@@ -11,7 +11,7 @@ import { TpParametros } from '../../../core/services/tpParametros';
 import { GenericService } from '../../../services/generic.services';
 
 @Component({
-  selector: 'app-notificacion-respuesta',
+  selector: 'app-notificacion-respuesta2',
   standalone: true,
   imports: [CommonModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
   DropdownModule, CalendarModule, FormsModule, InputTextModule],

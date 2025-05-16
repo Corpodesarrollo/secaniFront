@@ -1,35 +1,36 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { Generico } from '../core/services/generico';
-import { environment } from '../../environments/environment';
+import { GenericService } from './generic.services';
 
-@Injectable({providedIn: 'root'})
+@Injectable({
+  providedIn: 'root'
+})
 export class PlantillasCorreoService {
-  private urlbase: string = `${environment.url_MSSeguimiento}`;
-  constructor(private generico: Generico) { }
+  constructor(private generico: GenericService) { }
 
-  crearEditarPlantillaCorreo(data: any) {
-    const url: string = `CrearPlantillaCorreo`;
-    return this.generico.retorno_post(url, data, true, this.urlbase);
+  crearEditarPlantillaCorreo(dato: any): Observable<Object> {
+    const url: string = `seguimiento/CrearPlantillaCorreo`;
+     return this.generico.post(url, dato, 'Seguimiento');
   }
 
-  obtenerPlantillasCorreo() {
-    const url: string = `ConsultarPlantillaCorreo`;
-    return this.generico.retorno_get(url, this.urlbase);
+  getPlantillasCorreo(): Observable<Object> {
+    const url: string = `seguimiento/ConsultarPlantillaCorreo`;
+    return this.generico.get(url, '', 'Seguimiento');
   }
 
-  historioPlantillaCorreo(id: string) {
-    const url: string = `HistoricoPlantillaCorreo/${id}`;
-    return this.generico.retorno_get(url, this.urlbase);
+  getHistorioPlantillaCorreo(id: string) {
+    const url: string = `seguimiento/HistoricoPlantillaCorreo/${id}`;
+    return this.generico.get('', url, 'Seguimiento');
   }
 
-  obtnenerPlantillaCorreoPorId(id: string) {
-    const url: string = `ConsultarPlantillaCorreo/${id}`;
-    return this.generico.retorno_get(url, this.urlbase);
+  getPlantillaCorreo(id: string) {
+    const url: string = `seguimiento/ConsultarPlantillaCorreo/${id}`;
+    return this.generico.get('', url, 'Seguimiento');
   }
 
-  eliminarPlantillaCorreo(id: string) {
-    const url: string = `EliminarPlantillaCorreo/${id}`;
-    return this.generico.retorno_delete_custom(url, this.urlbase);
+  deletePlantillaCorreo(id: string) {
+    const url: string = `seguimiento/EliminarPlantillaCorreo/${id}`;
+    return this.generico.delete(url, 'Seguimiento');
   }
 }
