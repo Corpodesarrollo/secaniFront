@@ -161,6 +161,7 @@ export class SeguimientoAdherenciaComponent implements OnInit {
       parentescoRechazo: '',
       razonesRechazo: '',
       alertas: [],
+      alertasPendientes: []
     };
   }
 

@@ -244,6 +244,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
       parentescoRechazo: '',
       razonesRechazo: '',
       alertas: [],
+      alertasPendientes: []
     };
   }
 }

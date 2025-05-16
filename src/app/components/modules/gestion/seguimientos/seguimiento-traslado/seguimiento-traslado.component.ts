@@ -240,6 +240,7 @@ export class SeguimientoTrasladoComponent implements OnInit {
       parentescoRechazo: '',
       razonesRechazo: '',
       alertas: [],
+      alertasPendientes: []
     };
   }
 }
