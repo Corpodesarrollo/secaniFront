@@ -65,6 +65,7 @@ export class AsignacionSeguimientoComponent implements OnInit {
     { label: 'Agente 2', value: 'agente2' },
     { label: 'Agente 3', value: 'agente3' }
   ];
+
   agente: any;
   motivo: any = '';
 

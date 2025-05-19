@@ -99,7 +99,7 @@ export class ConsultarAlertasComponent implements OnInit {
   }
 
   loadSeguimientoData() {
-    this.repos.get_withoutParameters(`Seguimiento/${this.idSeguimiento}51`, 'Seguimiento').subscribe({
+    this.repos.get_withoutParameters(`Seguimiento/${this.idSeguimiento}`, 'Seguimiento').subscribe({
       next: (seguimientoData: any) => {
         this.seguimiento = seguimientoData;
         this.idNna = this.seguimiento.nnaId;
@@ -163,9 +163,7 @@ export class ConsultarAlertasComponent implements OnInit {
             return alertasAcumuladas;
           }, []);
 
-          if (this.todasAlertas.length > 0) {
-            console.log('Alertas cargadas:', this.todasAlertas);
-          } else {
+          if (this.todasAlertas.length == 0) {
             console.warn('No se encontraron alertas en los seguimientos');
           }
           this.applyFilter('0');
