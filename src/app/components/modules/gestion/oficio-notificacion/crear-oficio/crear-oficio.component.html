@@ -136,7 +136,7 @@
     </div>
     <!--/form-->
     <div class="text-center">
-      <button (click)="enviar()" class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 400px;">GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
+      <button (click)="enviar()" class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 400px;"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
     </div>
   </div>
 </p-dialog>

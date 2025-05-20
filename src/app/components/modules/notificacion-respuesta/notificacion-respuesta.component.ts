@@ -9,11 +9,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SeguimientoStepsComponent } from '../gestion/seguimientos/seguimiento-steps/seguimiento-steps.component';
 import { TpParametros } from '../../../core/services/tpParametros';
 import { GenericService } from '../../../services/generic.services';
+import { apis } from '../../../models/apis.model';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-notificacion-respuesta2',
   standalone: true,
-  imports: [CommonModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
+  imports: [CommonModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, ProgressSpinnerModule,
   DropdownModule, CalendarModule, FormsModule, InputTextModule],
   templateUrl: './notificacion-respuesta.component.html',
   styleUrl: './notificacion-respuesta.component.css'
@@ -25,6 +27,7 @@ export class NotificacionRespuestaComponent {
   isLoadingEntidades: boolean = false;
   selectedEntidad: Parametricas | undefined;
   submitted: boolean = false;
+  isValid: boolean | null = null;
   fileError: string | null = null;
   fileName: string | null = null;
   nombreFuncionario: string = '';
@@ -33,6 +36,10 @@ export class NotificacionRespuestaComponent {
   telefono: string = '';
   respuesta: string = '';
   archivo: any;
+  idNotificacion: string = '';
+  isLoading: boolean = false;
+  isOK: boolean = false;
+  saving: boolean = false;
 
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
@@ -49,9 +56,17 @@ export class NotificacionRespuestaComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    const url = window.location.href;
+    const id = url.split('/').pop();
+    const decodedId = decodeURIComponent(id || '');
+    this.idNotificacion = atob(decodedId);
+    this.isLoading = true;
+    this.validarRespuesta(this.idNotificacion);
+
     this.isLoadingEntidades = true;
     this.entidades = await this.tp.getEntidades();
     this.isLoadingEntidades = false;
+    this.isLoading = false;
   }
 
   onFileChange(event: any) {
@@ -92,7 +107,12 @@ export class NotificacionRespuestaComponent {
     event.stopPropagation();  // Evita que el evento se propague dos veces
   }
 
-  onSubmit() {
+  onSubmit() {    
+    if (this.saving) {
+      return;
+    }
+
+    this.saving = true;
     this.submitted = true;
     if (this.contactForm.valid) {
       const formData = new FormData();
@@ -100,6 +120,7 @@ export class NotificacionRespuestaComponent {
       if (this.selectedEntidad && this.selectedEntidad.codigo) {
         formData.append('entidad', this.selectedEntidad.codigo);
       }
+      formData.append('idNotificacion', this.idNotificacion);
       formData.append('nombreFuncionario', this.contactForm.get('nombreFuncionario')?.value);
       formData.append('cargo', this.contactForm.get('cargo')?.value);
       formData.append('correo', this.contactForm.get('correo')?.value);
@@ -109,7 +130,18 @@ export class NotificacionRespuestaComponent {
       // Llamada al método 'post'
       this.gs.post('Notificacion/NotificacionRespuesta', formData, "Seguimiento").subscribe(
         response => {
-          console.log('Archivo subido exitosamente');
+          let result = response as {estado: boolean, descripcion: string};
+          if (result.estado) {
+            this.contactForm.reset();
+            this.fileInput.nativeElement.value = ''; // Limpiar el input de archivo
+            this.fileName = null; // Limpiar el nombre del archivo
+            this.selectedFile = null; // Limpiar la referencia al archivo
+            this.submitted = false;
+            this.isOK = true;
+          } else {
+            this.isOK = false;
+            console.error('Error al subir el archivo:', result.descripcion);
+          }
         },
         error => {
           console.error('Error al subir el archivo', error);
@@ -118,5 +150,20 @@ export class NotificacionRespuestaComponent {
     } else {
       this.contactForm.markAllAsTouched();
     }
+    this.saving = false;
+  }
+
+  validarRespuesta(decodedId: string) {
+    this.gs.get('Notificacion/ValidarNotificacion/', `${decodedId}`, apis.seguimiento).subscribe(
+        response => {
+          let result = response as {estado: boolean, descripcion: string};
+          this.isValid = result.estado;
+        },
+        error => {
+          console.error('Error al subir el archivo', error);
+        }
+      );
   }
 }
+
+

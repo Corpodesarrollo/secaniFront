@@ -83,7 +83,7 @@
                 <label for="Asunto" class="fw-bold">Asunto</label>
             </div>
             <div class="col-9 flex-auto">
-                <input type="text" placeholder="Asunto" pInputText [(ngModel)]="notificacion.asunto">
+                <input type="text" placeholder="Asunto" pInputText maxlength="150" [(ngModel)]="notificacion.asunto">
             </div>
             <div *ngIf="submitted && (!notificacion.asunto || notificacion.asunto.trim() === '')" class="text-danger col-9 offset-3">
                 Campo requerido
@@ -94,7 +94,7 @@
                 <label for="Mensaje" class="fw-bold">Mensaje</label>
             </div>
             <div class="col-9 flex-auto">
-                <textarea pInputText rows="2" [(ngModel)]="notificacion.mensaje"></textarea>
+                <textarea pInputText rows="2" maxlength="5000" [(ngModel)]="notificacion.mensaje"></textarea>
             </div>
             <div *ngIf="submitted && (!notificacion.mensaje || notificacion.mensaje.trim() === '')" class="text-danger col-9 offset-3">
                 Campo requerido
@@ -132,7 +132,7 @@
                 <label for="Comentario" class="fw-bold">Comentario</label>
             </div>
             <div class="col-9 flex-auto">
-                <p-editor [(ngModel)]="notificacion.comentario" [style]="{ height: '80px' }" />
+                <p-editor [(ngModel)]="notificacion.comentario" maxlength="5000" [style]="{ height: '80px' }" />
             </div>
         </div>
         <div class="row align-items-center">
@@ -172,7 +172,7 @@
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 250px;" (click)="enviar()" >GUARDAR Y ENVIAR</button>
+                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 250px;" (click)="enviar()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR Y ENVIAR</button>
             </div>
         </div>
     </div>
@@ -187,8 +187,9 @@
   [contentStyle]="{ 'text-align': 'center' }">
   
   <div>
-    <i class="pi pi-check-circle" style="font-size: 4rem; color: #4CAF50;"></i>
-    <h3>Notificación enviada con éxito</h3>
+    <i class="pi mb-3" [ngClass]="icono" [style.fontSize]="'4rem'" [style.color]="colorIcono"></i>
+    <h3 class="mb-3">{{msg}}</h3>
+    <button type="button" pButton label="Aceptar" icon="pi pi-check" (click)="limpiar()" class="p-button-rounded p-button-success mb-3"></button>
   </div>
 </p-dialog>
 

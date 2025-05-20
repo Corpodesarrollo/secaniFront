@@ -38,8 +38,8 @@ export class NotificacionOficioComponent {
 
     @Input() showDialog: boolean = false;
     @Input() idNotificacion!: number;
-    @Input() idAlerta: number = 10;
-    @Input() idNNA: number = 10;
+    @Input() idAlerta: number = 0;
+    @Input() idNNA: number = 0;
     @Output() closeModal = new EventEmitter<void>();
     @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   
@@ -47,6 +47,7 @@ export class NotificacionOficioComponent {
     submitted: boolean = false;
     isLoadingEntidades: boolean = true;
     isLoadingPLantillas: boolean = true;
+    saving: boolean = false;
   
     selectedFile: File | null = null;
     fileError: string | null = null;
@@ -54,6 +55,11 @@ export class NotificacionOficioComponent {
   
     mensajeCarga: string = 'Cargando datos...';
     colorMensaje: string = 'text-primary';
+
+    error: boolean = false;
+    msg: string = '';
+    icono: string = 'pi-check-circle';
+    colorIcono: string = '#4CAF50';
   
     entidades: Parametricas[] = [];
     selectedEntidad: Parametricas | undefined;
@@ -102,11 +108,24 @@ export class NotificacionOficioComponent {
       if (changes['idNotificacion']) {
         this.idNotificacion = changes['idNotificacion'].currentValue; // Actualiza el ID si cambia
         this.notificacion.idNotificacion = this.idNotificacion ?? 0;
-        console.log("ngOnChanges:", this.idNotificacion);
+      }
+      if (changes['showDialog']) {
+        this.showDialog = changes['showDialog'].currentValue;
+      }
+      if (changes['idAlerta']) {
+        this.idAlerta = changes['idAlerta'].currentValue;
+      }
+      if (changes['idNNA']) {
+        this.idNNA = changes['idNNA'].currentValue; 
       }
     }
   
     async enviar(){
+      if (this.saving) {
+        return; // Evita múltiples envíos
+      }
+
+      this.saving = true; // Marca como en proceso de envío
       this.notificacion.para = this.selectedPara.map((contacto) => contacto.email);
       this.notificacion.conCopia = this.selectedConCopia.map((contacto) => contacto.email);
       this.notificacion.idEntidad = this.selectedEntidad?.codigo ?? '';
@@ -116,6 +135,11 @@ export class NotificacionOficioComponent {
       this.submitted = true;
       if (this.selectedPara.length === 0) {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar al menos un correo.' });
+        return;
+      }
+
+      if (this.selectedConCopia.length === 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe ingresar al menos un correo en copia.' });
         return;
       }
   
@@ -161,12 +185,26 @@ export class NotificacionOficioComponent {
       } else {
         this.guardar();
       }
+      this.saving = false; // Reinicia el estado de guardado
     }
   
     guardar(){
       this.repos.post("Notificacion/EnviarOficioNotificacion", this.notificacion, apis.seguimiento).subscribe({
         next: (response) => {
+          let result = response as {estado: boolean, datos: string};
           this.mostrarDialogo = true;
+          if(result.estado){
+            this.msg = result.datos;
+            this.icono = 'pi-check-circle';
+            this.colorIcono = '#4CAF50';
+            this.error = false;
+          }
+          else{
+            this.msg = result.datos;
+            this.icono = 'pi-times-circle';
+            this.colorIcono = '#F44336';
+            this.error = true;
+          }
         },
         error: (error) => {
           console.error('Error al consumir el API:', error);
@@ -175,7 +213,11 @@ export class NotificacionOficioComponent {
     }
   
     limpiar(){
-      this.notificacion = {
+      if (this.error){
+        this.mostrarDialogo = false;
+      }
+      else {
+        this.notificacion = {
             id: 0,
             idNotificacion: 0,
             idEntidad: '',
@@ -192,9 +234,13 @@ export class NotificacionOficioComponent {
             firma: "",
           };
 
-      this.showDialog = false;
-      this.selectedPlantilla = undefined;
-      this.selectedEntidad = undefined;
+        this.showDialog = false;
+        this.mostrarDialogo = true;
+        this.selectedPlantilla = undefined;
+        this.selectedEntidad = undefined;
+
+        this.closeModal.emit();
+      }
     }
   
     openModal() {

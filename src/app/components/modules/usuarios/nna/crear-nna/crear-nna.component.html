@@ -215,9 +215,6 @@
             <p-dropdown [(ngModel)]="selectedGrupoPoblacional" [options]="gruposPoblacionales" optionLabel="nombre"
               [filter]="true" filterBy="nombre" [showClear]="true" placeholder="Seleccione"
               [readonly]="nnaFormCrearSinActivar && !isPersona" />
-              <div class="text-danger" *ngIf="selectedPaisNacimiento?.codigo == '170' && submitted && (!nna.grupoPoblacionId || nna.grupoPoblacionId.trim() === '')">
-                Grupo poblacional es requerido.
-              </div>
           </div>
         </div>
       </div>

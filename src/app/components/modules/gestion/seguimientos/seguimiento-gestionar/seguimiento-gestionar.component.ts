@@ -25,6 +25,7 @@ import { apis } from '../../../../../models/apis.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 import { EstadoAlerta } from '../../../../../models/estadoAlerta.model';
+import { user, User } from '../../../../../core/services/userService';
 
 @Component({
   selector: 'app-seguimiento-gestionar',
@@ -34,6 +35,8 @@ import { EstadoAlerta } from '../../../../../models/estadoAlerta.model';
   styleUrl: './seguimiento-gestionar.component.css'
 })
 export class SeguimientoGestionarComponent {
+
+  user = new User();
 
   estado:string = 'Sin Diagnóstico';
   items: MenuItem[] = [];
@@ -154,7 +157,7 @@ export class SeguimientoGestionarComponent {
     this.seguimiento.nnaId = this.nna.id;
     this.seguimiento.contactoNNAId = this.contacto.id;
     this.seguimiento.telefono = this.contacto.telefonos;
-    this.seguimiento.usuarioId = '1';
+    this.seguimiento.usuarioId = User.id ?? "";
     this.seguimiento.solicitanteId = 1;
     this.seguimiento.fechaSolicitud = new Date();
     this.seguimiento.tieneDiagnosticos = this.nna.diagnosticoId > 0;

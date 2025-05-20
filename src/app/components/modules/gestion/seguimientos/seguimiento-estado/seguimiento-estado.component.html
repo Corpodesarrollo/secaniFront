@@ -109,6 +109,7 @@
                                 <p-dropdown
                                     [(ngModel)]="selectedIPS"
                                     [options]="IPS"
+                                    [loading]="isLoadingIPS"
                                     optionLabel="nombre"
                                     [filter]="true"
                                     filterBy="nombre"

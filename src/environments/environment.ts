@@ -7,7 +7,7 @@
 /*export const environment = {
   cookie : false,
   production: false,
-  url: 'https://localhost:7084/',
+  url: 'https://localhost:4200/',
   url_MsAuthention: 'https://localhost:7084/',
   url_MSEntidad: 'https://localhost:7084/',
   url_MSPermisos: 'https://localhost:7084/',

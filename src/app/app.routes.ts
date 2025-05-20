@@ -43,7 +43,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutSecondaryComponent,
     children: [
-      { path: 'respuesta-notificacion', loadComponent: () => import('./components/modules/notificacion-respuesta/notificacion-respuesta.component').then((c) => c.NotificacionRespuestaComponent) }
+      { path: 'respuesta-notificacion/:id', loadComponent: () => import('./components/modules/notificacion-respuesta/notificacion-respuesta.component').then((c) => c.NotificacionRespuestaComponent) }
     ]
   }
 ];
