@@ -8,10 +8,12 @@ import { EditarNnaComponent } from './nna/editar-nna/editar-nna.component';
 import { CasosTerritorioComponent } from './casos-territorio/casos-territorio.component';
 import { PendienteReportarComponent } from './nna/pendiente-reportar/pendiente-reportar.component';
 import { CuidadoresComponent } from './cuidadores/cuidadores.component';
+import { ContactoEntidadComponent } from './contacto-entidad/contacto-entidad.component';
 
 const routes: Routes = [
   { path: 'cuidadores', component: CuidadoresComponent },
   { path: 'consultar_eapb', component:  EAPBComponent},
+  { path: 'externos_et', component:  ContactoEntidadComponent},
   { path: 'historico_nna', component: HistoricoNnaComponent },
   { path: 'crear_nna', component: CrearNnaComponent },
   { path: 'detalle_nna/:idNna', component: DetalleNnaComponent },

@@ -38,7 +38,7 @@
                     <td>
                         <span *ngFor="let alerta of seguimiento.alertasSeguimientos" [ngClass]="getBadgeColor(alerta.estadoId)"
                             class="badge text-white me-1">
-                            {{ alerta.estadoId }}
+                            {{ alerta.nombreAlerta }}
                         </span>
                     </td>
                     <td>{{ seguimiento.observacion }}</td>
@@ -57,8 +57,12 @@
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
         <div>
-            <button class="btn btn-detalle-seguimiento"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EXPORTAR SEGUIMIENTO</button>
-            <button class="btn btn-detalle-seguimiento"><i class="bi bi-telephone-outbound-fill me-2"></i>GENERAR CONTACTO</button>
+            <button class="btn btn-detalle-seguimiento" (click)="descargarPDFSeguimiento()">
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i>EXPORTAR SEGUIMIENTO
+            </button>
+            <button class="btn btn-detalle-seguimiento" (click)="intentosLlamada(seguimientos[0].idSeguimiento)">
+                <i class="bi bi-telephone-outbound-fill me-2"></i>GENERAR CONTACTO
+            </button>
         </div>
     </div>
 

@@ -1,0 +1,32 @@
+.btn-guardar {
+    background-color: #73B7AD;
+    color: white;
+}
+
+.btn-guardar:hover {
+    background-color: #73b7adca;
+    /* Color de fondo al pasar el cursor */
+    color: white;
+}
+
+label {
+    font-weight: bold;
+}
+
+select.form-select {
+    width: 100%;
+    /* Asegura que el select ocupe el ancho completo de su contenedor */
+    overflow-x: hidden;
+    /* Oculta cualquier desbordamiento horizontal */
+}
+
+select.form-select option {
+    white-space: nowrap;
+    /* Evita que el texto se divida en varias líneas */
+    overflow: hidden;
+    /* Oculta cualquier contenido que se desborde */
+    text-overflow: ellipsis;
+    /* Añade "..." si el texto es muy largo */
+    max-width: 100%;
+    /* Limita el ancho máximo de la opción al ancho del select */
+}

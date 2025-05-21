@@ -1,0 +1,119 @@
+/***************** Estilos titulo y botones cabecera *****************/
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.top-right-buttons {
+    display: flex;
+}
+
+.btn-general {
+    margin-left: 20px;
+    padding: 10px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    border: none;
+}
+
+.btn-crear {
+    background-color: #FF9801;
+}
+
+.btn-crear:hover {
+    background-color: #ff9901b9;
+    color: white;
+}
+
+.btn-notificacion {
+    background-color: #73B7AD;
+}
+
+.btn-notificacion:hover {
+    background-color: #73b7adc0;
+    color: white;
+}
+
+
+/***************** Estilos rectangulo filtros *****************/
+
+.btn-buscar {
+    background-color: #73B7AD;
+    margin: 0 5px;
+}
+
+.btn-buscar:hover {
+    background-color: #73b7adca;
+    /* Color de fondo al pasar el cursor */
+}
+
+/***************** Estilos tabla *****************/
+
+.btn-round {
+    width: 35px;
+    /* Ajusta el tamaño según sea necesario */
+    height: 35px;
+    /* Ajusta el tamaño según sea necesario */
+    border-radius: 50%;
+    /* Hace que el botón sea redondo */
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: #73B7AD;
+    /* Color de fondo */
+    color: white;
+    /* Color del icono */
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-round .pi {
+    font-size: 15px;
+    /* Ajusta el tamaño del icono */
+}
+
+.btn-round:hover {
+    background-color: #73b7adca;
+    /* Color de fondo al pasar el cursor */
+}
+
+.table-actions {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.no-records {
+    text-align: center;
+    font-weight: bold;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.btn-principal {
+    text-align: center;
+    background: #73B7AD;
+    color: #FFFFFF;
+    width: Fixed (129px)px;
+    height: Fixed (23.52px)px;
+    top: 296.75px;
+    left: 1224px;
+    padding: 4px 12px 4px 12px;
+    gap: 10px;
+    border-radius: 4px 4px 4px 4px;
+    opacity: 0px;
+    border: 0px;
+}
+
+.btn-principal span {
+    margin-left: 10px;    
+}

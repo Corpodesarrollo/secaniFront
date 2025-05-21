@@ -5,11 +5,14 @@ import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { ActivatedRoute } from '@angular/router';
 import { GenericService } from '../../../../services/generic.services';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { NNAInfoDiagnostico } from '../../../../models/nnaInfoDiagnostico.model';
 import { InfoSeguimientoNnaComponent } from "../seguimientos/info-seguimiento-nna/info-seguimiento-nna.component";
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { EstadoNnaComponent } from "../../estado-nna/estado-nna.component";
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
+import { SeguimientoDetalle } from '../../../../models/seguimientoDetalle.model';
 
 @Component({
   selector: 'app-detalle-seguimientos',
@@ -20,10 +23,15 @@ import { EstadoNnaComponent } from "../../estado-nna/estado-nna.component";
 })
 
 export class DetalleSeguimientosComponent implements OnInit {
-  seguimientos: any[] = [];
+  seguimientos: SeguimientoDetalle[] = [];
   idSeguimiento: string = "";
   idNNA: number = 0;
-  datosNNA!: NNAInfoDiagnostico;
+  datosNNA: NNAInfoDiagnostico = {
+    nombreCompleto: '',
+    fechaNacimiento: '',
+    diagnostico: '',
+    idEstado: 0
+  };
 
   fechaInicio!: Date; // Fecha de nacimiento
   fechaFin: Date = new Date(); // Fecha actual
@@ -31,7 +39,9 @@ export class DetalleSeguimientosComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private repos: GenericService
+    private repos: GenericService,
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -46,8 +56,8 @@ export class DetalleSeguimientosComponent implements OnInit {
         this.datosNNA = data[0].nna;
         this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
         this.calcularTiempoTranscurrido();
-        console.log(this.seguimientos);
-        console.log(this.datosNNA);
+        console.log("Datos Seguimiento: ", this.seguimientos);
+        console.log("Datos NNA: ", this.datosNNA);
       }
     });
   }
@@ -81,7 +91,7 @@ export class DetalleSeguimientosComponent implements OnInit {
   getBadgeColor(estadoAlerta: number): string {
     switch (estadoAlerta) {
       case 4: // Resuelta
-        return ' '; // Verde
+        return 'bg-success'; // Verde
       case 1 || 2:
         return 'bg-warning'; // Amarillo
       case 3:
@@ -93,7 +103,31 @@ export class DetalleSeguimientosComponent implements OnInit {
     }
   }
 
+  intentosLlamada(id: number) {
+    this.router.navigate(['/intento-seguimiento'], { state: { id_seguimiento: id } });
+  }
+
   respuestaEntidad() {
     throw new Error('Method not implemented.');
+  }
+
+  descargarPDFSeguimiento(): void {
+    const url = `${environment.url_MSSeguimiento}Seguimiento/ExportarDetalleSeguimiento/${this.idSeguimiento}`;
+
+    this.http.get<{ archivoBase64: string }>(url).subscribe(response => {
+      const base64 = response.archivoBase64;
+
+      const byteCharacters = atob(base64); // Decodifica Base64
+      const byteNumbers = Array.from(byteCharacters, char => char.charCodeAt(0));
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = 'detalle-seguimiento.pdf';
+      a.click();
+      URL.revokeObjectURL(blobUrl);
+    });
   }
 }
