@@ -106,17 +106,16 @@
                                 <label for="estado" class="fw-bold">Nombre de la Institución en la que recibe tratamiento actualmente (IPS)</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-dropdown
+                                <p-autoComplete 
                                     [(ngModel)]="selectedIPS"
-                                    [options]="IPS"
-                                    [loading]="isLoadingIPS"
-                                    optionLabel="nombre"
-                                    [filter]="true"
-                                    filterBy="nombre"
-                                    [showClear]="true"
-                                    name="IPS"
-                                    id="IPS"
-                                    placeholder="Seleccione" />
+                                    [suggestions]="filteredItems"
+                                    [forceSelection]="true"
+                                    (completeMethod)="searchItems($event)"
+                                    [field]="'nombre'" 
+                                    [minLength]="3"
+                                    placeholder="Buscar IPS"
+                                    [dropdown]="false">
+                                </p-autoComplete>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2 flex flex-wrap p-fluid" *ngIf="estadoEnTratamiento">

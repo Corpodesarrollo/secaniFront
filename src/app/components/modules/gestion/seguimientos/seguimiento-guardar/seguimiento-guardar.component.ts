@@ -162,8 +162,10 @@ export class SeguimientoGuardarComponent {
 
   terminar(){
     this.onClose.emit();
-    this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true } }).then(() => {
-      window.scrollTo(0, 0);
-    });
+    if (this.seguimiento && this.seguimiento.nnaId !== undefined && this.seguimiento.nnaId !== null) {
+      this.router.navigate([`/gestion/consultar-alertas/${this.seguimiento.nnaId}`], { state: { skipGuard: true } }).then(() => {
+        window.scrollTo(0, 0);
+      });
+    }
   }
 }

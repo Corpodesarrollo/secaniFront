@@ -195,7 +195,7 @@ export class SeguimientoGestionarComponent {
       estadoId: this.idEstadoSeguimiento,
       contactoNNAId: this.contacto.id,
       telefono: this.contacto.telefonos,
-      usuarioId: '1',
+      usuarioId: User.id ?? "",
       solicitanteId: 1,
       fechaSolicitud: new Date(),
       tieneDiagnosticos: this.nna.diagnosticoId > 0,

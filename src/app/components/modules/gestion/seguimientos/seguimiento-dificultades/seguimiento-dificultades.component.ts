@@ -22,11 +22,13 @@ import { NNAService } from '../../../../../core/services/nnaService';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { apis } from '../../../../../models/apis.model';
 
 @Component({
   selector: 'app-seguimiento-dificultades',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, AutoCompleteModule,
     DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-dificultades.component.html',
   styleUrl: './seguimiento-dificultades.component.css'
@@ -81,8 +83,10 @@ export class SeguimientoDificultadesComponent implements OnInit {
   saving!: boolean;
 
   showGuardarSeguimiento: boolean = false;
+  itemsIPS: Parametricas[] = []; 
+  filteredItems: Parametricas[] = [];
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, 
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private gs: GenericService,
     private routeAct: ActivatedRoute, private nnaService: NNAService) {
   }
 
@@ -106,6 +110,14 @@ export class SeguimientoDificultadesComponent implements OnInit {
     this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
     this.selectedCategoriaAlerta = this.categoriaAlerta.find(x => x.id == this.nna.ipsId);
     this.isLoadingCategoriaAlerta = false;
+  }
+
+  searchItems(event: any) {
+    this.gs.getAsync('IPS/Search', `/${event.query}`, apis.tablaParametrica).then((data: any) => {
+      this.filteredItems = data;
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
   }
 
   MalaAtencion() {
@@ -233,7 +245,7 @@ export class SeguimientoDificultadesComponent implements OnInit {
       contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
       telefono: '',
       usuarioId: 'abc',
-      solicitanteId: 1,
+      solicitanteId: 0,
       fechaSolicitud: new Date(),
       tieneDiagnosticos: false,
       observacionesSolicitante: '',

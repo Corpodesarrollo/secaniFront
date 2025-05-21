@@ -127,17 +127,17 @@
                         </div>
                         <div class="row mb-2 flex flex-wrap p-fluid" *ngIf="nna.difMalaAtencionIPS">
                             <div class="col-8 flex-auto" style="padding-left: 40px;">
-                                <p-dropdown
+                                <p-autoComplete 
                                     [(ngModel)]="selectedIPSCual"
-                                    [options]="IPS"
-                                    optionLabel="nombre"
-                                    [filter]="true"
-                                    filterBy="nombre"
-                                    [showClear]="true"
-                                    name="estado"
-                                    id="estado"
+                                    [suggestions]="filteredItems"
+                                    [forceSelection]="true"
+                                    (completeMethod)="searchItems($event)"
+                                    [field]="'nombre'" 
+                                    [minLength]="3"
+                                    placeholder="¿Cuál?"
                                     [disabled]="!nna.difMalaAtencionIPS"
-                                    placeholder="¿Cuál?" />
+                                    [dropdown]="false">
+                                </p-autoComplete>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -192,16 +192,17 @@
                                 <label for="ips-{{i}}" class="fw-bold">IPS</label>
                             </div>
                             <div class="col-8 flex-auto">
-                                <p-dropdown
+                                <p-autoComplete 
                                     [(ngModel)]="selectedIPS[i]"
-                                    [options]="IPS"
-                                    optionLabel="nombre"
-                                    [filter]="true"
-                                    filterBy="nombre"
-                                    [showClear]="true"
-                                    name="IPS-{{i}}"
-                                    id="ips-{{i}}"
-                                    placeholder="Seleccione" />
+                                    [suggestions]="filteredItems"
+                                    [forceSelection]="true"
+                                    (completeMethod)="searchItems($event)"
+                                    [field]="'nombre'" 
+                                    [minLength]="3"
+                                    placeholder="¿Cuál?"
+                                    [disabled]="!nna.difMalaAtencionIPS"
+                                    [dropdown]="false">
+                                </p-autoComplete>
                             </div>
                         </div>
                         <div class="row mb-3 p-fluid">

@@ -327,7 +327,7 @@ export class SeguimientoDatosComponent implements OnInit {
       contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
       telefono: '',
       usuarioId: 'abc',
-      solicitanteId: 1,
+      solicitanteId: 0,
       fechaSolicitud: new Date(),
       tieneDiagnosticos: false,
       observacionesSolicitante: '',

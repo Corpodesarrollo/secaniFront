@@ -22,11 +22,12 @@ import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { apis } from '../../../../../models/apis.model';
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-seguimiento-estado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, AutoCompleteModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
   templateUrl: './seguimiento-estado.component.html',
   styleUrl: './seguimiento-estado.component.css'
 })
@@ -101,6 +102,8 @@ export class SeguimientoEstadoComponent  implements OnInit {
   cnt: number = 0;
 
   showGuardarSeguimiento: boolean = false;
+  itemsIPS: Parametricas[] = []; 
+  filteredItems: Parametricas[] = [];
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private nnaService: NNAService, private routeAct: ActivatedRoute, private gs: GenericService,) {
   }
@@ -162,11 +165,19 @@ export class SeguimientoEstadoComponent  implements OnInit {
     this.isLoadingIPS = false;
   }
 
+  searchItems(event: any) {
+    this.gs.getAsync('IPS/Search', `/${event.query}`, apis.tablaParametrica).then((data: any) => {
+      this.filteredItems = data;
+    }).catch((error: any) => {
+      console.error('Error fetching contact list', error);
+    });
+  }
+
   validarSeguimiento(id: number) {
     this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
       this.cnt = Number(data);
     }).catch((error: any) => {
-      console.error('Error fetching contact list', error);
+      console.error('Error al cargar la lista', error);
     });
   }
 
@@ -332,7 +343,7 @@ export class SeguimientoEstadoComponent  implements OnInit {
       contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
       telefono: '',
       usuarioId: 'abc',
-      solicitanteId: 1,
+      solicitanteId: 0,
       fechaSolicitud: new Date(),
       tieneDiagnosticos: false,
       observacionesSolicitante: '',

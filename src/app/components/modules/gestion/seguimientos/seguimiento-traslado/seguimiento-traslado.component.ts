@@ -17,6 +17,7 @@ import { GenericService } from '../../../../../services/generic.services';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
+import { User } from '../../../../../core/services/userService';
 
 @Component({
   selector: 'app-seguimiento-traslado',
@@ -27,6 +28,7 @@ import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.mod
 })
 export class SeguimientoTrasladoComponent implements OnInit {
   nna: NNA = new NNA();
+  user = new User();
   id: string | undefined;
   saving: boolean = false;
   
@@ -229,7 +231,7 @@ export class SeguimientoTrasladoComponent implements OnInit {
       contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
       telefono: '',
       usuarioId: 'abc',
-      solicitanteId: 1,
+      solicitanteId: 0,
       fechaSolicitud: new Date(),
       tieneDiagnosticos: false,
       observacionesSolicitante: '',

@@ -133,7 +133,8 @@ export class DialogCrearContactoComponent {
       email: this.contacto.email,
       telefonos: this.telefonos.join(','),
       cuidador: this.contacto.cuidador,
-      id: this.contacto.id
+      id: this.contacto.id,
+      estado: this.contacto.estado
     };
 
     this.submitted = true;
