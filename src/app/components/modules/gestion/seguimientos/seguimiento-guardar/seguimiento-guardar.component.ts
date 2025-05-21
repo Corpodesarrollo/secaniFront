@@ -42,6 +42,7 @@ export class SeguimientoGuardarComponent {
   hora: number | null = null;     // Horas
   minutos: number | null = null;  // Minutos
   periodo: string = 'AM';         // AM o PM
+  idSeguimiento: number = 0;
 
   constructor(private fb: FormBuilder, private tp: TpParametros, private gs: GenericService, private router: Router) {
     
@@ -128,6 +129,7 @@ export class SeguimientoGuardarComponent {
   enviar(){
     this.gs.post('Seguimiento/SetSeguimiento', this.seguimiento, apis.seguimiento).subscribe(
       response => {
+        this.idSeguimiento = response as number;
         this.mostrarMensaje = true;
         console.log('Archivo subido exitosamente');
       },
@@ -163,7 +165,7 @@ export class SeguimientoGuardarComponent {
   terminar(){
     this.onClose.emit();
     if (this.seguimiento && this.seguimiento.nnaId !== undefined && this.seguimiento.nnaId !== null) {
-      this.router.navigate([`/gestion/consultar-alertas/${this.seguimiento.nnaId}`], { state: { skipGuard: true } }).then(() => {
+      this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true } }).then(() => {
         window.scrollTo(0, 0);
       });
     }
