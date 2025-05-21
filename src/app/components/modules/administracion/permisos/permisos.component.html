@@ -7,77 +7,151 @@
     </div>
 
     <div class="navbar-urp">
-        <a [routerLink]="['/home']" routerLinkActive="active">
-            <button class="nav-button">USUARIOS</button>
-        </a>
-        <a [routerLink]="['/about']" routerLinkActive="active">
-            <button class="nav-button">ROLES</button>
-        </a>
-        <a [routerLink]="['/administracion/permisos']" routerLinkActive="active">
-            <button class="nav-button">PERMISOS</button>
-        </a>
+        <button class="nav-button" 
+                [class.active]="currentView === 'usuarios'" 
+                (click)="currentView = 'usuarios'">
+            USUARIOS
+        </button>
+        <button class="nav-button" 
+                [class.active]="currentView === 'roles'" 
+                (click)="currentView = 'roles'">
+            ROLES
+        </button>
+        <button class="nav-button" 
+                [class.active]="currentView === 'permisos'" 
+                (click)="currentView = 'permisos'">
+            PERMISOS
+        </button>
     </div>
 
     <br>
 
-    <p-card>
-        <div class="content-container">
-            <div class="dropdown-container">
-                <label for="dropdown1">Rol*</label>
-                <select id="dropdown1" (change)="onSelectChangeRol($event)">
-                    <option *ngFor="let option of selectRoles" [value]="option.id">
-                        {{ option.roleName }}
-                    </option>
-                </select>
+    <!-- Contenido de Usuarios -->
+    <div *ngIf="currentView === 'usuarios'">
+        <p-card>
+            <div>
+                <p-table [value]="dataUsers" [first]="first"
+                    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                    [paginator]="true" [rows]="5"
+                    [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombres y Apellidos</th>
+                            <th style="max-width: 130px;">Rol</th>
+                            <th>Entidad</th>
+                            <th>Cargo</th>
+                            <th>Telefono</th>
+                            <th>Correo Electronico</th>
+                            <th>Estado</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dataUsers>
+                        <tr>
+                            <td>{{ dataUsers.userName }}</td>
+                            <td>{{ dataUsers.fullName }}</td>
+                            <td style="max-width: 130px;">{{ dataUsers.roles?.join(', ') }}</td>
+                            <td>{{ buscarNombreEntidadPorId(dataUsers.entidadId) }}</td>
+                            <td>{{ dataUsers.cargo }}</td>
+                            <td>{{ dataUsers.telefonos }}</td>
+                            <td>{{ dataUsers.email }}</td>
+                            <td>{{ dataUsers.estado }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
-            <div class="dropdown-container">
-                <label for="dropdown2">Modulo*</label>
-                <select id="dropdown2" (change)="onSelectChangeModulo($event)">
-                    <option *ngFor="let option of selectModulos" [value]="option.id">
-                        {{ option.nombre }}
-                    </option>
-                </select>
-            </div>
-            
-            <div class="buttons-container">
-                <button class="consultar-button" (click)="onConsultarClick()">CONSULTAR</button>
-                <button class="limpiar-button" (click)="onLimpiarClick()">LIMPIAR</button>
-            </div>
-        </div>
-    </p-card>
+        </p-card>
+    </div>
 
-    <br>
+    <!-- Contenido de Roles -->
+    <div *ngIf="currentView === 'roles'">
+        <p-card>
+            <div>
+                <p-table [value]="selectRoles" [first]="first"
+                    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                    [paginator]="true" [rows]="5"
+                    [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 30%;">Nombre del Rol</th>
+                            <th style="width: 70%;">Descripcion del Rol</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-selectRoles>
+                        <tr>
+                            <td style="width: 30%;">{{ selectRoles.roleName }}</td>
+                            <td style="width: 70%;">{{ selectRoles.normalizedName }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-card>
+    </div>
 
-    <p-card>
-        <div class="header">
-            <button class="top-right-button" (click)="onGuardarClick()">GUARDAR</button>
-        </div>
+    <!-- Contenido de Permisos -->
+    <div *ngIf="currentView === 'permisos'">
+        <p-card>
+            <div class="content-container">
+                <div class="dropdown-container">
+                    <label for="dropdown1">Rol*</label>
+                    <select id="dropdown1" (change)="onSelectChangeRol($event)">
+                        <option *ngFor="let option of selectRoles" [value]="option.id">
+                            {{ option.roleName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="dropdown-container">
+                    <label for="dropdown2">Modulo*</label>
+                    <select id="dropdown2" (change)="onSelectChangeModulo($event)">
+                        <option *ngFor="let option of selectModulos" [value]="option.id">
+                            {{ option.nombre }}
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="buttons-container">
+                    <button class="consultar-button" (click)="onConsultarClick()">CONSULTAR</button>
+                    <button class="limpiar-button" (click)="onLimpiarClick()">LIMPIAR</button>
+                </div>
+            </div>
+        </p-card>
+
         <br>
-        <div>
 
-            <p-table [value]="tableData" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
-                [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
-                [rowsPerPageOptions]="[10, 25, 50]"
-                currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th class="large-column">Funcionalidad</th>
-                        <th>Crear</th>
-                        <th>Consultar</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-tableData>
-                    <tr>
-                        <td>{{ tableData.funcionalidad.descripcion }}</td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canAdd" (onChange)="onCheckboxChange($event, tableData, 'canAdd')"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canView" (onChange)="onCheckboxChange($event, tableData, 'canView')"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canEdit" (onChange)="onCheckboxChange($event, tableData, 'canEdit')"></p-checkbox></td>
-                        <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canDele" (onChange)="onCheckboxChange($event, tableData, 'canDele')"></p-checkbox></td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-    </p-card>
+        <p-card>
+            <div class="header">
+                <button class="top-right-button" (click)="onGuardarClick()">GUARDAR</button>
+            </div>
+            <br>
+            <div>
+                <p-table [value]="tableData" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+                    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                    [rowsPerPageOptions]="[10, 25, 50]"
+                    currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="large-column">Funcionalidad</th>
+                            <th>Crear</th>
+                            <th>Consultar</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-tableData>
+                        <tr>
+                            <td>{{ tableData.funcionalidad.nombre }}</td>
+                            <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canAdd" (onChange)="onCheckboxChange($event, tableData, 'canAdd')"></p-checkbox></td>
+                            <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canView" (onChange)="onCheckboxChange($event, tableData, 'canView')"></p-checkbox></td>
+                            <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canEdit" (onChange)="onCheckboxChange($event, tableData, 'canEdit')"></p-checkbox></td>
+                            <td><p-checkbox [binary]="true" [(ngModel)]="tableData.canDele" (onChange)="onCheckboxChange($event, tableData, 'canDele')"></p-checkbox></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-card>
+    </div>
 </body>

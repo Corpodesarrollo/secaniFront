@@ -77,11 +77,13 @@ export class ConsultarSeguimientosComponent implements OnInit {
     this.repos.get('Seguimiento/GetAllByIdUser/', `${this.idUsuario}/${filter}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;
+        console.log("Respuesta seguimiento : ", data)
       }
     });
   }
 
   intentosLlamada(id: number) {
+    console.log("Valor enviado: ", { state: { id_seguimiento : id} } );
     this.router.navigate(['/intento-seguimiento'], { state: { id_seguimiento : id} });
   }
 

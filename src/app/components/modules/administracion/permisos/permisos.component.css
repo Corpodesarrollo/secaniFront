@@ -11,13 +11,15 @@
     font-size: 14px;
     border-radius: 10px;
     color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .nav-button:hover {
     background-color: #ddd;
 }
 
-a.active .nav-button {
+.nav-button.active {
     background-color: #73B7AD;
     color: white;
     border-radius: 10px;
