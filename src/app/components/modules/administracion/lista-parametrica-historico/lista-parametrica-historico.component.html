@@ -11,8 +11,8 @@
                 <th pSortableColumn="fecha">
                   <div class="d-flex align-items-center justify-content-between">
                     Fecha
-                    <p-sortIcon field="fecha" />
-                    <p-columnFilter type="text" field="fecha" display="menu" class="ms-auto"/>
+                    <p-sortIcon field="fechaTransaccion" />
+                    <p-columnFilter type="text" field="fechaTransaccion" display="menu" class="ms-auto"/>
                   </div>
                 </th>
                 <th pSortableColumn="transaccion">
@@ -40,7 +40,7 @@
           </ng-template>
           <ng-template pTemplate="body" let-historico>
               <tr>
-                <td>{{ historico.fechaTransacion | date:'dd/MM/yyyy'}}</td>
+                <td>{{ historico.fechaTransaccion | date:'dd/MM/yyyy'}}</td>
                 <td>{{ historico.transaccion }}</td>
                 <td>{{ historico.usuarioId }}</td>
                 <td>{{ historico.comentario }}</td>
