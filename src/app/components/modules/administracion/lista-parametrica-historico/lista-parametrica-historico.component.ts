@@ -33,7 +33,7 @@ export class ListaParametricaHistoricoComponent {
         switchMap(id => this.listasParametricasService.getListaParametrica(id)),
         tap((lista: any) => this.listaParametrica = lista),
         tap((lista: any) => console.log(lista)),
-        switchMap((lista: any) => this.listasParametricasService.getHistoricoListaParametrica(lista.nombre))
+        switchMap((lista: any) => this.listasParametricasService.getHistoricoListaParametrica(`Tp${lista.nombre}`))
       )
       .subscribe({
         next: (response: any) => {
