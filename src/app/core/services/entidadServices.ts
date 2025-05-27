@@ -43,4 +43,19 @@ export class EntidadServices{
             });
         });
     }
+
+    public async getEntidades(): Promise<Parametricas[]>{
+        let url = `EAPB/Entidades`;
+        return new Promise((resolve, reject) => {
+            this.repos.get(url, ``, apis.tablaParametrica).subscribe({
+                next: (data: any) => {
+                    resolve(data);
+                },
+                error: (err) => {
+                    console.error(err);
+                    reject(err);
+                }
+            });
+        });
+    }
 }

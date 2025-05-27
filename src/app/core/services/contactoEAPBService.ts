@@ -26,4 +26,19 @@ export class ContactoEAPBService{
             });
         });
     }
+
+    public async getByEntidades(id: string): Promise<ContactoEAPB[]>{
+        let url = `ContactoEntidad/Entidades`;
+        return new Promise((resolve, reject) => {
+            this.repos.get(url, `/${id}`, apis.authentication).subscribe({
+                next: (data: any) => {
+                    resolve(data);
+                },
+                error: (err) => {
+                    console.error(err);
+                    reject(err);
+                }
+            });
+        });
+    }
 }
