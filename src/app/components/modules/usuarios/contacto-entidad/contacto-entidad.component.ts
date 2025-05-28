@@ -9,6 +9,8 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
+import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-contacto-entidad',
@@ -19,18 +21,6 @@ import { CardModule } from 'primeng/card';
 })
 export class ContactoEntidadComponent implements OnInit{
   @ViewChild(ModalCrearComponent) modalCrearComponent!: ModalCrearComponent;
-
-  data2: ContactoEntidad[] = [
-    { id: '1', entidadNombre: 'EPS Sanitas', tipoId: 'Luz Maria Soler', representante: 'Jefe de Enfermeras', telefonos: '3208987514', email: 'luz1@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '2', entidadNombre: 'EPS Sanitas', tipoId: 'Luz Maria Soler', representante: 'Jefe de Enfermeras', telefonos: '3208987515', email: 'luz2@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Inactivo' },
-    { id: '3', entidadNombre: 'EPS Sanitas', tipoId: 'Felipe Arias', representante: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '4', entidadNombre: 'EPS Sanitas', tipoId: 'Luz Maria Soler', representante: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '5', entidadNombre: 'EPS Compensar', tipoId: 'Luz Maria Soler', representante: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '6', entidadNombre: 'EPS Compensar', tipoId: 'Felipe Arias', representante: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '7', entidadNombre: 'EPS Compensar', tipoId: 'Luz Maria Soler', representante: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '8', entidadNombre: 'EPS Cafam', tipoId: 'Luz Maria Soler', representante: 'Jefe de Enfermeras', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-    { id: '9', entidadNombre: 'EPS Cafam', tipoId: 'Felipe Arias', representante: 'Jefe de Doctores', telefonos: '3208987516', email: 'luz3@sanitas.com', ubicacion: 'Antioquia, Medellin', estado: 'Activo' },
-  ];
 
   data: ContactoEntidad[] = [];
 
@@ -50,24 +40,27 @@ export class ContactoEntidadComponent implements OnInit{
   constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
   ngOnInit(): void {
-    this.dataService.get_withoutParameters('ET', 'TablaParametrica').subscribe({
-      next: (data: any) => {
-        this.listaEntidades = data
+    this.dataService.get_withoutParameters('ET', 'TablaParametrica')
+    .pipe(
+      switchMap((entidades: any) => {
+        this.listaEntidades = entidades;
         this.listaEntidades.sort((a, b) => a.nombre.localeCompare(b.nombre));
-      },
-      error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
-      complete: () => console.info('Se lleno la lista de EAPB')
-    });
-
-    this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad').subscribe({
-      next: (data: any) => {
-        this.data = data;
-        this.originalData = data;
+        console.log('Entidades ', this.listaEntidades);
+        // Encadenar segunda petición
+        return this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad') as Observable<ContactoEntidad[]>;
+      })
+    )
+    .subscribe({
+      next: (contactos: ContactoEntidad[]) => {
+        const idsValidos = new Set(this.listaEntidades.map(e => String(e.codigo)));
+        const dataFiltrada = contactos.filter(contacto => idsValidos.has(String(contacto.entidadId)));
+        this.data = dataFiltrada;
+        this.originalData = dataFiltrada;
         this.compartirDatosService.actualizarListaContactos(this.originalData);
-        console.log(data)
+        console.log('Contactos: ', contactos);
       },
-      error: (e) => console.error('Se presento un error al llenar la lista de Contactos por ET', e),
-      complete: () => console.info('Se lleno la lista de Contactos ET')
+      error: (e) => console.error('Error en alguna de las llamadas', e),
+      complete: () => console.info('Ambas listas se cargaron exitosamente')
     });
 
     this.compartirDatosService.nuevoContactoEAPB$.subscribe({

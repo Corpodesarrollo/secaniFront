@@ -50,8 +50,11 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       email: ['', [Validators.required, 
         Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
         this.validarEmailUnico.bind(this)]],
-      estado: ['Activo']
+      estado: ['Activo'],
+      activo: [true]
     });
+
+    this.contactForm.get('estado')?.disable(); 
   }
 
   validarEmailUnico(control: AbstractControl) {
@@ -68,8 +71,15 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   onSubmit() {
     if (this.contactForm.valid) {
+      this.contactForm.get('estado')?.enable(); 
       console.log(this.contactForm.value);
       console.log(this.isEditing);
+
+      this.contactForm.get('estado')?.valueChanges.subscribe((estadoValue) => {
+        this.contactForm.patchValue({
+          activo: estadoValue === 'Activo',
+        });
+      });
 
       if (this.isEditing){
         this.contactForm.get('entidadId')?.enable();
@@ -108,8 +118,10 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     this.contactForm.patchValue(item);
     if (this.isEditing) {
       this.contactForm.get('entidadId')?.disable(); 
+      this.contactForm.get('estado')?.enable(); 
     } else {
       this.contactForm.get('entidadId')?.enable(); 
+      this.contactForm.get('estado')?.disable(); 
     }
   }
 
