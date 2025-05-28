@@ -55,10 +55,11 @@ export class ReporteDinamicoEntidadTerritorialComponent {
   ngOnInit(): void {
     this.columnas = [
       { field: 'fechaNotificacion', header: 'Fecha notificación' },
-      { field: 'fechaResolucion', header: 'Fecha de resolución' },
-      { field: 'gestionConrreos', header: 'Gestión de correos' },
-      { field: 'nombresApellidos', header: 'Nombres y apellidos NNA' },
-      { field: 'observacion', header: 'Observación' }
+      { field: 'nombreNNA', header: 'Nombre NNA' },
+      { field: 'edad', header: 'Edad' },
+      { field: 'sexo', header: 'Sexo' },
+      { field: 'tiempoTranscurrido', header: 'Tiempo transcurrido en días' },
+      { field: 'estado', header: 'Estado' }
     ];
   }
 
