@@ -50,8 +50,11 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       email: ['', [Validators.required, 
         Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
         this.validarEmailUnico.bind(this)]],
-      estado: ['Activo']
+      estado: ['Activo'],
+      activo: [true]
     });
+
+    this.contactForm.get('estado')?.disable(); 
   }
 
   validarEmailUnico(control: AbstractControl) {
@@ -68,8 +71,15 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   onSubmit() {
     if (this.contactForm.valid) {
+      this.contactForm.get('estado')?.enable(); 
       console.log(this.contactForm.value);
       console.log(this.isEditing);
+
+      this.contactForm.get('estado')?.valueChanges.subscribe((estadoValue) => {
+        this.contactForm.patchValue({
+          activo: estadoValue === 'Activo',
+        });
+      });
 
       if (this.isEditing){
         this.contactForm.get('entidadId')?.enable();
@@ -83,7 +93,7 @@ export class ModalCrearComponent implements OnInit, OnChanges {
         this.dataService.post('ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
           next: (data: any) => {
             this.compartirDatosService.emitirNuevoContactoEAPB(data)
-            console.log("Ahora esto es lo que retorna",data)
+            //console.log("Ahora esto es lo que retorna",data)
           },
           error: (e) => console.error('Se presento un error al crear un contacto de ET', e),
           complete: () => console.info('Se creo el nuevo contacto de ET')
@@ -99,7 +109,6 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       // Si es modo edición, actualiza el formulario con los datos del item
       this.updateForm(this.item);
     } else if (!this.isEditing) {
-      // Si no es modo edición, resetea el formulario
       this.resetForm();
     }
   }
@@ -108,14 +117,17 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     this.contactForm.patchValue(item);
     if (this.isEditing) {
       this.contactForm.get('entidadId')?.disable(); 
+      this.contactForm.get('estado')?.enable(); 
     } else {
       this.contactForm.get('entidadId')?.enable(); 
+      this.contactForm.get('estado')?.enable(); 
     }
   }
 
   resetForm() {
     this.contactForm.reset();
     this.contactForm.get('estado')?.setValue('Activo');
+    this.contactForm.get('estado')?.enable(); 
     this.contactForm.get('entidadId')?.enable();
   }
 

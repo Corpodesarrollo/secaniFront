@@ -7,4 +7,5 @@ export interface ContactoEntidad {
     email: string;
     ubicacion: string;
     estado: string;
+    entidadId: string;
 }

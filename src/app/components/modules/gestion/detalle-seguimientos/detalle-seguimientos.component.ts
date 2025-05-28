@@ -112,9 +112,26 @@ export class DetalleSeguimientosComponent implements OnInit {
   }
 
   descargarPDFSeguimiento(): void {
-    const url = `${environment.url_MSSeguimiento}Seguimiento/ExportarDetalleSeguimiento/${this.idSeguimiento}`;
+    this.repos.get(`Seguimiento/ExportarDetalleSeguimiento/`, this.idSeguimiento, 'Seguimiento').subscribe({
+      next: (data: any) => {
+        const base64 = data.result.base64;
 
-    this.http.get<{ archivoBase64: string }>(url).subscribe(response => {
+        const byteCharacters = atob(base64); // Decodifica Base64
+        const byteNumbers = Array.from(byteCharacters, char => char.charCodeAt(0));
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'detalle-seguimiento.pdf';
+        a.click();
+        URL.revokeObjectURL(blobUrl);
+        console.log("Datos Seguimiento: ", data);
+      }
+    });
+
+    /*this.http.get<{ archivoBase64: string }>(url).subscribe(response => {
       const base64 = response.archivoBase64;
 
       const byteCharacters = atob(base64); // Decodifica Base64
@@ -128,6 +145,6 @@ export class DetalleSeguimientosComponent implements OnInit {
       a.download = 'detalle-seguimiento.pdf';
       a.click();
       URL.revokeObjectURL(blobUrl);
-    });
+    });*/
   }
 }
