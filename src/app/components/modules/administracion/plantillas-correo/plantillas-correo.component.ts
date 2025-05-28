@@ -11,6 +11,8 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
+import { EliminarPlantillaCorreo } from '../../../../models/eliminarPlantillaCorreo.model';
+
 
 
 @Component({
@@ -89,7 +91,13 @@ export class PlantillasCorreoComponent implements OnInit {
       rejectIcon: "none",
       accept: () => {
         if (plantillaCorreoId) {
-          this.plantillasCorreoService.deletePlantillaCorreo(plantillaCorreoId)
+          let eliminar: EliminarPlantillaCorreo = {
+            id: parseInt(plantillaCorreoId, 10),
+            comentario: "Comentario de eliminación",
+            idUsuario: "ID del usuario que elimina",
+            rol: "Rol del usuario que elimina"
+          }
+          this.plantillasCorreoService.deletePlantillaCorreo(eliminar)
             .subscribe({
               next: () => {
                 this.messageService.add({

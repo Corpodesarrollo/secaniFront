@@ -76,7 +76,7 @@
             <td>{{ plantillaCorreo.asunto }}</td>
             <td>{{ plantillaCorreo.tipoPlantilla }}</td>
             <td>{{ plantillaCorreo.firmante }}</td>
-            <td>{{ plantillaCorreo.estado }}</td>
+            <td>{{ plantillaCorreo.estado=='1'?'Activo':'Inactivo' }}</td>
             <th>
               <div>
                 <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"

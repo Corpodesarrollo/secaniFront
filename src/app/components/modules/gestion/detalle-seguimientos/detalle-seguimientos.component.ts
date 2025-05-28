@@ -13,6 +13,7 @@ import { EstadoNnaComponent } from "../../estado-nna/estado-nna.component";
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 import { SeguimientoDetalle } from '../../../../models/seguimientoDetalle.model';
+import { ExpDetallSeguimientoModel } from '../../../../models/expDetallSeguimientoModel.model';
 
 @Component({
   selector: 'app-detalle-seguimientos',
@@ -25,6 +26,7 @@ import { SeguimientoDetalle } from '../../../../models/seguimientoDetalle.model'
 export class DetalleSeguimientosComponent implements OnInit {
   seguimientos: SeguimientoDetalle[] = [];
   idSeguimiento: string = "";
+  idSeguimientoX: string = "";
   idNNA: number = 0;
   datosNNA: NNAInfoDiagnostico = {
     nombreCompleto: '',
@@ -52,6 +54,7 @@ export class DetalleSeguimientosComponent implements OnInit {
     console.log(this.idNNA);
     this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idSeguimiento, 'Seguimiento').subscribe({
       next: (data: any) => {
+        this.idSeguimientoX = data[0].idSeguimiento;
         this.seguimientos = data;
         this.datosNNA = data[0].nna;
         this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
@@ -112,10 +115,10 @@ export class DetalleSeguimientosComponent implements OnInit {
   }
 
   descargarPDFSeguimiento(): void {
-    const url = `${environment.url_MSSeguimiento}Seguimiento/ExportarDetalleSeguimiento/${this.idSeguimiento}`;
+    const url = `${environment.url_MSSeguimiento}Seguimiento/ExportarDetalleSeguimiento/${this.idSeguimientoX}`;
 
-    this.http.get<{ archivoBase64: string }>(url).subscribe(response => {
-      const base64 = response.archivoBase64;
+    this.http.get<ExpDetallSeguimientoModel>(url).subscribe(response => {
+      const base64 = response.result?.base64 || '';
 
       const byteCharacters = atob(base64); // Decodifica Base64
       const byteNumbers = Array.from(byteCharacters, char => char.charCodeAt(0));

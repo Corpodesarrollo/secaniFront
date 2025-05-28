@@ -9,6 +9,8 @@ import { EAPB } from '../../../../models/eapb.model';
 import { GenericService } from '../../../../services/generic.services';
 import { CompartirDatosService } from '../../../../services/compartir-datos.service';
 import { ContactoEAPB } from '../../../../models/contactoEapb.model';
+import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs/internal/Observable';
 
 declare var bootstrap: any;
 
@@ -54,24 +56,27 @@ export class EAPBComponent implements OnInit {
   constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
   ngOnInit(): void {
-    this.dataService.get_withoutParameters('EAPB', 'TablaParametrica').subscribe({
-      next: (data: any) => {
-        this.listaEAPB = data
+    this.dataService.get_withoutParameters('EAPB', 'TablaParametrica')
+    .pipe(
+      switchMap((entidades: any) => {
+        this.listaEAPB = entidades;
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
-      },
-      error: (e) => console.error('Se presento un error al llenar la lista de EAPB', e),
-      complete: () => console.info('Se lleno la lista de EAPB')
-    });
-
-    this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad').subscribe({
-      next: (data: any) => {
-        this.data = data;
-        this.originalData = data;
+        console.log('EAPB ', this.listaEAPB);
+        // Encadenar segunda petición
+        return this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad') as Observable<ContactoEAPB[]>;
+      })
+    )
+    .subscribe({
+      next: (contactos: ContactoEAPB[]) => {
+        const idsValidos = new Set(this.listaEAPB.map(e => String(e.codigo)));
+        const dataFiltrada = contactos.filter(contacto => idsValidos.has(String(contacto.entidadId)));
+        this.data = dataFiltrada;
+        this.originalData = dataFiltrada;
         this.compartirDatosService.actualizarListaContactos(this.originalData);
-        console.log(data)
+        console.log('Contactos: ', contactos);
       },
-      error: (e) => console.error('Se presento un error al llenar la lista de Contactos por EAPB', e),
-      complete: () => console.info('Se lleno la lista de Contactos EAPB')
+      error: (e) => console.error('Error en alguna de las llamadas', e),
+      complete: () => console.info('Ambas listas se cargaron exitosamente')
     });
 
     this.compartirDatosService.nuevoContactoEAPB$.subscribe({

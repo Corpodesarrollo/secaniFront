@@ -30,7 +30,7 @@ export class NuevaPlantillaCorreoComponent {
     'Oficion de notificación',
   ];
 
-  public firmantes: any[] = [];
+  public firmantes: any[] = ["Juan Manuel"];
   public estados: {label: string, value: string}[] = [
     { label: 'Activo', value: '1' },
     { label: 'Inactivo', value: '0' }
@@ -46,7 +46,7 @@ export class NuevaPlantillaCorreoComponent {
     private messageService: MessageService
   ) {
     this.plantillaCorreoForm = this.formBuilder.group({
-      id: [''],
+      id: null,
       nombre: ['', [Validators.required,  Validators.maxLength(100)]],
       tipoPlantilla: ['', Validators.required],
       firmante: ['', Validators.required],
@@ -112,7 +112,7 @@ export class NuevaPlantillaCorreoComponent {
             detail: 'Error al guardar la plantilla de correo.',
             life: 3000
           });
-        } 
+        }
       });
   }
 }

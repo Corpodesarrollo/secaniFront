@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { GenericService } from './generic.services';
+import { EliminarPlantillaCorreo } from '../models/eliminarPlantillaCorreo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class PlantillasCorreoService {
 
   crearEditarPlantillaCorreo(dato: any): Observable<Object> {
     const url: string = `seguimiento/CrearPlantillaCorreo`;
-     return this.generico.post(url, dato, 'Seguimiento');
+    return this.generico.post(url, dato, 'Seguimiento');
   }
 
   getPlantillasCorreo(): Observable<Object> {
@@ -29,8 +30,8 @@ export class PlantillasCorreoService {
     return this.generico.get('', url, 'Seguimiento');
   }
 
-  deletePlantillaCorreo(id: string) {
-    const url: string = `seguimiento/EliminarPlantillaCorreo/${id}`;
-    return this.generico.delete(url, 'Seguimiento');
+  deletePlantillaCorreo(eliminar: EliminarPlantillaCorreo) {
+    const url: string = `seguimiento/EliminarPlantillaCorreo`;
+    return this.generico.post(url, eliminar, 'Seguimiento');
   }
 }
