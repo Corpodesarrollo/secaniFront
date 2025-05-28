@@ -1,0 +1,77 @@
+<div class="container-fluid">
+  <h1 class="mt-5 mb-4">Reporte dinámicos entidad territorial</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
+        <div class="row align-items-center mb-3">
+          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
+          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+            <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
+          </div>
+
+          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
+          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+            <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-3">
+          <div class="col-12 mb-4 col-sm-10 mb-sm-0">
+            <p-inputGroup>
+              <input class="w-100" type="text" placeholder="Buscar..." pInputText />
+              <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
+          <div class="col-12 mb-3 col-sm-2 mb-sm-0">
+            <p-button severity="success" label="Agregar campos" styleClass="w-100"/>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          @for (campo of campos; track campo) {
+            <div class="col-md-3">
+              <p-checkbox styleClass="mt-1" name="group" [label]="campo.header" [value]="campo.field" />
+            </div>
+          }
+        </div>
+        <div class="d-flex justify-content-end mb-3">
+          <div class="col-12 col-sm-2">
+            <p-button severity="success" label="Generar" styleClass="w-100" />
+          </div>
+        </div>
+      </form>
+
+      <div class="mt-3">
+        <p-table [columns]="columnas"  [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
+          <ng-template pTemplate="caption">
+            <div class="d-flex align-items-center justify-content-between">
+              Reporte dinámico entidad territorial
+              <p-button severity="success" icon="pi pi-file-excel" />
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              @for (col of columns; track col) {
+                <th>
+                  {{ col.header }}
+                </th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              @for (col of columns; track col) {
+                <td>
+                  {{ rowData[col.field] }}
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
