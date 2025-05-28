@@ -793,7 +793,7 @@ export class EditarNnaComponent implements OnInit {
 
     (await this.repos.put('NNA/Actualizar', this.datosNNA, 'NNA')).subscribe({
       next: async (nnaData: any) => {
-        this.datosNNA = nnaData;
+        this.loadNNAData();
         this.fechaConsultaDiagnosticoInput = this.formatDate(this.datosNNA.fechaConsultaDiagnostico);
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Los datos del NNA han sido actualizados correctamente.' });
       },
