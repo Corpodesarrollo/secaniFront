@@ -16,7 +16,7 @@
             <div class="mb-3">
               <label class="fw-semibold mb-1" for="nombre">Nombre del Item</label>
               <input  *ngIf="!listaParametricaPadre || listaParametricaPadre?.nombre != 'festivos'" id="nombre" class="w-100" type="text" pInputText formControlName="nombre" />
-              <p-calendar *ngIf="listaParametricaPadre?.nombre == 'festivos'" id="nombre" styleClass="w-100" formControlName="nombre" />
+              <p-calendar *ngIf="listaParametricaPadre?.nombre == 'festivos'" id="festivo" styleClass="w-100" formControlName="festivo" />
             </div>
             <div class="mb-3">
               <label class="fw-semibold mb-1" for="indicador">Identificador del item</label>
