@@ -8,7 +8,7 @@ import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipsModule } from 'primeng/chips';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
@@ -25,6 +25,7 @@ import { ContactoEAPBService } from '../../../../../core/services/contactoEAPBSe
 import { MultiSelectModule } from 'primeng/multiselect';
 import { environment } from '../../../../../../environments/environment';
 import { EntidadServices } from '../../../../../core/services/entidadServices';
+import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-notificacion-oficio',
@@ -67,7 +68,7 @@ export class NotificacionOficioComponent {
     contactos: ContactoEAPB[] = [];
     selectedPara: ContactoEAPB[] = [];
     selectedConCopia: ContactoEAPB[] = [];
-    isLoadingContactos: boolean = true;
+    isLoadingContactos: boolean = false;
   
     plantillas: Plantilla[] = [];
     selectedPlantilla: Plantilla | undefined;
@@ -93,11 +94,9 @@ export class NotificacionOficioComponent {
   
     constructor(private messageService: MessageService, private tp: EntidadServices, private tpp: TpParametros, private repos: GenericService, private contactoEAPBService: ContactoEAPBService) {}
   
-    async ngOnInit(): Promise<void> {      
-      this.contactos = await this.contactoEAPBService.getAll();
-      this.isLoadingContactos = false;
+    async ngOnInit(): Promise<void> {
 
-      this.entidades =  await this.tp.getET();
+      this.entidades =  await this.tp.getEntidades();
       this.isLoadingEntidades = false;
   
       this.plantillas = await this.tpp.getPlantillas();
@@ -117,6 +116,20 @@ export class NotificacionOficioComponent {
       }
       if (changes['idNNA']) {
         this.idNNA = changes['idNNA'].currentValue; 
+      }
+    }
+
+    async cargarContactos(event: DropdownChangeEvent) {
+      console.log('Cargando contactos para la entidad:', event);
+      this.isLoadingContactos = true;
+      this.contactos = [];
+      this.selectedPara = [];
+      this.selectedConCopia = [];
+      if (this.selectedEntidad) {
+        if (this.selectedEntidad.codigo) {
+          this.contactos = await this.contactoEAPBService.getByEntidades(this.selectedEntidad.codigo);
+        }
+        this.isLoadingContactos = false;
       }
     }
   

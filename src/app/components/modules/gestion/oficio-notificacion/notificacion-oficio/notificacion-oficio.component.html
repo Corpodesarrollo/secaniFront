@@ -9,13 +9,16 @@
             </div>
             <div class="col-9 flex-auto">
                 <p-dropdown
+                    id="entidad"
                     [(ngModel)]="selectedEntidad"
                     [options]="entidades"
                     [loading]="isLoadingEntidades"
+                    (onChange)="cargarContactos($event)"
                     optionLabel="nombre"
                     [filter]="true"
                     filterBy="nombre"
                     [showClear]="true"
+                    class="w-100"
                     placeholder="Seleccione" />
             </div>
             <div *ngIf="submitted && (!selectedEntidad)" class="text-danger col-9 offset-3">
