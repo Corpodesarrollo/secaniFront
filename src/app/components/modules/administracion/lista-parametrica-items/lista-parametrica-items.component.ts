@@ -41,7 +41,10 @@ export class ListaParametricaItemsComponent implements OnInit {
   ) {
     this.itemsListaParametricaForm = this.formBuilder.group({
       id: [{ value: 0, disabled: true }, Validators.required],
-      nombre: ['', Validators.required],
+      festivo: [''],
+      horaInicio: ['00:00:00'],
+      horaFin: ['23:59:59'],
+      nombre: [''],
       descripcion: [{ value: '', disabled: true }],
       orden: [{ value: 0, disabled: true }],
       fechaCreacion: [{ value: new Date().toISOString(), disabled: true }],
@@ -60,7 +63,10 @@ export class ListaParametricaItemsComponent implements OnInit {
         map(params => params.get('id')),
         filter((id): id is string => !!id),
         switchMap(id => this.listasParametricasService.getListaParametrica(id)),
-        tap((lista: any) => this.listaParametricaPadre = lista),
+        tap((lista: any) => {
+          this.listaParametricaPadre = lista;
+          this.updateFormValidators();
+        }),
         tap(() => this.loadItems())
       )
       .subscribe({
@@ -178,5 +184,23 @@ export class ListaParametricaItemsComponent implements OnInit {
         });
       }
     });
+  }
+
+  private updateFormValidators(): void {
+    const festivoControl = this.itemsListaParametricaForm.get('festivo');
+    const nombreControl = this.itemsListaParametricaForm.get('nombre');
+
+    // Limpiamos validadores previos
+    festivoControl?.clearValidators();
+    nombreControl?.clearValidators();
+
+    if (this.listaParametricaPadre?.nombre === 'festivos') {
+      festivoControl?.setValidators([Validators.required]);
+    } else {
+      nombreControl?.setValidators([Validators.required]);
+    }
+
+    festivoControl?.updateValueAndValidity();
+    nombreControl?.updateValueAndValidity();
   }
 }
