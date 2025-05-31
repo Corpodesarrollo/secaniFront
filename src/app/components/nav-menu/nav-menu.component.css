@@ -1,0 +1,30 @@
+.home{
+    background: #73B7AD80;
+    margin-top: 14px;
+    margin-left: 25px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.home ul{
+    list-style-type: none;
+    padding-top: 5pt;
+}
+
+.home a{
+    text-decoration: none;
+    color: #4D4D4D;
+}
+
+.home ul li a span{
+    list-style-type: none;
+    padding-left: 10pt;
+    padding-top: 10px;
+    position: absolute;
+}
+
+.home ul li a i{
+    font-size: 40px;
+}
+
+
+

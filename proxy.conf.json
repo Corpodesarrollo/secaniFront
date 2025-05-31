@@ -1,0 +1,8 @@
+{
+  "/health": {
+    "target": "http://192.168.110.12/auth",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

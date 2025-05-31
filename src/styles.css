@@ -1,0 +1,137 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
+@import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+@import "@ng-select/ng-select/themes/default.theme.css";
+
+:root {
+    --color-base: #73b7ad; /* Reemplaza este valor por tu color */
+}
+
+body,
+html {
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F8FBFB;
+    font-size: 14px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.p-button-success {
+  background-color: var(--color-base);
+  border-color: var(--color-base);
+  border-radius: 0.3rem;
+  color: white;
+}
+
+.p-button-secondary:not(.p-button-text):not(.p-button-rounded) {
+  background-color: #4D4D4D80;
+  border-color: #4D4D4D80;
+  border-radius: 0.3rem;
+  color: white;
+}
+
+h1, h3 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29.26px;
+}
+
+.formato-fondo {
+    background-color: rgba(115, 183, 173, 0.05);
+    padding: 15px;
+}
+
+.formato-menu {
+    background: #d9d9d981;
+}
+
+.color-fondo {
+    background-color: #73B7AD;
+}
+
+.color-fondo_gris {
+    background-color: #D9D9D980;
+    color: black;
+}
+
+.fuente-letra {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/**
+Estilos menú
+SECÁNI-RQ00-HU00- Menú y Perfiles
+*/
+.menu-rq00-hu00 {
+    background: #D9D9D980;
+    gap: 0px;
+    opacity: 0px;
+    min-height: 100vh;
+}
+
+
+.menu-rq00-hu00 .p-menu {
+    padding: 0.5rem 0;
+    background: none !important;
+    color: #4b5563;
+    border: 0px solid #e5e7eb;
+    border-radius: 0px;
+    width: 100% !important;
+}
+
+.menu-rq00-hu00 .p-menu .p-submenu-header {
+    background: none;
+    padding: 0;
+}
+
+.menu-rq00-hu00 .p-menu .p-menuitem-link {
+    text-decoration: none !important;
+}
+
+.sinSubMenus .p-menuitem-icon {
+    margin-left: -17px !important;
+}
+
+.sinSubMenus span {
+    font-weight: bold;
+}
+
+/**
+Fin estilos menú
+SECÁNI-RQ00-HU00- Menú y Perfiles
+*/
+
+.main-fondo {
+    background: #73B7AD0D;
+    margin-top: 0px;
+    margin-left: 0px !important;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-left{
+  text-align: left;
+}
+
+.text-right{
+  text-align: right;
+}
+
+.card {
+  overflow: visible !important;
+}

@@ -1,0 +1,11 @@
+<svg width="82" height="81" viewBox="0 0 82 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="40.8471" cy="40.1718" rx="40.8471" ry="40.1718" fill="url(#paint0_linear_158_3798)"/>
+<path d="M45.465 50.5553L47.935 52.962L52.875 48.1487" stroke="#73B7AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M41.7603 37.604C41.5978 37.5881 41.4028 37.5881 41.224 37.604C37.3565 37.4773 34.2853 34.3898 34.2853 30.5898C34.269 26.7106 37.5028 23.5598 41.484 23.5598C45.4653 23.5598 48.699 26.7106 48.699 30.5898C48.699 34.3898 45.6115 37.4773 41.7603 37.604Z" stroke="#73B7AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M41.4836 54.9252C38.5261 54.9252 35.5848 54.1968 33.3423 52.7402C29.4098 50.1752 29.4098 45.9952 33.3423 43.446C37.8111 40.5327 45.1398 40.5327 49.6086 43.446" stroke="#73B7AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="paint0_linear_158_3798" x1="72.5036" y1="2.04873e-06" x2="41.7536" y2="80.689" gradientUnits="userSpaceOnUse">
+<stop stop-color="#73B7AD" stop-opacity="0.1"/>
+</linearGradient>
+</defs>
+</svg>

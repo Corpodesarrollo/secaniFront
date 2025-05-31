@@ -1,0 +1,398 @@
+.secani-footer {
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left {
+    flex: 1;
+    padding: 10px;
+}
+
+.right {
+    display: flex;
+    content: url(colombia.png);
+    max-width: 50px;
+    text-align: right;
+    padding: 10px;
+}
+
+/**
+ * Gov.co (https://www.gov.co) - Gobierno de Colombia
+ *  - Componente: Footer
+ *  - Version: 4.0.0
+ */
+
+/*** FUENTE ICONOS ***/
+@font-face {
+    font-family: "govco-fontv2";
+    src: url("govco-font-icons.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+p {
+    line-height: 1.5 !important;
+}
+
+.row>* {
+    padding-left: 0 !important;
+    margin-left: unset !important;
+}
+
+.row {
+    margin-left: 0 !important;
+    display: flex;
+    justify-content: space-between;
+}
+
+.row.col-xs-12.col-lg-7.govco-texto-sedes,
+.row.col-xs-12.col-lg-7.govco-network {
+    padding-left: 0 !important;
+    width: 100% !important;
+}
+
+body {
+    font-family: var(--bs-font-sans-serif) !important;
+    color: #212529 !important;
+    font-size: 16px !important;
+}
+
+[class^="govco-"]:before,
+[class*=" govco-"]:before {
+    font-family: "govco-fontv2";
+    font-style: normal;
+    font-weight: normal;
+
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: 0.2em;
+    text-align: center;
+    /* opacity: .8; */
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: 0.2em;
+
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.govco-x-square:before {
+    content: "\ee16";
+}
+
+.govco-x:before {
+    content: "\ee17";
+}
+
+.govco-instagram-square:before {
+    content: "\ed5b";
+}
+
+.govco-instagram:before {
+    content: "\ed5c";
+}
+
+.govco-facebook-f:before {
+    content: "\ed0e";
+}
+
+.govco-facebook-messenger:before {
+    content: "\ed0f";
+}
+
+.govco-facebook-square:before {
+    content: "\ed10";
+}
+
+.govco-facebook:before {
+    content: "\ed11";
+}
+
+.govco-phone:before {
+    content: "\ea8a";
+}
+
+.govco-phone-alt:before {
+    content: "\ea85";
+}
+
+.govco-tiktok:before {
+    content: "\ee0f";
+}
+
+.govco-whatsapp-square:before {
+    content: "\ee37";
+}
+
+.govco-youtube-square:before {
+    content: "\ee51";
+}
+
+.govco-youtube:before {
+    content: "\ee52";
+}
+
+/*** FUENTE ICONOS ***/
+
+/*** MODAL 1 ***/
+.govco-logo-entidad {
+    height: 83px;
+    display: inline-block;
+    content: url(https://www.minsalud.gov.co/LogosInstitucionales/Logo-MinSalud.png);
+}
+
+.govco-co {
+    height: 48px;
+    margin-top: 24px;
+    display: inline-block;
+    content: url(https://cdn.www.gov.co/v4/assets/images/logo-colombia.svg);
+}
+
+.govco-separator {
+    border-left: 1px solid #e5eefb;
+    opacity: 1px;
+    height: 44px;
+    margin-left: 10px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.govco-logo {
+    height: 30px;
+    display: inline-block;
+    content: url(https://cdn.www.gov.co/v4/assets/images/logo.svg);
+    vertical-align: super;
+}
+
+.govco-footer-logo {
+    height: 96px;
+    background-color: #3366cc;
+    width: 100%;
+    margin-top: 20px !important;
+}
+
+.govco-data-front {
+    width: calc(100% - 39%);
+    -webkit-box-shadow: 600px 30px 0px -30px #73b9af -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+    box-shadow: 600px 30px 0px -30px #35AFA4, -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+    top: 10;
+    border: 2px solid #e5eefb;
+    border-radius: 10px;
+    opacity: 1;
+    margin: auto !important;
+}
+
+.govco-text-header-1 {
+    color: #35AFA4;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.govco-text-header-2 {
+    color: #35AFA4;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 0 !important;
+}
+
+.govco-text-header-3 {
+    color: #3366cc;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 0 !important;
+}
+
+.govco-logo-container {
+    margin-left: 80px !important;
+}
+
+.govco-link-modal {
+    color: #3366cc;
+    margin-right: 30px !important;
+    text-decoration: underline;
+}
+
+.icon::before {
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: scale(1.5, 1.5);
+    margin-right: 10px !important;
+    margin-left: 5px !important;
+    vertical-align: text-top !important;
+    color: #35AFA4;
+}
+
+.govco-iconContainer {
+    display: inline-block !important;
+    width: auto !important;
+}
+
+.govco-links-container {
+    margin-bottom: 50px !important;
+    margin-top: 30px !important;
+    justify-content: start;
+}
+
+.govco-footer-text {
+    margin-top: 50px !important;
+    margin-left: 80px !important;
+}
+
+.govco-texto-sedes,
+.govco-network {
+    padding: unset !important;
+}
+
+.govco-network,
+.govco-listado-sedes {
+    margin-top: 30px !important;
+}
+
+.govco-sedes {
+    margin-top: 20px !important;
+}
+
+.govco-logo-div-a {
+    text-align: center !important;
+}
+
+.govco-links-directorio {
+    margin-top: 20px !important;
+}
+
+.govco-link-container {
+    display: inline-block;
+    width: auto !important;
+}
+
+.govco-mostrar {
+    display: none !important;
+}
+
+.govco-nombre-entidad {
+    margin-bottom: 0px !important;
+    padding-left: 0px;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 1400px) {
+    .govco-data-front {
+        width: calc(100% - 40px);
+        -webkit-box-shadow: 600px 30px 0px -30px #73b9af -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+        box-shadow: 600px 30px 0px -30px #35AFA4, -600px 30px 0px -30px #35AFA4, 0px 20px 0px 0px #35AFA4, 600px 50px 0px -30px #35AFA4, -600px 50px 0px -30px #35AFA4;
+        top: 10;
+        border: 2px solid #e5eefb;
+        border-radius: 10px;
+        opacity: 1;
+        margin: auto !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .govco-sedes {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 5px !important;
+    }
+
+    .govco-sede-info {
+        margin-left: 0 !important;
+    }
+
+    .govco-text-header-1 {
+        margin-left: 15px !important;
+    }
+
+    .govco-logo-entidad {
+        height: 65px;
+    }
+
+    .govco-footer-text {
+        margin: 0 !important;
+        margin-top: 50px !important;
+    }
+
+    .govco-nombre-entidad {
+        margin-left: 0px !important;
+        width: 100% !important;
+    }
+
+    .govco-logo-div-a {
+        margin-left: 0 !important;
+    }
+
+    .govco-texto-sedes,
+    .govco-links-directorio,
+    .govco-listado-sedes,
+    .govco-links-container {
+        margin-left: 15px !important;
+        margin-top: 20px !important;
+    }
+
+    .govco-texto-sedes,
+    .govco-network {
+        padding: unset !important;
+    }
+
+    .govco-iconContainer {
+        margin-top: 20px !important;
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .govco-network {
+        margin-left: 15px !important;
+        margin-top: 10px !important;
+    }
+
+    .govco-text-header-3 {
+        margin-top: 20px !important;
+    }
+
+    .govco-link-container {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .govco-mostrar {
+        display: unset !important;
+    }
+
+    .govco-logo-container {
+        text-align: center !important;
+        margin-left: unset !important;
+    }
+
+    .govco-texto-sedes {
+        padding-right: 20px !important;
+    }
+
+    .right {
+        max-width: 80px;
+    }
+
+}
