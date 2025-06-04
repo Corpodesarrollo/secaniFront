@@ -6,7 +6,7 @@
       <p class="mb-0">{{ titulos[listaParametrica?.nombre || ''] }}</p>
       <p class="mb-0">{{ listaParametrica?.descripcion }}</p>
       @if (listaParametrica?.tablaPadre) {
-        <p class="mb-0">Lista padre: {{ listaParametrica?.tablaPadre }}</p>
+        <p class="mb-0">Lista padre: {{ titulos[listaParametrica?.nombreTablaPadre || ''] }}</p>
       }
     </div>
   </div>
@@ -67,7 +67,11 @@
           <tr>
             <td>{{ item.id }}</td>
             <td>{{ item.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</td>
-            <td>{{ item.nombre }}</td>
+            @if (listaParametrica?.nombre == 'festivos') {
+              <td>{{ item.nombre  | date: 'dd/MM/yyyy' }}</td>
+            } @else {
+              <td>{{ item.nombre }}</td>
+            }
             <td>{{ item.indicador || 'No aplica' }}</td>
             <td>{{ item.orden || 'No aplica' }}</td>
             <td>{{ item.itemListaPadre || 'No aplica' }}</td>

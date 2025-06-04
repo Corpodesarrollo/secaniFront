@@ -46,68 +46,8 @@ export class ReporteDetalleNuevoDepuradosComponent {
     this.activatedRoute.paramMap.subscribe(async params => {
       this.id = params.get('id');
       if (this.id) {
-        this.reportes = await this.reportesService.getReporteDetalleRegDepurados(this.id);
-
-        if (!this.reportes || (this.reportes && this.reportes.length == 0)) {
-          this.reportes = [
-            {
-              "id": 1,
-              "idReporteDepuracion": 0,
-              "fechaNotificacion": "2022-07-12T02:41:36.4767203",
-              "origenReporteId": 3,
-              "origenReporte": "Secretaría de salud",
-              "primerNombre": "Greg",
-              "segundoNombre": "Ricky",
-              "primerApellido": "Christy",
-              "segundoApellido": "Brad",
-              "diagnosticoId": 10,
-              "diagnostico": "Tumores óseos malignos",
-              "fechaNacimiento": "2007-11-11T03:14:52.8061867",
-              "edad": 17,
-              "sexoId": "H",
-              "sexo": null,
-              "tipoIdentificacionId": "CC",
-              "tipoIdentificacion": "Cédula Ciudadanía",
-              "numeroIdentificacion": "1050069231",
-              "paisId": "0",
-              "pais": null,
-              "etniaId": "1",
-              "etnia": "Indígena",
-              "municipioNacimientoId": "504",
-              "departamentoNacimiento": "META",
-              "municipioNacimiento": null,
-              "grupoPoblacionId": "3",
-              "grupoPoblacion": null,
-              "residenciaOrigenMunicipioId": "05001",
-              "residenciaOrigenDepartamento": null,
-              "residenciaOrigenMunicipio": null,
-              "residenciaOrigenBarrio": "79627",
-              "residenciaOrigenAreaId": "1",
-              "areaProcedencia": "Urbano",
-              "residenciaOrigenDireccion": "830 West Fabien Drive",
-              "residenciaOrigenEstratoId": "3",
-              "residenciaActualTelefono": "606-989-5657",
-              "departamentoTratamientoId": "23",
-              "departamentoTratamiento": "CÓRDOBA",
-              "estadoIngresoEstrategiaId": 13,
-              "estadoIngresoEstrategia": "13",
-              "fechaIngresoEstrategia": "2023-06-07T02:02:33.8183336",
-              "tipoRegimenSSId": "2",
-              "tipoRegimenSS": "Contributivo",
-              "epsId": 7,
-              "eps": null,
-              "ipsId": 2,
-              "ips": null,
-              "cuidadorNombres": "Bridgette May",
-              "cuidadorParentescoId": "1",
-              "cuidadorParentesco": "Padre o Madre",
-              "cuidadorEmail": "uvlxsrgs.qzhvizagf@yqwnwd.vkcafx.org",
-              "cuidadorTelefono": "005-7444214",
-              "agente": "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5"
-            }
-          ];
-        }
-
+        this.reportesService.getReporteDetalleRegDepurados(this.id)
+          .subscribe((reportes: any) => this.reportes = reportes);
         this.filteredReportes = this.reportes;
       }
     });

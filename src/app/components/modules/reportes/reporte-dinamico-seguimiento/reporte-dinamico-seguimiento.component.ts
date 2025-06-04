@@ -112,8 +112,8 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     const fechaInicialString = fechaInicio.toISOString().split('T')[0];
     const fechaFinalString = fechaFin.toISOString().split('T')[0];
 
-    this.reportes = await this.reportesService
-      .getReporteSeguimientos(fechaInicialString, fechaFinalString);
+    this.reportesService.getReporteSeguimientos(fechaInicialString, fechaFinalString)
+      .subscribe((reportes: any) => this.reportes = reportes);
   }
 
   exportExcel() {

@@ -108,7 +108,7 @@ export class ListaParametricaItemsComponent implements OnInit {
 
     save$.pipe(
         tap(() => {
-          this.itemsListaParametricaForm.reset();
+          this.resetFormToDefaults();
           this.messageService.add({
             severity: 'success',
             summary: 'Guardado',
@@ -137,11 +137,7 @@ export class ListaParametricaItemsComponent implements OnInit {
     }));
   }
 
-  clearForm(): void {
-    this.itemsListaParametricaForm.reset();
-  }
-
-  confirmDelete(event: Event, itemListaParametricaId: string) {
+  confirmDelete(event: Event, itemListaParametrica: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: '¿Estás seguro de que quieres eliminar el item de lista parametrica?',
@@ -152,8 +148,10 @@ export class ListaParametricaItemsComponent implements OnInit {
       acceptIcon: "none",
       rejectIcon: "none",
       accept: () => {
-        if (itemListaParametricaId) {
-          this.listasParametricasService.deleteItemListaParametrica(itemListaParametricaId)
+        if (itemListaParametrica) {
+          this.itemsListaParametricaForm.reset({...itemListaParametrica, isDeleted: true, activo: false });
+          const formData = this.itemsListaParametricaForm.getRawValue();
+          this.listasParametricasService.deleteItemListaParametrica(this.listaParametricaPadre!.nombre, itemListaParametrica.id, formData)
             .pipe(tap(() => this.loadItems()))
             .subscribe({
               next: () => {
@@ -202,5 +200,33 @@ export class ListaParametricaItemsComponent implements OnInit {
 
     festivoControl?.updateValueAndValidity();
     nombreControl?.updateValueAndValidity();
+  }
+
+  resetFormToDefaults(): void {
+    this.itemsListaParametricaForm.reset({
+      id: 0,
+      festivo: '',
+      horaInicio: '00:00:00',
+      horaFin: '23:59:59',
+      nombre: '',
+      descripcion: '',
+      orden: 0,
+      fechaCreacion: new Date().toISOString(),
+      activo: true,
+      isDeleted: false,
+      itemListaPadre: 'N/A',
+      codigo: '',
+      indicador: '',
+    });
+
+    // Restaurar los campos deshabilitados
+    this.itemsListaParametricaForm.get('id')?.disable();
+    this.itemsListaParametricaForm.get('descripcion')?.disable();
+    this.itemsListaParametricaForm.get('orden')?.disable();
+    this.itemsListaParametricaForm.get('fechaCreacion')?.disable();
+    this.itemsListaParametricaForm.get('activo')?.disable();
+    this.itemsListaParametricaForm.get('isDeleted')?.disable();
+    this.itemsListaParametricaForm.get('itemListaPadre')?.disable();
+    this.itemsListaParametricaForm.get('codigo')?.disable();
   }
 }

@@ -43,7 +43,7 @@ export class ListasParametricasService {
   }
 
   getItemListaParametricas(nombre: string): Observable<Object> {
-    const url: string = `ApiTablasParametricas/${nombre}`;
+    const url: string = `${nombre}/notdeleted`;
     return this.generico.get(url, '', 'TablaParametrica');;
   }
 
@@ -52,8 +52,8 @@ export class ListasParametricasService {
     return this.generico.get(url, '', 'TablaParametrica');
   }
   
-  deleteItemListaParametrica(id: string): Observable<Object> {
-    const url: string = `NombreTablaParametrica/${id}`;
-    return this.generico.get(url, '', 'TablaParametrica');
+  deleteItemListaParametrica(nombre: string, id: string, dato: any): Observable<Object> {
+    const url: string = `${nombre}/${id}`;
+    return this.generico.put(url, dato, 'TablaParametrica');
   }
 }
