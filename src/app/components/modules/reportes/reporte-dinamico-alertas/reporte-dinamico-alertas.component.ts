@@ -110,8 +110,8 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     const fechaInicialString = fechaInicio.toISOString().split('T')[0];
     const fechaFinalString = fechaFin.toISOString().split('T')[0];
 
-    this.reportes = await this.reportesService
-      .getReporteDinamicosAlertas(fechaInicialString, fechaFinalString);
+    this.reportesService.getReporteDinamicosAlertas(fechaInicialString, fechaFinalString)
+      .subscribe((reportes: any) => this.reportes = reportes);
   }
 
   exportExcel() {

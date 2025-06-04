@@ -3,45 +3,47 @@
 
   <div class="card">
     <div class="card-body">
-      <div class="row align-items-center mb-3">
-        <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
-        <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-          <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
-          <div class="text-danger mt-1" 
-            *ngIf="camposForm.controls['fechaInicio'].invalid && camposForm.controls['fechaInicio'].touched">
-            La fecha incio es requerida
-          </div>
-          <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched">
-            La fecha inicial no puede ser mayor a la fecha final
-          </div>
-        </div>
-
-        <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
-        <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-          <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
-          <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaFin'].invalid && camposForm.controls['fechaFin'].touched">
-              La fecha fin es requerida
+      <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
+        <div class="row align-items-center mb-3">
+          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
+          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+            <p-calendar formControlName="fechaInicio" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
+            <div class="text-danger mt-1" 
+              *ngIf="camposForm.controls['fechaInicio'].invalid && camposForm.controls['fechaInicio'].touched">
+              La fecha incio es requerida
             </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched">
-              La fecha fin no puede ser mayor a la fecha actual
+            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched">
+              La fecha inicial no puede ser mayor a la fecha final
             </div>
-        </div>
-      </div>
+          </div>
+  
+          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
+          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
+            <p-calendar formControlName="fechaFin" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
+            <div class="text-danger mt-1" 
+                *ngIf="camposForm.controls['fechaFin'].invalid && camposForm.controls['fechaFin'].touched">
+                La fecha fin es requerida
+              </div>
+              <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched">
+                La fecha fin no puede ser mayor a la fecha actual
+              </div>
+          </div>
+        </div> 
 
-      <div class="row align-items-center">
-        <div class="col-12 mb-4 col-sm-10 mb-sm-0">
-          <p-inputGroup>
-            <input class="w-100" type="text" placeholder="Buscar..." pInputText />
-            <p-inputGroupAddon>
-                <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+        <div class="row align-items-center">
+          <div class="col-12 mb-4 col-sm-10 mb-sm-0">
+            <p-inputGroup>
+              <input class="w-100" type="text" placeholder="Buscar..." pInputText />
+              <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
+          <div class="col-6 mb-3 col-sm-2 mb-sm-0">
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100"/>
+          </div>
         </div>
-        <div class="col-6 mb-3 col-sm-2 mb-sm-0">
-          <p-button severity="success" label="Generar" styleClass="w-100"/>
-        </div>
-      </div>
+      </form>
 
       <div class="mt-3">
         <p-table [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
@@ -70,24 +72,24 @@
               <th>Teléfono errado</th>
               <th>Teléfono ocupado</th>
               <th>Buzón de voz</th>
-              <th>Sin sellan</th>
+              <th>Sin señal</th>
               <th>Otro</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-reporte>
             <tr>
               <td>{{ reporte.agente }}</td>
-              <td>{{ reporte.fecha | date:'dd/MM/YYYY' }}</td>
-              <td>{{ reporte.llamadasRealizadas }}</td>
-              <td>{{ reporte.exitosas }}</td>
-              <td>{{ reporte.fallidas }}</td>
-              <td>{{ reporte.noContestan }}</td>
-              <td>{{ reporte.telefonoErrado }}</td>
-              <td>{{ reporte.telefonoOcupado }}</td>
-              <td>{{ reporte.buzonVoz }}</td>
-              <td>{{ reporte.sinSenal }}</td>
-              <td>{{ reporte.otro }}</td>
-              <td>{{ reporte.observacion }}</td>
+              <td>{{ reporte.fechaIntento | date:'dd/MM/YYYY' }}</td>
+              <td>{{ reporte.llamadasExitosas + reporte.llamadasFallidas }}</td>
+              <td>{{ reporte.llamadasExitosas }}</td>
+              <td>{{ reporte.llamadasFallidas }}</td>
+              <td>{{ reporte.detallesFallas["No contesta"] }}</td>
+              <td>{{ reporte.detallesFallas["Teléfono equivocado"] }}</td>
+              <td>{{ reporte.detallesFallas["Telefono Ocupado"] }}</td>
+              <td>{{ reporte.detallesFallas["Buzon de voz"]  }}</td>
+              <td>{{ reporte.detallesFallas["Sin Señal"] }}</td>
+              <td>{{ reporte.detallesFallas["Otro"] }}</td>
+              <td>{{ reporte.observaciones }}</td>
               <td></td>
             </tr>
           </ng-template>
