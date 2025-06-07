@@ -210,26 +210,12 @@ export class CrearOficioComponent implements OnInit {
     this.closeModal.emit(); // Emite evento para cerrar el modal
   }
 
-  closeNotificacion() {
-    this.show = false; // Oculta el modal de notificación
-    this.selectedEntidad = undefined; // Reinicia la selección de entidad
-    this.oficio = {
-      id: 0,
-      ciudadEnvio: '',
-      fechaEnvio: new Date(),
-      membrete: this.membrete,
-      idEntidad: 0,
-      ciudad: '',
-      asunto: '',
-      mensaje: '',
-      idAlertaSeguimiento: 0,
-      comentario: '',
-      idNNA: 0,
-      cierre: '',
-      firma: '',
-      firmaJpg: '',
-      userName: ''
-    }; // Reinicia el objeto oficio
+  closeNotificacion(resultado: boolean): void {
+    this.showDialog = false; 
+    if (resultado) {
+      this.showDialog = false; 
+      this.show = false; 
+    }
   }
 
 }

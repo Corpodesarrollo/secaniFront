@@ -4,6 +4,7 @@
 
 // RUTAS DE DESARROLLO
 
+
 /*export const environment = {
   cookie : false,
   production: false,
@@ -36,19 +37,17 @@
 // };
 
 // RUTAS DE MINISTERIO
-  export const environment = {
-    cookie : false,
-    production: false,
-    url: 'http://192.168.110.12/auth/',
-    url_MsAuthention: 'http://192.168.110.12/auth/',
-     url_MSEntidad: 'http://192.168.110.12/auth/',
-     url_MSPermisos: 'http://192.168.110.12/auth/',
-     url_Parametricas: 'http://192.168.110.12/tablas/',
-    url_MSTablasParametricas: 'http://192.168.110.12/tablas/',
-     url_MsNna: 'http://192.168.110.12/nna/',
-     url_MSSeguimiento: 'http://192.168.110.12/seguimiento/',
-     url_MSParametricas: 'http://192.168.110.12/tablas/',
-     url_MSUsuarioyRoles: 'http://192.168.110.12/auth/',
-  };
-
-
+ export const environment = {
+   cookie : true,
+   production: false,
+   url: 'https://nna.sisprodesa.local/auth/',
+   url_MsAuthention: 'https://nna.sisprodesa.local/auth/',
+    url_MSEntidad: 'https://nna.sisprodesa.local/auth/',
+    url_MSPermisos: 'https://nna.sisprodesa.local/auth/',
+    url_Parametricas: 'https://nna.sisprodesa.local/tablas/',
+    url_MSTablasParametricas: 'https://nna.sisprodesa.local/tablas/',
+    url_MsNna: 'https://nna.sisprodesa.local/nna/',
+    url_MSSeguimiento: 'https://nna.sisprodesa.local/seguimiento/',
+    url_MSParametricas: 'https://nna.sisprodesa.local/tablas/',
+    url_MSUsuarioyRoles: 'https://nna.sisprodesa.local/auth/',
+ };

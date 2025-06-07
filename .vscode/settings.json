@@ -2,5 +2,11 @@
     "appService.zipIgnorePattern": [
         "node_modules{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#306341",
+        "activityBar.foreground": "#FFFFFF",
+        "titleBar.activeBackground": "#306341",
+        "titleBar.activeForeground": "#FFFFFF",
+    }
 }

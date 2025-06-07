@@ -136,9 +136,12 @@
     </div>
     <!--/form-->
     <div class="text-center">
-      <button (click)="enviar()" class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 400px;"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
+      <button (click)="enviar()" class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 420px;"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GENERAR OFICIO Y ENVIAR NOTIFICACION</button>
     </div>
   </div>
+  <!-- <button (click)="showDialog = true" class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 100px;"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> PRUEBA</button> -->
+
 </p-dialog>
 
-<app-notificacion-oficio [showDialog]="showDialog" [idAlerta]="alerta.id" [idNNA]="NNAdatos.id" [idNotificacion]='idNotificacion' (onClose)="closeNotificacion()"></app-notificacion-oficio>
+
+<app-notificacion-oficio [showDialog]="showDialog" [idAlerta]="alerta.id" [idNNA]="NNAdatos.id" [idNotificacion]='idNotificacion' (closeModal)="closeNotificacion($event)"></app-notificacion-oficio>

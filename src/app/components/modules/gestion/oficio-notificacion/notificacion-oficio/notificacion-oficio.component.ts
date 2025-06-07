@@ -41,7 +41,7 @@ export class NotificacionOficioComponent {
     @Input() idNotificacion!: number;
     @Input() idAlerta: number = 0;
     @Input() idNNA: number = 0;
-    @Output() closeModal = new EventEmitter<void>();
+    @Output() closeModal = new EventEmitter<boolean>();
     @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   
     isLoading: boolean = false;
@@ -226,34 +226,29 @@ export class NotificacionOficioComponent {
     }
   
     limpiar(){
-      if (this.error){
-        this.mostrarDialogo = false;
-      }
-      else {
-        this.notificacion = {
-            id: 0,
-            idNotificacion: 0,
-            idEntidad: '',
-            para: [],
-            conCopia: [],
-            plantillaId: 0,
-            asunto: "",
-            mensaje: "",
-            agregarEnlace: false,
-            enlace: "",
-            agregarComentario: false,
-            comentario: "",
-            adjunto: null,
-            firma: "",
-          };
+      // this.mostrarDialogo = false;
 
-        this.showDialog = false;
-        this.mostrarDialogo = true;
-        this.selectedPlantilla = undefined;
-        this.selectedEntidad = undefined;
+      // if (!this.error){
+      //   this.notificacion = {
+      //       id: 0,
+      //       idNotificacion: 0,
+      //       idEntidad: '',
+      //       para: [],
+      //       conCopia: [],
+      //       plantillaId: 0,
+      //       asunto: "",
+      //       mensaje: "",
+      //       agregarEnlace: false,
+      //       enlace: "",
+      //       agregarComentario: false,
+      //       comentario: "",
+      //       adjunto: null,
+      //       firma: "",
+      //     };
 
-        this.closeModal.emit();
-      }
+      //   this.showDialog = false;
+      //   this.closeModal.emit(true);
+      // }
     }
   
     openModal() {
@@ -338,8 +333,7 @@ export class NotificacionOficioComponent {
         adjunto: null,
         firma: "",
       }; // Reinicia el objeto oficio
-  
-      this.closeModal.emit(); // Emite evento para cerrar el modal
+      this.closeModal.emit(false);
     }
 
     cambiarEstadoEnlace() {
