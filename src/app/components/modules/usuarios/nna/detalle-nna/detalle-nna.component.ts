@@ -68,6 +68,7 @@ export class DetalleNnaComponent implements OnInit {
   tiposOrigenReporte: Parametricas[] = [];
   estadosNNA: any[] = [];
   regimenesAfiliacion: Parametricas[] = [];
+  razonesSinDiagnostico: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -99,6 +100,9 @@ export class DetalleNnaComponent implements OnInit {
     this.loadTiposOrigen();
     this.loadEstadosNNA();
     this.loadRegimenes();
+    this.loadRazonesSinDiagnostico();
+    this.loadDiagnosticos();
+    this.loadEntidadesRecibirTratamiento();
 
   }
 
@@ -119,7 +123,7 @@ export class DetalleNnaComponent implements OnInit {
 
   calcularTiempoTranscurrido() {
 
-    console.log(this.fechaInicio);
+    //console.log(this.fechaInicio);
     if (!this.fechaInicio) {
       return;
     }
@@ -142,7 +146,7 @@ export class DetalleNnaComponent implements OnInit {
       meses += 12;
     }
 
-    console.log(`${anos} años, ${meses} meses, ${dias} días`);
+    //console.log(`${anos} años, ${meses} meses, ${dias} días`);
 
     this.tiempoTranscurrido = `${anos} años, ${meses} meses, ${dias} días`;
   }
@@ -201,8 +205,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreSexoPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.sexoAnn.find(item => item.id === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -216,8 +222,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombrePaisPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.listadoPais.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -231,8 +239,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreEtniaPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.etnias.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -245,13 +255,16 @@ export class DetalleNnaComponent implements OnInit {
     });
   }
 
-  getNombreDeptoPorId(codigo: any): string | undefined {
+
+  getNombreDeptoPorCodigo(codigo: any): string | undefined {
+    if (!codigo) {
+      return '';
+    }
     const extraerDosPrimeros = (codigo: string): string => {
       return codigo.substring(0, 2);
     };
-    let codDepto: string = extraerDosPrimeros.toString();
+    let codDepto: string = extraerDosPrimeros(codigo).toString();
     const resultado = this.listaDepartamentos.find(item => item.codigo === codDepto);
-    console.log('No se encuentra el ID: ' + codigo);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -264,13 +277,12 @@ export class DetalleNnaComponent implements OnInit {
     });
   }
 
-  getNombreMuniPorId(codigo: any): string | undefined {
-    const completarCodigo = (codigo: string): string => {
-      return codigo.padEnd(5, '0');
-    };
-    let codigoCompleto: string = completarCodigo.toString();
+  getNombreMuniPorCodigo(codigo: any): string | undefined {
+    if (!codigo) {
+      return '';
+    }
+    let codigoCompleto: string = codigo.toString();
     const resultado = this.listaMunicipios.find(item => item.codigo === codigoCompleto);
-    console.log('No se encuentra el ID: ' + codigo);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -284,8 +296,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreGrupoPoblaPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.gruposponlacional.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -299,8 +313,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreAreaPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.areas.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -314,8 +330,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreEstratoPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.estratos.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -329,8 +347,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreOrigenReportePorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.tiposOrigenReporte.find(item => item.id === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -344,8 +364,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreEstadoNNAPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.estadosNNA.find(item => item.id === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -359,9 +381,38 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreTipoAfiliacionPorId(id: any): string | undefined {
+    if (!id) {
+      return '';
+    }
     const resultado = this.regimenesAfiliacion.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
     return resultado ? resultado.nombre : 'Dato no encontrado';
+  }
+
+  loadRazonesSinDiagnostico(){
+    this.repos.get_withoutParameters(`RazonesSinDiagnostico`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.razonesSinDiagnostico = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadDiagnosticos(){
+    this.repos.get_withoutParameters(`CIE10`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.optionsDiagnostico = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
+  }
+
+  loadEntidadesRecibirTratamiento(){
+    this.repos.get_withoutParameters(`Entidades/Entidades`, 'TablaParametrica').subscribe({
+      next: async (data: any) => {
+        this.optionsIps = data;
+      },
+      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+    });
   }
 
   ngAfterViewInit(): void {

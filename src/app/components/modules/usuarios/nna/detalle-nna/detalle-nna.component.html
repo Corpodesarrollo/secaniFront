@@ -51,7 +51,7 @@
         </div>
 
         <span [ngClass]="['bg-info', 'fixed-width-badge', 'text-wrap', 'fs-6', 'p-3']" class="badge text-white me-2">
-          Estado del seguimiento
+          {{getNombreEstadoNNAPorId(datosNNA.estadoId)}}
         </span>
       </div>
 
@@ -92,11 +92,11 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento de nacimiento: <br></div>
-              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.residenciaOrigenMunicipioId)}}</span><br></div>
+              <div class="col"><span>{{getNombreDeptoPorCodigo(datosNNA.residenciaOrigenMunicipioId)}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Ciudad de nacimiento: <br></div>
-              <div class="col"><span>{{getNombreMuniPorId(datosNNA.residenciaOrigenMunicipioId)}}</span><br></div>
+              <div class="col"><span>{{getNombreMuniPorCodigo(datosNNA.residenciaOrigenMunicipioId)}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Grupo poblacional*: <br></div>
@@ -110,11 +110,11 @@
             <br>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento: <br></div>
-              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
+              <div class="col"><span>{{getNombreDeptoPorCodigo(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Municipio: <br></div>
-              <div class="col"><span>{{getNombreMuniPorId(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
+              <div class="col"><span>{{getNombreMuniPorCodigo(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Barrio: <br></div>
@@ -144,7 +144,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento donde actualmente recibe el tratamiento: <br></div>
-              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.departamentoTratamientoId)}}</span><br></div>
+              <div class="col"><span>{{getNombreDeptoPorCodigo(datosNNA.departamentoTratamientoId)}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Estado de ingreso a la estrategia: <br></div>
@@ -207,10 +207,20 @@
               <div class="col" style="font-weight: bold;">Razones por las cuales el menor no tiene diagnóstico:<br></div>
               <div class="col">
                 <div class="row" style="margin-bottom: 10px;">
-                  <p-dropdown  placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoId"></p-dropdown>
+                  <select class="form-select" aria-label="Default select example" name="sindiagnostico" [(ngModel)]="datosNNA.motivoNoDiagnosticoId" [disabled]="true">
+                    <option value="" selected>Seleccionar</option>
+                    <option value="null">Sin registro</option>
+                    <option *ngFor="let sindiag of razonesSinDiagnostico" value="{{sindiag.id}}">{{sindiag.nombre}}</option>
+                  </select>
                 </div>
                 <div class="row">
-                  <input type="text" class="form-control" placeholder="Otro, ¿cuál?" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoOtro">
+                  <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Otro, ¿cuál?"
+                  [disabled]="true"
+                  [value]="datosNNA.motivoNoDiagnosticoOtro ? datosNNA.motivoNoDiagnosticoOtro : 'Sin registro'">
+
                 </div>
               </div>
             </div>
@@ -223,19 +233,22 @@
               <div class="row" style="margin-bottom: 10px;">
                 <div class="col" style="font-weight: bold;">Diagnóstico:<br></div>
                 <div class="col">
-                  <p-dropdown   placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.diagnosticoId" [options]="optionsDiagnostico"></p-dropdown>
+                  <select class="form-select" aria-label="Default select example" name="diagnostico" [(ngModel)]="datosNNA.diagnosticoId" [disabled]="true">
+                    <option value="" selected>Seleccionar</option>
+                    <option *ngFor="let diag of optionsDiagnostico" value="{{diag.id}}">{{diag.nombre}}</option>
+                  </select>
                 </div>
               </div>
               <div class="row" style="margin-bottom: 10px;">
                 <div class="col" style="font-weight: bold;">Fecha de consulta:<br></div>
                 <div class="col">
-                  <input type="date" class="form-control"  [(ngModel)]="datosNNA.fechaConsultaDiagnostico" [disabled]="true">
+                  <input type="date" class="form-control" [value]="datosNNA.fechaConsultaDiagnostico | date:'yyyy-MM-dd'" [disabled]="true">
                 </div>
               </div>
               <div class="row">
                 <div class="col" style="font-weight: bold;">Fecha de diagnóstico:<br></div>
                 <div class="col">
-                  <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaDiagnostico" [disabled]="true">
+                  <input type="date" class="form-control" [value]="datosNNA.fechaDiagnostico | date:'yyyy-MM-dd'" [disabled]="true">
                 </div>
               </div>
             </div>
@@ -244,13 +257,16 @@
               <div class="row" style="margin-bottom: 10px;">
                 <div class="col" style="font-weight: bold;">Fecha de inicio de tratamiento:<br></div>
                 <div class="col">
-                  <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaInicioTratamiento" [disabled]="true">
+                  <input type="date" class="form-control" [value]="datosNNA.fechaInicioTratamiento | date:'yyyy-MM-dd'" [disabled]="true">
                 </div>
               </div>
               <div class="row">
                 <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
                 <div class="col">
-                  <p-dropdown  placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.ipsId" [options]="optionsIps"></p-dropdown>
+                  <select class="form-select" aria-label="Default select example" name="nombreips" [(ngModel)]="datosNNA.ipsId" [disabled]="true">
+                    <option value="" selected>Seleccionar</option>
+                    <option *ngFor="let ips of optionsIps" value="{{ips.id}}">{{ips.nombre}}</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -268,11 +284,11 @@
                 <div class="col d-flex align-items-center">
                   <!-- Radio buttons for Si / No -->
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input"  type="radio"  id="recSi"  name="recaida"  value="true"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === true" [disabled]="true">
+                    <input class="form-check-input"  type="radio"  id="recSi"  name="recaida" [checked]="datosNNA.recaida === true" [disabled]="true">
                     <label class="form-check-label" for="recSi">Sí</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input"  type="radio"  id="recNo"  name="recaida"  value="false"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === false" [disabled]="true">
+                    <input class="form-check-input"  type="radio"  id="recNo"  name="recaida" [checked]="datosNNA.recaida === false" [disabled]="true">
                     <label class="form-check-label" for="recNo">No</label>
                   </div>
 
@@ -287,7 +303,7 @@
               <div class="row">
                 <div class="col" style="font-weight: bold;">Fecha de recaída:</div>
                 <div class="col">
-                  <input type="date" class="form-control" [(ngModel)]="datosNNA.fechaUltimaRecaida" [disabled]="true">
+                  <input type="date" class="form-control" [value]="datosNNA.fechaUltimaRecaida | date:'yyyy-MM-dd'" [disabled]="true">
                 </div>
               </div>
             </div>
@@ -305,11 +321,11 @@
               </div>
               <div class="col-6">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input"  type="radio"  id="traslSi"  name="traslados"  value="true"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === true" [disabled]="true">
+                  <input class="form-check-input"  type="radio"  id="traslSi"  name="traslados" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === true" [disabled]="true">
                   <label class="form-check-label" for="trasladoSi">Sí</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input"  type="radio"  id="traslNo"  name="traslados"  value="false"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === false" [disabled]="true">
+                  <input class="form-check-input"  type="radio"  id="traslNo"  name="traslados" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === false" [disabled]="true">
                   <label class="form-check-label" for="trasladoNo">No</label>
                 </div>
               </div>

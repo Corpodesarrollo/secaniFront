@@ -96,3 +96,16 @@ td {
   opacity: 0.5;
   font-style: italic;
 }
+
+select.form-select {
+  border-radius: 8px; /* Ajusta el valor según lo que necesites */
+  padding: 10px; /* Aumenta el espacio interno para un aspecto más limpio */
+  font-size: 14px; /* Ajusta el tamaño del texto */
+}
+
+.form-select option {
+  border-radius: 8px; /* Aplica esquinas redondeadas a las opciones */
+  background-color: #ffffff; /* Fondo blanco */
+  color: #495057; /* Texto oscuro */
+  padding: 8px; /* Espaciado interno */
+}

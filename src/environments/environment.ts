@@ -4,7 +4,7 @@
 
 // RUTAS DE DESARROLLO
 
-/*export const environment = {
+export const environment = {
   cookie : false,
   production: false,
   url: 'https://localhost:4200/',
@@ -17,7 +17,7 @@
   url_MSSeguimiento: 'https://localhost:7085/',
   url_MSParametricas: 'https://localhost:7294/',
   url_MSUsuarioyRoles: 'https://localhost:7084/',
-};*/
+};
 
 // RUTAS DE AZURE
 // export const environment = {
@@ -36,7 +36,7 @@
 // };
 
 // RUTAS DE MINISTERIO
-  export const environment = {
+  /*export const environment = {
     cookie : false,
     production: false,
     url: 'http://192.168.110.12/auth/',
@@ -49,6 +49,6 @@
      url_MSSeguimiento: 'http://192.168.110.12/seguimiento/',
      url_MSParametricas: 'http://192.168.110.12/tablas/',
      url_MSUsuarioyRoles: 'http://192.168.110.12/auth/',
-  };
+  };*/
 
 
