@@ -8,5 +8,8 @@
         "activityBar.foreground": "#FFFFFF",
         "titleBar.activeBackground": "#306341",
         "titleBar.activeForeground": "#FFFFFF",
-    }
+    },
+    "appService.showBuildDuringDeployPrompt": false,
+    "appService.defaultWebAppToDeploy": "/subscriptions/e95267d0-7153-4d83-919f-ec931f20c5bf/resourceGroups/Minsalud/providers/Microsoft.Web/sites/SECANI2",
+    "appService.deploySubpath": "dist\\secani-front"
 }

@@ -143,7 +143,11 @@ export class GenericService {
   }
 
   public delete(modulo: string, parameters: string) {
-    return this.http.delete(`${this.url}${modulo}${parameters}`);
+    if (environment.cookie){
+      return this.http.delete(`${this.url}${modulo}${parameters}`, { withCredentials: true });
+    }else{
+      return this.http.delete(`${this.url}${modulo}${parameters}`);
+    }
   }
   public async deleteAsync(modulo: string, parameters: string) {
     return await this.http
