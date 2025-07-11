@@ -48,7 +48,17 @@ export class ReporteDepuracionComponent implements OnInit {
     const fechaFinalString = fechaFin.toISOString().split('T')[0];
 
     this.reportesService.getReporteEstadoDepuracion(fechaInicialString, fechaFinalString)
-    .subscribe((reportes: any) => this.reportes = reportes);
+    .subscribe((reportes: any) => {
+      this.reportes = reportes.map((reporte: any) => {
+        if (reporte.estado === 1 || reporte.estado === '1') {
+          return { ...reporte, estado: 'Procesado' };
+        } else if (reporte.estado === 2 || reporte.estado === '2') {
+          return { ...reporte, estado: 'Fallido' };
+        } else {
+          return reporte;
+        }
+      });
+    });
   }
 
   exportExcel() {

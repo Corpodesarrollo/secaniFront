@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -32,7 +32,8 @@ export class ReporteDetalleNuevoDepuradosComponent {
     private formBuilder: FormBuilder,
     private reportesService: ReportesService,
     private activatedRoute: ActivatedRoute,
-    private excelExportService: ExcelExportService
+    private excelExportService: ExcelExportService,
+    private router: Router
   ) {
     this.camposForm = this.formBuilder.group({
       fechaInicio: ['', Validators.required],
@@ -45,6 +46,7 @@ export class ReporteDetalleNuevoDepuradosComponent {
   async ngOnInit() {
     this.activatedRoute.paramMap.subscribe(async params => {
       this.id = params.get('id');
+      
       if (this.id) {
         this.reportesService.getReporteDetalleRegDepurados(this.id)
           .subscribe((reportes: any) => this.reportes = reportes);
@@ -71,5 +73,9 @@ export class ReporteDetalleNuevoDepuradosComponent {
     this.excelExportService.exportReporteToExcel(
       this.reportes, [], 'Reporte detalle nuevo depuración'
     );
+  }
+
+  volver() {
+    this.router.navigate(['/reportes/depuracion_p115']);
   }
 }
