@@ -3,9 +3,10 @@ import * as XLSX from 'xlsx';
 import { Reporte } from '../models/reporte.model';
 import { Alerta, NotificacionAlerta } from '../models/ExportConsutarAlertas.model';
 
-export interface TableData {
-  data: any[];         // Datos de la tabla (filas)
-  sheetName: string;   // Nombre de la hoja en Excel
+export interface ExcelSheet<T = any> {
+  rows: T[];
+  sheetName: string;
+  columns?: { header: string; field: keyof T }[];
 }
 
 @Injectable({
@@ -13,43 +14,28 @@ export interface TableData {
 })
 export class ExcelExportService {
 
-  exportToExcel(tableData: TableData, fileName: string = 'reporte') {
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();  // Crear un nuevo libro de trabajo
+  exportToExcel<T>(sheet: ExcelSheet<T>, fileName = 'export') {
+    const wb = XLSX.utils.book_new();
+    const data = this.mapRowsWithColumns(sheet.rows, sheet.columns);
+    const ws = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, sheet.sheetName);
 
-    // Convertir los datos en una hoja de Excel
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(tableData.data);
-    XLSX.utils.book_append_sheet(wb, ws, tableData.sheetName);
-
-    const now = new Date();
-    const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
-    const formattedTime = `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`;
-
-    // Concatenar el nombre del archivo con la fecha y hora
-    const finalFileName = `${fileName}_${formattedDate}_${formattedTime}.xlsx`;
-
-    // Descargar el archivo Excel con el nuevo nombre
-    XLSX.writeFile(wb, finalFileName);
+    const fileNameWithDate = `${this.sanitizeFileName(fileName)}_${this.getTimestamp()}.xlsx`;
+    XLSX.writeFile(wb, fileNameWithDate);
   }
 
-  exportReporteToExcel(reportes: Reporte[], columnas?: { header: string, field: string }[], fileName: string = 'reporte') {
-    if (!reportes|| reportes.length === 0) return;
-    if (!columnas || columnas.length === 0) return this.exportToExcel({ data: reportes, sheetName: 'Reporte' }, fileName);
+  exportToExcelMultipleSheets(sheets: ExcelSheet[], fileName = 'reporte') {
+    const wb = XLSX.utils.book_new();
 
-    const datosExportar = reportes.map(reporte => {
-      return columnas.reduce((acc, key) => {
-        if (key.field in reporte) {
-          acc[key.field] = reporte[key.field as keyof Reporte];  // Asegura que acceda a las claves correctamente
-        }
-        return acc;
-      }, {} as { [key: string]: any });
+    sheets.forEach((sheet) => {
+      const data = this.mapRowsWithColumns(sheet.rows, sheet.columns);
+      const ws = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, sheet.sheetName);
     });
 
-    this.exportToExcel({ data: datosExportar, sheetName: 'Reporte' }, fileName);
+    const fileNameWithDate = `${this.sanitizeFileName(fileName)}_${this.getTimestamp()}.xlsx`;
+    XLSX.writeFile(wb, fileNameWithDate);
   }
-
-
-
-
 
   exportToExcelDesdeConsultarAlertas(alerta: Alerta, noCaso: string, nombreNNA: string): void {
     const wsData: any[][] = [];
@@ -96,9 +82,30 @@ export class ExcelExportService {
     XLSX.writeFile(wb, noCaso + ' - ' + nombreNNA +'.xlsx');
   }
 
+  private mapRowsWithColumns<T>(rows: T[], columns?: { header: string; field: keyof T }[]): any[] {
+    if (!columns || columns.length === 0) return rows;
 
+    return rows.map((row) => {
+      const mapped: any = {};
+      columns.forEach((col) => {
+        mapped[col.header] = row[col.field];
+      });
+      return mapped;
+    });
+  }
 
+  private sanitizeFileName(name: string): string {
+    return name.replace(/[\\/:*?"<>|]/g, '_');
+  }
 
-
-
+  private getTimestamp(): string {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mi = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} -- ${hh}-${mi}-${ss}`;
+  }
 }

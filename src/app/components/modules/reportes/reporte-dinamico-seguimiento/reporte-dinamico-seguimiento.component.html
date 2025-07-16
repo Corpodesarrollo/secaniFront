@@ -81,7 +81,7 @@
         >
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
-              Reporte dinámico NNA
+              Reporte dinámico de Seguimiento
               <p-button (onClick)="exportExcel()" severity="success" icon="pi pi-file-excel" />
             </div>
           </ng-template>
@@ -101,6 +101,13 @@
                   {{ rowData[col.field] }}
                 </td>
               }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="columnas.length" class="text-center">
+                Reportes no encontrados.
+              </td>
             </tr>
           </ng-template>
         </p-table>

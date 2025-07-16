@@ -117,8 +117,9 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   }
 
   exportExcel() {
-    this.excelExportService.exportReporteToExcel(
-      this.reportes, this.columnas, 'Reporte dinámico NNA'
+    this.excelExportService.exportToExcel<any>(
+      { rows: this.reportes, columns: this.columnas, sheetName: `Reporte Dinamico Seguimiento` }, 
+      'Reporte Dinamico Seguimiento',
     );
   }
 }

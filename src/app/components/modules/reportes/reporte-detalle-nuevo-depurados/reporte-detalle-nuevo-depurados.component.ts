@@ -70,8 +70,9 @@ export class ReporteDetalleNuevoDepuradosComponent {
   }
 
   exportExcel() {
-    this.excelExportService.exportReporteToExcel(
-      this.reportes, [], 'Reporte detalle nuevo depuración'
+    this.excelExportService.exportToExcel<any>(
+      { rows: this.reportes, sheetName: `Reporte Detalle Nuevo Depurados` }, 
+      'Reporte Detalle Nuevo Depurados',
     );
   }
 
