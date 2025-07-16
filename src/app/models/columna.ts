@@ -1,4 +1,4 @@
-export interface Columna {
+export interface Columna<T = any> {
   header: string;
-  field: string;
+  field: keyof T;
 }

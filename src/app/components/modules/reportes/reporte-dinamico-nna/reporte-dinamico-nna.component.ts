@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 
 import { ReportesService } from '../../../../services/reportes.service';
-import { Reporte } from '../../../../models/reporte.model';
+import { ReporteDinamicoNNA } from '../../../../models/reporteDinamicoNNA.model';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
@@ -24,10 +24,10 @@ import { Columna } from '../../../../models/columna';
   styleUrl: './reporte-dinamico-nna.component.css'
 })
 export class ReporteDinamicoNnaComponent {
-  public reportes: Reporte[] = [];
+  public reportes: ReporteDinamicoNNA[] = [];
   public camposForm!: FormGroup;
 
-  public columnasObligatorias: Columna[] = [
+  public columnasObligatorias: Columna<ReporteDinamicoNNA>[] = [
     { header: 'Primer nombre', field: 'primerNombre' },
     { header: 'Segundo nombre', field: 'segundoNombre' },
     { header: 'Primer apellido', field: 'primerApellido' },
@@ -39,7 +39,7 @@ export class ReporteDinamicoNnaComponent {
     { header: 'Número de identificación', field: 'numeroIdentificacion' },
   ];
 
-  public columnasOpcionales: Columna[] = [
+  public columnasOpcionales: Columna<ReporteDinamicoNNA>[] = [
     { header: 'Fecha notificación', field: 'fechaNotificacionSIVIGILA' },
     { header: 'Origen del reporte', field: 'origenReporte' },
     { header: 'Fecha de nacimiento', field: 'fechaNacimiento' },
@@ -51,16 +51,16 @@ export class ReporteDinamicoNnaComponent {
     { header: 'Grupo poblacional', field: 'grupoPoblacion' },
     { header: 'Departamento procedencia', field: 'residenciaOrigenDepartamento' },
     { header: 'Municipio procedencia', field: 'residenciaOrigenMunicipio' },
-    { header: 'Barrio procedencia', field: 'barrioProcedencia' },
-    { header: 'Área procedencia', field: 'residenciaOrigenBarrio' },
+    { header: 'Barrio procedencia', field: 'residenciaOrigenBarrio' },
+    { header: 'Área procedencia', field: 'areaProcedencia' },
     { header: 'Dirección procedencia', field: 'residenciaOrigenDireccion' },
     { header: 'Estrato', field: 'residenciaOrigenEstratoId' },
     { header: 'Teléfono', field: 'residenciaActualTelefono' },
-    { header: 'Departamento donde actualmente recibe el tratamiento', field: 'departamentoTratamiento' },
+    { header: 'Departamento donde actualmente recibe el tratamiento', field: 'departamentoResidenciaActual' },
     { header: 'Estado de ingreso a la estrategia', field: 'estadoIngresoEstrategia' },
     { header: 'Fecha de ingreso a la estrategia', field: 'fechaIngresoEstrategia' },
     { header: 'Régimen de afiliación', field: 'tipoRegimenSS' },
-    { header: 'Asegurador', field: 'asegurador' },
+    { header: 'Asegurador', field: 'eps' },
     { header: 'IPS / UPGD', field: 'ips' },
     { header: 'Teléfono de contacto', field: 'cuidadorTelefono' },
     { header: 'Contacto', field: 'cuidadorNombres' },
@@ -90,7 +90,7 @@ export class ReporteDinamicoNnaComponent {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
-  onCheckboxChange(event: any, columna: Columna): void {
+  onCheckboxChange(event: any, columna: Columna<ReporteDinamicoNNA>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
 
@@ -101,7 +101,7 @@ export class ReporteDinamicoNnaComponent {
     }
   }
 
-  get columnasParaMostrar(): Columna[] {
+  get columnasParaMostrar(): Columna<ReporteDinamicoNNA>[] {
     return [...this.columnasObligatorias, ...this.camposSeleccionados.value];
   }
 
@@ -121,7 +121,7 @@ export class ReporteDinamicoNnaComponent {
   }
 
   exportExcel() {
-    this.excelExportService.exportToExcel<any>(
+    this.excelExportService.exportToExcel<ReporteDinamicoNNA>(
       { rows: this.reportes, columns: this.columnasParaMostrar, sheetName: `Reporte Dinamico NNA` }, 
       'Reporte Dinamico NNA',
     );

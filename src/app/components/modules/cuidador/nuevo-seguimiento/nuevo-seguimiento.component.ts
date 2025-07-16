@@ -13,7 +13,7 @@ import { TablasParametricas } from '../../../../core/services/tablasParametricas
 import { ReportesService } from '../../../../services/reportes.service';
 import { ReportesSIVIGILA } from '../../../../models/reporteSIVIGILA.model';
 import { GenericService } from '../../../../services/generic.services';
-import { Reporte } from '../../../../models/reporte.model';
+import { Reporte } from '../../../../models/reporteDinamicoNNA.model';
 import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
 
