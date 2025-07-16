@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { Reporte } from '../models/reporte.model';
 import { Alerta, NotificacionAlerta } from '../models/ExportConsutarAlertas.model';
 
 export interface ExcelSheet<T = any> {

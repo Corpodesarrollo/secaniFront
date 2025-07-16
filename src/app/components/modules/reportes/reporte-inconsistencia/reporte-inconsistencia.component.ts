@@ -8,6 +8,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ReportesService } from '../../../../services/reportes.service';
+import { ReporteInconsistencias } from '../../../../models/reporteInconsistenias';
 
 @Component({
   selector: 'app-reporte-inconsistencia',
@@ -17,7 +18,7 @@ import { ReportesService } from '../../../../services/reportes.service';
   styleUrl: './reporte-inconsistencia.component.css'
 })
 export class ReporteInconsistenciaComponent implements OnInit {
-  public reporte?: any;
+  public reporte?: ReporteInconsistencias;
 
   constructor(private reportesService: ReportesService) {}
 

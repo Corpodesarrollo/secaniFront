@@ -13,6 +13,7 @@ import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
+import { ReporteDinamicoSeguimiento } from '../../../../models/reporteDinamicoSeguimiento';
 
 @Component({
   selector: 'app-reporte-dinamico-seguimiento',
@@ -22,50 +23,50 @@ import { Columna } from '../../../../models/columna';
   styleUrl: './reporte-dinamico-seguimiento.component.css'
 })
 export class ReporteDinamicoSeguimientoComponent implements OnInit {
-  public reportes: any[] = [];
+  public reportes: ReporteDinamicoSeguimiento[] = [];
   public camposForm!: FormGroup;
 
-  public columnasObligatorias: Columna[] = [
-    { field: 'tipoSeguimiento', header: 'Tipo de seguimiento' },
-    { field: 'asunto', header: 'Asunto' },
-    { field: 'primerNombre', header: 'Primer nombre' },
-    { field: 'segundoNombre', header: 'Segundo nombre' },
-    { field: 'primerApellido', header: 'Primer apellido' },
-    { field: 'segundoApellido', header: 'Segundo apellido' },
-    { field: 'diagnostico', header: 'Diagnóstico' },
-    { field: 'tipoIdentificacion', header: 'Tipo de identificación' },
-    { field: 'numeroIdentificacion', header: 'Número de identificación' },
-    { field: 'tipoRegimenSS', header: 'Régimen de afiliación' },
-    { field: 'eapb', header: 'EAPB' },
-    { field: 'estado', header: 'Estado' },
-    { field: 'fechaSeguimiento', header: 'Fecha del seguimiento' },
-    { field: 'observacionAgente', header: 'Observación' },
+  public columnasObligatorias: Columna<ReporteDinamicoSeguimiento>[] = [
+    { header: 'Tipo de seguimiento', field: 'tipoSeguimiento' },
+    { header: 'Asunto', field: 'asunto' },
+    { header: 'Primer nombre', field: 'primerNombre' },
+    { header: 'Segundo nombre', field: 'segundoNombre' },
+    { header: 'Primer apellido', field: 'primerApellido' },
+    { header: 'Segundo apellido', field: 'segundoApellido' },
+    { header: 'Diagnóstico', field: 'diagnostico' },
+    { header: 'Tipo de identificación', field: 'tipoIdentificacion' },
+    { header: 'Número de identificación', field: 'numeroIdentificacion' },
+    { header: 'Régimen de afiliación', field: 'tipoRegimenSS' },
+    { header: 'EAPB', field: 'eapb' },
+    { header: 'Estado', field: 'estado' },
+    { header: 'Fecha del seguimiento', field: 'fechaSeguimiento' },
+    { header: 'Observación', field: 'observacionAgente' },
   ];
 
-  public columnasOpcionales: Columna[] = [
-    { field: 'fechaConsultaDiagnostico', header: 'Fecha de consulta' },
-    { field: 'fechaDiagnostico', header: 'Fecha de diagnóstico' },
-    { field: 'motivoNoDiagnostico', header: 'Razones de No diagnosticado' },
-    { field: 'motivoNoDiagnosticoOtro', header: 'Razones No inicio tratamiento' },
-    { field: 'fechaInicioTratamiento', header: 'Fecha inicio tratamiento' },
-    { field: 'ips', header: 'Nombre institución en la que recibe el tratamiento' },
-    { field: 'fechaUltimaRecaida', header: 'Fecha de última recaída' },
-    { field: 'trasladosHaSidoTrasladadodeInstitucion', header: 'Se trasladó para recibir tratamiento' },
-    { field: 'recaida', header: 'Recaídas' },
-    { field: 'cantidadRecaidas', header: 'Cantidad de recaídas' },
-    { field: 'residenciaActualDepartamento', header: 'Departamento residencia actual' },
-    { field: 'residenciaActualMunicipio', header: 'Municipio residencia actual' },
-    { field: 'residenciaActualBarrio', header: 'Barrio actual' },
-    { field: 'residenciaActualArea', header: 'Área actual' },
-    { field: 'residenciaActualDireccion', header: 'Dirección actual' },
-    { field: 'residenciaActualEstratoId', header: 'Estrato actual' },
-    { field: 'trasladoTieneCapacidadEconomica', header: 'Capacidad económica para traslado' },
-    { field: 'eapb', header: 'La EAPB suministró servicios sociales de apoyo' },
-    { field: 'trasladosServiciosdeApoyoOportunos', header: 'Los servicios sociales de apoyo los entregaron oportunamente' },
-    { field: 'observacionesSolicitante', header: 'Observación' },
-    { field: 'cuidadorParentesco', header: 'Parentesco contacto' },
-    { field: 'cuidadorTelefono', header: 'Teléfono contacto' },
-    { field: 'cuidadorNombres', header: 'Nombre contacto' },
+  public columnasOpcionales: Columna<ReporteDinamicoSeguimiento>[] = [
+    { header: 'Fecha de consulta', field: 'fechaConsultaDiagnostico' },
+    { header: 'Fecha de diagnóstico', field: 'fechaDiagnostico' },
+    { header: 'Razones de No diagnosticado', field: 'motivoNoDiagnostico' },
+    { header: 'Razones No inicio tratamiento', field: 'motivoNoDiagnosticoOtro' },
+    { header: 'Fecha inicio tratamiento', field: 'fechaInicioTratamiento' },
+    { header: 'Nombre institución en la que recibe el tratamiento', field: 'ips' },
+    { header: 'Fecha de última recaída', field: 'fechaUltimaRecaida' },
+    { header: 'Se trasladó para recibir tratamiento', field: 'trasladosHaSidoTrasladadodeInstitucion' },
+    { header: 'Recaídas', field: 'recaida' },
+    { header: 'Cantidad de recaídas', field: 'cantidadRecaidas' },
+    { header: 'Departamento residencia actual', field: 'residenciaActualDepartamento' },
+    { header: 'Municipio residencia actual', field: 'residenciaActualMunicipio' },
+    { header: 'Barrio actual', field: 'residenciaActualBarrio' },
+    { header: 'Área actual', field: 'residenciaActualArea' },
+    { header: 'Dirección actual', field: 'residenciaActualDireccion' },
+    { header: 'Estrato actual', field: 'residenciaActualEstratoId' },
+    { header: 'Capacidad económica para traslado', field: 'trasladoTieneCapacidadEconomica' },
+    { header: 'La EAPB suministró servicios sociales de apoyo', field: 'eapb' },
+    { header: 'Los servicios sociales de apoyo los entregaron oportunamente', field: 'trasladosServiciosdeApoyoOportunos' },
+    { header: 'Observación', field: 'observacionesSolicitante' },
+    { header: 'Parentesco contacto', field: 'cuidadorParentesco' },
+    { header: 'Teléfono contacto', field: 'cuidadorTelefono' },
+    { header: 'Nombre contacto', field: 'cuidadorNombres' },
   ];
 
   constructor(
@@ -91,7 +92,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
-  onCheckboxChange(event: any, columna: Columna): void {
+  onCheckboxChange(event: any, columna: Columna<ReporteDinamicoSeguimiento>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
 
@@ -102,7 +103,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     }
   }
 
-  get columnasParaMostrar(): Columna[] {
+  get columnasParaMostrar(): Columna<ReporteDinamicoSeguimiento>[] {
     return [...this.columnasObligatorias, ...this.camposSeleccionados.value];
   }
 
@@ -122,7 +123,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   }
 
   exportExcel() {
-    this.excelExportService.exportToExcel<any>(
+    this.excelExportService.exportToExcel<ReporteDinamicoSeguimiento>(
       { rows: this.reportes, columns: this.columnasParaMostrar, sheetName: `Reporte Dinamico Seguimiento` }, 
       'Reporte Dinamico Seguimiento',
     );

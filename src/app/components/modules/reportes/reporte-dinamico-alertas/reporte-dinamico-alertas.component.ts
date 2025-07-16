@@ -14,6 +14,7 @@ import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
+import { ReporteDinamicoAlertas } from '../../../../models/reporteDinamicoAlertas';
 
 @Component({
   selector: 'app-reporte-dinamico-alertas',
@@ -23,18 +24,18 @@ import { Columna } from '../../../../models/columna';
   styleUrl: './reporte-dinamico-alertas.component.css'
 })
 export class ReporteDinamicoAlertasComponent implements OnInit {
-  reportes: any[] = [];
+  reportes: ReporteDinamicoAlertas[] = [];
   camposForm!: FormGroup;
 
-  columnasObligatorias: Columna[] = [
-    { field: 'fechaNotificacion', header: 'Fecha notificación' },
-    { field: 'fechaResolucion', header: 'Fecha de resolución' },
-    { field: 'gestionCorreos', header: 'Gestión de correos' },
-    { field: 'nombresApellidos', header: 'Nombres y apellidos NNA' },
-    { field: 'observacion', header: 'Observación' }
+  columnasObligatorias: Columna<ReporteDinamicoAlertas>[] = [
+    { header: 'Fecha notificación', field: 'fechaNotificacion' },
+    { header: 'Fecha de resolución', field: 'fechaResolucion' },
+    { header: 'Gestión de correos', field: 'gestionCorreos' },
+    { header: 'Nombres y apellidos NNA', field: 'nombresApellidos' },
+    { header: 'Observación', field: 'observacion' }
   ];
 
-  columnasOpcionales: Columna[] = [
+  columnasOpcionales: Columna<ReporteDinamicoAlertas>[] = [
     { header: 'Nombre NNA', field: 'nombreNNA' },
     { header: 'EAPB', field: 'eapb' },
     { header: 'Categoría alerta', field: 'categoriaAlerta' },
@@ -87,7 +88,7 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
-  onCheckboxChange(event: any, columna: Columna): void {
+  onCheckboxChange(event: any, columna: Columna<ReporteDinamicoAlertas>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
 
@@ -98,7 +99,7 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     }
   }
 
-  get columnasParaMostrar(): Columna[] {
+  get columnasParaMostrar(): Columna<ReporteDinamicoAlertas>[] {
     return [...this.columnasObligatorias, ...this.camposSeleccionados.value];
   }
 
@@ -118,7 +119,7 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
   }
 
   exportExcel() {
-    this.excelExportService.exportToExcel<any>(
+    this.excelExportService.exportToExcel<ReporteDinamicoAlertas>(
       { rows: this.reportes, columns: this.columnasParaMostrar, sheetName: `Reporte Dinamico Alertas` }, 
       'Reporte Dinamico Alertas',
     );

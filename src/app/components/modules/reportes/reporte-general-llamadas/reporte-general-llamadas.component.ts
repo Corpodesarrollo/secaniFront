@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { FormUtils } from '../../../../utils/form-utils';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { ReporteGeneralLlamadas } from '../../../../models/reporteGeneralLlamadas';
 
 @Component({
   selector: 'app-reporte-general-llamadas',
@@ -21,7 +22,7 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
   styleUrl: './reporte-general-llamadas.component.css'
 })
 export class ReporteGeneralLlamadasComponent {
-  public reportes: any[] = [];
+  public reportes: ReporteGeneralLlamadas[] = [];
   public camposForm!: FormGroup;
 
   constructor(
@@ -55,7 +56,7 @@ export class ReporteGeneralLlamadasComponent {
   }
 
   exportExcel() {
-    this.excelExportService.exportToExcel<any>(
+    this.excelExportService.exportToExcel<ReporteGeneralLlamadas>(
       { rows: this.reportes, sheetName: `Reporte General de Llamadas` }, 
       'Reporte General de Llamadas',
     );

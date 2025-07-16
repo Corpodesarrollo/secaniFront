@@ -15,6 +15,7 @@ import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
+import { ReporteDinamicoEAPB } from '../../../../models/reporteDinamicoEAPB';
 
 @Component({
   selector: 'app-reporte-dinamico-eapb',
@@ -24,17 +25,17 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
   styleUrl: './reporte-dinamico-eapb.component.css'
 })
 export class ReporteDinamicoEapbComponent implements OnInit {
-  public reportes: any[] = [];
+  public reportes: ReporteDinamicoEAPB[] = [];
   public camposForm!: FormGroup;
 
-  public columnasObligatorias: Columna[] = [
+  public columnasObligatorias: Columna<ReporteDinamicoEAPB>[] = [
     { header: 'EAPB', field: 'eapb' },
     { header: 'Casos asociados', field: 'casosAsociados' },
     { header: 'Casos con alertas sin resolver', field: 'casosAlertasSinResolver' },
     { header: 'Total de alertas sin resolver', field: 'totalAlertasSinResolver' }
   ];
 
-  public columnasOpcionales: Columna[] = [
+  public columnasOpcionales: Columna<ReporteDinamicoEAPB>[] = [
     { header: 'Promedio de tiempo de respuesta a alertas', field: 'promedioTiempoRespuestaAlertas' },
     { header: 'Casos por Régimen de afiliación Contributivo', field: 'casosRegimenAfiliacionContributivo' },
     { header: 'Casos por Régimen de afiliación Subsidiado', field: 'casosRegimenAfiliacionSubsidiado' },
@@ -69,7 +70,7 @@ export class ReporteDinamicoEapbComponent implements OnInit {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
-  onCheckboxChange(event: any, columna: Columna): void {
+  onCheckboxChange(event: any, columna: Columna<ReporteDinamicoEAPB>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
 
@@ -80,7 +81,7 @@ export class ReporteDinamicoEapbComponent implements OnInit {
     }
   }
 
-  get columnasParaMostrar(): Columna[] {
+  get columnasParaMostrar(): Columna<ReporteDinamicoEAPB>[] {
     return [...this.columnasObligatorias, ...this.camposSeleccionados.value];
   }
 
@@ -100,7 +101,7 @@ export class ReporteDinamicoEapbComponent implements OnInit {
   }
 
   exportExcel() {
-    this.excelExportService.exportToExcel<any>(
+    this.excelExportService.exportToExcel<ReporteDinamicoEAPB>(
       { rows: this.reportes, columns: this.columnasParaMostrar, sheetName: `Reporte Dinamico EAPB` }, 
       'Reporte Dinamico EAPB',
     );
