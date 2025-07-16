@@ -57,8 +57,9 @@ export class ReporteGeneralLlamadasComponent {
   }
 
   exportExcel() {
-    this.excelExportService.exportReporteToExcel(
-      this.reportes, [], 'Reporte general de Llamadas'
+    this.excelExportService.exportToExcel<any>(
+      { rows: this.reportes, sheetName: `Reporte General de Llamadas` }, 
+      'Reporte General de Llamadas',
     );
   }
 }

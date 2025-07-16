@@ -13,7 +13,6 @@ import { IndicadoresComponent } from './indicadores/indicadores.component';
 
 const routes: Routes = [
   { path: 'indicadores', component: IndicadoresComponent },
-  { path: 'agentes_de_seguimiento', component: ReporteInconsistenciaComponent },
   {
     path: 'depuracion_p115',
     children: [
@@ -25,9 +24,10 @@ const routes: Routes = [
   { path: 'alertas', component: ReporteDinamicoAlertasComponent },
   { path: 'nna', component: ReporteDinamicoNnaComponent },
   { path: 'seguimientos', component: ReporteDinamicoSeguimientoComponent },
-  { path: 'actiaciones_de_entidades_externas', component: ReporteDinamicoEapbComponent },
+  { path: 'eapb', component: ReporteDinamicoEapbComponent },
   { path: 'llamadas', component: ReporteGeneralLlamadasComponent },
-  { path: '**', redirectTo: 'reporte-inconsistencia' }
+  { path: 'inconsistencias', component: ReporteInconsistenciaComponent },
+  { path: '**', redirectTo: 'indicadores' }
 ];
 
 @NgModule({

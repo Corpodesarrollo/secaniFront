@@ -117,8 +117,9 @@ export class ReporteDinamicoNnaComponent {
   }
 
   exportExcel() {
-    this.excelExportService.exportReporteToExcel(
-      this.reportes, this.columnas, 'Reporte dinámico NNA'
+    this.excelExportService.exportToExcel<any>(
+      { rows: this.reportes, columns: this.columnas, sheetName: `Reporte Dinamico NNA` }, 
+      'Reporte Dinamico NNA',
     );
   }
 }

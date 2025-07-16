@@ -115,8 +115,9 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
   }
 
   exportExcel() {
-    this.excelExportService.exportReporteToExcel(
-      this.reportes, this.columnas, 'Reporte dinámico alertas'
+    this.excelExportService.exportToExcel<any>(
+      { rows: this.reportes, columns: this.columnas, sheetName: `Reporte Dinamico Alertas` }, 
+      'Reporte Dinamico Alertas',
     );
   }
 }

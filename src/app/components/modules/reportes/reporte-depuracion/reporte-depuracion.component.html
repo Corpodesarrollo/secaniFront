@@ -1,89 +1,143 @@
 <div class="container-fluid">
-  <h1 class="mt-5 mb-4">Reporte de Depuración</h1>
+  <h1 class="mt-5 mb-4 text-center">Reporte de Depuración</h1>
 
-  <div class="card">
+  <div class="card shadow-sm">
     <div class="card-body">
+      <!-- Formulario de Fechas -->
       <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
-        <div class="row align-items-center mb-3">
-          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
-          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-calendar formControlName="fechaInicio" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
-            <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaInicio'].invalid && camposForm.controls['fechaInicio'].touched">
-              La fecha incio es requerida
-            </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched">
-              La fecha inicial no puede ser mayor a la fecha final
+        <div class="row g-3 mb-2">
+          <!-- Fecha Inicio -->
+          <div class="col-12 col-md-5">
+            <label for="fechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
+            <p-calendar
+              inputId="fechaInicio"
+              formControlName="fechaInicio"
+              styleClass="w-100"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              dateFormat="dd/mm/yy"
+            />
+            <div style="min-height: 1.8rem;" class="mt-1">
+              <div *ngIf="camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')" class="text-danger small">
+                La fecha inicio es requerida
+              </div>
+              <div *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched" class="text-danger small">
+                La fecha inicial no puede ser mayor a la fecha final
+              </div>
+              <!-- Espacio reservado si no hay errores -->
+              <div *ngIf="!(camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')) && !(camposForm.errors?.['fechasInvalidas'] && camposForm.touched)" class="invisible small">
+                Placeholder
+              </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
-          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-calendar formControlName="fechaFin" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
-            <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaFin'].invalid && camposForm.controls['fechaFin'].touched">
-              La fecha fin es requerida
-            </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched">
-              La fecha fin no puede ser mayor a la fecha actual
+          <!-- Fecha Fin -->
+          <div class="col-12 col-md-5">
+            <label for="fechaFin" class="form-label fw-semibold">Fecha Fin</label>
+            <p-calendar
+              inputId="fechaFin"
+              formControlName="fechaFin"
+              styleClass="w-100"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              dateFormat="dd/mm/yy"
+            />
+            <div style="min-height: 1.8rem;" class="mt-1">
+              <div *ngIf="camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')" class="text-danger small">
+                La fecha fin es requerida
+              </div>
+              <div *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched" class="text-danger small">
+                La fecha fin no puede ser mayor a la fecha actual
+              </div>
+              <!-- Espacio reservado si no hay errores -->
+              <div *ngIf="!(camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')) && !(camposForm.errors?.['fechaFutura'] && camposForm.touched)" class="invisible small">
+                Placeholder
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="row align-items-center">
-          <div class="col-12 mb-4 col-sm-10 mb-sm-0">
-            <p-inputGroup>
-              <input class="w-100" type="text" placeholder="Buscar..." pInputText
-                (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
-              />
-              <p-inputGroupAddon>
-                  <i class="pi pi-search"></i>
-              </p-inputGroupAddon>
-            </p-inputGroup>
-          </div>
-          <div class="col-12 mb-3 col-sm-2 mb-sm-0">
+          <!-- Botón Generar -->
+          <div class="col-12 col-md-2 d-grid align-self-center">
             <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
       </form>
 
-      <div class="mt-3">
+      <!-- Buscador -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <p-inputGroup>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              pInputText
+              class="w-100"
+              (keydown.enter)="$event.preventDefault()"
+              (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
+            />
+            <p-inputGroupAddon>
+              <i class="pi pi-search"></i>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+        </div>
+      </div>
+
+      <!-- Tabla de reportes -->
+      <div class="mt-4">
         <p-table
           #tabla
           [value]="reportes"
-          [tableStyle]="{ 'min-width': '50rem' }"
           [globalFilterFields]="['id', 'fecha', 'hora', 'registrosIngresados', 'registrosNuevos', 'registrosDuplicados', 'estado']"
-          [paginator]="true" [rows]="5"
-          [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '60rem' }"
+          [paginator]="true"
+          [rows]="5"
+          [rowsPerPageOptions]="[5, 10, 25, 50]"
+          [showCurrentPageReport]="true"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
         >
+          <!-- Título y exportar -->
           <ng-template pTemplate="caption">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="text-center justify-content-between">
-                Reporte de depuración SIVIGILA
-              </div>
-              <p-button (onClick)="exportExcel()" severity="success" icon="pi pi-file-excel" />
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">Reporte de depuración SIVIGILA</span>
+              <p-button
+                (onClick)="exportExcel()"
+                icon="pi pi-file-excel"
+                severity="success"
+                label="Exportar"
+                size="small"
+              />
             </div>
-        </ng-template>
+          </ng-template>
+
+          <!-- Encabezado -->
           <ng-template pTemplate="header">
             <tr>
               <th>Id</th>
               <th>Fecha</th>
               <th>Hora</th>
-              <th>Registros ingresados</th>
-              <th>Registros nuevos</th>
-              <th>Registros duplicados</th>
+              <th>Registros Ingresados</th>
+              <th>Registros Nuevos</th>
+              <th>Registros Duplicados</th>
               <th>Estado</th>
             </tr>
           </ng-template>
+
+          <!-- Filas -->
           <ng-template pTemplate="body" let-reporte>
             <tr>
               <td>
-                <a [routerLink]="['/reportes/depuracion_p115', reporte.id]">
+                <a 
+                  [routerLink]="['/reportes/depuracion_p115', reporte.id]"
+                  [queryParams]="{
+                    fechaInicio: (camposForm.value.fechaInicio | date: 'yyyy-MM-dd'),
+                    fechaFin: (camposForm.value.fechaFin | date: 'yyyy-MM-dd')
+                  }"
+                  class="text-decoration-underline"
+                >
                   {{ reporte.id }}
                 </a>
               </td>
-              <td>{{ reporte.fecha | date: 'dd/MM/YYYY' }}</td>
+              <td>{{ reporte.fecha | date: 'dd/MM/yyyy' }}</td>
               <td>{{ reporte.hora }}</td>
               <td>{{ reporte.registrosIngresados }}</td>
               <td>{{ reporte.registrosNuevos }}</td>
@@ -91,10 +145,12 @@
               <td>{{ reporte.estado }}</td>
             </tr>
           </ng-template>
+
+          <!-- Mensaje vacío -->
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="7" class="text-center">
-                Reportes no encontrados.
+              <td colspan="7" class="text-center text-muted">
+                No se encontraron reportes.
               </td>
             </tr>
           </ng-template>
