@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControlOptions, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -25,35 +25,33 @@ export class ReporteGeneralLlamadasComponent {
   public camposForm!: FormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private reportesService: ReportesService,
     private excelExportService: ExcelExportService
-  ) {
-    this.camposForm = this.formBuilder.group({
-      buscador: [''], // Campo de búsqueda
-      fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
-      fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
-    }, { 
-      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
-    });
+  ) {}
+
+  ngOnInit(): void {
+    this.camposForm = this.fb.group(
+      {
+        fechaInicio: ['', Validators.required],
+        fechaFin: ['', Validators.required],
+        camposSeleccionados: this.fb.array([]),
+      }, 
+      {
+        validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
+      } as AbstractControlOptions
+    );
   }
 
   onSubmit() {
-    console.log('SUBMIT');
-    this.camposForm.markAllAsTouched();
-    if (this.camposForm.invalid) return;
+    if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     
-    console.log('SUBMIT2');
     const { fechaInicio, fechaFin } = this.camposForm.value;
     const fechaInicialString = fechaInicio.toISOString().split('T')[0];
     const fechaFinalString = fechaFin.toISOString().split('T')[0];
 
-    console.log('SUBMIT3');
     this.reportesService.getReporteGeneralLlamadas(fechaInicialString, fechaFinalString)
-      .subscribe((reportes: any) => {
-        this.reportes = reportes;
-        console.log(reportes);
-      });
+      .subscribe((reportes: any) => this.reportes = reportes);
   }
 
   exportExcel() {

@@ -31,7 +31,6 @@ export class ReporteDepuracionComponent implements OnInit {
     private reportesService: ReportesService,
     private excelExportService: ExcelExportService,
     private route: ActivatedRoute,
-    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,17 +45,17 @@ export class ReporteDepuracionComponent implements OnInit {
     );
 
     this.route.queryParams.subscribe((params) => {
-    const fechaInicio = params['fechaInicio'];
-    const fechaFin = params['fechaFin'];
+      const fechaInicio = params['fechaInicio'];
+      const fechaFin = params['fechaFin'];
 
-    if (fechaInicio && fechaFin) {
-      this.camposForm.patchValue({
-        fechaInicio: new Date(fechaInicio),
-        fechaFin: new Date(fechaFin),
-      });
-      this.onSubmit();
-    }
-  });
+      if (fechaInicio && fechaFin) {
+        this.camposForm.patchValue({
+          fechaInicio: new Date(fechaInicio),
+          fechaFin: new Date(fechaFin),
+        });
+        this.onSubmit();
+      }
+    });
   }
 
   onSubmit() {

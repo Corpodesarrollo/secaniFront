@@ -57,7 +57,7 @@
         </div>
 
         <div class="row mb-3">
-          @for (campo of campos; track campo) {
+          @for (campo of columnasOpcionales; track campo) {
             <div class="col-md-3">
               <p-checkbox styleClass="my-2" name="group" [label]="campo.header" [value]="campo.field" />
             </div>
@@ -71,11 +71,22 @@
       </form>
 
       <div class="mt-3">
-        <p-table [columns]="columnas"  [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table
+          #tabla
+          [columns]="columnasParaMostrar"
+          [value]="reportes"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [paginator]="true"
+          [rows]="5"
+          [globalFilterFields]="columnasFiltroGlobal"
+          [rowsPerPageOptions]="[5, 10, 25, 50]"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+        >
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               Reporte dinámico EAPB
-              <p-button severity="success" icon="pi pi-file-excel" />
+              <p-button severity="success" icon="pi pi-file-excel" (onClick)="exportExcel()"/>
             </div>
           </ng-template>
           <ng-template pTemplate="header" let-columns>
@@ -96,14 +107,11 @@
               }
             </tr>
           </ng-template>
-          <ng-template pTemplate="footer">
+          <ng-template pTemplate="emptymessage">
             <tr>
-              <td>Total</td>
-              @for (col of columnas.slice(1); track col) {
-                <td>
-                  {{ col.field }}
-                </td>
-              }
+              <td [attr.colspan]="columnasParaMostrar.length" class="text-center">
+                Reportes no encotrados.
+              </td>
             </tr>
           </ng-template>
         </p-table>

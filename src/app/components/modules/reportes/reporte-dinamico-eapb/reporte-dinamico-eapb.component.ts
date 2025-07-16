@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControlOptions, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -10,7 +10,11 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+
 import { FormUtils } from '../../../../utils/form-utils';
+import { Columna } from '../../../../models/columna';
+import { ReportesService } from '../../../../services/reportes.service';
+import { ExcelExportService } from '../../../../services/excel-export.service';
 
 @Component({
   selector: 'app-reporte-dinamico-eapb',
@@ -21,10 +25,16 @@ import { FormUtils } from '../../../../utils/form-utils';
 })
 export class ReporteDinamicoEapbComponent implements OnInit {
   public reportes: any[] = [];
-  public columnas!: any[];
-
   public camposForm!: FormGroup;
-  public campos: { header: string, field: string }[] = [
+
+  public columnasObligatorias: Columna[] = [
+    { header: 'EAPB', field: 'eapb' },
+    { header: 'Casos asociados', field: 'casosAsociados' },
+    { header: 'Casos con alertas sin resolver', field: 'casosAlertasSinResolver' },
+    { header: 'Total de alertas sin resolver', field: 'totalAlertasSinResolver' }
+  ];
+
+  public columnasOpcionales: Columna[] = [
     { header: 'Promedio de tiempo de respuesta a alertas', field: 'promedioTiempoRespuestaAlertas' },
     { header: 'Casos por Régimen de afiliación Contributivo', field: 'casosRegimenAfiliacionContributivo' },
     { header: 'Casos por Régimen de afiliación Subsidiado', field: 'casosRegimenAfiliacionSubsidiado' },
@@ -36,32 +46,63 @@ export class ReporteDinamicoEapbComponent implements OnInit {
     { header: 'Casos con seguimiento culminado', field: 'casosSeguimientoCulminado' }
   ];
 
-  constructor(private formBuilder: FormBuilder) {
-    this.camposForm = this.formBuilder.group({
-      buscador: [''], // Campo de búsqueda
-      fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
-      fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
-      camposSeleccionados: this.formBuilder.array([])
-    }, { 
-      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
-    });
-  }
-
+  constructor(
+    private fb: FormBuilder,
+    private reportesService: ReportesService,
+    private excelExportService: ExcelExportService
+  ) {}
+  
   ngOnInit(): void {
-    this.columnas = [
-      { header: 'EAPB', field: 'eapb' },
-      { header: 'Casos asociados', field: 'casosAsociados' },
-      { header: 'Casos con alertas sin resolver', field: 'casosAlertasSinResolver' },
-      { header: 'Total de alertas sin resolver', field: 'totalAlertasSinResolver' }
-    ];
+    this.camposForm = this.fb.group(
+      {
+        fechaInicio: ['', Validators.required],
+        fechaFin: ['', Validators.required],
+        camposSeleccionados: this.fb.array([]),
+      }, 
+      {
+        validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
+      } as AbstractControlOptions
+    );
   }
 
-  get camposSeleccionados() {
+  get camposSeleccionados(): FormArray {
     return this.camposForm.get('camposSeleccionados') as FormArray;
   }
 
+  onCheckboxChange(event: any, columna: Columna): void {
+    const selected = this.camposSeleccionados;
+    const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
+
+    if (event.checked && index === -1) {
+      selected.push(new FormControl(columna));
+    } else if (!event.checked && index !== -1) {
+      selected.removeAt(index);
+    }
+  }
+
+  get columnasParaMostrar(): Columna[] {
+    return [...this.columnasObligatorias, ...this.camposSeleccionados.value];
+  }
+
+  get columnasFiltroGlobal(): string[] {
+    return this.columnasParaMostrar.map(col => col.field);
+  }
+
   onSubmit(): void {
-    if ( this.camposForm.invalid ) return;
-    console.log(this.camposForm.value);
+    if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
+    const { fechaInicio, fechaFin } = this.camposForm.value;
+
+    const fechaInicialString = new Date(fechaInicio).toISOString().split('T')[0];
+    const fechaFinalString = new Date(fechaFin).toISOString().split('T')[0];
+
+    this.reportesService.getReporteDinamicosAlertas(fechaInicialString, fechaFinalString)
+      .subscribe((data: any) => this.reportes = data as any[]);
+  }
+
+  exportExcel() {
+    this.excelExportService.exportToExcel<any>(
+      { rows: this.reportes, columns: this.columnasParaMostrar, sheetName: `Reporte Dinamico EAPB` }, 
+      'Reporte Dinamico EAPB',
+    );
   }
 }

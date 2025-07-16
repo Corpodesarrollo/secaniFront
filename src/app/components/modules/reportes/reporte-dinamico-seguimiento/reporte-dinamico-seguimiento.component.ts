@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControlOptions, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
+import { Columna } from '../../../../models/columna';
 
 @Component({
   selector: 'app-reporte-dinamico-seguimiento',
@@ -24,7 +25,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   public reportes: any[] = [];
   public camposForm!: FormGroup;
 
-  public columnasObligatorios: { header: string, field: string }[] = [
+  public columnasObligatorias: Columna[] = [
     { field: 'tipoSeguimiento', header: 'Tipo de seguimiento' },
     { field: 'asunto', header: 'Asunto' },
     { field: 'primerNombre', header: 'Primer nombre' },
@@ -41,7 +42,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     { field: 'observacionAgente', header: 'Observación' },
   ];
 
-  public columnasOpcionales: { header: string, field: string }[] = [
+  public columnasOpcionales: Columna[] = [
     { field: 'fechaConsultaDiagnostico', header: 'Fecha de consulta' },
     { field: 'fechaDiagnostico', header: 'Fecha de diagnóstico' },
     { field: 'motivoNoDiagnostico', header: 'Razones de No diagnosticado' },
@@ -68,41 +69,45 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   ];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private reportesService: ReportesService,
     private excelExportService: ExcelExportService
-  ) {
-    this.camposForm = this.formBuilder.group({
-      buscador: [''], // Campo de búsqueda
-      fechaInicio: ['', Validators.required], // Campo de fecha de inicio con validación requerida
-      fechaFin: ['', Validators.required], // Campo de fecha de fin con validación requerida
-      camposSeleccionados: this.formBuilder.array([])
-    }, { 
-      validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
-    });
+  ) {}
+
+  ngOnInit(): void {
+    this.camposForm = this.fb.group(
+      {
+        fechaInicio: ['', Validators.required],
+        fechaFin: ['', Validators.required],
+        camposSeleccionados: this.fb.array([]),
+      }, 
+      {
+        validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
+      } as AbstractControlOptions
+    );
   }
 
-  ngOnInit(): void { }
+  get camposSeleccionados(): FormArray {
+    return this.camposForm.get('camposSeleccionados') as FormArray;
+  }
 
-  onCheckboxChange(e: any, columna: { header: string, field: string }) {
-    const camposSeleccionadosArray = this.camposForm.get('camposSeleccionados') as FormArray;
-    if (e.checked.length != 0) {
-      camposSeleccionadosArray.push(this.formBuilder.control(columna));
-    } else {
-      const index = camposSeleccionadosArray.controls.findIndex(x => x.value === columna);
-      if (index >= 0) camposSeleccionadosArray.removeAt(index);
+  onCheckboxChange(event: any, columna: Columna): void {
+    const selected = this.camposSeleccionados;
+    const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
+
+    if (event.checked && index === -1) {
+      selected.push(new FormControl(columna));
+    } else if (!event.checked && index !== -1) {
+      selected.removeAt(index);
     }
   }
 
-  get columnas() {
-    const columnasSeleccionadas = this.camposForm.value.camposSeleccionados;
-    return [ ...this.columnasObligatorios, ...columnasSeleccionadas ];
+  get columnasParaMostrar(): Columna[] {
+    return [...this.columnasObligatorias, ...this.camposSeleccionados.value];
   }
 
-  get columnasFiltroGlobal() {
-    const fieldsColumnasOpcionales = this.columnasOpcionales.map(campo => campo.field);
-    const fieldsColumnasObligatorias = this.columnasObligatorios.map(campo => campo.field);
-    return [ ...fieldsColumnasOpcionales, ...fieldsColumnasObligatorias ];
+  get columnasFiltroGlobal(): string[] {
+    return this.columnasParaMostrar.map(col => col.field);
   }
 
   async onSubmit() {
@@ -118,7 +123,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
 
   exportExcel() {
     this.excelExportService.exportToExcel<any>(
-      { rows: this.reportes, columns: this.columnas, sheetName: `Reporte Dinamico Seguimiento` }, 
+      { rows: this.reportes, columns: this.columnasParaMostrar, sheetName: `Reporte Dinamico Seguimiento` }, 
       'Reporte Dinamico Seguimiento',
     );
   }
