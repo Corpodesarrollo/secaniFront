@@ -1,4 +1,6 @@
 export interface ReporteDinamicoSeguimiento {
+    tipoSeguimiento:                        string;
+    asunto:                                 string;     
     seguimientoId:                          number;
     nnaId:                                  number;
     primerNombre:                           string;

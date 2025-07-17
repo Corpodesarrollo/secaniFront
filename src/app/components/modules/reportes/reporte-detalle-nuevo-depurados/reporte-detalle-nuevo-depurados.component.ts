@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
+import { ReporteDetalleNuevoDepurados } from '../../../../models/reporteDetalleNuevoDepurados';
 
 @Component({
   selector: 'app-reporte-detalle-nuevo-depurados',
@@ -24,9 +25,12 @@ import { FormUtils } from '../../../../utils/form-utils';
 export class ReporteDetalleNuevoDepuradosComponent {
   private id: string | null = null;
 
-  public reportes: any[] = [];
-  public filteredReportes: any[] = [];
+  public reportes: ReporteDetalleNuevoDepurados[] = [];
+  public filteredReportes: ReporteDetalleNuevoDepurados[] = [];
   public camposForm!: FormGroup;
+
+  public fechaInicioRuta: string | null = null;
+  public fechaFinRuta: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,20 +47,28 @@ export class ReporteDetalleNuevoDepuradosComponent {
     });
   }
 
-  async ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(async params => {
+  ngOnInit() {
+    this.activatedRoute.paramMap.subscribe(params => {
       this.id = params.get('id');
-      
+
       if (this.id) {
         this.reportesService.getReporteDetalleRegDepurados(this.id)
-          .subscribe((reportes: any) => this.reportes = reportes);
-        this.filteredReportes = this.reportes;
+          .subscribe((reportes: any) => {
+            console.log('Respuesta del backend:', reportes);
+            this.reportes = reportes;
+            this.filteredReportes = reportes;
+          });
       }
+    });
+
+    this.activatedRoute.queryParamMap.subscribe(queryParams => {
+      this.fechaInicioRuta = queryParams.get('fechaInicio');
+      this.fechaFinRuta = queryParams.get('fechaFin');
     });
   }
 
   onSubmit() {
-    if (this.camposForm.invalid) return;
+    if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     const { fechaInicio, fechaFin } = this.camposForm.value;
 
     this.filteredReportes = this.reportes.filter(reporte => {
@@ -77,6 +89,11 @@ export class ReporteDetalleNuevoDepuradosComponent {
   }
 
   volver() {
-    this.router.navigate(['/reportes/depuracion_p115']);
+    this.router.navigate(['/reportes/depuracion_p115'], {
+      queryParams: {
+        fechaInicio: this.fechaInicioRuta,
+        fechaFin: this.fechaFinRuta
+      }
+    });
   }
 }

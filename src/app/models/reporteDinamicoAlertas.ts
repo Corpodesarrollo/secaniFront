@@ -1,1 +1,37 @@
-export interface ReporteDinamicoAlertas { }
+export interface ReporteDinamicoAlertas {
+    fechaNotificacion:          string;
+    fechaResolucion:            string;
+    gestionCorreos:             string;
+    nombresApellidos:           string;
+    observacion:                string;
+    nombreNNA:                  string;
+    eapb:                       string;
+    categoriaAlerta:            string;
+    procesosConDificultad:      string;
+    edadNNA:                    string;
+    correoElectronico:          string;
+    subcategoriaAlerta:         string;
+    respuestaEntidad:           string;
+    diagnostico:                string;    
+    agenteDeSeguimiento:        string;
+    estado:                     string;
+    fechaRespuestaEntidad:      string;
+    sitioResidenciaActual:      string;
+    tiempoDejoAsistir:          string;
+    estudiaActualmente:         string;
+    claridadIpsMedicos:         string;
+    costosTraslado:             string;
+    unidadMedidaTiempo:         string;
+    dejoAsistirColegio:         string;
+    viaticosCoberturaTraslado:  string;
+    costosVivienda:             string;
+    causasInasistencias:        string;
+    tiempoInasistenciaColegio:  string;
+    apoyoFundaciones:           string;
+    dejoAsistirTratamiento:     string;
+    otra:                       string;
+    unidadMedidaTiempoOtra:     string;
+    nombreFundacion:            string;
+    tipoSeguimiento:            string;
+    apoyoRecibidoFundacion:     string;
+}

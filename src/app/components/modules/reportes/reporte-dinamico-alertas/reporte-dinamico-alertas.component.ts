@@ -65,7 +65,7 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     { header: 'Unidad de medida tiempo', field: 'unidadMedidaTiempoOtra' },
     { header: 'Nombre de la fundación', field: 'nombreFundacion' },
     { header: 'Tipo de seguimiento', field: 'tipoSeguimiento' },
-    { header: 'Apoyo recibido por fundación', field: 'apoyoRecibidoFundacion' }
+    { header: 'Apoyo recibido por fundación', field: 'apoyoRecibidoFundacion' } 
   ];
 
   constructor(
