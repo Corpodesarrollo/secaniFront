@@ -6,46 +6,81 @@
 
   <div class="card">
     <div class="card-body">
+      <!-- Formulario de Fechas -->
       <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
-        <div class="row align-items-center mb-3">
-          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
-          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-calendar formControlName="fechaInicio" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
-            <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaInicio'].invalid && camposForm.controls['fechaInicio'].touched">
-              La fecha incio es requerida
-            </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched">
-              La fecha inicial no puede ser mayor a la fecha final
+        <div class="row g-3 mb-2">
+          <!-- Fecha Inicio -->
+          <div class="col-12 col-md-5">
+            <label for="fechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
+            <p-calendar
+              inputId="fechaInicio"
+              formControlName="fechaInicio"
+              styleClass="w-100"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              dateFormat="dd/mm/yy"
+            />
+            <div style="min-height: 1.8rem;" class="mt-1">
+              <div *ngIf="camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')" class="text-danger small">
+                La fecha inicio es requerida
+              </div>
+              <div *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched" class="text-danger small">
+                La fecha inicial no puede ser mayor a la fecha final
+              </div>
+              <!-- Espacio reservado si no hay errores -->
+              <div *ngIf="!(camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')) && !(camposForm.errors?.['fechasInvalidas'] && camposForm.touched)" class="invisible small">
+                Placeholder
+              </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
-          <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-calendar formControlName="fechaFin" styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
-            <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaFin'].invalid && camposForm.controls['fechaFin'].touched">
-              La fecha fin es requerida
+          <!-- Fecha Fin -->
+          <div class="col-12 col-md-5">
+            <label for="fechaFin" class="form-label fw-semibold">Fecha Fin</label>
+            <p-calendar
+              inputId="fechaFin"
+              formControlName="fechaFin"
+              styleClass="w-100"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              dateFormat="dd/mm/yy"
+            />
+            <div style="min-height: 1.8rem;" class="mt-1">
+              <div *ngIf="camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')" class="text-danger small">
+                La fecha fin es requerida
+              </div>
+              <div *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched" class="text-danger small">
+                La fecha fin no puede ser mayor a la fecha actual
+              </div>
+              <!-- Espacio reservado si no hay errores -->
+              <div *ngIf="!(camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')) && !(camposForm.errors?.['fechaFutura'] && camposForm.touched)" class="invisible small">
+                Placeholder
+              </div>
             </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched">
-              La fecha fin no puede ser mayor a la fecha actual
-            </div>
+          </div>
+
+          <!-- Botón Generar -->
+          <div class="col-12 col-md-2 d-grid align-self-center">
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
 
-        <div class="row align-items-center">
-          <div class="col-12 mb-4 col-sm-10 mb-sm-0">
+        <!-- Buscador -->
+        <div class="row mb-4">
+          <div class="col-12">
             <p-inputGroup>
-              <input class="w-100" type="text" placeholder="Buscar..." pInputText
+              <input
+                type="text"
+                placeholder="Buscar..."
+                pInputText
+                class="w-100"
+                (keydown.enter)="$event.preventDefault()"
                 (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
               />
               <p-inputGroupAddon>
-                  <i class="pi pi-search"></i>
+                <i class="pi pi-search"></i>
               </p-inputGroupAddon>
             </p-inputGroup>
-          </div>
-          <div class="col-6 mb-3 col-sm-2 mb-sm-0">
-            <p-button type="submit" severity="success" label="Generar" styleClass="w-100"/>
           </div>
         </div>
       </form>
@@ -63,9 +98,9 @@
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               <div class="text-center justify-content-between">
-                Reporte registros nuevos depuración - 22052024
+                Reporte registros nuevos depuración - {{ fechaInicioRuta | date: 'dd/MM/YYYY' }} - {{ fechaFinRuta | date: 'dd/MM/YYYY' }}
               </div>
-              <p-button (onClick)="exportExcel()" severity="success" icon="pi pi-file-excel" />
+              <p-button (onClick)="exportExcel()" severity="success" label="Exportar" icon="pi pi-file-excel" />
             </div>
         </ng-template>
           <ng-template pTemplate="header">

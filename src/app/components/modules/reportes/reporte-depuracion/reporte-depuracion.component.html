@@ -61,26 +61,26 @@
             <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
-      </form>
 
-      <!-- Buscador -->
-      <div class="row mb-4">
-        <div class="col-12">
-          <p-inputGroup>
-            <input
-              type="text"
-              placeholder="Buscar..."
-              pInputText
-              class="w-100"
-              (keydown.enter)="$event.preventDefault()"
-              (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
-            />
-            <p-inputGroupAddon>
-              <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+        <!-- Buscador -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <p-inputGroup>
+              <input
+                type="text"
+                placeholder="Buscar..."
+                pInputText
+                class="w-100"
+                (keydown.enter)="$event.preventDefault()"
+                (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
+              />
+              <p-inputGroupAddon>
+                <i class="pi pi-search"></i>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
         </div>
-      </div>
+      </form>
 
       <!-- Tabla de reportes -->
       <div class="mt-4">

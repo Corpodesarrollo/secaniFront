@@ -32,7 +32,7 @@ export class ReporteDinamicoEapbComponent implements OnInit {
     { header: 'EAPB', field: 'eapb' },
     { header: 'Casos asociados', field: 'casosAsociados' },
     { header: 'Casos con alertas sin resolver', field: 'casosAlertasSinResolver' },
-    { header: 'Total de alertas sin resolver', field: 'totalAlertasSinResolver' }
+    { header: 'Total de alertas sin resolver', field: 'totalAlertasSinResolver' } 
   ];
 
   public columnasOpcionales: Columna<ReporteDinamicoEAPB>[] = [

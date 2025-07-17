@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
+
 import { Parametricas } from '../../../../models/parametricas.model';
-import { CommonModule } from '@angular/common';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
-import { ReportesService } from '../../../../services/reportes.service';
 import { ReportesSIVIGILA } from '../../../../models/reporteSIVIGILA.model';
-import { GenericService } from '../../../../services/generic.services';
-import { Reporte } from '../../../../models/reporteDinamicoNNA.model';
-import { DialogModule } from 'primeng/dialog';
-import { Router } from '@angular/router';
+import { GenericService } from '../../../../services/generic.services'
 
 @Component({
   selector: 'app-nuevo-seguimiento',
