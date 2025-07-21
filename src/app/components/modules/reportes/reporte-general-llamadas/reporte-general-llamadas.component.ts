@@ -8,22 +8,28 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
 
 import { FormUtils } from '../../../../utils/form-utils';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { ReporteGeneralLlamadas } from '../../../../models/reporteGeneralLlamadas';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @Component({
   selector: 'app-reporte-general-llamadas',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CommonModule, InputGroupAddonModule, InputGroupModule, InputTextModule, ReactiveFormsModule, TableModule],
+  imports: [ButtonModule, CalendarModule, CommonModule, DialogModule, InputGroupAddonModule, InputGroupModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, TableModule],
   templateUrl: './reporte-general-llamadas.component.html',
   styleUrl: './reporte-general-llamadas.component.css'
 })
 export class ReporteGeneralLlamadasComponent {
   public reportes: ReporteGeneralLlamadas[] = [];
   public camposForm!: FormGroup;
+
+  public reporteLlamadaForm!: FormGroup;
+  public reporteSeleccionado!: ReporteGeneralLlamadas;
+  public mostrarModalEditar: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +48,10 @@ export class ReporteGeneralLlamadasComponent {
         validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
       } as AbstractControlOptions
     );
+
+    this.reporteLlamadaForm = this.fb.group(
+      { observaciones: ['', Validators.required] }
+    );
   }
 
   onSubmit() {
@@ -53,6 +63,40 @@ export class ReporteGeneralLlamadasComponent {
 
     this.reportesService.getReporteGeneralLlamadas(fechaInicialString, fechaFinalString)
       .subscribe((reportes: any) => this.reportes = reportes);
+  }
+
+  onSubmitReporteForm() {
+    if (this.reporteLlamadaForm.invalid) return this.reporteLlamadaForm.markAllAsTouched();
+    const nuevaObservaciones = this.reporteLlamadaForm.value.observaciones;
+
+    const reporteActualizado: ReporteGeneralLlamadas = {
+      ...this.reporteSeleccionado,
+      observaciones: nuevaObservaciones
+    };
+
+    this.reportesService.actualizarReporteGeneralLlamadas(reporteActualizado).subscribe({
+      next: () => {
+        const index = this.reportes.findIndex(r => r.id === reporteActualizado.id);
+        if (index !== -1) this.reportes[index] = reporteActualizado;
+        this.mostrarModalEditar = false;
+      },
+      error: (error: any) => {
+        console.error('Error al actualizar el reporte', error);
+      }
+    });
+  }
+
+  editarObservacion(reporte: ReporteGeneralLlamadas) {
+    this.reporteSeleccionado = reporte;
+    this.reporteLlamadaForm.patchValue({
+      descripcion: reporte.observaciones || ''
+    });
+    this.mostrarModalEditar = true;
+  }
+
+  closeEditModal() {
+    this.mostrarModalEditar = false;
+    this.reporteLlamadaForm.reset();
   }
 
   exportExcel() {

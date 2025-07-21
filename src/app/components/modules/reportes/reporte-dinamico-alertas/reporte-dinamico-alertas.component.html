@@ -98,7 +98,7 @@
             <tr>
               @for (col of columns; track col) {
                 <td>
-                  {{ rowData[col.field] }}
+                  {{ formatCell(rowData[col.field], col.field) }}
                 </td>
               }
             </tr>
