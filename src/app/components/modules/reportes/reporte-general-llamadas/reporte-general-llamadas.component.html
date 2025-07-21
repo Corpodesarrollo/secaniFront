@@ -33,20 +33,32 @@
         <div class="row align-items-center">
           <div class="col-12 mb-4 col-sm-10 mb-sm-0">
             <p-inputGroup>
-              <input class="w-100" type="text" placeholder="Buscar..." pInputText />
+              <input class="w-100" type="text" placeholder="Buscar..." pInputText
+                (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
+              />
               <p-inputGroupAddon>
                   <i class="pi pi-search"></i>
               </p-inputGroupAddon>
             </p-inputGroup>
           </div>
-          <div class="col-6 mb-3 col-sm-2 mb-sm-0">
+          <div class="col-6 mb-3 col-sm-2 mb-sm-0 d-flex flex-column">
             <p-button type="submit" severity="success" label="Generar" styleClass="w-100"/>
           </div>
         </div>
       </form>
 
       <div class="mt-3">
-        <p-table [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table 
+          #tabla
+          [value]="reportes" 
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [paginator]="true"
+          [rows]="5"
+          [globalFilterFields]="['agente', 'fechaIntento', 'observaciones']"
+          [rowsPerPageOptions]="[5, 10, 25, 50]"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"  
+        >
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
               <div class="text-center justify-content-between">
@@ -90,7 +102,18 @@
               <td>{{ reporte.detallesFallas["Sin Señal"] }}</td>
               <td>{{ reporte.detallesFallas["Otro"] }}</td>
               <td>{{ reporte.observaciones }}</td>
-              <td></td>
+              <td>
+                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                  (click)="editarObservacion(reporte)" pTooltip="Editar Observación"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="12" class="text-center">
+                Reportes no encotrados.
+              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -98,3 +121,22 @@
     </div>
   </div>
 </div>
+
+
+<p-dialog header="Editar Descripcion del reporte" [modal]="true" [(visible)]="mostrarModalEditar"
+  [style]="{ width: '45rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+>
+  <form [formGroup]="reporteLlamadaForm" class="container-fluid py-3 pt-3 pb-2" (ngSubmit)="onSubmitReporteForm()">
+    <div class="row mb-3">
+      <label class="col-12 col-sm-3 mb-2 mb-sm-0 fw-semibold" for="description">Descripción</label>
+      <div class="col-12 col-sm-9">
+        <textarea id="observaciones" class="w-100" rows="4" pInputTextarea formControlName="observaciones"></textarea>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-5">
+      <p-button type="button" styleClass="me-3" severity="secondary" (click)="closeEditModal()">Cancelar</p-button>
+      <p-button type="submit" severity="success">Guardar</p-button>
+    </div>
+  </form>
+</p-dialog>

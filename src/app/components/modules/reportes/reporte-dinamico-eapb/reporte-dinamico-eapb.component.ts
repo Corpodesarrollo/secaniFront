@@ -16,6 +16,8 @@ import { Columna } from '../../../../models/columna';
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { ReporteDinamicoEAPB } from '../../../../models/reporteDinamicoEAPB';
+import { EAPB } from '../../../../models/eapb.model';
+import { GenericService } from '../../../../services/generic.services';
 
 @Component({
   selector: 'app-reporte-dinamico-eapb',
@@ -47,9 +49,13 @@ export class ReporteDinamicoEapbComponent implements OnInit {
     { header: 'Casos con seguimiento culminado', field: 'casosSeguimientoCulminado' }
   ];
 
+  public listaEAPB: EAPB[] = [];
+  public departamentos: any[] = [];
+
   constructor(
     private fb: FormBuilder,
     private reportesService: ReportesService,
+    private dataService: GenericService,
     private excelExportService: ExcelExportService
   ) {}
   
@@ -58,12 +64,22 @@ export class ReporteDinamicoEapbComponent implements OnInit {
       {
         fechaInicio: ['', Validators.required],
         fechaFin: ['', Validators.required],
+        eapb: ['', Validators.required],
+        departamento: ['', Validators.required],
         camposSeleccionados: this.fb.array([]),
       }, 
       {
         validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
       } as AbstractControlOptions
     );
+
+    this.dataService.get_withoutParameters('EAPB', 'TablaParametrica').subscribe({
+      next: (data: any) => { this.listaEAPB = data; }
+    });
+    
+    this.dataService.get_withoutParameters('TablaParametrica/Departamento', 'TablaParametrica').subscribe({
+      next: (data: any) => { this.departamentos = data; }
+    });
   }
 
   get camposSeleccionados(): FormArray {
@@ -91,12 +107,18 @@ export class ReporteDinamicoEapbComponent implements OnInit {
 
   onSubmit(): void {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
-    const { fechaInicio, fechaFin } = this.camposForm.value;
+    const formValue = this.camposForm.value;
+    const { fechaInicio, fechaFin } = formValue;
 
     const fechaInicialString = new Date(fechaInicio).toISOString().split('T')[0];
     const fechaFinalString = new Date(fechaFin).toISOString().split('T')[0];
 
-    this.reportesService.getReporteDinamicosAlertas(fechaInicialString, fechaFinalString)
+    const payload = {
+      ...formValue,
+      camposSeleccionados: formValue.camposSeleccionados.map((campo: Columna<ReporteDinamicoEAPB>) => campo.field),
+    };
+
+    this.reportesService.getReporteDinamicoEAPB(payload)
       .subscribe((data: any) => this.reportes = data as any[]);
   }
 

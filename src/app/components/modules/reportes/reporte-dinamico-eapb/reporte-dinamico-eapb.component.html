@@ -7,25 +7,49 @@
         <div class="row align-items-center mb-3">
           <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
           <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
-            <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaInicio'].invalid && camposForm.controls['fechaInicio'].touched">
-              La fecha incio es requerida
-            </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched">
-              La fecha inicial no puede ser mayor a la fecha final
+            <p-calendar
+              inputId="fechaInicio"
+              formControlName="fechaInicio"
+              styleClass="w-100"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              dateFormat="dd/mm/yy"
+            />
+            <div style="min-height: 1.8rem;" class="mt-1">
+              <div *ngIf="camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')" class="text-danger small">
+                La fecha inicio es requerida
+              </div>
+              <div *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched" class="text-danger small">
+                La fecha inicial no puede ser mayor a la fecha final
+              </div>
+              <!-- Espacio reservado si no hay errores -->
+              <div *ngIf="!(camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')) && !(camposForm.errors?.['fechasInvalidas'] && camposForm.touched)" class="invisible small">
+                Placeholder
+              </div>
             </div>
           </div>
 
           <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
           <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
-            <div class="text-danger mt-1" 
-              *ngIf="camposForm.controls['fechaFin'].invalid && camposForm.controls['fechaFin'].touched">
-              La fecha fin es requerida
-            </div>
-            <div class="text-danger mt-1" *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched">
-              La fecha fin no puede ser mayor a la fecha actual
+            <p-calendar
+              inputId="fechaFin"
+              formControlName="fechaFin"
+              styleClass="w-100"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              dateFormat="dd/mm/yy"
+            />
+            <div style="min-height: 1.8rem;" class="mt-1">
+              <div *ngIf="camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')" class="text-danger small">
+                La fecha fin es requerida
+              </div>
+              <div *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched" class="text-danger small">
+                La fecha fin no puede ser mayor a la fecha actual
+              </div>
+              <!-- Espacio reservado si no hay errores -->
+              <div *ngIf="!(camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')) && !(camposForm.errors?.['fechaFutura'] && camposForm.touched)" class="invisible small">
+                Placeholder
+              </div>
             </div>
           </div>
         </div>
@@ -33,19 +57,35 @@
         <div class="row align-items-center mb-3">
           <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Departamento:</div>
           <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-dropdown formControlName="departamento" styleClass="w-100" placeholder="Seleccione"/>
+            <p-dropdown 
+              [options]="departamentos"
+              optionLabel="nombre"  
+              optionValue="codigo"
+              formControlName="departamento" 
+              styleClass="w-100" 
+              placeholder="Seleccione"
+            />
           </div>
 
           <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">EAPB:</div>
           <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-            <p-dropdown formControlName="eapb" styleClass="w-100" placeholder="Seleccione"/>
+            <p-dropdown 
+              [options]="listaEAPB"
+              optionLabel="nombre" 
+              optionValue="id"
+              formControlName="eapb" 
+              styleClass="w-100" 
+              placeholder="Seleccione"
+            />
           </div>
         </div>
 
         <div class="row align-items-center mb-3">
           <div class="col-12 mb-4 col-sm-10 mb-sm-0">
             <p-inputGroup>
-              <input class="w-100" type="text" placeholder="Buscar..." pInputText />
+              <input class="w-100" type="text" placeholder="Buscar..." pInputText
+                (input)="tabla.filterGlobal($any($event.target).value, 'contains')"
+              />
               <p-inputGroupAddon>
                   <i class="pi pi-search"></i>
               </p-inputGroupAddon>
@@ -56,16 +96,22 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          @for (campo of columnasOpcionales; track campo) {
+        <div class="row mb-3" formArrayName="camposSeleccionados">
+          @for (columna of columnasOpcionales; track columna) {
             <div class="col-md-3">
-              <p-checkbox styleClass="my-2" name="group" [label]="campo.header" [value]="campo.field" />
+              <p-checkbox
+                styleClass="my-2"
+                name="group"
+                [label]="columna.header"
+                [binary]="true"
+                (onChange)="onCheckboxChange($event, columna)">
+              </p-checkbox>
             </div>
           }
         </div>
         <div class="d-flex justify-content-end mb-3">
           <div class="col-12 col-sm-2">
-            <p-button severity="success" label="Generar" styleClass="w-100" />
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
           </div>
         </div>
       </form>
