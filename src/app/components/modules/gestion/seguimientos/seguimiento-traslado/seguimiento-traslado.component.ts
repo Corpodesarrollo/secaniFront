@@ -18,18 +18,19 @@ import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 import { User } from '../../../../../core/services/userService';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-traslado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule, EstadoNnaComponent, SeguimientoGuardarComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, FormsModule, InputTextModule, EstadoNnaComponent, SeguimientoGuardarComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-traslado.component.html',
   styleUrl: './seguimiento-traslado.component.css'
 })
 export class SeguimientoTrasladoComponent implements OnInit {
   nna: NNA = new NNA();
   user = new User();
-  id: string | undefined;
+  id: number = 0;
   saving: boolean = false;
   
   traslado: InfoTraslado = {
@@ -95,16 +96,15 @@ export class SeguimientoTrasladoComponent implements OnInit {
 
   showGuardarSeguimiento: boolean = false;
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: Router, private routeAct: ActivatedRoute, private repos: GenericService) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private routerAct: ActivatedRoute, private router: Router, private routeAct: ActivatedRoute, private repos: GenericService) {
   }
 
   async ngOnInit(): Promise<void> {
     this.routeAct.paramMap.subscribe(() => {
       this.idContacto = history.state.idContacto;
     });
-    this.id = this.routeAct.snapshot.paramMap.get('id')!;
-    this.nna = await this.tpp.getNNA(this.id);
-    console.log(this.nna);
+    const idParam = this.routerAct.snapshot.paramMap.get('id');
+    this.id = idParam ? Number(idParam) : 0;
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },

@@ -66,15 +66,14 @@ export class Generico {
 
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.post(url, data, { headers });
+    const request = axios.post(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
   async retorno_get(urltemp: string, baseUrl:string = this.BASE_URL): Promise<any> {
-
     const headers = await this.headersWithToken();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers });
+    const request = axios.get(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -84,7 +83,7 @@ export class Generico {
 
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.put(url, data, { headers });
+    const request = axios.put(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -94,7 +93,7 @@ export class Generico {
 
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.patch(url, data, { headers });
+    const request = axios.patch(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -104,7 +103,7 @@ export class Generico {
 
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.delete(url, { headers });
+    const request = axios.delete(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -114,7 +113,7 @@ export class Generico {
 
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.post(url, data, { headers });
+    const request = axios.post(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -122,7 +121,7 @@ export class Generico {
   async retorno_put_parametrica(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL_PARAMETRICAS}${urltemp}`;
-    const request = axios.put(url, data, { headers });
+    const request = axios.put(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -130,7 +129,7 @@ export class Generico {
 
     const headers = await this.headersWithToken();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers });
+    const request = axios.get(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
   // Método para verificar si un campo está vacío
@@ -143,7 +142,7 @@ export class Generico {
 
     const headers = await this.headersWithToken();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers });
+    const request = axios.get(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 
@@ -161,7 +160,7 @@ export class Generico {
   ): Promise<any> {
     const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.delete(url, { headers });
+    const request = axios.delete(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
     return this.handleRequest(request);
   }
 

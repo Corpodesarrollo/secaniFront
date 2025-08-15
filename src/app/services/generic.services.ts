@@ -58,13 +58,30 @@ export class GenericService {
     }
   }
 
-  public get(modulo: string, parameters: string, api: string = '') {
+  public get(modulo: string, parameters: string, api: string = ''): Observable<any> {
     const apiUrl = this.getApiUrl(api);
-    if (environment.cookie){
-      return this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
-    } else {
-      return this.http.get(`${apiUrl}${modulo}${parameters}`);
-    }
+    const url = `${apiUrl}${modulo}${parameters}`;
+
+    const fetchOptions: RequestInit = {
+      method: 'GET',
+      credentials: environment.cookie ? 'include' : 'same-origin'
+    };
+
+    const fetchPromise = fetch(url, fetchOptions)
+      .then(response => {
+        if (!response.ok) {
+          // Aquí ya tienes un error HTTP (404, 500, etc.)
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      });
+
+    return from(fetchPromise).pipe(
+      catchError((err) => {
+        console.error('Error en fetch:', err);
+        return throwError(() => err);
+      })
+    );
   }
 
   public async getAsync(modulo: string, parameters: string, api: string = ''): Promise<any> {
@@ -102,13 +119,33 @@ export class GenericService {
     return await this.http.get(`${url}`).toPromise();
   }
 
-  public post(modulo: string, parameters: any, api: string = '') {
+  public post(modulo: string, parameters: any, api: string = ''): Observable<any> {
     const apiUrl = this.getApiUrl(api);
-    if (environment.cookie){
-      return this.http.post(`${apiUrl}${modulo}`, parameters, { withCredentials: true });
-    } else {
-      return this.http.post(`${apiUrl}${modulo}`, parameters);
-    }
+    const url = `${apiUrl}${modulo}`;
+
+    const fetchOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify(parameters),
+      credentials: environment.cookie ? 'include' : 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const fetchPromise = fetch(url, fetchOptions)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // o .text() si no es JSON
+      });
+
+    return from(fetchPromise).pipe(
+      catchError((err) => {
+        console.error('Error en fetch POST:', err);
+        return throwError(() => err);
+      })
+    );
   }
 
   public async postAsync(url: string = this.url, modulo: string, parameters: any) {

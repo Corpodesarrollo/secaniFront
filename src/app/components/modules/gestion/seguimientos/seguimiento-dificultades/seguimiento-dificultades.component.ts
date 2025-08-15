@@ -24,12 +24,13 @@ import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { apis } from '../../../../../models/apis.model';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-dificultades',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, AutoCompleteModule,
-    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-dificultades.component.html',
   styleUrl: './seguimiento-dificultades.component.css'
 })

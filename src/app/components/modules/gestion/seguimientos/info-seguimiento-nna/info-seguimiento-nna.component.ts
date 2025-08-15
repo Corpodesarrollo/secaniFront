@@ -31,6 +31,7 @@ export class InfoSeguimientoNnaComponent {
     fechaInicioSeguimiento: new Date(),
     tiempoTranscurrido: '',
     seguimientosRealizados: 0,
+    estado: ''
   };
 
   constructor(
@@ -45,7 +46,6 @@ export class InfoSeguimientoNnaComponent {
     this.isLoading = true;
     this.repos.get('Seguimiento/SeguimientoNNA/', `${this.idNNA}`, 'Seguimiento').subscribe({
       next: (data: any) => {
-        console.log("data2", data);
         if (data != null) {
           this.NNA = data;
           this.NNA.seguimientosRealizados -= 1; 

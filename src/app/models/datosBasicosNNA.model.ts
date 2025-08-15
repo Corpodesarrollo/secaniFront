@@ -8,4 +8,5 @@ export interface DatosBasicosNNA {
     fechaInicioSeguimiento: Date;
     tiempoTranscurrido: string;
     seguimientosRealizados: number;
+    estado: string;
     }

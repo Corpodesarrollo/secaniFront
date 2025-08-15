@@ -28,12 +28,13 @@ import { apis } from '../../../../../models/apis.model';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-datos',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent, NnaContactoListaComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
+    DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoHistorialComponent, DialogModule, UsuariosModule, DialogCrearContactoComponent, NnaContactoListaComponent, EstadoNnaComponent, SeguimientoGuardarComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-datos.component.html',
   styleUrl: './seguimiento-datos.component.css'
 })

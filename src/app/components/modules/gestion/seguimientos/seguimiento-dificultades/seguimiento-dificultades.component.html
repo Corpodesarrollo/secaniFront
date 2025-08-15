@@ -1,21 +1,7 @@
-<body class="formato-fondo fuente-letra pe-4">
+<div class="fuente-letra pe-4">
     <div class="row mb-3  align-items-center">
         <div class="col-12 d-flex justify-content-between">
-            <p-breadcrumb class="" [model]="items">
-                <ng-template pTemplate="item" let-item>
-                    <ng-container *ngIf="item.route; else elseBlock">
-                        <a [routerLink]="item.route" class="p-menuitem-link">
-                            <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
-                            <span class="text-primary font-semibold">{{ item.label }}</span>
-                        </a>
-                    </ng-container>
-                    <ng-template #elseBlock>
-                        <a [href]="item.url">
-                            <span class="text-color">{{ item.label }}</span>
-                        </a>
-                    </ng-template>
-                </ng-template>
-            </p-breadcrumb>
+            <app-breadcrumb [id]="nna.id" />
             <div>
                 Estado: <app-estado-nna [nnaEstadoId]="nna.estadoId" />
             </div>
@@ -259,4 +245,4 @@
         [seguimiento]="seguimientoActual"
         (onClose)="cerrarGuardarYReagendar()" 
     />
-</body>
+</div>

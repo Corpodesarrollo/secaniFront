@@ -16,14 +16,14 @@ export class CabecerasGenericas {
   }
 
   obtnerCabeceras(){
-    var token = localStorage.getItem("access_token");
-    this.headers(token!);
+    this.headers();
   }
 
-  headers = async (token?: string) => {
+  headers = async () => {
     this.headers_service = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Accept': 'application/json',
+      'crossOrigin': 'https://localhost:4200',
     };
     return this.headers_service;
   };

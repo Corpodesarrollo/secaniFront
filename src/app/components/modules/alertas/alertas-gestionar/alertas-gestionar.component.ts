@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificacionVerComponent } from "../../notificacion-ver/notificacion-ver.component";
 import { AlertasEnviarRespuestaComponent } from "../alertas-enviar-respuesta/alertas-enviar-respuesta.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alertas-gestionar',
@@ -29,7 +30,7 @@ export class AlertasGestionarComponent {
   alerta: string = '';
 
   constructor(
-    private repos: GenericService
+    private router: Router, private repos: GenericService
   ) { }
 
   ngOnInit(): void {
@@ -65,7 +66,10 @@ export class AlertasGestionarComponent {
     this.alerta = `${alerta.categoria} - ${alerta.alerta} ${alerta.subcategoria}`;
     this.displayModalEnviarRespuesta = true;
   }
-  
-  verRespuesta(value: any) {
+
+  verRespuesta(alerta: AlertasGestion) {
+    this.router.navigate([`/gestion/consultar-alertas/${alerta.idSeguimiento}`]).then(() => {
+        window.scrollTo(0, 0);
+      });
   }
 }

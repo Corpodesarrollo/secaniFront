@@ -16,6 +16,9 @@
     background-color: #eff2f2;
     color: transparent;
 }
+::ng-deep ul[data-pc-section="menu"] {
+  margin-bottom: 0% !important;
+}
 
 ::ng-deep .ng-star-inserted{
     text-decoration: none;

@@ -1,0 +1,10 @@
+::ng-deep .inline-spinner {
+  width: 1.2rem;      /* igual a altura de letra */
+  height: 1.2rem;
+  vertical-align: middle; /* alinea con el texto */
+}
+
+::ng-deep .inline-spinner svg {
+  width: 100%;
+  height: 100%;
+}

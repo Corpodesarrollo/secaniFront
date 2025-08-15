@@ -15,17 +15,18 @@ import { TablasParametricas } from '../../../../../core/services/tablasParametri
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
+import { NNA } from '../../../../../models/nna.model';
 
 @Component({
   selector: 'app-seguimiento-sin-diagnostico',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-sin-diagnostico.component.html',
   styleUrl: './seguimiento-sin-diagnostico.component.css'
 })
 export class SeguimientoSinDiagnosticoComponent  implements OnInit {
-  estado:string = 'Sin Diagnóstico';
-  items: MenuItem[] = [];
+  id: number = 0;
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];
   IPS: Parametricas[] = [];
@@ -58,7 +59,7 @@ export class SeguimientoSinDiagnosticoComponent  implements OnInit {
     alertas: []
   };
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private routerAct: ActivatedRoute, private router: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -89,10 +90,8 @@ export class SeguimientoSinDiagnosticoComponent  implements OnInit {
       this.concatenatedAlertas = '';
     }
 
-    this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
-      { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
-    ];
+    const idParam = this.routerAct.snapshot.paramMap.get('id');
+    this.id = idParam ? Number(idParam) : 0;
 
     this.estados = await this.tpp.getTpEstadosNNA();
     this.isLoadingEstados = false;

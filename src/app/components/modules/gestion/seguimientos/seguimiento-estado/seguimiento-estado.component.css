@@ -27,3 +27,7 @@
   background-color: #73b7ad !important;
   color: white;
 }
+
+::ng-deep .formato-fondo{
+  background-color: #73B7AD0D !important;
+}

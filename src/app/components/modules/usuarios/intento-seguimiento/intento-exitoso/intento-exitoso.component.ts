@@ -221,7 +221,9 @@ export class IntentoExitosoComponent implements OnInit {
   }
 
   getNombreParentesco(parentescoId: string): string {
-
+    if (!parentescoId || !this.parentesco) {
+      return '';
+    }
     const parentesco = this.parentesco.find((item: any) => item.codigo == parentescoId);
     return parentesco ? parentesco.nombre : '';
   }

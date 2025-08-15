@@ -16,17 +16,18 @@ import { InfoDiagnostico } from '../../../../../models/infoDiagnostico.model';
 import { Parametricas } from '../../../../../models/parametricas.model';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-sin-tratamiento',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-sin-tratamiento.component.html',
   styleUrl: './seguimiento-sin-tratamiento.component.css'
 })
 export class SeguimientoSinTratamientoComponent  implements OnInit {
   estado:string = 'Sin Tratamiento';
-  items: MenuItem[] = [];
+  id: number = 0;
   estados: Parametricas[] = [];
   diagnosticos: Parametricas[] = [];
   IPS: Parametricas[] = [];
@@ -63,7 +64,7 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
   alertas: AlertasTratamiento[] = [];
   idContacto: string | undefined;
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute) {
+  constructor(private tpp: TpParametros, private tp: TablasParametricas, private routerAct: ActivatedRoute, private router: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -71,6 +72,9 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
       this.alertas = history.state.alertas;
       this.idContacto = history.state.idContacto;
     });
+
+    const idParam = this.routerAct.snapshot.paramMap.get('id');
+    this.id = idParam ? Number(idParam) : 0;
 
     if (this.diagnostico) {
       if (this.diagnostico.alertas) {
@@ -94,13 +98,6 @@ export class SeguimientoSinTratamientoComponent  implements OnInit {
       };
       this.concatenatedAlertas = '';
     }
-
-    console.log(this.diagnostico);
-
-    this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimiento' },
-      { label: 'Ana Ruiz', routerLink: '/gestion/seguimiento' },
-    ];
 
     this.estados = await this.tpp.getTpEstadosNNA();
     this.isLoadingEstados = false;

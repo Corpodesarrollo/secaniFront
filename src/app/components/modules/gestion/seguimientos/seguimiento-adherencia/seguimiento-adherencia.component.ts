@@ -20,12 +20,13 @@ import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-adherencia',
   standalone: true,
   imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule,
-    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, EstadoNnaComponent, SeguimientoGuardarComponent],
+    DropdownModule, FormsModule, InputTextModule, CheckboxModule, TableModule, EstadoNnaComponent, SeguimientoGuardarComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-adherencia.component.html',
   styleUrl: './seguimiento-adherencia.component.css'
 })

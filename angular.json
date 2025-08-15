@@ -93,7 +93,10 @@
           "options":{
             "ssl": false,
             "sslKey": "certificados/localhost.key",
-            "sslCert": "certificados/localhost.crt"
+            "sslCert": "certificados/localhost.crt",
+            "allowedHosts": [
+              "localhost",
+              "secani.sispropreprod.gov.co"]
           },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {

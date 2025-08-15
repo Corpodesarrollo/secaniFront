@@ -51,7 +51,7 @@ h1, h3 {
 }
  
 .formato-fondo {
-    background-color: rgba(115, 183, 173, 0.05);
+    background: #73B7AD0D !important;
     padding: 15px;
 }
 
@@ -70,6 +70,10 @@ h1, h3 {
 
 .fuente-letra {
     font-family: 'Montserrat', sans-serif;
+}
+
+.container-fluid{
+    padding: 10px !important;
 }
 
 /**
@@ -120,6 +124,7 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
     margin-top: 0px;
     margin-left: 0px !important;
     font-family: 'Montserrat', sans-serif;
+    padding: 15px !important;
 }
 
 .text-center{

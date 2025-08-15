@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { TpParametros } from '../../../core/services/tpParametros';
 import { CommonModule } from '@angular/common';
+import { ProgressSpinnerModule } from "primeng/progressspinner";
 
 @Component({
   selector: 'app-estado-nna',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProgressSpinnerModule],
   templateUrl: './estado-nna.component.html',
   styleUrl: './estado-nna.component.css'
 })
@@ -14,6 +15,7 @@ export class EstadoNnaComponent {
   estado:string = 'Registrado';
   colorTxt:string = 'white';
   colorBg:string = '#73b7ad';
+  cargando: boolean = true;
 
   constructor(private tpp: TpParametros) {
   }
@@ -28,5 +30,6 @@ export class EstadoNnaComponent {
     this.estado = estado?.nombre ?? '';
     this.colorTxt = estado?.colorText ?? 'white';
     this.colorBg = estado?.colorBG ?? '#73b7ad';
+    this.cargando = false;
   }
 }

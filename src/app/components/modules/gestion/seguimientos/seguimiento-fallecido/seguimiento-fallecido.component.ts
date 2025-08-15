@@ -19,11 +19,12 @@ import { NNA } from '../../../../../models/nna.model';
 import { NotificacionComponent } from "../../../notificacion/notificacion.component";
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { NNAService } from '../../../../../core/services/nnaService';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-fallecido',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent, EstadoNnaComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent, EstadoNnaComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-fallecido.component.html',
   styleUrl: './seguimiento-fallecido.component.css'
 })

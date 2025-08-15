@@ -26,11 +26,12 @@ import { GenericService } from '../../../../../services/generic.services';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 import { EstadoAlerta } from '../../../../../models/estadoAlerta.model';
 import { user, User } from '../../../../../core/services/userService';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-gestionar',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent, SeguimientoGuardarComponent, EstadoNnaComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, SeguimientoHistorialComponent, InfoSeguimientoNnaComponent, SeguimientoGuardarComponent, EstadoNnaComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-gestionar.component.html',
   styleUrl: './seguimiento-gestionar.component.css'
 })
@@ -100,6 +101,7 @@ export class SeguimientoGestionarComponent {
   idEstadoSeguimiento: number = 0;
   cntDias: number = 0;
   saving: boolean = false;
+  primerSeguimiento: boolean = false;
 
   constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute, private gs: GenericService) {
   }
@@ -146,8 +148,24 @@ export class SeguimientoGestionarComponent {
     this.diagnosticos =  await this.tpp.getDiagnosticos();
     this.isLoadingDiagnostico = false;
 
+    this.validarSeguimiento();
+
     this.validarEstado();
     this.CargarData();
+  }
+
+  validarSeguimiento() {
+    let id = this.router.snapshot.paramMap.get('id')!;
+    this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
+      let cnt = Number(data);
+      if (cnt > 1) {
+        this.primerSeguimiento = false;
+      } else {
+        this.primerSeguimiento = true;
+      }
+    }).catch((error: any) => {
+      console.error('Error fetching seguimiento count', error);
+    });
   }
 
   CargarData() {

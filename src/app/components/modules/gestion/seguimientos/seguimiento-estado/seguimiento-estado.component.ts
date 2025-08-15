@@ -23,11 +23,12 @@ import { apis } from '../../../../../models/apis.model';
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-seguimiento-estado',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, AutoCompleteModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, AutoCompleteModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, CalendarModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, SeguimientoGuardarComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-estado.component.html',
   styleUrl: './seguimiento-estado.component.css'
 })
