@@ -92,5 +92,5 @@
 </div>
 
 <p-dialog  [(visible)]="displayModalContacto" [modal]="true"  (onHide)="onModalHide()">
-  <app-nna-contacto-lista [nnaId]="nnaId"/>
+  <app-nna-contacto-lista [nnaId]="nnaId" (datosGuardados)="recargarHistorial()" />
 </p-dialog>

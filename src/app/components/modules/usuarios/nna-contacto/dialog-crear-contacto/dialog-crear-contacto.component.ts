@@ -33,6 +33,7 @@ export class DialogCrearContactoComponent {
   @Input() nnaId: number = 0;
   @Output() closeModal = new EventEmitter<void>(); // Emite un evento al cerrar el modal
   @Output() dataToParent = new EventEmitter<any>();  // Emitir datos al padre
+  @Output() datosGuardados = new EventEmitter<void>();
 
   telefonos:string[] = [];
 
@@ -149,6 +150,7 @@ export class DialogCrearContactoComponent {
               return;
             }
             this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto actualizado exitosamente.' });
+            this.datosGuardados.emit();
             this.show = false;
           },
           error: (error) => {
@@ -164,6 +166,7 @@ export class DialogCrearContactoComponent {
               return;
             }
             this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto creado exitosamente.' });
+            this.datosGuardados.emit();
             this.show = false;
           },
           error: (error) => {

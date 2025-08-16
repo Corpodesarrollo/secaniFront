@@ -1,229 +1,307 @@
-<!-- <div class="container-fluid">
-  <h1 class="mt-5 mb-4">Reporte Incosistencias</h1>
-
-  <div class="d-flex gap-3 mb-2">
-    <p-button label="General" severity="success" />
-    <p-button label="Por NNA" severity="success" />
-  </div>
+<div class="container-fluid">
+  <h1 class="mt-5 mb-4">Reporte de Inconsistencias</h1>
 
   <div class="card">
     <div class="card-body">
-      <div class="row align-items-center mb-3">
-        <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Inicio:</div>
-        <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-          <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"   />
-        </div>
 
-        <div class="col-12 col-sm-2 mb-2 mb-sm-0 fw-semibold">Fecha Fin:</div>
-        <div class="col-12 col-sm-4 mb-2 mb-sm-0">
-          <p-calendar styleClass="w-100" [showIcon]="true" [iconDisplay]="'input'"  />
-        </div>
+      <div class="d-flex mb-5 gap-2">
+        <p-button [severity]="tipoReporte === TipoReporte.GENERAL ? 'success' : 'secondary'" label="Reporte General" (click)="tipoReporte = TipoReporte.GENERAL"/>
+        <p-button [severity]="tipoReporte === TipoReporte.POR_NNA ? 'success' : 'secondary'" label="Reporte por NNA" (click)="tipoReporte = TipoReporte.POR_NNA"/>
       </div>
 
-      <div class="row align-items-center mb-3">
-        <div class="col-12 mb-4 col-sm-9 mb-sm-0">
-          <p-inputGroup>
-            <input class="w-100" type="text" placeholder="Buscar..." pInputText />
-            <p-inputGroupAddon>
-                <i class="pi pi-search"></i>
-            </p-inputGroupAddon>
-        </p-inputGroup>
-        </div>
-        <div class="col-6 mb-2 col-sm-2 mb-sm-0">
-          <p-button styleClass="w-100" label="Generar" severity="success" />
-        </div>
-        <div class="col-6 mb-2 col-sm-1 mb-sm-0">
-          <p-button styleClass="w-100" icon="pi pi-file-excel" severity="success" />
-        </div>
-      </div>
+      <!-- Reporte General -->
+      <div *ngIf="tipoReporte === TipoReporte.GENERAL">
+        <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
+          <div class="row g-3 mb-2">
+            <!-- Fecha Inicio -->
+            <div class="col-12 col-md-5">
+              <label for="fechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
+              <p-calendar inputId="fechaInicio" formControlName="fechaInicio" styleClass="w-100" [showIcon]="true"
+                [iconDisplay]="'input'" dateFormat="dd/mm/yy" />
+              <div style="min-height: 1.8rem;" class="mt-1">
+                <div
+                  *ngIf="camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')"
+                  class="text-danger small">
+                  La fecha inicio es requerida
+                </div>
+                <div *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched" class="text-danger small">
+                  La fecha inicial no puede ser mayor a la fecha final
+                </div>
+                <!-- Espacio reservado si no hay errores -->
+                <div
+                  *ngIf="!(camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')) && !(camposForm.errors?.['fechasInvalidas'] && camposForm.touched)"
+                  class="invisible small">
+                  Placeholder
+                </div>
+              </div>
+            </div>
 
-      <div class="row">
-        <div class="col-12 my-4">
-          <table class="table table-borderless table-responsive w-100">
-            <thead>
-              <tr>
-                <th colspan="3">Número total de inconsistencias</th>
-                <th colspan="2" class="text-end">{{ reporte?.totalInconsistencias }}</th>
-              </tr>
-            </thead>
+            <!-- Fecha Fin -->
+            <div class="col-12 col-md-5">
+              <label for="fechaFin" class="form-label fw-semibold">Fecha Fin</label>
+              <p-calendar inputId="fechaFin" formControlName="fechaFin" styleClass="w-100" [showIcon]="true"
+                [iconDisplay]="'input'" dateFormat="dd/mm/yy" />
+              <div style="min-height: 1.8rem;" class="mt-1">
+                <div *ngIf="camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')"
+                  class="text-danger small">
+                  La fecha fin es requerida
+                </div>
+                <div *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched" class="text-danger small">
+                  La fecha fin no puede ser mayor a la fecha actual
+                </div>
+                <!-- Espacio reservado si no hay errores -->
+                <div
+                  *ngIf="!(camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')) && !(camposForm.errors?.['fechaFutura'] && camposForm.touched)"
+                  class="invisible small">
+                  Placeholder
+                </div>
+              </div>
+            </div>
+            
+            <!-- Botón Generar -->
+            <div class="col-12 col-md-2 d-grid align-self-center">
+              <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
+            </div>
+          </div>
+        </form>
 
-            <tbody>
-              <!-- Distribución de Incosistencias por Tipo de Campo ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Distribución de Incosistencias por Tipo de Campo
-                </th>
-              </tr>
-              <tr>
-                <td class="text-center">Nombres</td>
-                <td class="text-center">Fechas de nacimientos</td>
-                <td class="text-center">Diagnosticos</td>
-                <td class="text-center">Tipo de identificación</td>
-                <td class="text-center">Otros</td>
-              </tr>
-              <tr>
-                <td class="text-center">{{ reporte?.distribucionTipoCampo?.nombre }}</td>
-                <td class="text-center">{{ reporte?.distribucionTipoCampo?.fechasNacimiento }}</td>
-                <td class="text-center">{{ reporte?.distribucionTipoCampo?.diagnosticoas }}</td>
-                <td class="text-center">{{ reporte?.distribucionTipoCampo?.tipoIdentificacion }}</td>
-                <td class="text-center">{{ reporte?.distribucionTipoCampo?.otros }}</td>
-              </tr>
-
-              <!-- Porcentaje de Inconsistencias por Fuente de Datos ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Porcentaje de Inconsistencias por Fuente de Datos
-                </th>
-              </tr>
-              <tr>
-                <td class="text-center">SIVIGILA</td>
-                <td class="text-center">RUAF</td>
-                <td class="text-center">BDUA</td>
-                <td colspan="2" class="text-center">MIPRES</td>
-              </tr>
-              <tr>
-                <td class="text-center">{{ reporte?.inconsistencias?.fuenteDatos?.sivigila | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.fuenteDatos?.ruaf | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.fuenteDatos?.bdua | percent }}</td>
-                <td colspan="2" class="text-center">{{ reporte?.inconsistencias?.fuenteDatos?.mipres | percent }}</td>
-              </tr>
-
-              <!-- Tasa de Inconsistencias por Entidad Territorial ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Tasa de Inconsistencias por Entidad Territorial
-                </th>
-              </tr>
-              <tr>
-                <td class="text-center">ET A</td>
-                <td class="text-center">ET B</td>
-                <td class="text-center">ET C</td>
-                <td class="text-center">ET D</td>
-                <td class="text-center">ET E</td>
-              </tr>
-              <tr>
-                <td class="text-center">{{ reporte?.inconsistencias?.entidadTerritorial?.etA | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.entidadTerritorial?.etB | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.entidadTerritorial?.etC | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.entidadTerritorial?.etD | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.entidadTerritorial?.etE | percent }}</td>
-              </tr>
-
-              <!-- Tasa de Inconsistencias por Tipo de Cancer ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Tasa de Inconsistencias por Tipo de Cáncer
-                </th>
-              </tr>
-              <tr>
-                <td class="text-center">LLA</td>
-                <td class="text-center">LMA</td>
-                <td class="text-center">Otras leucemias</td>
-                <td colspan="2" class="text-center">Otros Cánceres</td>
-              </tr>
-              <tr>
-                <td class="text-center">{{ reporte?.inconsistencias?.tipoCancer?.lla | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.tipoCancer?.lma | percent }}</td>
-                <td class="text-center">{{ reporte?.inconsistencias?.tipoCancer?.otrasLeucemias | percent }}</td>
-                <td colspan="2" class="text-center">{{ reporte?.inconsistencias?.tipoCancer?.otrosCanceres | percent }}</td>
-              </tr>
-
-              <!-- Tiempo promedio de Resolución de Inconsistencias ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Tiempo promedio de Resolución de Inconsistencias
-                </th>
-              </tr>
-              <tr>
-                <td colspan="5" class="text-center">{{ reporte?.tiempoPromedioResolucion }}</td>
-              </tr>
-
-              <!-- Número de Casos Validados Automáticamente vs. Manualmente ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Número de Casos Validados Automáticamente vs. Manualmente
-                </th>
-              </tr>
-              <tr>
-                <td colspan="2" class="text-center">Automáticamente</td>
-                <td colspan="3" class="text-center">Manualmente</td>
-              </tr>
-              <tr>
-                <td colspan="2" class="text-center">{{ reporte?.numerosCasosValidos?.automaticamente }}</td>
-                <td colspan="3" class="text-center">{{ reporte?.numerosCasosValidos?.manualmente }}</td>
-              </tr>
-
-              <!-- Tasa de Reincidencia de Inconsistencias ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Tasa de Reincidencia de Inconsistencias
-                </th>
-              </tr>
-              <tr>
-                <td colspan="5" class="text-center">
-                  {{ reporte?.tasaResidenciaInconsistencas | percent }}
-                </td>
-              </tr>
-
-              <tr>
-                <th colspan="5" class="text-center">
-                  Impacto en el Tiempo de Notificación y Tratamiento
-                </th>
-              </tr>
-              @for(impacto of reporte.impactosTiempoNotificacion; track impacto) {
-                <tr>
-                  <td colspan="5" class="text-center">
-                    {{ impacto }}
-                  </td>
-                </tr>
-              }
-
-              <!-- Campos Críticos con Mayor Trazabilidad ->
-              <tr>
-                <th colspan="5" class="text-center">
-                  Campos Críticos con Mayor Trazabilidad
-                </th>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  Fecha de inicio de tratamiento
-                </td>
-                <td class="text-center">
-                  Fecha de toma de prueba diagnóstica presuntiva
-                </td>
-                <td class="text-center">
-                  Fecha de resultado de prueba diagnóstica presuntiva
-                </td>
-                <td class="text-center">
-                  Fecha de toma de prueba confirmatoria
-                </td>
-                <td class="text-center">
-                  Fecha de resultado de prueba confirmatoria
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  {{ reporte?.camposCriticos?.fechaInicioTratamiento | percent }} inconsistencias
-                </td>
-                <td class="text-center">
-                  {{ reporte?.camposCriticos?.fechaTomaPruebaDiagnostica | percent}} inconsistencias
-                </td>
-                <td class="text-center">
-                  {{ reporte?.camposCriticos?.fechaResultadoPruebaDiagnostica | percent}} inconsistencias
-                </td>
-                <td class="text-center">
-                  {{ reporte?.camposCriticos?.fechaTomaPruebaConfirmatoria | percent}} inconsistencias
-                </td>
-                <td class="text-center">
-                  {{ reporte?.camposCriticos?.fechaResultadoPruebaConfirmatoria | percent}} inconsistencias
-                </td>
-              </tr>
-            </tbody>
-
+        <!-- Reporte de Inconsistencias -->
+        <div class="p-4 my-3">
+          <table class="custom-table text-center align-middle">
+            <tr>
+              <th colspan="2" class="fs-5">Reporte de Inconsistencias</th>
+            </tr>
+            <tr>
+              <td colspan="2" class="fs-2 fw-bold">0</td>
+            </tr>
+            <tr>
+              <td colspan="2">Total Inconsistencias</td>
+            </tr>
+            <tr>
+              <td class="fw-bold">Periodo</td>
+              <td>dd/mm/yyyy</td>
+            </tr>
           </table>
+        </div>
+
+        <!-- Tabla: Inconsistencias por campo -->
+        <div class="mb-4">
+          <div>
+            <p class="fs-5 fw-semibold">Inconsistencias por campo</p>
+          </div>
+          <p-table [value]="[]">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tipo de Identificación</th>
+                <th>Nombres</th>
+                <th>Sexo</th>
+                <th>Fecha de Defunción</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reporte>
+              <tr>
+                <td>{{ reporte.tipoIdentificacion }}</td>
+                <td>{{ reporte.nombres }}</td>
+                <td>{{ reporte.sexo }}</td>
+                <td>{{ reporte.fechaDefuncion }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td> 0 </td>
+                <td> 0 </td>
+                <td> 0 </td>
+                <td> 0 </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <!-- Tabla: Inconsistencias por departamento -->
+        <div class="mb-4">
+          <div class="row py-4">
+            <div class="col">
+              <p class="fs-5 fw-semibold">Inconsistencias por departamento</p>
+            </div>
+            <div class="col">
+              <p-inputGroup>
+                <input class="w-25" type="text" placeholder="Buscar..." pInputText
+                  (input)="tablaDepartamento.filterGlobal($any($event.target).value, 'contains')" />
+                <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+                </p-inputGroupAddon>
+              </p-inputGroup>
+            </div>
+          </div>
+          <p-table #tablaDepartamento [value]="[]" [paginator]="false">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Departamento</th>
+                <th>Total Inconsistencias</th>
+                <th>Porcentaje</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reporte>
+              <tr>
+                <td>{{ reporte.departamento }}</td>
+                <td>{{ reporte.total }}</td>
+                <td>{{ reporte.porcentaje }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td> 0 </td>
+                <td> 0 </td>
+                <td> 0% </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <!-- Tabla: Inconsistencias por diagnóstico -->
+        <div class="mb-4">
+          <div class="row py-4">
+            <div class="col">
+              <p class="fs-5 fw-semibold">Inconsistencias por diagnóstico</p>
+            </div>
+            <div class="col">
+              <p-inputGroup>
+                <input class="w-25" type="text" placeholder="Buscar..." pInputText
+                  (input)="tablaDiagnostico.filterGlobal($any($event.target).value, 'contains')" />
+                <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+                </p-inputGroupAddon>
+              </p-inputGroup>
+            </div>
+          </div>
+          <p-table #tablaDiagnostico [value]="[]" [paginator]="false">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Diagnóstico</th>
+                <th>Total Inconsistencias</th>
+                <th>Porcentaje</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reporte>
+              <tr>
+                <td>{{ reporte.diagnostico }}</td>
+                <td>{{ reporte.total }}</td>
+                <td>{{ reporte.porcentaje }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td> 0 </td>
+                <td> 0 </td>
+                <td> 0% </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <!-- Reporte NNA -->
+      <div *ngIf="tipoReporte === TipoReporte.POR_NNA">
+        <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
+          <div class="row align-items-end mb-3">
+            <div class="col-12 col-md-5">
+              <label for="nna" class="form-label fw-semibold">NNA:</label>
+              <p-dropdown 
+                optionLabel="nombre"  
+                optionValue="codigo"
+                formControlName="nna" 
+                styleClass="w-100" 
+                placeholder="Seleccione"
+              />
+            </div>
+
+            <div class="col-12 col-md-5">
+              <p-inputGroup>
+                <input class="w-25" type="text" placeholder="Buscar..." pInputText
+                  (input)="tabla.filterGlobal($any($event.target).value, 'contains')" />
+                <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+                </p-inputGroupAddon>
+              </p-inputGroup>
+            </div>
+
+            <!-- Botón Generar -->
+            <div class="col-12 col-md-2 d-grid align-items-end">
+              <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
+            </div>
+          </div>
+        </form>
+
+        <div class="mt-3">
+          <p-table #tabla [value]="reportes" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
+            [globalFilterFields]="['agente', 'fechaIntento', 'observaciones']" [rowsPerPageOptions]="[5, 10, 25, 50]"
+            [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
+            <ng-template pTemplate="caption">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="text-center justify-content-between">
+                  Inconsistencias
+                </div>
+                <p-button severity="success" icon="pi pi-file-excel" />
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>fecha reporte</th>
+                <th>Tipo identificación SIVIGILA</th>
+                <th>Tipo afiliación REAL</th>
+                <th>Número indentificación SIVIGILA</th>
+                <th>Número identificación REAL</th>
+                <th>Primer Nombre SIVIGILA</th>
+                <th>Primer Nombre REAL</th>
+                <th>Segundo Nombre SIVIGILA</th>
+                <th>Segundo Nombre REAL</th>
+                <th>Primer Apellido SIVIGILA</th>
+                <th>Primer Apellido REAL</th>
+                <th>Segundo Apellido SIVIGILA</th>
+                <th>Segundo Apellido REAL</th>
+                <th>Fecha nacimiento SIVIGILA</th>
+                <th>Fecha nacimiento REAL</th>
+                <th>SexoId SIVIGILA</th>
+                <th>SexoId REAL</th>
+                <th>Fecha Defunción SIVIGILA</th>
+                <th>Fecha Defunción REAL</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reporte>
+              <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>19</td>
+                <td>20</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="20" class="text-center">
+                  Reportes no encotrados.
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
       </div>
     </div>
   </div>
 </div>
- -->
