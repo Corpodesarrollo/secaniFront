@@ -1,0 +1,12 @@
+.custom-table {
+  width: 100%;
+  margin: auto;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid rgba(205,205,205,0.6);
+  padding: 8px;
+}

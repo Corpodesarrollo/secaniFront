@@ -48,4 +48,9 @@ export class ReportesService {
     const url: string = `ReporteGeneralLlamadas/ActualizarObservaciones`;
     return this.generico.put(url, reporte, 'Seguimiento');
   }
+
+  getReporteInconsistencias(fechaInicial: string, fechaFinal: string) {
+    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechaInicial}&FechaFin=${fechaFinal}`;
+    return this.generico.get(url, '', 'Seguimiento');
+  }
 }
