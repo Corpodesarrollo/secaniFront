@@ -19,6 +19,7 @@ export class NnaContactoListaComponent {
   @Input() contactoId: number = 0;
   @Input() disable: boolean = false;
   @Output() lista = new EventEmitter<any>();
+  @Output() datosGuardados = new EventEmitter<void>();
   
   displayModalContacto: boolean = false;
 
@@ -99,5 +100,9 @@ export class NnaContactoListaComponent {
   nuevoContacto(){
     this.displayModalContacto = true;
     this.contactoId = 0;
+  }
+
+  avisarAlPadre() {
+    this.datosGuardados.emit();
   }
 }

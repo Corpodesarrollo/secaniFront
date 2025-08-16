@@ -52,7 +52,7 @@ export class IntentoSeguimientoComponent implements OnInit {
 
     this.parentesco = await this.TpParametros.getTPParentesco();
     //Obtenemos valores para las 2 grillas de datos
-    this.contactos = await this.servicios.GetIntentoContactoAgrupado(this.nnaId);
+    this.cargarContacto();
     this.intentos = await this.servicios.GetIntentosContactoNNA(this.nnaId);
 
     this.intentos = this.intentos.sort((a: any, b: any) => {
@@ -85,6 +85,9 @@ export class IntentoSeguimientoComponent implements OnInit {
     this.ngOnInit();
   }
 
+  async cargarContacto() {
+    this.contactos = await this.servicios.GetIntentoContactoAgrupado(this.nnaId);
+  }
 
   valor_cuidador(valor: any){
     if(valor){
