@@ -98,19 +98,21 @@ export class SeguimientoDificultadesComponent implements OnInit {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
 
-    this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
-      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
-    ];
-
     //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
     this.IPS =  await this.tpp.getIPS(this.nna.municipioNacimientoId);
     this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
 
-
     this.categoriaAlerta =  await this.tpp.getCategoriaAlerta();
     this.selectedCategoriaAlerta = this.categoriaAlerta.find(x => x.id == this.nna.ipsId);
     this.isLoadingCategoriaAlerta = false;
+
+    this.actualizarTrasladosArray();
+    //cargar selectedIPS[i]
+    console.log('Traslados IPS IDs:', this.nna.trasladosIPSId);
+    this.nna.trasladosIPSId.forEach(async (id, index) => {
+      this.selectedIPS[index] =  await this.tpp.getIPSById(id);
+      console.log(`Selected IPS for traslado ${index}:`, this.selectedIPS[index]);
+    });
   }
 
   searchItems(event: any) {
@@ -211,6 +213,11 @@ export class SeguimientoDificultadesComponent implements OnInit {
 
   async Siguiente() {
     this.saving = true;
+
+    this.nna.trasladosIPSId = this.selectedIPS
+      .map(ips => ips?.id)
+      .filter((id): id is number => id !== undefined && id !== null);
+
     await this.Actualizar();
 
     this.router.navigate([`/gestion/seguimientos/adherencia-seguimiento/${this.id}`], {

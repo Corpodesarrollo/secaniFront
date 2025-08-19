@@ -86,7 +86,7 @@ export class NNA {
     subcategoriaAlertaId!: number;
     trasladosHaSidoTrasladadodeInstitucion!: boolean;
     trasladosNumerodeTraslados!: number;
-    trasladosIPSId!: number;
+    trasladosIPSId!: number[];
     trasladosHaRecurridoAccionLegal!: boolean;
     trasladosTipoAccionLegalId!: string;
     tratamientoRequirioCambiodeCiudad!: boolean | undefined;
