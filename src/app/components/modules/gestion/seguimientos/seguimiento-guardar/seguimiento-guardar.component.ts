@@ -57,9 +57,7 @@ export class SeguimientoGuardarComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('Datos recibidos en el hijo:', changes);
     if (changes['seguimiento'] && changes['seguimiento'].currentValue) {
-      console.log('Datos recibidos en el hijo:', this.seguimiento);
       this.fechaSugerida = new Date(this.seguimiento?.fechaSeguimiento || '');
     }
     if (changes['show'] && changes['show'].currentValue) {

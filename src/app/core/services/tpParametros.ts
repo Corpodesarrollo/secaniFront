@@ -113,6 +113,12 @@ export class TpParametros {
     return await this.axios.retorno_get(url, urlbase);
   }
 
+  async getIPSById(id: number) {
+    var urlbase: string = environment.url_MSParametricas
+    var url = "IPS/GetById/" + id;
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
   async getDiagnosticos() {
     var urlbase: string = environment.url_MSParametricas
     var url = "CIE10";

@@ -90,8 +90,6 @@ export class SeguimientoTrasladoComponent implements OnInit {
   tiposRecidencia: Parametricas[] = [];
   
   submitted2: boolean = false;
-  estado:string = 'Registrado';
-  items: MenuItem[] = [];
   idContacto: string | undefined;
 
   showGuardarSeguimiento: boolean = false;
@@ -106,10 +104,11 @@ export class SeguimientoTrasladoComponent implements OnInit {
     const idParam = this.routerAct.snapshot.paramMap.get('id');
     this.id = idParam ? Number(idParam) : 0;
 
-    this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
-      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
-    ];
+    this.nna = await this.tpp.getNNA(this.id.toString());
+    console.log('xxxx',this.nna);
+    if (!this.nna){
+      this.nna = new NNA();
+    }
 
     this.departamentos = await this.tp.getTP('Departamento');
     this.selectedDepartamentoProcedencia = this.departamentos.find(x => x.codigo == this.nna.residenciaOrigenCategoriaId);

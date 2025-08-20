@@ -102,9 +102,16 @@
                         </div>
                         <div class="row" *ngIf="primerSeguimiento">
                             <div class="col-12 fs-5" style="text-align: justify;">
-                                <p>
-                                    Agradecemos la información suministrada, nos pondremos en contacto con las entidades responsables de ({{concatenatedAlertas}}) con el fin de resolver el problema. Y estaremos realizando una nueva llamada de seguimiento en los próximos 8 días para corroborar que la situación se haya resuelto.
-                                </p>
+                                <ng-container *ngIf="alertas && alertas.length > 0; else sinAlerta">
+                                    <p>
+                                        Agradecemos la información suministrada, nos pondremos en contacto con las entidades responsables de ({{concatenatedAlertas}}) con el fin de resolver el problema. Y estaremos realizando una nueva llamada de seguimiento en los próximos 8 días para corroborar que la situación se haya resuelto.
+                                    </p>
+                                </ng-container>
+                                <ng-template #sinAlerta>
+                                    <p>
+                                        Agradecemos la información suministrada, nos pondremos en contacto nuevamente en los próximos 15 días para actualización de estado.
+                                    </p>
+                                </ng-template>
                             </div>
                         </div>
                     </p-card>

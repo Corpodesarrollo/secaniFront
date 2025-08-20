@@ -158,6 +158,7 @@ export class SeguimientoGestionarComponent {
     let id = this.router.snapshot.paramMap.get('id')!;
     this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
       let cnt = Number(data);
+      console.log('Cantidad de seguimientos:', cnt);
       if (cnt > 1) {
         this.primerSeguimiento = false;
       } else {
