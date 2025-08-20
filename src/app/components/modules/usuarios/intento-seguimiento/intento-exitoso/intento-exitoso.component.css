@@ -1,8 +1,5 @@
-*{
-  font-family: 'Montserrat', sans-serif;
-}
+
 .parrafo {
-  font-family: Montserrat;
   font-size: 16px;
   line-height: 19.5px;
   text-align: left;
@@ -20,7 +17,6 @@
 }
 
 .tajetaBlanca{
-  font-family: Montserrat;
   border-radius: 20px;
   opacity: 0px;
   background: white !important;
@@ -28,7 +24,6 @@
 }
 
 .titulo {
-  font-family: Montserrat;
   font-size: 20px;
   font-weight: 700;
   line-height: 24.38px;
@@ -38,7 +33,6 @@
 }
 
 .ajuste{
-  font-family: var(--font-family);
   font-feature-settings: var(--font-feature-settings, normal);
   font-size: 1rem;
   color: #334155;

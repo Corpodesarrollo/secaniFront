@@ -400,8 +400,8 @@ export class MiSemanaComponent {
   }
 
 
-  async iniciarSeguimiento(){
-    this.router.navigate(['/gestion/seguimientos/datos-seguimiento', this.infoEvent.extendedProps.nnaId, this.usuarioId]);
+  iniciarSeguimiento(){
+    this.router.navigate(['/intento-seguimiento'], { state: { id_seguimiento : this.infoEvent.id} })
   }
 
   async guardar(){

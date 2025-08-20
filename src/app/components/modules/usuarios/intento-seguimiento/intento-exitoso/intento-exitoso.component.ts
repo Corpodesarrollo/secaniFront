@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 
 import { UsuariosModule } from '../../usuarios.module';
 import { TpParametros } from '../../../../../core/services/tpParametros';
+import { User } from '../../../../../core/services/userService';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class IntentoExitosoComponent implements OnInit {
   seguimiento: any;
   ContactoNNA: any;
   id_usuario: any;
+  nombreUsuario: string = '';
   NNA: any;
 
   fechaHoy: any;
@@ -50,7 +52,7 @@ export class IntentoExitosoComponent implements OnInit {
 
   parentesco: any;
 
-  constructor(private fb: FormBuilder, public servicio: IntentoExitosoService, public router: Router, public TpParametros: TpParametros) {
+  constructor(private fb: FormBuilder, public servicio: IntentoExitosoService, public router: Router, public TpParametros: TpParametros, public user: User) {
 
     this.formGroup2 = this.fb.group({
       FechaIntento: [null, Validators.required],
@@ -78,7 +80,8 @@ export class IntentoExitosoComponent implements OnInit {
     this.NNA = await this.servicio.GetNNaById(this.ContactoNNA.nnaId);
 
     //TODO: OBTENER EL ID DEL USUARIO
-    this.id_usuario = '73325';
+    this.id_usuario = User.id;
+    this.nombreUsuario = User.name ?? 'Nombre Usuario';
 
     this.parentesco = await this.TpParametros.getTPParentesco();
   }
