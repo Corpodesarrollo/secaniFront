@@ -29,6 +29,7 @@ import { GenericService } from '../../../../services/generic.services';
 export class ReporteDinamicoEapbComponent implements OnInit {
   public reportes: ReporteDinamicoEAPB[] = [];
   public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
   public columnasObligatorias: Columna<ReporteDinamicoEAPB>[] = [
     { header: 'EAPB', field: 'eapb' },
@@ -108,10 +109,7 @@ export class ReporteDinamicoEapbComponent implements OnInit {
   onSubmit(): void {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     const formValue = this.camposForm.value;
-    const { fechaInicio, fechaFin } = formValue;
-
-    const fechaInicialString = new Date(fechaInicio).toISOString().split('T')[0];
-    const fechaFinalString = new Date(fechaFin).toISOString().split('T')[0];
+    this.cargando = true;
 
     const payload = {
       ...formValue,
@@ -119,7 +117,15 @@ export class ReporteDinamicoEapbComponent implements OnInit {
     };
 
     this.reportesService.getReporteDinamicoEAPB(payload)
-      .subscribe((data: any) => this.reportes = data as any[]);
+      .subscribe({
+        next: (response: any) => {
+          this.reportes = response;
+          this.cargando = false;
+        },
+        error: (err) => {
+          this.cargando = false;
+        }
+      });
   }
 
   exportExcel() {

@@ -25,10 +25,11 @@ import { ReporteDinamicoAlertas } from '../../../../models/reporteDinamicoAlerta
   providers: [DatePipe]
 })
 export class ReporteDinamicoAlertasComponent implements OnInit {
-  reportes: ReporteDinamicoAlertas[] = [];
-  camposForm!: FormGroup;
+  public reportes: ReporteDinamicoAlertas[] = [];
+  public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
-  columnasObligatorias: Columna<any>[] = [
+  public columnasObligatorias: Columna<any>[] = [
     { header: 'Fecha notificación', field: 'fechaNotificacion' },
     { header: 'Fecha de resolución', field: 'fechaResolucion' },
     { header: 'Gestión de correos', field: 'correo' },
@@ -36,7 +37,7 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     { header: 'Observación', field: 'observacion' }
   ];
 
-  columnasOpcionales: Columna<any>[] = [
+  public columnasOpcionales: Columna<any>[] = [
     { header: 'Nombre NNA', field: 'nombreNNA' },
     { header: 'EAPB', field: 'eapb' },
     { header: 'Categoría alerta', field: 'categoriaAlerta' },
@@ -130,15 +131,20 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.camposForm.value);
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     const { fechaInicio, fechaFin } = this.camposForm.value;
+    this.cargando = true;
 
-    const fechaInicialString = new Date(fechaInicio).toISOString().split('T')[0];
-    const fechaFinalString = new Date(fechaFin).toISOString().split('T')[0];
-
-    this.reportesService.getReporteDinamicoAlertas(fechaInicialString, fechaFinalString)
-      .subscribe((data: any) => this.reportes = data as ReporteDinamicoAlertas[]);
+    this.reportesService.getReporteDinamicoAlertas(fechaInicio, fechaFin)
+      .subscribe({
+        next: (response) => {
+          this.reportes = response as ReporteDinamicoAlertas[];
+          this.cargando = false;
+        },
+        error: (err) => {
+          this.cargando = false;
+        }
+      }); 
   }
 
   exportExcel() {
