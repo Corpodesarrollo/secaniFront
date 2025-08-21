@@ -119,12 +119,14 @@
             </div>
             <div class="row mt-3">
                 <div class="col-12">
-                    <app-seguimiento-historial [id]="id || 0" />
+                    <app-seguimiento-historial *ngIf="id && id > 0" [id]="id" />
                 </div>
             </div>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" (click)="guardar()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR Y GESTIONAR ALERTAS</button>
+                    <button class="btn text-white rounded-4 btn-lg me-2" style="background-color: #ff9801; width: 400px;" (click)="actualizar()">ACTUALIZAR DATOS DE TRATAMIENTO</button>
+                    <button class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 400px;" (click)="guardar()" *ngIf="alertas && alertas.length > 0"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR Y GESTIONAR ALERTAS</button>
+                    <button class="btn text-white rounded-4 btn-lg" style="background-color: #ff9801; width: 200px;" (click)="guardar()" *ngIf="alertas && alertas.length < 1"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR</button>
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { SeguimientoAlertasComponent } from '../../seguimiento-alertas/seguimiento-alertas.component';
 import { SeguimientoStepsComponent } from '../seguimiento-steps/seguimiento-steps.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { TpParametros } from '../../../../../core/services/tpParametros';
@@ -96,18 +96,19 @@ export class SeguimientoGestionarComponent {
   alertas: AlertasTratamiento[] = [];
   alertasPendientes: EstadoAlerta[] = [];
   nna: NNA = new NNA();
-  id: number | undefined;
+  id?: number;
   idContacto: string | undefined;
   idEstadoSeguimiento: number = 0;
   cntDias: number = 0;
   saving: boolean = false;
   primerSeguimiento: boolean = false;
 
-  constructor(private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute, private gs: GenericService) {
+  constructor(private routerUrl: Router, private tpp: TpParametros, private tp: TablasParametricas, private router: ActivatedRoute, private gs: GenericService) {
   }
   
   async ngOnInit(): Promise<void> {
     let id = this.router.snapshot.paramMap.get('id')!;
+    this.id = Number(id);
     this.nna = await this.tpp.getNNA(id?.toString() || '');
 
     this.router.paramMap.subscribe(() => {
@@ -228,17 +229,7 @@ export class SeguimientoGestionarComponent {
       alertas: this.alertas.map(alerta => alerta.idSubcategoriaAlerta as number),
       alertasPendientes: this.alertasPendientes
     };
-
-    // let alertasGestionadas = this.alertasPendientes.filter(alerta => alerta.resuelta != true);
-    // if (alertasGestionadas.length > 0) {
-    //   alertasGestionadas.forEach(alerta => {
-    //     if (!this.seguimiento.alertas.includes(alerta.idAlerta as number)) {
-    //       this.seguimiento.alertas.push(alerta.idAlerta as number);
-    //     }
-    //   });
-    // }
-
-    console.log('Datos del seguimiento:', this.seguimiento);
+    
     this.showDialog = true;
     this.saving = false;
   }
@@ -260,5 +251,13 @@ export class SeguimientoGestionarComponent {
 
   closeModal(){
     this.showDialog = false;
+  }
+
+  actualizar() {
+    this.routerUrl.navigate([`/usuarios/editar_nna/${this.id}`], {
+      state: { alertas: this.alertas, idContacto: this.idContacto, skipGuard: true }
+    }).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 }

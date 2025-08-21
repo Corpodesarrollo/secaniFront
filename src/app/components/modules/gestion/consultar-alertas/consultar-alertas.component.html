@@ -169,7 +169,8 @@
             <td>
               <div class="icon-container">
                 <button class="icon-button" (click)="iniciarDescarga(alerta)">
-                  <i class="pi pi-file-pdf icon-style"></i>
+                  <i *ngIf="descargar" class="pi pi-spin pi-spinner"></i>
+                  <i *ngIf="!descargar" class="pi pi-file-pdf icon-style"></i>
                 </button>
 
                 <button class="icon-button" (click)="showDialog(alerta)">

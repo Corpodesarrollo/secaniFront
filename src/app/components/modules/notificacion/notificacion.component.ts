@@ -19,11 +19,12 @@ import { TpParametros } from '../../../core/services/tpParametros';
 import { Plantilla } from '../../../models/plantilla.model';
 import { GenericService } from '../../../services/generic.services';
 import { apis } from '../../../models/apis.model';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-notificacion',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule,
+  imports: [CommonModule, BreadcrumbModule, CardModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule, MultiSelectModule,
             InputTextModule, ChipsModule, ToastModule, CheckboxModule, EditorModule, ButtonModule],
   templateUrl: './notificacion.component.html',
   styleUrl: './notificacion.component.css',
@@ -50,6 +51,8 @@ export class NotificacionComponent {
 
   entidades: Parametricas[] = [];
   selectedEntidad: Parametricas | undefined;
+  paras: Parametricas[] = [];
+  selectedParas!: Parametricas[];
 
   plantillas: Plantilla[] = [];
   selectedPlantilla: Plantilla | undefined;
@@ -86,6 +89,7 @@ export class NotificacionComponent {
   async enviar(){
     this.notificacion.idEntidad = this.selectedEntidad?.codigo ?? '';
     this.notificacion.plantillaId = this.selectedPlantilla?.id ?? 0;
+    this.notificacion.para = this.selectedParas.map(p => p.nombre).filter((nombre): nombre is string => nombre !== undefined);
 
     this.submitted = true;
     if (this.notificacion.para.length === 0) {
@@ -231,6 +235,12 @@ export class NotificacionComponent {
   openFileDialog(event: Event) {
     this.fileInput.nativeElement.click();
     event.stopPropagation();  // Evita que el evento se propague dos veces
+  }
+
+  async cargarPara() {
+    let codigoEntidad : string = this.selectedEntidad?.codigo ?? '';
+    let contactos = await this.tpp.getContactoEntidad(codigoEntidad);
+    this.paras = contactos.map((contacto: { id: number; email: string; }) => ({ id: contacto.id, nombre: contacto.email }));
   }
 }
 

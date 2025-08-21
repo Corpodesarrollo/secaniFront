@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
@@ -67,8 +67,14 @@ export class SeguimientoHistorialComponent {
     this.CargarDatos();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['id'] && !changes['id'].firstChange) {
+      console.log('ID cambió:', changes['id'].currentValue);
+      this.CargarDatos();
+    }
+  }
+
   CargarDatos() {
-    console.log("id", this.id);
     this.repos.get('Seguimiento/GetSeguimientosByNNA/', `${this.id}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;

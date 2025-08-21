@@ -16,6 +16,12 @@ export class TpParametros {
     var url = `NNA/${id}`;
     return await this.axios.retorno_get(url, urlbase);
   }
+  
+  async getByTipoIdNumeroId(tipo:string, documento:string) {
+    var urlbase: string = environment.url_MsNna;
+    var url = `NNA/ConsultarNNAsByTipoIdNumeroId/${tipo}/${documento}`;
+    return await this.axios.retorno_get(url, urlbase);
+  }
 
   async getEstadoIngresoEstrategia(id: number) {
     var urlbase: string = environment.url_MSParametricas;
@@ -164,6 +170,12 @@ export class TpParametros {
   async getEntidades() {
     var urlbase: string = environment.url_MSParametricas;
     var url = "Entidades/Entidades";
+    return await this.axios.retorno_get(url, urlbase);
+  }
+
+  async getContactoEntidad(id:string) {
+    var urlbase: string = environment.url_MsAuthention;
+    var url = "ContactoEntidad/Entidades/" + id;
     return await this.axios.retorno_get(url, urlbase);
   }
 }

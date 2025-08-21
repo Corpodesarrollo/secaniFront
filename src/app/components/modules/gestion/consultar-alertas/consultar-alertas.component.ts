@@ -14,7 +14,7 @@ import { SeguimientoCntFiltros } from '../../../../models/seguimientoCntFiltros.
 import { Parametricas } from '../../../../models/parametricas.model';
 import { SubcategoriaAlerta } from '../../../../models/subcategoriaAlerta.model';
 import { TpParametros } from '../../../../core/services/tpParametros';
-import { from, map, Observable } from 'rxjs';
+import { firstValueFrom, from, map, Observable } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { VerNotificacionComponent } from '../oficio-notificacion/ver-notificacion/ver-notificacion.component';
@@ -24,6 +24,7 @@ import { ToastModule } from 'primeng/toast';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { CrearOficioComponent } from '../oficio-notificacion/crear-oficio/crear-oficio.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { apis } from '../../../../models/apis.model';
 
 
 @Component({
@@ -36,7 +37,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   providers: [MessageService,ConfirmationService]
 })
 export class ConsultarAlertasComponent implements OnInit {
-
+  descargar: boolean = false;
   idNna: string = "";
   idSeguimiento: string = "";
   seguimiento: any;
@@ -308,11 +309,6 @@ export class ConsultarAlertasComponent implements OnInit {
 
   }
 
-
-
-
-
-
   visible: boolean = false;
   verCrearOficio: boolean = false;
 
@@ -350,55 +346,81 @@ export class ConsultarAlertasComponent implements OnInit {
   ExportNotificacion: NotificacionAlerta[] = [];
   notificacionesAlertaExport: NotificacionAlerta[] = [];
 
-
   iniciarDescarga(alert: any): void {
-    this.confirmationService.confirm({
-      message: '¿Está seguro que desea exportar esta alerta?',
-      header: 'Confirmación de Exportación',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí',
-      rejectLabel: 'Cancelar',
-      acceptButtonStyleClass: 'custom-accept-btn',
-      rejectButtonStyleClass: 'custom-reject-btn',
-      accept: async () => {
-        if (!alert || !alert.alertaId) {
-          console.error('Alerta inválida o sin alertaId');
-          return;
-        }
+  this.confirmationService.confirm({
+    message: '¿Está seguro que desea exportar esta alerta?',
+    header: 'Confirmación de Exportación',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Sí',
+    rejectLabel: 'Cancelar',
+    acceptButtonStyleClass: 'custom-accept-btn',
+    rejectButtonStyleClass: 'custom-reject-btn me-2',
+    accept: async () => {
+      if (!alert || !alert.alertaId) {
+        console.error('Alerta inválida o sin alertaId');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Alerta inválida para exportar'
+        });
+        return;
+      }
 
-        try {
-          const notifications = await this.obtenerNotificacionesExport(alert.alertaId);
-
-          this.ExportAlertas = {
-            ultimaFechaSeguimiento: alert.ultimaFechaSeguimiento || null,
-            categoriaAlerta: alert.categoriaAlerta || null,
-            subcategoriaAlerta: alert.subcategoriaAlerta || null,
-            observaciones: alert.observaciones || null,
-            estadoId: this.getDescripcionEstado(alert.estadoId) || null,
-            notificacionesAlerta: notifications
-          };
-
-          this.excelExportService.exportToExcelDesdeConsultarAlertas(
-            this.ExportAlertas,
-            this.idNna,
-            this.datosBasicosNNA.nombreCompleto
+      try {
+        if (this.descargar == false) {
+          this.descargar = true;
+          
+          const archivo: Blob = await this.repos.getFile(
+            'Alerta/Exportar', 
+            alert.alertaId.toString(), 
+            apis.seguimiento
           );
+
+          if (archivo.size === 0) {
+            throw new Error('Archivo vacío recibido del servidor');
+          }
+
+          const blobUrl = window.URL.createObjectURL(archivo);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `${this.datosNNA.id} - ${this.datosNNA.nombreCompleto.trim()}.zip`;
+          link.style.display = 'none';
+
+          document.body.appendChild(link);
+          link.click();
+
+          setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+          }, 100);
+
+          this.descargar = false;
 
           this.messageService.add({
             severity: 'success',
             summary: 'Exportación completada',
-            detail: 'El archivo fue generado y está listo para descarga.'
+            detail: 'El archivo fue descargado correctamente'
           });
-
-        } catch (error) {
-          console.error('Error durante la descarga de la alerta:', error);
-          this.messageService.add({ severity: 'warn', summary: 'Importante', detail: 'Sin notificaciones.' });
         }
+      } catch (error: any) {
+        let mensajeError = 'Error al descargar el archivo';
+        if (error.status === 404) {
+          mensajeError = 'El archivo solicitado no existe';
+        } else if (error.status === 500) {
+          mensajeError = 'Error del servidor al generar el archivo';
+        } else if (error.message?.includes('vacío')) {
+          mensajeError = 'El servidor devolvió un archivo vacío';
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error en exportación',
+          detail: mensajeError
+        });
       }
-    });
-  }
-
-
+    }
+  });
+}
 
   obtenerNotificacionesExport(alertaId: string): Promise<NotificacionAlerta[]> {
     return new Promise((resolve, reject) => {
@@ -425,7 +447,4 @@ export class ConsultarAlertasComponent implements OnInit {
       });
     });
   }
-
-
-
 }

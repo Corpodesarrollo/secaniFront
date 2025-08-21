@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -23,6 +23,7 @@ import { Parametricas } from '../../../../../models/parametricas.model';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { NnaContactoListaComponent } from '../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
+import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 
 @Component({
   selector: 'app-editar-nna',
@@ -54,7 +55,6 @@ export class EditarNnaComponent implements OnInit {
   fechaDiagnosticoInput: string = '';
   fechaInicioTratamientoInput: string = '';
   fechaRecaidaInput: string = '';
-
 
   optionsIps: any[] = [];
 
@@ -103,7 +103,11 @@ export class EditarNnaComponent implements OnInit {
   departamentoRecidenciaActual: any ='';
   municipioRecidenciaActual: any ='';
 
+  alertas: AlertasTratamiento[] = [];
+  idContacto: string | undefined;
+
   constructor(
+    private routerUrl: Router, 
     private route: ActivatedRoute,
     private repos: GenericService,
     private tpp: TpParametros,
@@ -117,6 +121,8 @@ export class EditarNnaComponent implements OnInit {
 
     this.route.paramMap.subscribe(params => {
       this.idNna = params.get('idNna') || '';
+      this.alertas = history.state.alertas;
+      this.idContacto = history.state.idContacto;
       this.loadDatosBasicosNNA();
       this.loadNNAData();
       this.loadContactosNna();
@@ -802,8 +808,6 @@ export class EditarNnaComponent implements OnInit {
 
   }
 
-
-
   visibleCrearContacto: boolean = false;
   visibleEditarContacto: boolean = false;
   headerContacto: any = '';
@@ -830,4 +834,11 @@ export class EditarNnaComponent implements OnInit {
     this.visibleCrearContacto = false; // Cerrar el modal
   }
 
+  volver(){
+    this.routerUrl.navigate([`/gestion/seguimientos/gestionar-seguimiento/${this.idNna}`], {
+          state: { alertas: this.alertas, idContacto: this.idContacto, skipGuard: true }
+        }).then(() => {
+          window.scrollTo(0, 0);
+    });
+  }
 }

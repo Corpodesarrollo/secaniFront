@@ -39,8 +39,8 @@ export class SeguimientoGuardarComponent {
 
   mostrarDialogo: boolean = false;
   diasDiferencia: number = 0;
-  hora: number | null = null;     // Horas
-  minutos: number | null = null;  // Minutos
+  hora: number | null = 8;     // Horas
+  minutos: number | null = 0;  // Minutos
   periodo: string = 'AM';         // AM o PM
   idSeguimiento: number = 0;
 
@@ -163,9 +163,16 @@ export class SeguimientoGuardarComponent {
   terminar(){
     this.onClose.emit();
     if (this.seguimiento && this.seguimiento.nnaId !== undefined && this.seguimiento.nnaId !== null) {
-      this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true } }).then(() => {
-        window.scrollTo(0, 0);
-      });
+      if (this.seguimiento.alertas && this.seguimiento.alertas.length > 0) {
+        this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true } }).then(() => {
+          window.scrollTo(0, 0);
+        });
+      } else {
+        this.router.navigate([`/gestion/seguimientos`]).then(() => {
+          window.scrollTo(0, 0);
+        });
+      }
+      
     }
   }
 }

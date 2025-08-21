@@ -14,6 +14,7 @@
             filterBy="nombre"
             [showClear]="true"
             name="tipoID"
+            [readonly]="readonly"
             placeholder="Seleccione" />
             <div *ngIf="submitted && (!reporte.tipoIdentificacionId || reporte.tipoIdentificacionId.trim() === '')" class="text-danger">
                 Campo requerido
@@ -21,32 +22,32 @@
         </div>
         <div class="mb-3">
           <label for="numeroID" class="mb-1">Número de ID</label>
-          <input pInputText type="text" class="w-100" id="numeroID" placeholder="Ingrese" [(ngModel)]="reporte.numeroIdentificacion" name="numeroID" />
+          <input pInputText type="text" class="w-100" id="numeroID" placeholder="Ingrese" [(ngModel)]="reporte.numeroIdentificacion" name="numeroID" [readonly]="readonly" />
           <div *ngIf="submitted && (!reporte.numeroIdentificacion || reporte.numeroIdentificacion.trim() === '')" class="text-danger">
               Campo requerido
           </div>
         </div>
         <div class="mb-3">
           <label for="primerNombre" class="mb-1">Primer nombre</label>
-          <input pInputText type="text" class="w-100" id="primerNombre" placeholder="Ingrese" [(ngModel)]="reporte.primerNombre" name="primerNombre" />
+          <input pInputText type="text" class="w-100" id="primerNombre" placeholder="Ingrese" [(ngModel)]="reporte.primerNombre" name="primerNombre" [readonly]="readonly"/>
           <div *ngIf="submitted && (!reporte.primerNombre || reporte.primerNombre.trim() === '')" class="text-danger">
               Campo requerido
           </div>
         </div>
         <div class="mb-3">
           <label for="segundoNombre" class="mb-1">Segundo nombre</label>
-          <input pInputText type="text" class="w-100" id="segundoNombre" placeholder="Ingrese" [(ngModel)]="reporte.segundoNombre" name="segundoNombre" />
+          <input pInputText type="text" class="w-100" id="segundoNombre" placeholder="Ingrese" [(ngModel)]="reporte.segundoNombre" name="segundoNombre" [readonly]="readonly"/>
         </div>
         <div class="mb-3">
           <label for="primerApellido" class="mb-1">Primer apellido</label>
-          <input pInputText type="text" class="w-100" id="primerApellido" placeholder="Ingrese" [(ngModel)]="reporte.primerApellido" name="primerApellido" />
+          <input pInputText type="text" class="w-100" id="primerApellido" placeholder="Ingrese" [(ngModel)]="reporte.primerApellido" name="primerApellido" [readonly]="readonly"/>
           <div *ngIf="submitted && (!reporte.primerApellido || reporte.primerApellido.trim() === '')" class="text-danger">
               Campo requerido
           </div>
         </div>
         <div class="mb-3">
           <label for="segundoApellido" class="mb-1">Segundo apellido</label>
-          <input pInputText type="text" class="w-100" id="segundoApellido" placeholder="Ingrese" [(ngModel)]="reporte.segundoApellido" name="segundoApellido" />
+          <input pInputText type="text" class="w-100" id="segundoApellido" placeholder="Ingrese" [(ngModel)]="reporte.segundoApellido" name="segundoApellido" [readonly]="readonly"/>
         </div>
         <div class="mb-3">
           <label for="evidenciaDiagnostico" class="mb-1">Evidencia del diagnóstico o sospecha</label>
@@ -61,14 +62,14 @@
       <div class="col-md-6">
         <div class="mb-3">
           <label for="fechaNacimiento" class="mb-1">Fecha de nacimiento</label>
-          <p-calendar styleClass="w-100" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" [(ngModel)]="reporte.fechaNacimiento" name="fechaNacimiento"></p-calendar>
+          <p-calendar styleClass="w-100" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" [(ngModel)]="reporte.fechaNacimiento" name="fechaNacimiento" [disabled]="readonly"></p-calendar>
           <div *ngIf="submitted && (!reporte.fechaNacimiento)" class="text-danger">
               Campo requerido
           </div>
         </div>
         <div class="mb-3">
           <label for="sexoAsignado" class="mb-1">Sexo asignado al nacer</label>
-          <p-dropdown [options]="sexoOptions" placeholder="Seleccione" styleClass="w-100" [(ngModel)]="reporte.sexoId" name="sexoAsignado"></p-dropdown>
+          <p-dropdown [options]="sexoOptions" placeholder="Seleccione" styleClass="w-100" [(ngModel)]="reporte.sexoId" name="sexoAsignado" [readonly]="readonly"></p-dropdown>
         </div>
         <div class="mb-3">
           <label for="tieneDiagnostico" class="mb-1">¿Tiene diagnóstico?</label>

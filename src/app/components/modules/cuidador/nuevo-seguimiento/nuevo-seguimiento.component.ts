@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
@@ -27,7 +27,7 @@ export class NuevoSeguimientoComponent {
 
   sexoOptions = [{ label: 'Masculino', value: 'H' }, { label: 'Femenino', value: 'M' }];
   diagnosticoOptions = [{ label: 'Sí', value: true }, { label: 'No', value: false }];
-
+  readonly: boolean = true;
   departamentos: Parametricas[] = [];
   municipios: Parametricas[] = [];
   IPS: Parametricas[] = [];
@@ -69,10 +69,18 @@ export class NuevoSeguimientoComponent {
     evidenciaParentesco: undefined
     };
 
-  constructor(private router: Router, private repos: GenericService, private tp: TablasParametricas, private tpp: TpParametros, private formbuilder: FormBuilder) {
+  constructor(private router: Router, private repos: GenericService, private tp: TablasParametricas, private tpp: TpParametros, private formbuilder: FormBuilder, private routeAct: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
+    let tipoId: string | undefined;
+    let numero: string | undefined;
+
+    this.routeAct.paramMap.subscribe(() => {
+      tipoId = history.state.tipoId;
+      numero = history.state.numero;
+    });
+
     this.isLoadingTipoID = true;
     this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
     this.isLoadingTipoID = false;
@@ -84,6 +92,18 @@ export class NuevoSeguimientoComponent {
     this.isLoadingIPS = true;
     this.IPS = await this.tpp.getTPEAPB();
     this.isLoadingIPS = false;
+
+    this.reporte = await this.tpp.getByTipoIdNumeroId(tipoId ?? '', numero ?? '');
+    if (this.reporte?.fechaNacimiento) {
+      this.reporte.fechaNacimiento = new Date(this.reporte.fechaNacimiento);
+    }
+    if (!this.reporte){
+      this.reporte = new ReportesSIVIGILA();
+    }
+
+    this.selectedTipoID = this.tipoID.find(item => item.codigo === tipoId);
+    this.reporte.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
+    this.reporte.numeroIdentificacion = numero ?? '';
   }
 
   async CargarMunicipios() {

@@ -85,15 +85,27 @@ export class GenericService {
   }
 
   public async getAsync(modulo: string, parameters: string, api: string = ''): Promise<any> {
+    const apiUrl = this.getApiUrl(api);
+    if (environment.cookie) {
+      return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true }));
+    } else {
+      return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`));
+    }
+  }
+
+  public async getFile(modulo: string, parameters: string, api: string = ''): Promise<Blob> {
+    const apiUrl = this.getApiUrl(api);
+    const url = `${apiUrl}${modulo}/${parameters}`; // ✅ Agregar slash entre modulo y parameters
+    
+    const options = {
+      responseType: 'blob' as 'json', // ✅ Siempre responseType blob
+      withCredentials: environment.cookie ? true : undefined
+    };
+
     try {
-      const apiUrl = this.getApiUrl(api);
-      if (environment.cookie) {
-        return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true }));
-      } else {
-        return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`));
-      }
+      return await lastValueFrom(this.http.get<Blob>(url, options));
     } catch (error) {
-      console.error('Error en la solicitud:', error);
+      console.error('Error en getFile:', error);
       throw error;
     }
   }

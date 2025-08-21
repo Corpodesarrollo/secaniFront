@@ -152,6 +152,7 @@ export class AlertasEnviarRespuestaComponent {
   }
 
   guardar() {
+    this.respuesta.idAlerta = this.alertaId;
     this.repos
       .post(
         'GestionarAlertas/EnviarRespuesta',

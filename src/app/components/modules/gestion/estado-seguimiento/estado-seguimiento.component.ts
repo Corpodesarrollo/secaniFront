@@ -35,6 +35,7 @@ import { NNAService } from '../../../../core/services/nnaService';
   providers: [MessageService]
 })
 export class EstadoSeguimientoComponent {
+
   nna: NNA = new NNA();
   idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
   // idUsuario?: string;
@@ -186,34 +187,33 @@ export class EstadoSeguimientoComponent {
       this.submitted = true;
       this.validating = true;
       if (this.validarCamposRequeridos()){
-  
         await this.buscar();
       }
       this.validating = false;
-    }
-  
-    validarCamposRequeridos(): boolean {
-      this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
-      this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
-  
-      const camposAValidar = [
-        this.nna.numeroIdentificacion,
-        this.nna.tipoIdentificacionId,
-        this.nna.cuidadorParentescoId
-      ];
-  
-      // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
-      let pos = 0;
-      for (const campo of camposAValidar) {
-        pos++;
-        if (!campo || campo.toString().trim() === '' || campo === '0') {
-          console.log('Campo requerido vacío', pos);
-          return false;
-        }
+  }
+
+  validarCamposRequeridos(): boolean {
+    this.nna.tipoIdentificacionId = this.selectedTipoID?.codigo ?? '';
+    this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
+
+    const camposAValidar = [
+      this.nna.numeroIdentificacion,
+      this.nna.tipoIdentificacionId,
+      this.nna.cuidadorParentescoId
+    ];
+
+    // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
+    let pos = 0;
+    for (const campo of camposAValidar) {
+      pos++;
+      if (!campo || campo.toString().trim() === '' || campo === '0') {
+        console.log('Campo requerido vacío', pos);
+        return false;
       }
-  
-      return true;
     }
+
+    return true;
+  }
   
     async buscar() {
       this.validating = true;
@@ -283,5 +283,13 @@ export class EstadoSeguimientoComponent {
     });
 
     this.hiddenDialog();
+  }
+
+  continuar() {
+    this.router.navigate([`/cuidador/seguimientos/nuevo`], {
+      state: { tipoId: this.selectedTipoID?.codigo, numero: this.nna.numeroIdentificacion, parentescoId: this.selectedParentesco?.codigo }
+    }).then(() => {
+      window.scrollTo(0, 0);
+    });
   }
 }

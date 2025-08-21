@@ -88,12 +88,9 @@ export class SeguimientoFallecidoComponent  implements OnInit {
 
     this.id = this.routerAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
-
-    this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
-      { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
-    ];
-
+    if (this.nna) {
+      this.nna.tratamientoObservaciones = '';
+    }
     this.estados = await this.tpp.getTpEstadosNNA();
     this.isLoadingEstados = false;
     this.diagnosticos =  await this.tpp.getDiagnosticos();
@@ -102,7 +99,7 @@ export class SeguimientoFallecidoComponent  implements OnInit {
 
   async Guardar(){
     this.saving = true;
-    await this.nnaService.putNNA(this.nna);    
+    await this.nnaService.putNNA(this.nna);
     this.modal.id = this.nna.id;
     this.modal.openModal();
     this.saving = false;
