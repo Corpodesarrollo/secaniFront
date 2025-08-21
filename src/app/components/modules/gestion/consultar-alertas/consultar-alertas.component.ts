@@ -403,6 +403,7 @@ export class ConsultarAlertasComponent implements OnInit {
           });
         }
       } catch (error: any) {
+        this.descargar = false;
         let mensajeError = 'Error al descargar el archivo';
         if (error.status === 404) {
           mensajeError = 'El archivo solicitado no existe';

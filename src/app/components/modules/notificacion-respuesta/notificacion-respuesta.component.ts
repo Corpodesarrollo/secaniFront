@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { Parametricas } from '../../../models/parametricas.model';
 import { CalendarModule } from 'primeng/calendar';
@@ -45,13 +45,13 @@ export class NotificacionRespuestaComponent {
 
   constructor(private fb: FormBuilder, private tp: TpParametros, private gs: GenericService) {
     this.contactForm = this.fb.group({
-      entidad: ['', Validators.required],
+      entidad: [null, Validators.required],
       nombreFuncionario: ['', Validators.required],
       cargo: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.required],
+      telefono: [''],
       respuesta: ['', Validators.required],
-      archivo: [null, Validators.required] // Inicializamos el campo como null
+      archivo: [null] // Remover Validators.required si el archivo no es obligatorio
     });
   }
 
@@ -67,6 +67,12 @@ export class NotificacionRespuestaComponent {
     this.entidades = await this.tp.getEntidades();
     this.isLoadingEntidades = false;
     this.isLoading = false;
+  }
+
+  // Manejar cambio de entidad en el dropdown
+  onEntidadChange(event: any): void {
+    this.selectedEntidad = event.value;
+    this.contactForm.get('entidad')?.setValue(event.value?.codigo || null);
   }
 
   onFileChange(event: any) {
@@ -114,43 +120,155 @@ export class NotificacionRespuestaComponent {
 
     this.saving = true;
     this.submitted = true;
+    
+    // Debug: verificar estado del formulario
+    console.log('Formulario válido:', this.contactForm.valid);
+    console.log('Valores del formulario:', this.contactForm.value);
+    
     if (this.contactForm.valid) {
-      const formData = new FormData();
-      formData.append('archivo', this.contactForm.get('archivo')?.value);
-      if (this.selectedEntidad && this.selectedEntidad.codigo) {
-        formData.append('entidad', this.selectedEntidad.codigo);
-      }
-      formData.append('idNotificacion', this.idNotificacion);
-      formData.append('nombreFuncionario', this.contactForm.get('nombreFuncionario')?.value);
-      formData.append('cargo', this.contactForm.get('cargo')?.value);
-      formData.append('correo', this.contactForm.get('correo')?.value);
-      formData.append('telefono', this.contactForm.get('telefono')?.value);
-      formData.append('respuesta', this.contactForm.get('respuesta')?.value);
-
-      // Llamada al método 'post'
-      this.gs.post('Notificacion/NotificacionRespuesta', formData, "Seguimiento").subscribe(
-        response => {
-          let result = response as {estado: boolean, descripcion: string};
-          if (result.estado) {
-            this.contactForm.reset();
-            this.fileInput.nativeElement.value = ''; // Limpiar el input de archivo
-            this.fileName = null; // Limpiar el nombre del archivo
-            this.selectedFile = null; // Limpiar la referencia al archivo
-            this.submitted = false;
-            this.isOK = true;
-          } else {
-            this.isOK = false;
-            console.error('Error al subir el archivo:', result.descripcion);
-          }
-        },
-        error => {
-          console.error('Error al subir el archivo', error);
+      try {
+        const formData = new FormData();
+        
+        // 1. Archivo
+        const archivoValue = this.contactForm.get('archivo')?.value;
+        if (archivoValue instanceof File) {
+          formData.append('archivo', archivoValue, archivoValue.name);
+          console.log('Archivo agregado:', archivoValue.name);
         }
-      );
+
+        // 2. Entidad - CORREGIDO: usar el valor del formulario, no la variable selectedEntidad
+        const entidadValue = this.contactForm.get('entidad')?.value;
+        if (entidadValue) {
+          // Si es objeto, tomar el código; si es string, usarlo directamente
+          const entidadCodigo = typeof entidadValue === 'object' ? entidadValue.codigo : entidadValue;
+          if (entidadCodigo) {
+            formData.append('entidad', entidadCodigo.toString());
+            console.log('Entidad agregada:', entidadCodigo);
+          }
+        }
+
+        // 3. ID Notificación - VERIFICAR que this.idNotificacion tenga valor
+        if (this.idNotificacion) {
+          formData.append('idNotificacion', this.idNotificacion.toString());
+          console.log('ID Notificación agregado:', this.idNotificacion);
+        } else {
+          console.error('idNotificacion está vacío o undefined');
+        }
+
+        // 4. Campos del formulario - FUNCIÓN MEJORADA
+        const appendFormField = (fieldName: string, formControlName: string) => {
+          const control = this.contactForm.get(formControlName);
+          if (control && control.value !== null && control.value !== undefined && control.value !== '') {
+            formData.append(fieldName, control.value.toString());
+            console.log(`${fieldName} agregado:`, control.value);
+          }
+        };
+
+        appendFormField('nombreFuncionario', 'nombreFuncionario');
+        appendFormField('cargo', 'cargo');
+        appendFormField('correo', 'correo');
+        appendFormField('telefono', 'telefono');
+        appendFormField('respuesta', 'respuesta');
+
+        // Debug: ver contenido del FormData
+        this.logFormDataContents(formData);
+
+        // 5. Llamada al API
+        this.gs.post('Notificacion/NotificacionRespuesta', formData, "Seguimiento").subscribe(
+          response => {
+            try {
+              let result = response as {estado: boolean, descripcion: string};
+              if (result.estado) {
+                this.resetForm();
+                this.isOK = true;
+                console.log('✅ Success:', result.descripcion);
+              } else {
+                this.isOK = false;
+                console.error('❌ Server error:', result.descripcion);
+                this.showErrorMessage(result.descripcion || 'Error del servidor');
+              }
+            } catch (parseError) {
+              console.error('❌ Error parsing response:', parseError);
+              this.showErrorMessage('Error procesando la respuesta del servidor');
+            }
+            this.saving = false;
+          },
+          error => {
+            console.error('❌ HTTP error:', error);
+            console.error('❌ Error status:', error?.status);
+            console.error('❌ Error message:', error?.message);
+            
+            let errorMsg = 'Error de conexión';
+            if (error?.status === 404) {
+              errorMsg = 'Endpoint no encontrado';
+            } else if (error?.status === 500) {
+              errorMsg = 'Error interno del servidor';
+            } else if (error?.error?.descripcion) {
+              errorMsg = error.error.descripcion;
+            }
+            
+            this.showErrorMessage(errorMsg);
+            this.saving = false;
+          }
+        );
+
+      } catch (formDataError) {
+        console.error('❌ Error creating FormData:', formDataError);
+        this.showErrorMessage('Error preparando los datos para enviar');
+        this.saving = false;
+      }
     } else {
-      this.contactForm.markAllAsTouched();
+      // Mostrar errores de validación
+      this.markFormGroupTouched(this.contactForm);
+      console.log('❌ Form invalid. Errors:');
+      Object.keys(this.contactForm.controls).forEach(key => {
+        const control = this.contactForm.get(key);
+        if (control?.invalid) {
+          console.log(`- ${key}:`, control.errors);
+        }
+      });
+      this.saving = false;
     }
-    this.saving = false;
+  }
+
+  // Métodos auxiliares
+  private logFormDataContents(formData: FormData): void {
+    console.log('=== FORMDATA CONTENTS ===');
+    for (let pair of (formData as any).entries()) {
+      if (pair[1] instanceof File) {
+        console.log(`${pair[0]}: File - ${pair[1].name} (${pair[1].size} bytes)`);
+      } else {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+    }
+  }
+
+  private resetForm(): void {
+    this.contactForm.reset();
+    this.submitted = false;
+    this.fileName = null;
+    this.selectedFile = null;
+    
+    if (this.fileInput?.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  private showErrorMessage(message: string): void {
+    // Usar tu servicio de mensajes o console.error
+    console.error('Error:', message);
+    // this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      if (control instanceof FormControl) {
+        control.markAsTouched();
+      } else if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   validarRespuesta(decodedId: string) {

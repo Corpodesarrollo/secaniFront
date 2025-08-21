@@ -133,31 +133,11 @@ export class GenericService {
 
   public post(modulo: string, parameters: any, api: string = ''): Observable<any> {
     const apiUrl = this.getApiUrl(api);
-    const url = `${apiUrl}${modulo}`;
-
-    const fetchOptions: RequestInit = {
-      method: 'POST',
-      body: JSON.stringify(parameters),
-      credentials: environment.cookie ? 'include' : 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    const fetchPromise = fetch(url, fetchOptions)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        return response.json(); // o .text() si no es JSON
-      });
-
-    return from(fetchPromise).pipe(
-      catchError((err) => {
-        console.error('Error en fetch POST:', err);
-        return throwError(() => err);
-      })
-    );
+    if (environment.cookie){
+      return this.http.post(`${apiUrl}${modulo}`, parameters, { withCredentials: true });
+    } else {
+      return this.http.post(`${apiUrl}${modulo}`, parameters);
+    }
   }
 
   public async postAsync(url: string = this.url, modulo: string, parameters: any) {
