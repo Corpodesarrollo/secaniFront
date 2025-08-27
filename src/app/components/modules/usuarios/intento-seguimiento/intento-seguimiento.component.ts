@@ -20,6 +20,7 @@ import { TpParametros } from '../../../../core/services/tpParametros';
 import { NnaContactoListaComponent } from "../nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
 import { MenuItem } from 'primeng/api';
 import { GenericService } from '../../../../services/generic.services';
+import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
 
 @Component({
   selector: 'app-intento-seguimiento',
@@ -27,6 +28,7 @@ import { GenericService } from '../../../../services/generic.services';
   styleUrls: ['./intento-seguimiento.component.css'],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
+    BotonNotificacionComponent,
     FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule, InfoSeguimientoNnaComponent, UsuariosModule, NnaContactoListaComponent, BreadcrumbModule]
 })
 export class IntentoSeguimientoComponent implements OnInit {
