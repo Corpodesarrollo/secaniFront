@@ -94,6 +94,7 @@
           [rowsPerPageOptions]="[5, 10, 25, 50]"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+
         >
           <!-- Título y exportar -->
           <ng-template pTemplate="caption">
@@ -148,9 +149,14 @@
 
           <!-- Mensaje vacío -->
           <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="7" class="text-center text-muted">
-                No se encontraron reportes.
+            <tr style="height: 120px;">
+              <td [attr.colspan]="7" class="text-center" *ngIf="cargando">
+                  <div class="table-loading">
+                      <span>Cargando datos...</span>
+                  </div>
+              </td>
+              <td [attr.colspan]="7" class="text-center" *ngIf="!cargando && reportes.length === 0">
+                  No se encontraron registros
               </td>
             </tr>
           </ng-template>

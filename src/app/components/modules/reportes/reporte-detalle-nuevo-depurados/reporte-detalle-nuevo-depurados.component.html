@@ -183,10 +183,16 @@
               <td>{{ reporte.agente }}</td>
             </tr>
           </ng-template>
+          
           <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="36" class="text-center">
-                Reportes no encontrados.
+            <tr style="height: 120px;">
+              <td [attr.colspan]="13" class="text-center" *ngIf="cargando">
+                  <div class="table-loading">
+                      <span>Cargando datos...</span>
+                  </div>
+              </td>
+              <td [attr.colspan]="13" class="text-center" *ngIf="!cargando && reportes.length === 0">
+                  No se encontraron registros
               </td>
             </tr>
           </ng-template>

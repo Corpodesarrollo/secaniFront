@@ -107,9 +107,14 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
-            <tr>
-              <td [attr.colspan]="columnasParaMostrar.length" class="text-center">
-                Reportes no encotrados.
+            <tr style="height: 120px;">
+              <td [attr.colspan]="columnasObligatorias.length" class="text-center" *ngIf="cargando">
+                  <div class="table-loading">
+                      <span>Cargando datos...</span>
+                  </div>
+              </td>
+              <td [attr.colspan]="columnasObligatorias.length" class="text-center" *ngIf="!cargando && reportes.length === 0">
+                  No se encontraron registros
               </td>
             </tr>
           </ng-template>

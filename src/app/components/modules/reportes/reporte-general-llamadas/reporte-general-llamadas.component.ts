@@ -26,6 +26,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class ReporteGeneralLlamadasComponent {
   public reportes: ReporteGeneralLlamadas[] = [];
   public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
   public reporteLlamadaForm!: FormGroup;
   public reporteSeleccionado!: ReporteGeneralLlamadas;
@@ -58,23 +59,31 @@ export class ReporteGeneralLlamadasComponent {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     
     const { fechaInicio, fechaFin } = this.camposForm.value;
-    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
-    const fechaFinalString = fechaFin.toISOString().split('T')[0];
+    this.cargando = true;
 
-    this.reportesService.getReporteGeneralLlamadas(fechaInicialString, fechaFinalString)
-      .subscribe((reportes: any) => this.reportes = reportes);
+    this.reportesService.getReporteGeneralLlamadas(fechaInicio, fechaFin)
+      .subscribe({
+        next: (response: any) => {
+          this.reportes = response;
+          this.cargando = false;
+        },
+        error: (err) => {
+          this.cargando = false;
+        }
+      });
   }
 
   onSubmitReporteForm() {
     if (this.reporteLlamadaForm.invalid) return this.reporteLlamadaForm.markAllAsTouched();
     const nuevaObservaciones = this.reporteLlamadaForm.value.observaciones;
 
+    const id = this.reporteSeleccionado.id;
     const reporteActualizado: ReporteGeneralLlamadas = {
       ...this.reporteSeleccionado,
       observaciones: nuevaObservaciones
     };
 
-    this.reportesService.actualizarReporteGeneralLlamadas(reporteActualizado).subscribe({
+    this.reportesService.actualizarReporteGeneralLlamadas(id, nuevaObservaciones).subscribe({
       next: () => {
         const index = this.reportes.findIndex(r => r.id === reporteActualizado.id);
         if (index !== -1) this.reportes[index] = reporteActualizado;

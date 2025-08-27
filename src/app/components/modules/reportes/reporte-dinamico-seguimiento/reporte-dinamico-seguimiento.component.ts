@@ -25,6 +25,7 @@ import { ReporteDinamicoSeguimiento } from '../../../../models/reporteDinamicoSe
 export class ReporteDinamicoSeguimientoComponent implements OnInit {
   public reportes: ReporteDinamicoSeguimiento[] = [];
   public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
   public columnasObligatorias: Columna<ReporteDinamicoSeguimiento>[] = [
     { header: 'Tipo de seguimiento', field: 'tipoSeguimiento' },
@@ -114,12 +115,18 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   async onSubmit() {
     if (this.camposForm.invalid) return;
     const { fechaInicio, fechaFin } = this.camposForm.value;
+    this.cargando = true;
 
-    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
-    const fechaFinalString = fechaFin.toISOString().split('T')[0];
-
-    this.reportesService.getReporteSeguimientos(fechaInicialString, fechaFinalString)
-      .subscribe((reportes: any) => this.reportes = reportes);
+    this.reportesService.getReporteSeguimientos(fechaInicio, fechaFin)
+      .subscribe({
+        next: (response: any) => {
+          this.reportes = response;
+          this.cargando = false;
+        },
+        error: (err) => {
+          this.cargando = false;
+        }
+      });
   }
 
   exportExcel() {

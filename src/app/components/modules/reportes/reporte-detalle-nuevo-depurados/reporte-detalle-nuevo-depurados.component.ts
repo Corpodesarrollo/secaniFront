@@ -28,6 +28,7 @@ export class ReporteDetalleNuevoDepuradosComponent {
   public reportes: ReporteDetalleNuevoDepurados[] = [];
   public filteredReportes: ReporteDetalleNuevoDepurados[] = [];
   public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
   public fechaInicioRuta: string | null = null;
   public fechaFinRuta: string | null = null;
@@ -48,17 +49,24 @@ export class ReporteDetalleNuevoDepuradosComponent {
   }
 
   ngOnInit() {
+    this.cargando = true;
     this.activatedRoute.paramMap.subscribe(params => {
       this.id = params.get('id');
-
+    
       if (this.id) {
         this.reportesService.getReporteDetalleRegDepurados(this.id)
-          .subscribe((reportes: any) => {
-            console.log('Respuesta del backend:', reportes);
-            this.reportes = reportes;
-            this.filteredReportes = reportes;
-          });
+          .subscribe({
+            next: (response: any) => {
+              this.reportes = response;
+              this.filteredReportes = response;
+              this.cargando = false;
+            },
+            error: (err) => {
+              this.cargando = false;
+            }
+        });
       }
+      this.cargando = false;
     });
 
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
@@ -70,7 +78,8 @@ export class ReporteDetalleNuevoDepuradosComponent {
   onSubmit() {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
     const { fechaInicio, fechaFin } = this.camposForm.value;
-
+    
+    this.cargando = true;
     this.filteredReportes = this.reportes.filter(reporte => {
       const fechaNotificacion = new Date(reporte.fechaNotificacion);
 
@@ -79,6 +88,7 @@ export class ReporteDetalleNuevoDepuradosComponent {
 
       return fechaInicioValida && fechaFinValida;
     });
+    this.cargando = false;
   }
 
   exportExcel() {

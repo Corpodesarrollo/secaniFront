@@ -10,17 +10,20 @@ export class ReportesService {
   constructor(private generico: GenericService) { }
 
   getReporteEstadoDepuracion(fechaInicial: string, fechaFinal: string) {
-    const url: string = `Reportes/EstadoDepuracion?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
+    const url: string = `Reportes/EstadoDepuracion?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
     return this.generico.get(url, '', 'Seguimiento');
   }
 
   getReporteDinamicoNNA(fechaInicial: string, fechaFinal: string) {
-    const url: string = `Reportes/ReporteDinamicoNNA?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
+    const url: string = `Reportes/ReporteDinamicoNNA?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
     return this.generico.get(url, '', 'Seguimiento');
   }
 
   getReporteSeguimientos(fechaInicial: string, fechaFinal: string) {
-    const url: string = `Reportes/ReporteDinamicoSeguimiento?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
+    const url: string = `Reportes/ReporteDinamicoSeguimiento?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
     return this.generico.get(url, '', 'Seguimiento');
   }
 
@@ -30,27 +33,67 @@ export class ReportesService {
   }
 
   getReporteDinamicoAlertas(fechaInicial: string, fechaFinal: string) {
-    const url: string = `Reportes/ReporteDinamicoAlertas?FechaInicial=${fechaInicial}&FechaFinal=${fechaFinal}`;
+    const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
+    const url: string = `Reportes/ReporteDinamicoAlertas?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
     return this.generico.get(url, '', 'Seguimiento');
   }
   
   getReporteDinamicoEAPB(data: any) {
-    const url: string = `Reportes/ReporteCasosEAPB`;
-    return this.generico.post(url, data, 'Seguimiento');
+    const fechas = this.convertirFechasEntrada(data.fechaInicio, data.fechaFin, 'mm-dd-yyyy');
+    const newData = { ...data, fechaInicial: fechas.fechaInicio, fechaFinal: fechas.fechaFin };
+    const url: string = `ReporteDinamicoEAPB?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
+    return this.generico.get(url, '', 'NNA');
   }
   
   getReporteGeneralLlamadas(fechaInicial: string, fechaFinal: string) {
-    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechaInicial}&FechaFin=${fechaFinal}`;
+    const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
+    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechas.fechaInicio}&FechaFin=${fechas.fechaFin}`;
     return this.generico.get(url, '', 'Seguimiento');
   }
 
-  actualizarReporteGeneralLlamadas(reporte: ReporteGeneralLlamadas) {
-    const url: string = `ReporteGeneralLlamadas/ActualizarObservaciones`;
-    return this.generico.put(url, reporte, 'Seguimiento');
+  actualizarReporteGeneralLlamadas(id: number, observaciones: string) {
+    const url: string = `ReporteGeneralLlamadas/ActualizarObservaciones/${id}`;
+    return this.generico.put(url, { observacion: observaciones }, 'Seguimiento');
   }
 
   getReporteInconsistencias(fechaInicial: string, fechaFinal: string) {
-    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechaInicial}&FechaFin=${fechaFinal}`;
+    const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
+    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechas.fechaInicio}&FechaFin=${fechas.fechaFin}`;
     return this.generico.get(url, '', 'Seguimiento');
+  }
+
+  private formatearFecha(fechaISO: string, formato: 'dd-mm-yyyy'|'yyyy-mm-dd'|'mm-dd-yyyy' = 'yyyy-mm-dd'): string {
+    if (!fechaISO) return '';
+    
+    const fecha = new Date(fechaISO);
+    
+    // Validar que la fecha sea válida
+    if (isNaN(fecha.getTime())) {
+      console.error('Fecha inválida:', fechaISO);
+      return '';
+    }
+    
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear();
+    
+    switch (formato.toLowerCase()) {
+      case 'dd-mm-yyyy':
+        return `${dia}-${mes}-${anio}`;
+      case 'yyyy-mm-dd':
+        return `${anio}-${mes}-${dia}`;
+      case 'mm-dd-yyyy':
+        return `${mes}-${dia}-${anio}`;
+      default:
+        console.warn(`Formato '${formato}' no reconocido. Usando formato por defecto yyyy-mm-dd`);
+        return `${anio}-${mes}-${dia}`;
+    }
+  }
+
+  private convertirFechasEntrada(fechaInicial: string, fechaFinal: string, formato: 'dd-mm-yyyy'|'yyyy-mm-dd'|'mm-dd-yyyy' = 'yyyy-mm-dd'): {fechaInicio: string, fechaFin: string} {
+    return {
+      fechaInicio: this.formatearFecha(fechaInicial, formato),
+      fechaFin: this.formatearFecha(fechaFinal, formato)
+    };
   }
 }

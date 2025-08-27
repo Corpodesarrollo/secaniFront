@@ -25,6 +25,7 @@ import { ReporteDepuracion } from '../../../../models/reporteDepuracion';
 export class ReporteDepuracionComponent implements OnInit {
   public reportes: ReporteDepuracion[] = [];
   public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,22 +61,28 @@ export class ReporteDepuracionComponent implements OnInit {
 
   onSubmit() {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
+    
     const { fechaInicio, fechaFin } = this.camposForm.value;
     if (!fechaInicio || !fechaFin) return;
     
-    const fechaInicialString = new Date(fechaInicio).toISOString().split('T')[0];
-    const fechaFinalString = new Date(fechaFin).toISOString().split('T')[0];
+    this.cargando = true;
 
-    this.reportesService.getReporteEstadoDepuracion(fechaInicialString, fechaFinalString)
-    .subscribe((reportes: any) => {
-      this.reportes = reportes.map((reporte: any) => {
-        switch (String(reporte.estado)) {
-          case '1': return { ...reporte, estado: 'Procesado' };
-          case '2': return { ...reporte, estado: 'Fallido' };
-          default: return reporte;
+    this.reportesService.getReporteEstadoDepuracion(fechaInicio, fechaFin)
+      .subscribe({
+        next: (response: any) => {
+          this.reportes = response.map((reporte: any) => {
+            switch (String(reporte.estado)) {
+              case '1': return { ...reporte, estado: 'Procesado' };
+              case '2': return { ...reporte, estado: 'Fallido' };
+              default: return reporte;
+            }
+          });
+          this.cargando = false;
+        },
+        error: (err) => {
+          this.cargando = false;
         }
       });
-    });
   }
 
   exportExcel() {

@@ -26,6 +26,7 @@ import { Columna } from '../../../../models/columna';
 export class ReporteDinamicoNnaComponent {
   public reportes: ReporteDinamicoNNA[] = [];
   public camposForm!: FormGroup;
+  public cargando: boolean = false;
 
   public columnasObligatorias: Columna<ReporteDinamicoNNA>[] = [
     { header: 'Primer nombre', field: 'primerNombre' },
@@ -112,12 +113,18 @@ export class ReporteDinamicoNnaComponent {
   onSubmit() {
     if (this.camposForm.invalid) return;
     const { fechaInicio, fechaFin } = this.camposForm.value;
+    this.cargando = true;
 
-    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
-    const fechaFinalString = fechaFin.toISOString().split('T')[0];
-
-    this.reportesService.getReporteDinamicoNNA(fechaInicialString, fechaFinalString)
-      .subscribe((reportes: any) => this.reportes = reportes);
+    this.reportesService.getReporteDinamicoNNA(fechaInicio, fechaFin)
+      .subscribe({
+        next: (response: any) => {
+          this.reportes = response;
+          this.cargando = false;
+        },
+        error: (err) => {
+          this.cargando = false;
+        }
+      });
   }
 
   exportExcel() {
