@@ -20,7 +20,7 @@ export class IntentoExitosoService {
   }
 
   GetNNaById = async (Id: number) => {
-    let url = `${'Seguimiento/NNA/'+Id}`;
+    let url = `${'Seguimiento/SeguimientoNNA/'+Id}`;
     return await  this.comun.retorno_get(url);
   }
 

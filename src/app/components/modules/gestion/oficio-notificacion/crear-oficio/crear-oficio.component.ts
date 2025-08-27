@@ -22,6 +22,7 @@ import { NotificacionOficioComponent } from "../notificacion-oficio/notificacion
 import { User } from '../../../../../core/services/userService';
 import { ContactoEAPBService } from '../../../../../core/services/contactoEAPBService';
 import { EntidadServices } from '../../../../../core/services/entidadServices';
+import { PlantillasCorreoService } from '../../../../../services/plantillas-correo.service';
 
 @Component({
   selector: 'app-crear-oficio',
@@ -57,6 +58,9 @@ export class CrearOficioComponent implements OnInit {
   showDialog: boolean = false;
   user = new User(); 
 
+  selectedPlantillaCorreo: any | undefined = undefined;
+  plantillasCorreo:        any[] = [];
+
   oficio: Oficio = {
     id: 0,
     ciudadEnvio: '',
@@ -83,6 +87,7 @@ export class CrearOficioComponent implements OnInit {
     private tp: TablasParametricas,
     private notificacionService: NotificacionService,
     private entidadesService: EntidadServices, 
+    private plantillasCorreoService: PlantillasCorreoService
   ) {
     this.today = new Date();
     this.formattedDate = this.formatDate(this.today);
@@ -95,6 +100,7 @@ export class CrearOficioComponent implements OnInit {
 
   ngOnInit() {
     this.loadAlertaData();
+    this.cargarPlantillasCorreo();
   }
 
   ver(){
@@ -120,6 +126,31 @@ export class CrearOficioComponent implements OnInit {
     this.entidades =  await this.entidadesService.getET();
     this.isLoadingEntidades = false;
 
+  }
+
+  cargarPlantillasCorreo() {
+    this.plantillasCorreoService.getPlantillasCorreo()
+      .subscribe({
+        next: (value) => {
+          this.plantillasCorreo = value as any[]; 
+        }
+      });
+  }
+
+  cambioPlantilla(event: any) {
+    if (!this.selectedPlantillaCorreo) return;
+    
+    this.plantillasCorreoService.getPlantillaCorreo(this.selectedPlantillaCorreo?.id)
+      .subscribe({
+        next: (value) => {
+          this.oficio = {
+            ...this.oficio,
+            mensaje: value.mensaje,
+            cierre: value.cierre,
+            asunto: value.asunto
+          }
+        }
+      });
   }
 
   async enviar(){
