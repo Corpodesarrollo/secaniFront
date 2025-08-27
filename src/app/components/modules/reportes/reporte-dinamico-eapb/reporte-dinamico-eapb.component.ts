@@ -65,8 +65,8 @@ export class ReporteDinamicoEapbComponent implements OnInit {
       {
         fechaInicio: ['', Validators.required],
         fechaFin: ['', Validators.required],
-        eapb: ['', Validators.required],
-        departamento: ['', Validators.required],
+        eapb: [''],
+        departamento: [''],
         camposSeleccionados: this.fb.array([]),
       }, 
       {

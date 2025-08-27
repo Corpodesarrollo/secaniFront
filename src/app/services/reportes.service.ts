@@ -39,10 +39,10 @@ export class ReportesService {
   }
   
   getReporteDinamicoEAPB(data: any) {
-    const fechas = this.convertirFechasEntrada(data.fechaInicial, data.fechaFinal);
-    const newData = { ...data, fechaInicial: fechas.fechaInicio, fechaFinal: fechas.fechaFin }
-    const url: string = `Reportes/ReporteCasosEAPB`;
-    return this.generico.post(url, newData, 'Seguimiento');
+    const fechas = this.convertirFechasEntrada(data.fechaInicio, data.fechaFin, 'mm-dd-yyyy');
+    const newData = { ...data, fechaInicial: fechas.fechaInicio, fechaFinal: fechas.fechaFin };
+    const url: string = `ReporteDinamicoEAPB?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
+    return this.generico.get(url, '', 'NNA');
   }
   
   getReporteGeneralLlamadas(fechaInicial: string, fechaFinal: string) {
@@ -62,21 +62,38 @@ export class ReportesService {
     return this.generico.get(url, '', 'Seguimiento');
   }
 
-  private formatearFecha(fechaISO: string): string {
+  private formatearFecha(fechaISO: string, formato: 'dd-mm-yyyy'|'yyyy-mm-dd'|'mm-dd-yyyy' = 'yyyy-mm-dd'): string {
     if (!fechaISO) return '';
     
     const fecha = new Date(fechaISO);
+    
+    // Validar que la fecha sea válida
+    if (isNaN(fecha.getTime())) {
+      console.error('Fecha inválida:', fechaISO);
+      return '';
+    }
+    
     const dia = fecha.getDate().toString().padStart(2, '0');
     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const anio = fecha.getFullYear();
     
-    return `${anio}-${mes}-${dia}`;
+    switch (formato.toLowerCase()) {
+      case 'dd-mm-yyyy':
+        return `${dia}-${mes}-${anio}`;
+      case 'yyyy-mm-dd':
+        return `${anio}-${mes}-${dia}`;
+      case 'mm-dd-yyyy':
+        return `${mes}-${dia}-${anio}`;
+      default:
+        console.warn(`Formato '${formato}' no reconocido. Usando formato por defecto yyyy-mm-dd`);
+        return `${anio}-${mes}-${dia}`;
+    }
   }
 
-  private convertirFechasEntrada(fechaInicial: string, fechaFinal: string): {fechaInicio: string, fechaFin: string} {
+  private convertirFechasEntrada(fechaInicial: string, fechaFinal: string, formato: 'dd-mm-yyyy'|'yyyy-mm-dd'|'mm-dd-yyyy' = 'yyyy-mm-dd'): {fechaInicio: string, fechaFin: string} {
     return {
-      fechaInicio: this.formatearFecha(fechaInicial),
-      fechaFin: this.formatearFecha(fechaFinal)
+      fechaInicio: this.formatearFecha(fechaInicial, formato),
+      fechaFin: this.formatearFecha(fechaFinal, formato)
     };
   }
 }
