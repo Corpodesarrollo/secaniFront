@@ -28,19 +28,17 @@ export class BotonNotificacionComponent implements OnInit {
   ngOnInit(): void {
     this.consultarNotificaciones();
   }
-
+  
   consultarNotificaciones() {
-    this.repos.get('Notificacion/GetNumeroNotification/', `${this.idUsuario}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.cntNotificaciones = data;
-      }
-    });
+    this.repos.get('Notificacion/GetNumeroNotification/', `${this.idUsuario}`, 'Seguimiento')
+      .subscribe({
+        next: (data) => this.cntNotificaciones = data
+      });
 
-    this.repos.get('Notificacion/GetNotification/', `${this.idUsuario}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.notificaciones = data;
-      }
-    });
+    this.repos.get('Notificacion/GetNotification/', `${this.idUsuario}`, 'Seguimiento')
+      .subscribe({
+        next: (data) => this.notificaciones = Array.isArray(data) ? data : []
+      });
   }
 
   openUrl(url:string, id: number){

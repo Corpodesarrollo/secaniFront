@@ -5,20 +5,20 @@
 // RUTAS DE DESARROLLO
 
 
-export const environment = {
-  cookie : false,
-  production: false,
-  url: 'https://localhost:4200/',
-  url_MsAuthention: 'https://localhost:7084/',
-  url_MSEntidad: 'https://localhost:7084/',
-  url_MSPermisos: 'https://localhost:7084/',
-  url_Parametricas: 'https://localhost:7294/',
-  url_MSTablasParametricas: 'https://localhost:7294/',
-  url_MsNna: 'https://localhost:7291/',
-  url_MSSeguimiento: 'https://localhost:7085/',
-  url_MSParametricas: 'https://localhost:7294/',
-  url_MSUsuarioyRoles: 'https://localhost:7084/',
-};
+// export const environment = {
+//   cookie : false,
+//   production: false,
+//   url: 'https://localhost:4200/',
+//   url_MsAuthention: 'https://localhost:7084/',
+//   url_MSEntidad: 'https://localhost:7084/',
+//   url_MSPermisos: 'https://localhost:7084/',
+//   url_Parametricas: 'https://localhost:7294/',
+//   url_MSTablasParametricas: 'https://localhost:7294/',
+//   url_MsNna: 'https://localhost:7291/',
+//   url_MSSeguimiento: 'https://localhost:7085/',
+//   url_MSParametricas: 'https://localhost:7294/',
+//   url_MSUsuarioyRoles: 'https://localhost:7084/',
+// };
 
 // RUTAS DE AZURE
 // export const environment = {
@@ -42,16 +42,16 @@ const baseUrl = 'https://nna.sispropreprod.gov.co/';
 // const baseUrl = 'http://192.168.110.12/';
 
 
-// export const environment = {
-//   cookie: false,
-//   url: `${baseUrl}auth/`,
-//   url_MsAuthention: `${baseUrl}auth/`,
-//   url_MSEntidad: `${baseUrl}auth/`,
-//   url_MSPermisos: `${baseUrl}auth/`,
-//   url_Parametricas: `${baseUrl}tablas/`,
-//   url_MSTablasParametricas: `${baseUrl}tablas/`,
-//   url_MsNna: `${baseUrl}nna/`,
-//   url_MSSeguimiento: `${baseUrl}seguimiento/`,
-//   url_MSParametricas: `${baseUrl}tablas/`,
-//   url_MSUsuarioyRoles: `${baseUrl}auth/`,
-// };
+export const environment = {
+  cookie: true,
+  url: `${baseUrl}auth/`,
+  url_MsAuthention: `${baseUrl}auth/`,
+  url_MSEntidad: `${baseUrl}auth/`,
+  url_MSPermisos: `${baseUrl}auth/`,
+  url_Parametricas: `${baseUrl}tablas/`,
+  url_MSTablasParametricas: `${baseUrl}tablas/`,
+  url_MsNna: `${baseUrl}nna/`,
+  url_MSSeguimiento: `${baseUrl}seguimiento/`,
+  url_MSParametricas: `${baseUrl}tablas/`,
+  url_MSUsuarioyRoles: `${baseUrl}auth/`,
+};

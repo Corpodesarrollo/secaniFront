@@ -9,32 +9,21 @@ import { environment } from '../../../environments/environment';
 export class Generico {
 
   private BASE_URL = environment.url_MSSeguimiento;
-  private headers: any = '';
-  private headersWithoutToken: any = '';
-
   private BASE_URL_PARAMETRICAS = environment.url_Parametricas;
-
   private BASE_URL_USUARIOS = environment.url_MSUsuarioyRoles;
 
   constructor() {
-    const token = localStorage.getItem("access_token");
-    this.headers = {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '',
-    };
-    this.headersWithoutToken = {
-      'Content-Type': 'application/json',
-    };
+    // Config global de Axios
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['Content-Type'] = 'application/json';
+    axios.defaults.headers.common['Accept'] = 'application/json';
   }
 
   private async handleRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T | null> {
-
     try {
       const response = await request;
-
       return response.data;
     } catch (error: any) {
-
       if (error.response) {
         console.error('Error data:', error.response.data);
         console.error('Error status:', error.response.status);
@@ -46,91 +35,57 @@ export class Generico {
     }
   }
 
-  private async headersWithToken(): Promise<any> {
-    const token = localStorage.getItem("access_token") || undefined;
-    return {
-      ...this.headers,
-      'Authorization': token ? `Bearer ${token}` : '',
-    };
+  private async request<T>(
+    method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+    url: string,
+    data?: any
+  ): Promise<T | null> {
+    const request = axios({ method, url, data });
+    return this.handleRequest(request);
   }
-
-  private async headersWithoutTokenFn(): Promise<any> {
-    return this.headersWithoutToken;
-  }
-
-
 
   async retorno_post(urltemp: string, data: any, withToken: boolean = true,baseUrl:string = this.BASE_URL): Promise<any> {
-
-
-
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
-    const url = `${baseUrl}${urltemp}`;
-    const request = axios.post(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('post', `${baseUrl}${urltemp}`, data);
   }
 
   async retorno_get(urltemp: string, baseUrl:string = this.BASE_URL): Promise<any> {
-    const headers = await this.headersWithToken();
-    const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('get', `${baseUrl}${urltemp}`);
   }
 
   async retorno_put(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
-
-
-
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.put(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('put', url, data);
   }
 
   async retorno_patch(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
-
-
-
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.patch(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('patch', url, data);
   }
 
   async retorno_delete(urltemp: string, withToken: boolean = true): Promise<any> {
-
-
-
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.delete(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('delete', url);
   }
 
   async retorno_post_archivo(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
-
-
-
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL}${urltemp}`;
-    const request = axios.post(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
+    const request = axios.post(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return this.handleRequest(request);
   }
 
 
   async retorno_put_parametrica(urltemp: string, data: any, withToken: boolean = true): Promise<any> {
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${this.BASE_URL_PARAMETRICAS}${urltemp}`;
-    const request = axios.put(url, data, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('put', url, data);
   }
 
   async retorno_get_parametrica(urltemp: string, baseUrl:string = this.BASE_URL_PARAMETRICAS): Promise<any> {
-
-    const headers = await this.headersWithToken();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('get', url);
   }
   // Método para verificar si un campo está vacío
   isEmpty(value: any): boolean {
@@ -139,17 +94,17 @@ export class Generico {
 
 
   async retorno_get_usuarios(urltemp: string, baseUrl:string = this.BASE_URL_USUARIOS): Promise<any> {
-
-    const headers = await this.headersWithToken();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.get(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('get', url);
   }
 
   async retorno_post_cargue_archivo(urltemp: string, data: any, withToken: boolean = true, baseUrl:string = this.BASE_URL): Promise<any> {
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.post(url, data, { headers: { ...headers, 'Content-Type': 'multipart/form-data' } });
+    const request = axios.post(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return this.handleRequest(request);
   }
 
@@ -158,10 +113,7 @@ export class Generico {
     baseUrl: string,
     withToken: boolean = true
   ): Promise<any> {
-    const headers = withToken ? await this.headersWithToken() : await this.headersWithoutTokenFn();
     const url = `${baseUrl}${urltemp}`;
-    const request = axios.delete(url, { headers: { 'Accept': 'application/json' }, withCredentials: false });
-    return this.handleRequest(request);
+    return this.request('delete', url);
   }
-
 }

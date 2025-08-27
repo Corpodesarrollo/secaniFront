@@ -24,6 +24,7 @@ export class CabecerasGenericas {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'crossOrigin': 'https://localhost:4200',
+      'withCredentials': environment.cookie ? true : undefined
     };
     return this.headers_service;
   };

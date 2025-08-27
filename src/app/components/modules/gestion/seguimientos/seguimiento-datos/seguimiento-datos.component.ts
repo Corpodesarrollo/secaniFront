@@ -105,7 +105,7 @@ export class SeguimientoDatosComponent implements OnInit {
   constructor(private tpp: TpParametros, private fb: FormBuilder, private tp: TablasParametricas, private gs: GenericService,
   private router: Router, private routeAct: ActivatedRoute, private nnaService: NNAService, private ss: SeguimientoDatosService) {
     this.contactForm = this.fb.group({
-      nombre: ['', [Validators.required]],
+      nombres: ['', [Validators.required]],
       parentesco: ['', [Validators.required]],
       telefono1: ['', [Validators.required]],
       telefono2: ['', [Validators.required]]
