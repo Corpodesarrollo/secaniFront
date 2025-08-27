@@ -48,7 +48,7 @@ export class IntentoSeguimientoComponent implements OnInit {
     //TODO: operar con el id_seguimiento recibido
     this.seguimiento = await this.servicios.GetSeguimientoById(id_seguimiento);
     this.nnaId = this.seguimiento.nnaId;
-    this.NNaCargado = await this.servicios.GetNNaById(this.nnaId);
+    // this.NNaCargado = await this.servicios.GetNNaById(this.nnaId);
 
     this.parentesco = await this.TpParametros.getTPParentesco();
     //Obtenemos valores para las 2 grillas de datos
