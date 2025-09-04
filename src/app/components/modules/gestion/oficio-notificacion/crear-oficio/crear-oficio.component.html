@@ -13,9 +13,10 @@
           <div class="col-2">
             <label for="plantilla" style="font-weight: bold;">Plantilla</label>
           </div>
-          <div class="col-10">
+          <div class="col-10 flex-auto">
             <p-dropdown id="plantilla" [(ngModel)]="selectedPlantillaCorreo" [options]="plantillasCorreo"
-              optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true" class="w-100" placeholder="Seleccione"
+              optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true" class="w-100" 
+              placeholder="Seleccione"
               (onChange)="cambioPlantilla($event)" appendTo="body"
             />
           </div>
@@ -96,10 +97,10 @@
         </div>
         <div class="row mb-3 p-fluid">
           <div class="col-2">
-            <label for="comentario1" style="font-weight: bold;">Comentario 1</label>
+            <label for="comentario" style="font-weight: bold;">Comentario</label>
           </div>
           <div class="col-10">
-            <p-editor id="comentario1" pInputText rows="6" placeholder="" [(ngModel)]="oficio.comentario"></p-editor>
+            <p-editor id="comentario" rows="6" placeholder="" [(ngModel)]="oficio.comentario"></p-editor>
           </div>
         </div>
         <div class="row mb-3">
