@@ -13,10 +13,10 @@
           <div class="col-2">
             <label for="plantilla" style="font-weight: bold;">Plantilla</label>
           </div>
-          <div class="col">
+          <div class="col-10">
             <p-dropdown id="plantilla" [(ngModel)]="selectedPlantillaCorreo" [options]="plantillasCorreo"
-              optionLabel="nombre" [filter]="true" [showClear]="true" class="w-100" placeholder="Seleccione"
-              (onChange)="cambioPlantilla($event)"   
+              optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="true" class="w-100" placeholder="Seleccione"
+              (onChange)="cambioPlantilla($event)" appendTo="body"
             />
           </div>
         </div>
@@ -143,13 +143,13 @@
             <p-editor id="firma" [(ngModel)]="oficio.firma" [style]="{ height: '140px' }" />
           </div>
         </div>
+        <!--/form-->
+        <div class="text-center">
+          <button (click)="enviar()" class="btn text-white rounded-4 btn-lg"
+            style="background-color: #ff9801; width: 420px;"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GENERAR
+            OFICIO Y ENVIAR NOTIFICACION</button>
+        </div>
       </ng-container>
-    </div>
-    <!--/form-->
-    <div class="text-center">
-      <button (click)="enviar()" class="btn text-white rounded-4 btn-lg"
-        style="background-color: #ff9801; width: 420px;"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GENERAR
-        OFICIO Y ENVIAR NOTIFICACION</button>
     </div>
 
   </div>
