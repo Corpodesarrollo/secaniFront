@@ -30,7 +30,7 @@ import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
 @Component({
   selector: 'app-notificacion-oficio',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule, NgSelectModule,MultiSelectModule,
+  imports: [CommonModule, BreadcrumbModule, CardModule, EditorModule, ReactiveFormsModule, DropdownModule, DialogModule, FormsModule, NgSelectModule,MultiSelectModule,
               InputTextModule, ChipsModule, ToastModule, CheckboxModule, EditorModule, ButtonModule],
   templateUrl: './notificacion-oficio.component.html',
   styleUrl: './notificacion-oficio.component.css'

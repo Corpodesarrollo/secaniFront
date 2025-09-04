@@ -97,7 +97,7 @@
                 <label for="Mensaje" class="fw-bold">Mensaje</label>
             </div>
             <div class="col-9 flex-auto">
-                <textarea pInputText rows="2" maxlength="5000" [(ngModel)]="notificacion.mensaje"></textarea>
+                <p-editor maxlength="5000" [(ngModel)]="notificacion.mensaje"></p-editor>
             </div>
             <div *ngIf="submitted && (!notificacion.mensaje || notificacion.mensaje.trim() === '')" class="text-danger col-9 offset-3">
                 Campo requerido
