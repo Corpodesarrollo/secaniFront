@@ -47,6 +47,7 @@ export class CrearOficioComponent implements OnInit {
   @Input() nombreNNA: any;
   @Input() edadNNA: any;
   @Input() diagnosticoNNA: any;
+  @Input() telefono: any;
   @Input() show: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
