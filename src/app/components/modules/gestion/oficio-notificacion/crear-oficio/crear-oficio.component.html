@@ -1,6 +1,6 @@
 <p-toast [life]="10000" />
 
-<p-dialog header="Crear oficio de notificación" [(visible)]="show" [modal]="true" [style]="{ width: '900px' }"
+<p-dialog header="Crear oficio de notificación" [(visible)]="show" [modal]="true" [style]="{ width: '900px', minHeight: '400px' }"
   [draggable]="false" [resizable]="false" (onHide)="close()">
 
   <div class="mx-3">
@@ -121,7 +121,7 @@
               <b>Diagnostico: {{ diagnosticoNNA }}</b>
             </div>
             <div class="row">
-              <b>Teléfono del acudiente: {{ NNAdatos?.cuidadorTelefono }}</b>
+              <b>Teléfono del acudiente: {{ telefono }}</b>
             </div>
           </div>
         </div>
