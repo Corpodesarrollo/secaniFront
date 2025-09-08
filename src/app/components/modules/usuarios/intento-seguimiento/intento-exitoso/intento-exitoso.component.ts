@@ -14,8 +14,8 @@ import { Router } from '@angular/router';
 
 import { UsuariosModule } from '../../usuarios.module';
 import { TpParametros } from '../../../../../core/services/tpParametros';
+import { NnaContactoListaComponent } from '../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component';
 import { User } from '../../../../../core/services/user';
-
 
 @Component({
   selector: 'app-intento-exitoso',
@@ -23,7 +23,7 @@ import { User } from '../../../../../core/services/user';
   styleUrls: ['../../general.component.css', './intento-exitoso.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule],
+    CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule, NnaContactoListaComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class IntentoExitosoComponent implements OnInit {
@@ -43,6 +43,8 @@ export class IntentoExitosoComponent implements OnInit {
   opcion_4 = false;
 
   displayModalContacto: boolean = false;
+  displayModalEditContacto: boolean = false;
+  contactoId: number | undefined;
 
   //formularios
 
@@ -274,6 +276,10 @@ export class IntentoExitosoComponent implements OnInit {
     } else {
       return 'Buenas noches';
     }
+  }
+
+  editarContacto() {
+    this.displayModalEditContacto = true;
   }
 
 }

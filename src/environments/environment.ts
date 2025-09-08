@@ -21,20 +21,20 @@ export const environment = {
 };
 
 // RUTAS DE AZURE
-export const environment = {
-  cookie : false,
-  production: false,
-  url: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-  url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-  url_MSEntidad: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-  url_MSPermisos: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-  url_Parametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/',
-  url_MSTablasParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/',
-  url_MsNna: 'https://msnna-bjdgg4h5b0duh0gz.eastus-01.azurewebsites.net/',
-  url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
-  url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/',
-  url_MSUsuarioyRoles: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
-};
+// export const environment = {
+//   cookie : false,
+//   production: false,
+//   url: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
+//   url_MsAuthention: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
+//   url_MSEntidad: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
+//   url_MSPermisos: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
+//   url_Parametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/',
+//   url_MSTablasParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/',
+//   url_MsNna: 'https://msnna-bjdgg4h5b0duh0gz.eastus-01.azurewebsites.net/',
+//   url_MSSeguimiento: 'https://msseguimientov2-byb0d5gwh9c9hufx.westus2-01.azurewebsites.net/',
+//   url_MSParametricas: 'https://mstablasparametricas-bdf0a9cza5bucwby.eastus2-01.azurewebsites.net/',
+//   url_MSUsuarioyRoles: 'https://msauthentication-auc6a9ajccerbndk.eastus2-01.azurewebsites.net/',
+// };
 
  // RUTAS DE MINISTERIO
 const baseUrl = 'https://nna.sispropreprod.gov.co/';
