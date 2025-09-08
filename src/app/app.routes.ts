@@ -36,7 +36,7 @@ export const routes: Routes = [
       { path: 'perfil', component: ContentComponent, loadChildren: () => import('./components/modules/perfil/perfil.module').then((m) => m.PerfilModule) },
       { path: 'reportes', loadChildren: () => import('./components/modules/reportes/reportes.module').then((m) => m.ReportesModule) },
       { path: 'usuarios', component: ContentComponent, loadChildren: () => import('./components/modules/usuarios/usuarios.module').then((m) => m.UsuariosModule) },
-      { path: 'prueba/:id', loadComponent: () => import('./components/modules/gestion/consultar-alertas/consultar-alertas.component').then((m) => m.ConsultarAlertasComponent) },
+      { path: 'prueba', loadComponent: () => import('./components/modules/gestion/consultar-alertas/consultar-alertas.component').then((m) => m.ConsultarAlertasComponent) },
     ]
   },
   {

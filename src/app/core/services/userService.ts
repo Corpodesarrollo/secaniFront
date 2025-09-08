@@ -1,60 +1,28 @@
 import { Injectable } from "@angular/core";
+import { apis } from "../../models/apis.model";
+import { GenericService } from "../../services/generic.services";
 
 @Injectable({
   providedIn: 'root',
 })
-export class User {
-    static id?: string;
-    static alias?: string;
-    static email?: string;
-    static name?: string;
-    static state?: boolean = false;
-    static rolCode?: string[];
-    static enterpriseCode?: string;
-    static enterpriseDeptoCode?: string;
-    static enterpriseEmail?: string;
-    static enterpriseName?: string;
-    static enterpriseIdentification?: string;
-    static isMinSalud?: string;
-    static isAuth?: boolean = false;
+export class UserService {
 
-    constructor() {
-        this.getData();
+    constructor(
+        private repos: GenericService,
+    )  {
     }
-
-    getData(){
-        const usuarioJson = localStorage.getItem('user');
-        if (usuarioJson) {
-            const usuarioData = JSON.parse(usuarioJson);
-            User.id = usuarioData.Id;
-            User.alias = usuarioData.Alias;
-            User.email = usuarioData.Email;
-            User.name = usuarioData.Name;
-            User.state = usuarioData.State;
-            User.rolCode = usuarioData.RolCode;
-            User.enterpriseCode = usuarioData.EnterpriseCode;
-            User.enterpriseDeptoCode = usuarioData.EnterpriseDeptoCode;
-            User.enterpriseEmail = usuarioData.EnterpriseEmail;
-            User.enterpriseName = usuarioData.EnterpriseName;
-            User.enterpriseIdentification = usuarioData.EnterpriseIdentification;
-            User.isMinSalud = usuarioData.IsMinSalud;
-            User.isAuth = usuarioData.IsAuth;
-        }
+    
+    public async get(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.repos.get('auth', '', apis.authentication).subscribe({
+                next: (data: any) => {
+                    resolve(data);
+                },
+                error: (err) => {
+                    console.error(err);
+                    reject(err);
+                }
+            });
+        });
     }
-}
-
-export const user = {
-    id: User.id,
-    alias: User.alias,
-    email: User.email,
-    name: User.name,
-    state: User.state,
-    rolCode: User.rolCode,
-    enterpriseCode: User.enterpriseCode,
-    enterpriseDeptoCode: User.enterpriseDeptoCode,
-    enterpriseEmail: User.enterpriseEmail,
-    enterpriseName: User.enterpriseName,
-    enterpriseIdentification: User.enterpriseIdentification,
-    isMinSalud: User.isMinSalud,
-    isAuth: User.isAuth
 }

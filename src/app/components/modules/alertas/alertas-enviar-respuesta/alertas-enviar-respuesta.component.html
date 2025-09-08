@@ -79,6 +79,9 @@
                 <small class="form-text" style="color: #61b9ab;">Solo puede cargar un archivo, asegúrese de incluir toda la información</small><br>
                 <small class="text-danger" *ngIf="fileError" >{{ fileError }}</small>
             </div>
+            <div class="col-9 col-md-9 offset-3 text-danger" *ngIf="submitted && (fileName == null || fileName.trim() === '')">
+                Campo requerido
+            </div>
         </div>
         <div class="row mb-3 p-fluid">
             <div class="col-3">
@@ -90,7 +93,7 @@
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 250px;" (click)="enviar()" >GUARDAR Y ENVIAR</button>
+                <button class="btn text-white rounded-4 btn-lg" type="button" style="background-color: #ff9801; width: 250px;" (click)="enviar()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR Y ENVIAR</button>
             </div>
         </div>
     </div>

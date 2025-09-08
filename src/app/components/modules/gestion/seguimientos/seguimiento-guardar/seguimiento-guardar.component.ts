@@ -67,7 +67,7 @@ export class SeguimientoGuardarComponent {
 
   validarCamposRequeridos(): boolean {
     const camposAValidar = [];
-
+    this.getFechaYHoraCompleta();
     camposAValidar.push(this.nuevaHora);
 
     if (this.nuevaFecha) {
@@ -91,13 +91,17 @@ export class SeguimientoGuardarComponent {
         this.diasDiferencia = Math.floor((this.nuevaFecha.getTime() - this.fechaSugerida.getTime()) / (1000 * 60 * 60 * 24));
         this.mostrarDialogo = true;
       } else {
+        let fechaConHora = new Date(this.seguimiento!.fechaSeguimiento);
+        fechaConHora.setHours(this.periodo === 'PM' ? (this.hora ?? 0) + 12 : (this.hora ?? 0));
+        fechaConHora.setMinutes(this.minutos ?? 0);
+        //this.seguimiento!.fechaSeguimientoStr = fechaConHora.toISOString();
+        this.seguimiento!.fechaSeguimiento = fechaConHora;
         this.enviar();
       }
     }
   }
 
   getFechaYHoraCompleta(): void {
-    console.log('Fecha completa:', this.nuevaHora);
     if (this.hora !== null && this.minutos !== null) {
       let fechaConHora = new Date();
       fechaConHora.setHours(this.periodo === 'PM' ? this.hora + 12 : this.hora);
@@ -118,8 +122,10 @@ export class SeguimientoGuardarComponent {
   }
 
   limpiar(){
-    this.mostrarMensaje = false;
     this.mostrarDialogo = false;
+  }
+
+  limpiar2(){
     this.show = false;
     this.onClose.emit();
   }
@@ -129,7 +135,6 @@ export class SeguimientoGuardarComponent {
       response => {
         this.idSeguimiento = response as number;
         this.mostrarMensaje = true;
-        console.log('Archivo subido exitosamente');
       },
       error => {
         console.error('Error al subir el archivo', error);
@@ -139,13 +144,8 @@ export class SeguimientoGuardarComponent {
 
   cancelar(){
     this.mostrarDialogo = false;
-    this.onClose.emit();
-    if (this.fechaSugerida && this.nuevaHora) {
-      this.fechaSugerida.setHours(this.nuevaHora.getHours());
-    }
-    if (this.seguimiento && this.fechaSugerida) {
-      this.seguimiento.fechaSeguimiento = this.fechaSugerida;
-    }
+    this.motivo = '';
+    this.nuevaFecha = undefined;
   }
 
   continuar(){

@@ -19,10 +19,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { NotificacionService } from '../../../../../core/services/notificacionService';
 import { Oficio } from '../../../../../models/oficio.model';
 import { NotificacionOficioComponent } from "../notificacion-oficio/notificacion-oficio.component";
-import { User } from '../../../../../core/services/userService';
 import { ContactoEAPBService } from '../../../../../core/services/contactoEAPBService';
 import { EntidadServices } from '../../../../../core/services/entidadServices';
-import { PlantillasCorreoService } from '../../../../../services/plantillas-correo.service';
+import { User } from '../../../../../core/services/user';
 
 @Component({
   selector: 'app-crear-oficio',
@@ -47,7 +46,6 @@ export class CrearOficioComponent implements OnInit {
   @Input() nombreNNA: any;
   @Input() edadNNA: any;
   @Input() diagnosticoNNA: any;
-  @Input() telefono: any;
   @Input() show: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
@@ -58,9 +56,6 @@ export class CrearOficioComponent implements OnInit {
   isLoadingEntidades: boolean = true;
   showDialog: boolean = false;
   user = new User(); 
-
-  selectedPlantillaCorreo: any | undefined = undefined;
-  plantillasCorreo:        any[] = [];
 
   oficio: Oficio = {
     id: 0,
@@ -88,7 +83,6 @@ export class CrearOficioComponent implements OnInit {
     private tp: TablasParametricas,
     private notificacionService: NotificacionService,
     private entidadesService: EntidadServices, 
-    private plantillasCorreoService: PlantillasCorreoService
   ) {
     this.today = new Date();
     this.formattedDate = this.formatDate(this.today);
@@ -101,7 +95,6 @@ export class CrearOficioComponent implements OnInit {
 
   ngOnInit() {
     this.loadAlertaData();
-    this.cargarPlantillasCorreo();
   }
 
   ver(){
@@ -117,41 +110,21 @@ export class CrearOficioComponent implements OnInit {
   }
 
   async loadAlertaData(){
+    console.log(this.alerta);
     if (this.alerta.idAlertaSeguimiento) {
       let result = await this.notificacionService.getOficio(this.alerta.idAlertaSeguimiento);
       if (result.estado){
         this.oficio = result.datos;
+      } else {
+        this.oficio.idAlertaSeguimiento = this.alerta.idAlertaSeguimiento;
+        this.oficio.idNNA = this.NNAdatos.id;
       }
     }
 
     this.entidades =  await this.entidadesService.getET();
     this.isLoadingEntidades = false;
+    this.selectedEntidad = this.entidades.find(e => e.id === this.oficio.idEntidad);
 
-  }
-
-  cargarPlantillasCorreo() {
-    this.plantillasCorreoService.getPlantillasCorreo()
-      .subscribe({
-        next: (value) => {
-          this.plantillasCorreo = value as any[]; 
-        }
-      });
-  }
-
-  cambioPlantilla(event: any) {
-    if (!this.selectedPlantillaCorreo) return;
-    
-    this.plantillasCorreoService.getPlantillaCorreo(this.selectedPlantillaCorreo?.id)
-      .subscribe({
-        next: (value) => {
-          this.oficio = {
-            ...this.oficio,
-            mensaje: value.mensaje,
-            cierre: value.cierre,
-            asunto: value.asunto
-          }
-        }
-      });
   }
 
   async enviar(){
@@ -169,10 +142,7 @@ export class CrearOficioComponent implements OnInit {
 
   validarCamposRequeridos(): boolean {
     this.oficio.idEntidad = this.selectedEntidad?.id ?? 0;
-    this.oficio.userName = User.email ?? "";
-    
-    this.oficio.idNNA = 10;
-    this.oficio.idAlertaSeguimiento = 10;
+    this.oficio.userName = this.user.email ?? "";
 
     const camposAValidar = [
       this.oficio.membrete,
@@ -181,7 +151,7 @@ export class CrearOficioComponent implements OnInit {
       this.oficio.asunto,
       this.oficio.mensaje,
       this.oficio.cierre,
-      this.oficio.firma
+      this.oficio.firmaJpg
     ];
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
@@ -198,11 +168,10 @@ export class CrearOficioComponent implements OnInit {
   }
 
   async guardar() {
+    console.log('Guardando oficio:', this.oficio);
     var result = await this.notificacionService.postOficio(this.oficio);
-    console.log(result);
     if (result.estado) {
       this.idNotificacion = Number(result.datos);
-      console.log(this.idNotificacion);
       this.showDialog = true; // Muestra el modal de notificación.
     } else {
       console.error('Error al guardar el oficio:');

@@ -14,7 +14,6 @@ import { DialogModule } from 'primeng/dialog';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../models/parametricas.model';
 import { Injectable } from "@angular/core";
-import { User } from '../../../../core/services/userService';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
@@ -74,7 +73,6 @@ export class AsignacionSeguimientoComponent implements OnInit {
     private repos: GenericService,
     private tp: TablasParametricas,
     private tpp: TpParametros,
-    private user: User,
     private messageService: MessageService
   ) { }
 

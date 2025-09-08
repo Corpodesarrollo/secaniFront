@@ -12,15 +12,11 @@ import { IntentoComponent } from './intento/intento.component';
 import { IntentoSeguimientoService } from './intento-seguimiento.services';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { InfoSeguimientoNnaComponent } from '../../gestion/seguimientos/info-seguimiento-nna/info-seguimiento-nna.component';
 
 import { UsuariosModule } from '../usuarios.module';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { NnaContactoListaComponent } from "../nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
-import { MenuItem } from 'primeng/api';
-import { GenericService } from '../../../../services/generic.services';
-import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
 
 @Component({
   selector: 'app-intento-seguimiento',
@@ -28,66 +24,43 @@ import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notif
   styleUrls: ['./intento-seguimiento.component.css'],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    BotonNotificacionComponent,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule, InfoSeguimientoNnaComponent, UsuariosModule, NnaContactoListaComponent, BreadcrumbModule]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, TableModule, PaginatorModule, InfoSeguimientoNnaComponent, UsuariosModule, NnaContactoListaComponent]
 })
 export class IntentoSeguimientoComponent implements OnInit {
   @ViewChild(IntentoComponent) intentoComponent!: IntentoComponent;
   seguimiento!: any;
   contactos!: any;
   intentos!: any;
-
+  loading: boolean = false;
   displayModalContacto: boolean = false;
 
   parentesco: any;
   nnaId: number = 0;
-  nna: any | undefined = undefined;
 
-  items: MenuItem[] = [];
-
-  constructor(private repos: GenericService, public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
+  constructor(public servicios: IntentoSeguimientoService, public TpParametros: TpParametros) { }
 
 
   async ngOnInit() {
+    this.loading = true;
     let id_seguimiento = history.state.id_seguimiento;
-    console.log('id_seguimiento ', id_seguimiento, history);
 
     //id_seguimiento = 5;
     //TODO: operar con el id_seguimiento recibido
     this.seguimiento = await this.servicios.GetSeguimientoById(id_seguimiento);
     this.nnaId = this.seguimiento.nnaId;
-    // this.NNaCargado = await this.servicios.GetNNaById(this.nnaId);
+    this.NNaCargado = await this.servicios.GetNNaById(this.nnaId);
 
     this.parentesco = await this.TpParametros.getTPParentesco();
     //Obtenemos valores para las 2 grillas de datos
     this.cargarContacto();
-    this.cargarNna();
     this.intentos = await this.servicios.GetIntentosContactoNNA(this.nnaId);
 
     this.intentos = this.intentos.sort((a: any, b: any) => {
       return new Date(b.fechaIntento).getTime() - new Date(a.fechaIntento).getTime();
     });
-
-    this.items = [
-      { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
-      { label: this.nna?.nombreCompleto },
-    ];
-
-    console.log("data", this.seguimiento, this.contactos)
-    console.log("intentos", this.intentos)
-    console.log('nnaId enviada', this.nnaId);
-    console.log("ver 06/11/2024")
+    this.loading = false;
   }
 
-  async cargarNna() {
-    this.repos.get('Seguimiento/SeguimientoNNA/', `${this.nnaId}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        if (data != null) {
-          this.nna = data; 
-        }
-      }
-    });
-  }
 
   /*
   CODIGO NUEVO  INTENTOS

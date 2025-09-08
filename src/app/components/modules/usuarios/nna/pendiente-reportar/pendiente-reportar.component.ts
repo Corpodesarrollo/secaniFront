@@ -10,7 +10,6 @@ import { DialogModule } from 'primeng/dialog';
 import { GenericService } from '../../../../../services/generic.services';
 import { TablasParametricas } from '../../../../../core/services/tablasParametricas';
 import { TpParametros } from '../../../../../core/services/tpParametros';
-import { User } from '../../../../../core/services/userService';
 import { apis } from '../../../../../models/apis.model';
 import { environment } from '../../../../../../environments/environment';
 import { NNA } from '../../../../../models/nna.model';
@@ -82,7 +81,6 @@ export class PendienteReportarComponent implements OnInit {
     private genericService: GenericService,
     private tp: TablasParametricas,
     private tpParametro: TpParametros,
-    private user: User,
     private messageService: MessageService
   ) { }
 

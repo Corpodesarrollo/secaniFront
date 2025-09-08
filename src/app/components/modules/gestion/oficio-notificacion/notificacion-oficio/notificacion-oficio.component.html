@@ -157,11 +157,6 @@
                 <small class="text-danger" *ngIf="fileError" >{{ fileError }}</small>
             </div>
         </div>
-        <div class="row mb-2 " *ngIf="submitted && (!notificacion.adjunto)">
-            <div class="col-8 col-md-8 offset-4">
-                <small class="text-danger">Campo requerido</small>
-            </div>
-        </div>
         <div class="row mb-3 p-fluid">
             <div class="col-3">
                 <label for="Firma" class="fw-bold">Firma</label>
@@ -192,7 +187,7 @@
   <div>
     <i class="pi mb-3" [ngClass]="icono" [style.fontSize]="'4rem'" [style.color]="colorIcono"></i>
     <h3 class="mb-3">{{msg}}</h3>
-    <button type="button" icon="pi pi-check" (click)="limpiar()" class="p-button-rounded p-button-success mb-3" style="width: 160px;">ACEPTAR</button>
+    <button type="button" icon="pi pi-check" (click)="limpiar()" class="btn p-button-rounded p-button-success mb-3" style="width: 160px;">ACEPTAR</button>
   </div>
 </p-dialog>
 

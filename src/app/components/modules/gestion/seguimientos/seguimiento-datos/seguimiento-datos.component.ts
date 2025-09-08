@@ -134,14 +134,11 @@ export class SeguimientoDatosComponent implements OnInit {
       this.nna = new NNA();
     }
 
-    this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna).then(async (data: any) => {
-      this.contacto = data.datos;
-      this.parentescos = await this.tpp.getParentescos();
-      this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
-      this.isLoadingParentesco = false;
-    }).catch((error: any) => {
-      console.error('Error fetching contact list', error);
-    });
+    const data: any = await this.gs.getAsync('ContactoNNAs/Obtener', `/${this.idContacto}`, apis.nna);
+    this.contacto = data.datos;
+    this.parentescos = await this.tpp.getParentescos();
+    this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
+    this.isLoadingParentesco = false;
 
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
@@ -156,8 +153,10 @@ export class SeguimientoDatosComponent implements OnInit {
     this.selectedTipoID = this.tipoID.find(x => x.codigo == this.nna.tipoIdentificacionId);
     this.isLoadingTipoID = false;
 
-    let estadoIngresoResult = await this.tpp.getEstadoIngresoEstrategia(this.nna.estadoIngresoEstrategiaId);
-    this.estadoIngreso = estadoIngresoResult?.nombre ?? '';
+    if (this.nna.estadoIngresoEstrategiaId > 0) {
+      let estadoIngresoResult = await this.tpp.getEstadoIngresoEstrategia(this.nna.estadoIngresoEstrategiaId ?? 0);
+      this.estadoIngreso = estadoIngresoResult?.nombre ?? '';
+    }
 
     this.origenReporte = await this.tpp.getTPOrigenReporte();
     this.selectedOrigenReporte = this.origenReporte.find(x => x.id == this.nna.origenReporteId);
