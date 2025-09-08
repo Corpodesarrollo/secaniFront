@@ -31,7 +31,7 @@ export const routes: Routes = [
       { path: 'intento-exitoso', loadComponent: () => import('./components/modules/usuarios/intento-seguimiento/intento-exitoso/intento-exitoso.component').then((c) => c.IntentoExitosoComponent) },
       { path: 'intento-seguimiento', loadComponent: () => import('./components/modules/usuarios/intento-seguimiento/intento-seguimiento.component').then((c) => c.IntentoSeguimientoComponent) },
       { path: 'login', component: LoginComponent },
-      { path: 'mis-seguimientos', component: EstadoSeguimientoComponent },
+      { path: 'seguimientos', component: EstadoSeguimientoComponent },
       { path: 'mi-semana', loadComponent: () => import('./components/modules/usuarios/mi-semana/mi-semana.component').then((c) => c.MiSemanaComponent) },
       { path: 'perfil', component: ContentComponent, loadChildren: () => import('./components/modules/perfil/perfil.module').then((m) => m.PerfilModule) },
       { path: 'reportes', loadChildren: () => import('./components/modules/reportes/reportes.module').then((m) => m.ReportesModule) },
