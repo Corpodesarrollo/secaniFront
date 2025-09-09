@@ -69,8 +69,8 @@
               [value]="seguimientos"
               [responsive]="true"
               [paginator]="true"
-              [rows]="5"
-              [rowsPerPageOptions]="[5, 10, 25, 50]"
+              [rows]="20"
+              [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
               [showCurrentPageReport]="true"
               currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
               [(selection)]="selectedRecords"
@@ -81,35 +81,35 @@
                 <tr>
                   <th>
                     No. Caso
-                    <p-columnFilter field="noCaso" display="menu" type="text"></p-columnFilter>
+                    <p-columnFilter type="text" field="noCaso" display="menu" />
                   </th>
                   <th>
                     Fecha Notificación
-                    <p-columnFilter field="fechaNotificacion" display="menu" type="date"></p-columnFilter>
+                    <p-columnFilter type="data" field="fechaNotificacion" display="menu" />
                   </th>
                   <th>
                     Nombre
-                    <p-columnFilter field="nombreCompleto" display="menu" type="text"></p-columnFilter>
+                    <p-columnFilter type="text" field="nombreCompleto" display="menu" />
                   </th>
                   <th>
                     Estado
-                    <p-columnFilter field="estado.nombre" display="menu" type="text"></p-columnFilter>
+                    <p-columnFilter type="text" field="estado.nombre" display="menu" />
                   </th>
                   <th>
                     Asunto Última Actuación
-                    <p-columnFilter field="asuntoUltimaActuacion" display="menu" type="text"></p-columnFilter>
+                    <p-columnFilter type="text" field="asuntoUltimaActuacion" display="menu" />
                   </th>
                   <th>
                     Fecha Última Actuación
-                    <p-columnFilter field="fechaUltimaActuacion" display="menu" type="date"></p-columnFilter>
+                    <p-columnFilter type="date" field="fechaUltimaActuacion" display="menu" />
                   </th>
                   <th>
                     Agente Actual
-                    <p-columnFilter field="nombreAgenteActual" display="menu" type="text"></p-columnFilter>
+                    <p-columnFilter type="text" field="nombreAgenteActual" display="menu" />
                   </th>
                   <th>
                     Alertas
-                    <p-columnFilter field="alertas.nombre" display="menu" type="text"></p-columnFilter>
+                    <p-columnFilter type="text" field="alertas.nombre" display="menu" />
                   </th>
                   <th>Acción</th>
                 </tr>
