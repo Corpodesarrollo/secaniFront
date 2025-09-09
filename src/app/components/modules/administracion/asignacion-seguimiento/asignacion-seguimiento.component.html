@@ -328,47 +328,47 @@
 
 <p-dialog header="Reasignar seguimiento" [(visible)]="showDialogAgente" [modal]="true" [style]="{width: '600px'}">
 
-  <span *ngIf="selectedRecords.length==1" class="p-text-secondary block mb-8">{{selectedRecords[0].nombreCompleto}} - Seguimiento No.  {{selectedRecords[0].noCaso}}</span>
-  <span *ngIf="selectedRecords.length!=1" class="p-text-secondary block mb-8">Casos seleccionados: {{selectedRecords.length}}</span>
+  <p class="text-muted mb-4">
+    <ng-container *ngIf="selectedRecords.length === 1">
+      <strong>{{ selectedRecords[0].nombreCompleto }}</strong> - Seguimiento No. {{ selectedRecords[0].noCaso }}
+    </ng-container>
+    <ng-container *ngIf="selectedRecords.length !== 1">
+      Casos seleccionados: <strong>{{ selectedRecords.length }}</strong>
+    </ng-container>
+  </p>
 
-  <div class="flex items-center gap-4 mb-8">
-    <div class="row fw-bold">
-      Agente de segimiento*
-    </div>
-    <div class="row">
-      <select class="form-select" aria-label="Default select example" name="agentes" [(ngModel)]="agente">
-        <option value="" selected>Seleccionar</option>
-        <option *ngFor="let ag of agentes" value="{{ag.value}}">{{ag.label}}</option>
-      </select>
-    </div>
+  <!-- Info seleccionados -->
+  <p class="text-muted mb-4">
+    <ng-container *ngIf="selectedRecords.length === 1">
+      <strong>{{ selectedRecords[0].nombreCompleto }}</strong> - Seguimiento No. {{ selectedRecords[0].noCaso }}
+    </ng-container>
+    <ng-container *ngIf="selectedRecords.length !== 1">
+      Casos seleccionados: <strong>{{ selectedRecords.length }}</strong>
+    </ng-container>
+  </p>
+
+  <!-- Campo agente -->
+  <div class="mb-4">
+    <label for="agente" class="form-label fw-bold">Agente de seguimiento*</label>
+    <select id="agente"class="form-select"aria-label="Seleccionar agente"[(ngModel)]="agente">
+      <option value="" disabled selected>Seleccione un agente</option>
+      <option *ngFor="let ag of agentes" [value]="ag.value">{{ ag.label }}</option>
+    </select>
   </div>
 
-  <div class="flex items-center gap-4 mb-8">
-    <div class="row fw-bold">
-      Motivo*
-    </div>
-    <div class="row">
-      <textarea
-        id="motivo"
-        [(ngModel)]="motivo"
-        rows="3"
-        class="form-control"
-        placeholder="Ingrese el motivo">
-      </textarea>
-    </div>
+  <!-- Campo motivo -->
+  <div class="mb-4">
+    <label for="motivo" class="form-label fw-bold">Motivo*</label>
+    <textarea id="motivo" [(ngModel)]="motivo" rows="3" class="form-control" placeholder="Ingrese el motivo"></textarea>
   </div>
 
-  <div class="agente-dialog">
-    <button
-      class="btn-agente-close"
-      (click)="closeSeleccionarAgente()">
+  <!-- Botones -->
+  <div class="d-flex justify-content-end gap-2 mt-3">
+    <button class="btn btn-outline-secondary" (click)="closeSeleccionarAgente()">
       Cancelar
     </button>
-    <button
-      class="btn-agente-guardar"
-      (click)="reasignarCasos()">
+    <button class="btn btn-primary" (click)="reasignarCasos()">
       Confirmar
     </button>
   </div>
-
 </p-dialog>
