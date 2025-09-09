@@ -1,5 +1,5 @@
 <p-dialog header="Guardar y agendar seguimiento"  [(visible)]="show" [modal]="true" [style]="{ width: '800px' }"
-  (onHide)="limpiar()"
+  (onHide)="limpiar2()"
 >
   <div *ngIf="isLoading" class="spinner">
     <p class="{{ colorMensaje }}">{{ mensajeCarga }}</p>
@@ -87,7 +87,7 @@
   </div>
 </p-dialog>
 
-<p-dialog [(visible)]="mostrarDialogo" [modal]="true" [closable]="true" [style]="{ width: '600px' }" [header]="''" (onHide)="limpiar()">
+<p-dialog [(visible)]="mostrarDialogo" [modal]="true" [closable]="true" [style]="{ width: '630px' }" [header]="''" (onHide)="limpiar()">
   <!-- Título -->
   <div class="container my-4 text-center">
     <i class="pi pi-question-circle mb-3" style="font-size: 4rem; color: #a1a1a1;"></i>
@@ -101,7 +101,7 @@
 
   <!-- Botones -->
   <div class="text-center">
-      <button class="btn text-white rounded-4 btn-lg me-2 mb-3" type="button" 
+      <button class="btn text-white rounded-4 btn-lg me-2" type="button" 
           style="background-color: #a1a1a1; color: white; width: 250px" (click)="cancelar()">NO, dejar fecha sugerida</button>
       <button class="btn text-white rounded-4 btn-lg" type="button"
           style="background-color: #73B7AD; color: white; width: 250px" (click)="continuar()">SÍ, continuar</button>

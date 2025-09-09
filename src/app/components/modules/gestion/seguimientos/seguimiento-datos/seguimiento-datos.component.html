@@ -37,7 +37,7 @@
                                                 <label for="cuidadorNombres" class="fw-bold">Nombre*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombres" [(ngModel)]="contacto.nombres" [readOnly]="true">
+                                                <input id="cuidadorNombres" type="text" pInputText formControlName="nombres" [readOnly]="true">
                                             </div>
                                         </div>
                                     </div>
@@ -50,7 +50,6 @@
                                             <div class="col-8 flex-auto">
                                                 <p-dropdown
                                                     formControlName="parentesco"
-                                                    [(ngModel)]="selectedParentesco"
                                                     [options]="parentescos"
                                                     [loading]="isLoadingParentesco"
                                                     optionLabel="nombre"
@@ -69,7 +68,7 @@
                                                 <label for="telefono" class="fw-bold">Teléfono de Contacto*</label>
                                             </div>
                                             <div class="col-8 p-fluid">
-                                                <input type="text" pInputText formControlName="telefono1" [(ngModel)]="contacto.telefonos" [readOnly]="true">
+                                                <input type="text" pInputText formControlName="telefono1" [readOnly]="true">
                                             </div>
                                         </div>
                                     </div>

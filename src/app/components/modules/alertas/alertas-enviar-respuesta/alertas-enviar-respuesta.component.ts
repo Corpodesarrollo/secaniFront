@@ -20,6 +20,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Config } from '../../../../models/config.model';
 import { ConfigService } from '../../../../core/services/configService';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-alertas-enviar-respuesta',
@@ -60,7 +61,7 @@ export class AlertasEnviarRespuestaComponent {
   selectedFile: File | null = null;
   fileError: string | null = null;
   fileName: string | null = null;
-
+  saving: boolean = false;
   mensajeCarga: string = 'Cargando datos...';
   colorMensaje: string = 'text-primary';
 
@@ -101,29 +102,15 @@ export class AlertasEnviarRespuestaComponent {
   async ngOnInit(): Promise<void> {
     this.contactos = await this.contactoEAPBService.getAll();
     this.config = await this.configService.get();
-    this.respuesta.para = this.config.userName; 
+    this.respuesta.para = this.config.userName;
   }
 
-  enviar() {
+  async enviar() {
+    if (this.saving) {
+      return; // Evita múltiples envíos si ya se está guardando
+    }
+    this.saving = true;
     this.submitted = true;
-
-    if (!this.respuesta.asunto) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Debe ingresar un asunto.',
-      });
-      return;
-    }
-
-    if (!this.respuesta.mensaje) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Debe ingresar un mensaje.',
-      });
-      return;
-    }
 
     if (this.selectedContactos.length > 0) {
       this.respuesta.cc = this.selectedContactos.map(
@@ -131,9 +118,14 @@ export class AlertasEnviarRespuestaComponent {
       );
     }
 
+    if (!this.respuesta.asunto || !this.respuesta.mensaje || !this.selectedFile) {
+      this.saving = false;
+      return;
+    }
+
     if (this.selectedFile) {
       const fileReader = new FileReader();
-      fileReader.onload = () => {
+      fileReader.onload = async () => {
         const fileContent = fileReader.result as ArrayBuffer;
 
         this.respuesta.archivo = {
@@ -142,55 +134,59 @@ export class AlertasEnviarRespuestaComponent {
           file: Array.from(new Uint8Array(fileContent)),
         };
 
-        this.guardar();
+        await this.guardar();
       };
 
       fileReader.readAsArrayBuffer(this.selectedFile);
     } else {
-      this.guardar();
+      await this.guardar();
     }
+
+    this.saving = false;
   }
 
-  guardar() {
+  async guardar() {
     this.respuesta.idAlerta = this.alertaId;
-    this.repos
-      .post(
-        'GestionarAlertas/EnviarRespuesta',
-        this.respuesta,
-        apis.seguimiento,
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response.estado == false) {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: response.descripcion,
-            });
-          } else {
-            this.mostrarDialogo = true;
-          }
-        },
-        error: (error) => {
-          console.error('Error al consumir el API:', error);
-        },
-      });
+    try {
+      const response: any = await firstValueFrom(
+        this.repos.post(
+          'GestionarAlertas/EnviarRespuesta',
+          this.respuesta,
+          apis.seguimiento,
+        )
+      );
+
+      if (response.estado == false) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: response.descripcion,
+        });
+      } else {
+        this.mostrarDialogo = true;
+      }
+    } catch (error) {
+      console.error('Error al consumir el API:', error);
+    }
   }
 
   limpiar() {
     this.submitted = false;
     this.mostrarDialogo = false;
+    this.selectedContactos = [];
     this.respuesta = {
       idAlerta: 0,
       idNNA: 0,
-      para: [] as string[],
       cc: [] as string[],
       asunto: '',
       mensaje: '',
       archivo: null as Attachment | null,
       firma: '',
     };
+    this.respuesta.archivo = null;
+    this.fileName = null;
     this.selectedFile = null;
+    this.respuesta.para = this.config.userName;
   }
 
   close() {
@@ -257,9 +253,6 @@ export class AlertasEnviarRespuestaComponent {
       // Si todo es válido, guardar el archivo seleccionado
       this.selectedFile = file;
       this.fileName = file.name;
-      // this.contactForm.patchValue({
-      //   archivo: file
-      // });
     }
   }
 }

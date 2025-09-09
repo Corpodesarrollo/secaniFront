@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { ModalCrearComponent } from '../../usuarios/eapb/modal-crear/modal-crear.component';
 import { Usuario } from '../../../../models/usuario.model';
 import { GenericService } from '../../../../services/generic.services';
-import { User } from '../../../../core/services/userService';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -63,7 +62,7 @@ export class MiPerfilComponent implements OnInit {
     { fecha: '30/09/2024', motivo: 'Calamidad domestica' }
   ];
 
-  constructor(private dataService: GenericService, private user: User) { }
+  constructor(private dataService: GenericService) { }
 
   async ngOnInit() {
     sessionStorage.setItem('roleId', '311882D4-EAD0-4B0B-9C5D-4A434D49D16D');

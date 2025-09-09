@@ -14,9 +14,8 @@ import { Router } from '@angular/router';
 
 import { UsuariosModule } from '../../usuarios.module';
 import { TpParametros } from '../../../../../core/services/tpParametros';
-import { User } from '../../../../../core/services/userService';
 import { NnaContactoListaComponent } from '../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component';
-
+import { User } from '../../../../../core/services/user';
 
 @Component({
   selector: 'app-intento-exitoso',
@@ -54,8 +53,9 @@ export class IntentoExitosoComponent implements OnInit {
   formGroup4: FormGroup;
 
   parentesco: any;
+  user = new User();
 
-  constructor(private fb: FormBuilder, public servicio: IntentoExitosoService, public router: Router, public TpParametros: TpParametros, public user: User) {
+  constructor(private fb: FormBuilder, public servicio: IntentoExitosoService, public router: Router, public TpParametros: TpParametros) {
 
     this.formGroup2 = this.fb.group({
       FechaIntento: [null, Validators.required],
@@ -83,8 +83,9 @@ export class IntentoExitosoComponent implements OnInit {
     this.NNA = await this.servicio.GetNNaById(this.ContactoNNA.nnaId);
 
     //TODO: OBTENER EL ID DEL USUARIO
-    this.id_usuario = User.id;
-    this.nombreUsuario = User.name ?? 'Nombre Usuario';
+    this.id_usuario = this.user.id;
+    this.nombreUsuario = this.user.name ?? 'Nombre Usuario';
+    console.log("Usuario", this.user);
 
     this.parentesco = await this.TpParametros.getTPParentesco();
   }

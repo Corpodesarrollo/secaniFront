@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
 
 import { TableModule } from 'primeng/table';
 
@@ -10,7 +11,7 @@ import { PlantillasCorreoService } from '../../../../services/plantillas-correo.
 @Component({
   selector: 'app-plantilla-correo-historico',
   standalone: true,
-  imports: [CommonModule, TableModule],
+  imports: [CommonModule, TableModule, ButtonModule, RouterModule],
   templateUrl: './plantilla-correo-historico.component.html',
   styleUrl: './plantilla-correo-historico.component.css'
 })

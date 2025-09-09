@@ -226,29 +226,10 @@ export class NotificacionOficioComponent {
     }
   
     limpiar(){
-      // this.mostrarDialogo = false;
-
-      // if (!this.error){
-      //   this.notificacion = {
-      //       id: 0,
-      //       idNotificacion: 0,
-      //       idEntidad: '',
-      //       para: [],
-      //       conCopia: [],
-      //       plantillaId: 0,
-      //       asunto: "",
-      //       mensaje: "",
-      //       agregarEnlace: false,
-      //       enlace: "",
-      //       agregarComentario: false,
-      //       comentario: "",
-      //       adjunto: null,
-      //       firma: "",
-      //     };
-
-      //   this.showDialog = false;
-      //   this.closeModal.emit(true);
-      // }
+      this.mostrarDialogo = false;
+      if (!this.error){
+        this.closeModal.emit(true);
+      }
     }
   
     openModal() {

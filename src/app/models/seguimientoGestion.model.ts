@@ -4,6 +4,7 @@ export interface SeguimientoGestion {
     id?: number;
     nnaId: number;
     fechaSeguimiento: Date;
+    fechaSeguimientoStr?: string;
     estadoId: number;
     contactoNNAId: number;
     telefono: string;

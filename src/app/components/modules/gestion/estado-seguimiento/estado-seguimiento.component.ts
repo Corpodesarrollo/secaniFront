@@ -7,7 +7,6 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
 import { TpParametros } from '../../../../core/services/tpParametros';
-import { User } from '../../../../core/services/userService';
 import { NNA } from '../../../../models/nna.model';
 import { Parametricas } from '../../../../models/parametricas.model';
 import { Seguimiento } from '../../../../models/seguimiento.model';
@@ -95,7 +94,6 @@ export class EstadoSeguimientoComponent {
       private repos: GenericService,
       private tp: TablasParametricas,
       private tpp: TpParametros,
-      private user: User,
       private personaService: PersonaService,
       private nnaService: NNAService,
     ) {

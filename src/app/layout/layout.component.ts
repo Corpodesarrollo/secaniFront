@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { GenericService } from '../services/generic.services';
 import { MenuService } from '../services/menu.service';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../core/services/userService';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-layout',
@@ -13,10 +15,10 @@ import { CommonModule } from '@angular/common';
 export class LayoutComponent {
   title = 'SecaniFront';
   isMenuCollapsed = true;
-  constructor(private primengConfig: PrimeNGConfig, private menuService: MenuService, private repos: GenericService) {}
+  constructor(private primengConfig: PrimeNGConfig, private menuService: MenuService, private repos: GenericService, private userServise: UserService ) {}
 
-  ngOnInit() {
-    this.loadAuth();
+  async ngOnInit() {
+    await this.loadAuth();
 
     this.primengConfig.setTranslation({
       startsWith: 'Empieza con',
@@ -150,39 +152,32 @@ export class LayoutComponent {
     });
   }
 
-  loadAuth() {
-    if (environment.cookie){
-      this.repos.get('auth', ``, 'Authentication').subscribe({
-        next: (data: any) => {
-          console.log("data", data);
-          if (data != null) {
-            localStorage.setItem('user', JSON.stringify(data));
-          }
-        },
-        error: (err) => {
-          console.log("Error", err);
-        },
-      });
-    }else{
-      localStorage.setItem('user', `
-        {
-          "Id":"48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5",
-          "Alias":"CC51644243",
-          "Email":"CHARLESROCK96@GMAIL.COM",
-          "Name":"CLAUDIA MARTINEZ",
-          "State":true,
-          "RolCode":[
-            "Perfil PISIS Neo",
-            "SINTRA-ENT"
-          ],
-          "EnterpriseCode":"NI 800114312",
-          "EnterpriseDeptoCode":"80",
-          "EnterpriseEmail":"lidertic@saluddecaldas.gov.co",
-          "EnterpriseName":"DIRECCION TERRITORIAL DE SALUD DE CALDAS",
-          "EnterpriseIdentification":"800114312",
-          "IsMinSalud":false,
-          "IsAuth":true
-        }`);
+  async loadAuth(): Promise<any> {
+    if (environment.cookie) {
+      let data = await this.userServise.get();
+      if (data){
+        localStorage.setItem('user', JSON.stringify(data));
+      }
+    } else {
+      localStorage.setItem('user', JSON.stringify({
+        id: '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5',
+        alias: 'CC51644243',
+        email: 'CHARLESROCK96@GMAIL.COM',
+        name: 'CLAUDIA MARTINEZ',
+        state: true,
+        rolCode: ['Perfil PISIS Neo','SINTRA-ENT'],
+        enterpriseCode: 'NI 800114312',
+        enterpriseDeptoCode: '80',
+        enterpriseEmail: 'lidertic@saluddecaldas.gov.co',
+        enterpriseName: 'DIRECCION TERRITORIAL DE SALUD DE CALDAS',
+        enterpriseIdentification: '800114312',
+        isMinSalud: false,
+        isAuth: true
+      }));
     }
   }
 }
+function firstValueFrom(arg0: Observable<any>): any {
+  throw new Error('Function not implemented.');
+}
+

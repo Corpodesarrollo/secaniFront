@@ -25,8 +25,8 @@ import { apis } from '../../../../../models/apis.model';
 import { GenericService } from '../../../../../services/generic.services';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 import { EstadoAlerta } from '../../../../../models/estadoAlerta.model';
-import { user, User } from '../../../../../core/services/userService';
 import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
+import { User } from '../../../../../core/services/user';
 
 @Component({
   selector: 'app-seguimiento-gestionar',
@@ -138,7 +138,6 @@ export class SeguimientoGestionarComponent {
     //alertas pendientes
     this.gs.getAsync('Alerta/ConsultarAlertasUltimoSeguimiento', `/${id}`, apis.seguimiento).then((data: any) => {
       this.alertasPendientes = data;
-      console.log('Alertas pendientes:', this.alertasPendientes);
     }).catch((error: any) => {
       console.error('Error fetching contact list', error);
     });
@@ -159,7 +158,6 @@ export class SeguimientoGestionarComponent {
     let id = this.router.snapshot.paramMap.get('id')!;
     this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
       let cnt = Number(data);
-      console.log('Cantidad de seguimientos:', cnt);
       if (cnt > 1) {
         this.primerSeguimiento = false;
       } else {
@@ -177,7 +175,7 @@ export class SeguimientoGestionarComponent {
     this.seguimiento.nnaId = this.nna.id;
     this.seguimiento.contactoNNAId = this.contacto.id;
     this.seguimiento.telefono = this.contacto.telefonos;
-    this.seguimiento.usuarioId = User.id ?? "";
+    this.seguimiento.usuarioId = this.user.id ?? "";
     this.seguimiento.solicitanteId = 1;
     this.seguimiento.fechaSolicitud = new Date();
     this.seguimiento.tieneDiagnosticos = this.nna.diagnosticoId > 0;
@@ -215,7 +213,7 @@ export class SeguimientoGestionarComponent {
       estadoId: this.idEstadoSeguimiento,
       contactoNNAId: this.contacto.id,
       telefono: this.contacto.telefonos,
-      usuarioId: User.id ?? "",
+      usuarioId: this.user.id ?? "",
       solicitanteId: 1,
       fechaSolicitud: new Date(),
       tieneDiagnosticos: this.nna.diagnosticoId > 0,
@@ -230,6 +228,7 @@ export class SeguimientoGestionarComponent {
       alertasPendientes: this.alertasPendientes
     };
     
+    console.log('showDialog:', this.showDialog);
     this.showDialog = true;
     this.saving = false;
   }

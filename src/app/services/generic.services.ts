@@ -74,11 +74,16 @@ export class GenericService {
   }
 
   public async getAsync(modulo: string, parameters: string, api: string = ''): Promise<any> {
-    const apiUrl = this.getApiUrl(api);
-    if (environment.cookie){
-      return this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
-    } else {
-      return this.http.get(`${apiUrl}${modulo}${parameters}`);
+    try {
+      const apiUrl = this.getApiUrl(api);
+      if (environment.cookie) {
+        return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`, { withCredentials: true }));
+      } else {
+        return await lastValueFrom(this.http.get(`${apiUrl}${modulo}${parameters}`));
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      throw error;
     }
   }
 

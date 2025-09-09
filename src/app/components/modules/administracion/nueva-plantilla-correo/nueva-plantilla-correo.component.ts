@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 
 import { MessageService } from 'primeng/api';
 
@@ -43,7 +43,8 @@ export class NuevaPlantillaCorreoComponent {
     private formBuilder: FormBuilder,
     private plantillasCorreoService: PlantillasCorreoService,
     private activatedRoute: ActivatedRoute,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {
     this.plantillaCorreoForm = this.formBuilder.group({
       id: null,
@@ -121,6 +122,10 @@ export class NuevaPlantillaCorreoComponent {
             detail: 'Plantilla de correo guardada correctamente.',
             life: 3000
           });
+          const delayInMilliseconds = 3000;
+          setTimeout(() => {
+            this.router.navigate(['/administracion/plantilla_de_correo'])
+          }, delayInMilliseconds);
         },
         error: (error) => {
           this.messageService.add({

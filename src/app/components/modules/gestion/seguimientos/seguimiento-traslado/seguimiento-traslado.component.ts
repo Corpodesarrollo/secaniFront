@@ -17,8 +17,8 @@ import { GenericService } from '../../../../../services/generic.services';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { SeguimientoGuardarComponent } from "../seguimiento-guardar/seguimiento-guardar.component";
 import { SeguimientoGestion } from '../../../../../models/seguimientoGestion.model';
-import { User } from '../../../../../core/services/userService';
 import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
+import { User } from '../../../../../core/services/user';
 
 @Component({
   selector: 'app-seguimiento-traslado',
