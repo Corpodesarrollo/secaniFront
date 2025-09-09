@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h1 class="mt-5 mb-4">Nueva plantilla de correo</h1>
 
-  <div class="card border border-0 py-5 px-4">
+  <div class="card border-0 py-5 px-4">
     <div class="card-body">
       <form [formGroup]="plantillaCorreoForm" (ngSubmit)="onSubmit()">
         <!-- Primera Fila -->
@@ -14,9 +14,9 @@
           </div>
 
           <!-- Columna Firmante -->
-          <div class="col-12 col-md-1 mb-1 mb-md-0 fw-semibold">Firmate:</div>
+          <div class="col-12 col-md-1 mb-1 mb-md-0 fw-semibold">Firmante:</div>
           <div class="col-12 col-md-5">
-            <p-dropdown [options]="firmantes" formControlName="firmante" styleClass="w-100" placeholder="Seleccione"/>
+            <p-dropdown [options]="firmantes" optionLabel="fullName" optionValue="id" formControlName="firmante" styleClass="w-100" placeholder="Seleccione"/>
             <small *ngIf="isValidField('firmante')" class="text-danger">{{ getFieldError('firmante') }}</small>
           </div>
         </div>
