@@ -39,8 +39,7 @@ export class ListaParametricaHistoricoComponent {
         next: (response: any) => {
           this.historicos = response;
           console.log(response);
-        },
-        error: () => this.router.navigate(['/administracion/lista_parametricas'])
+        }
       });
   }
 }
