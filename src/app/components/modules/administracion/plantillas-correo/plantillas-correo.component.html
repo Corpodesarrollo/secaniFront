@@ -60,7 +60,15 @@
               <div class="d-flex align-items-center justify-content-between">
                 Estado
                 <p-sortIcon field="estado" />
-                <p-columnFilter type="text" field="estado" display="menu" class="ms-auto"/>
+                <p-columnFilter field="status" matchMode="equals" display="menu">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown [ngModel]="value" [options]="estados" (onChange)="filter($event.value)" placeholder="Any">
+                            <ng-template let-option pTemplate="item">
+                                
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
               </div>
             </th>
             <th style="min-width:10rem">Accion</th>

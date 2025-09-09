@@ -3,31 +3,35 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
 import { EliminarPlantillaCorreo } from '../../../../models/eliminarPlantillaCorreo.model';
+import { Plantilla } from '../../../../models/plantilla.model';
 
 
 
 @Component({
   selector: 'app-plantillas-correo',
   standalone: true,
-  imports: [ButtonModule, ConfirmDialogModule, CommonModule, DialogModule, RouterModule, TableModule, ToastModule],
+  imports: [ButtonModule, ConfirmDialogModule, CommonModule, DialogModule, DropdownModule, FormsModule, RouterModule, TableModule, ToastModule],
   templateUrl: './plantillas-correo.component.html',
   styleUrl: './plantillas-correo.component.css',
   providers: [ConfirmationService, MessageService]
 })
 export class PlantillasCorreoComponent implements OnInit {
 
-  public plantillasCorreo: any[] = [];
-  public plantillaCorreoSeleccionada: any | null = null;
+  public plantillasCorreo: Plantilla[] = [];
+  public plantillaCorreoSeleccionada: Plantilla | null = null;
   public mostrarDetallesModal: boolean = false;
+  public estados!: any[];
 
   constructor(
     private plantillasCorreoService: PlantillasCorreoService,
@@ -37,13 +41,21 @@ export class PlantillasCorreoComponent implements OnInit {
 
   ngOnInit() {
     this.obtenerPlantillasCorreo();
+
+    this.estados = [
+      { label: 'Activo', value: '1' },
+      { label: 'Inactivo', value: '0' }
+    ];
   }
 
   obtenerPlantillasCorreo() {
     this.plantillasCorreoService.getPlantillasCorreo()
       .subscribe({
         next: (response: any) => {
-          this.plantillasCorreo = response;
+          this.plantillasCorreo = response.map((p: Plantilla) => ({
+            ...p,
+            fechaCreacion: p.fechaCreacion ? this.toDateOnly(p.fechaCreacion) : null
+          }));
         },
         error: (error) => {
           this.messageService.add({
@@ -130,5 +142,11 @@ export class PlantillasCorreoComponent implements OnInit {
         });
       }
     });
+  }
+
+  private toDateOnly(value: string | Date): Date | null {
+    if (!value) return null;
+    const d = new Date(value);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()); 
   }
 }

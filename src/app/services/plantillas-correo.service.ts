@@ -34,4 +34,9 @@ export class PlantillasCorreoService {
     const url: string = `seguimiento/EliminarPlantillaCorreo`;
     return this.generico.post(url, eliminar, 'Seguimiento');
   }
+
+  getFirmantes() {
+    const url: string = `NNA/VwAgentesAsignados`;
+    return this.generico.get(url, '', 'NNA');
+  }
 }
