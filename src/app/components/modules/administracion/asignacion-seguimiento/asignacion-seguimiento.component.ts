@@ -100,7 +100,11 @@ export class AsignacionSeguimientoComponent implements OnInit {
   CargarDatos(filter: string) {
     this.repos.get('Seguimiento/GetAllByIdUser/', `${this.idUsuario}/${filter}`, 'Seguimiento').subscribe({
       next: (data: any) => {
-        this.seguimientos = data;
+        this.seguimientos = data.map((s: Seguimiento) => ({
+          ...s,
+          fechaNotificacion: s.fechaNotificacion ? this.toDateOnly(s.fechaNotificacion) : null,
+          fechaUltimaActuacion: s.fechaUltimaActuacion ? this.toDateOnly(s.fechaUltimaActuacion) : null
+        }));
       }
     });
   }
@@ -227,5 +231,10 @@ export class AsignacionSeguimientoComponent implements OnInit {
 
   }
 
+  private toDateOnly(value: string | Date): Date | null {
+    if (!value) return null;
+    const d = new Date(value);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()); 
+  }
 
 }
