@@ -51,7 +51,7 @@ export class ListaParametricaItemsComponent implements OnInit {
       activo: [{ value: true, disabled: true }],
       isDeleted: [{ value: false, disabled: true }],
 
-      itemListaPadre: [{ value: 'N/A', disabled: true }],
+      categoriaAlertaId: [{ value: 'N/A', disabled: true }],
       codigo: [{ value: '', disabled: true }],
       indicador: [''],
     });
@@ -106,7 +106,7 @@ export class ListaParametricaItemsComponent implements OnInit {
       formData = {
         id: formData.id,
         subCategoriaAlerta: formData.nombre,
-        categoriaAlertaId: formData.itemListaPadre,
+        categoriaAlertaId: formData.categoriaAlertaId,
         indicador: formData.indicador,
         isDeleted: formData.isDeleted
       }
