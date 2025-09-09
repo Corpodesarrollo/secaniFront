@@ -62,11 +62,7 @@
                 <p-sortIcon field="estado" />
                 <p-columnFilter field="status" matchMode="equals" display="menu">
                     <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                        <p-dropdown [ngModel]="value" [options]="estados" (onChange)="filter($event.value)" placeholder="Any">
-                            <ng-template let-option pTemplate="item">
-                                
-                            </ng-template>
-                        </p-dropdown>
+                        <p-dropdown optionLabel="label"optionValue="value" [ngModel]="value" [options]="estados" (onChange)="filter($event.value)" placeholder="Any" />
                     </ng-template>
                 </p-columnFilter>
               </div>
