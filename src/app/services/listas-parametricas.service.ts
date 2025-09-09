@@ -48,7 +48,7 @@ export class ListasParametricasService {
   }
 
   getHistoricoListaParametrica(nombre: string): Observable<Object> {
-    const url: string = `api/HistoricoTransaccion/tabla/${nombre}`;
+    const url: string = `/HistoricoTransaccion/tabla/${nombre}`;
     return this.generico.get(url, '', 'TablaParametrica');
   }
   
