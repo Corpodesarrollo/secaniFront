@@ -28,6 +28,7 @@ export class ListaParametricaItemsComponent implements OnInit {
 
   public listaParametricaPadre: ListaParametrica | null = null;
   public items: any[] = [];
+  public itemsListaPadre: any[] = [];
 
   public itemsListaParametricaForm: FormGroup;
 
@@ -66,6 +67,10 @@ export class ListaParametricaItemsComponent implements OnInit {
         tap((lista: any) => {
           this.listaParametricaPadre = lista;
           this.updateFormValidators();
+          
+          if (this.listaParametricaPadre?.nombreTablaPadre) {
+            this.obtenerItemsDePadre(this.listaParametricaPadre?.nombreTablaPadre);
+          }
         }),
         tap(() => this.loadItems())
       )
@@ -88,6 +93,13 @@ export class ListaParametricaItemsComponent implements OnInit {
             life: 3000
           });
         }
+      });
+  }
+
+  obtenerItemsDePadre(nombrePadre: string): void {
+    this.listasParametricasService.getItemListaParametricas(nombrePadre)
+      .subscribe({
+        next: (value) => this.itemsListaPadre = value
       });
   }
 

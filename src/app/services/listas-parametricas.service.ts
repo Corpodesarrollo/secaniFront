@@ -42,7 +42,7 @@ export class ListasParametricasService {
     return this.generico.post(url, dato, 'TablaParametrica');;
   }
 
-  getItemListaParametricas(nombre: string): Observable<Object> {
+  getItemListaParametricas(nombre: string): Observable<Object[]> {
     const url: string = `${nombre}/notdeleted`;
     return this.generico.get(url, '', 'TablaParametrica');;
   }
