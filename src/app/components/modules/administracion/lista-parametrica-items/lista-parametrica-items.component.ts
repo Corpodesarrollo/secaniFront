@@ -99,8 +99,18 @@ export class ListaParametricaItemsComponent implements OnInit {
     if(this.itemsListaParametricaForm.invalid || !this.listaParametricaPadre) 
       return this.itemsListaParametricaForm.markAllAsTouched();
 
-    const formData = this.itemsListaParametricaForm.getRawValue();
+    let formData = this.itemsListaParametricaForm.getRawValue();
     const nombreLista = this.listaParametricaPadre.nombre;
+
+    if (this.listaParametricaPadre.nombre === "subcategoriaalerta") {
+      formData = {
+        id: formData.id,
+        subCategoriaAlerta: formData.nombre,
+        categoriaAlertaId: formData.itemListaPadre,
+        indicador: formData.indicador,
+        isDeleted: formData.isDeleted
+      }
+    }
 
     const save$ = formData.id
       ? this.listasParametricasService.putItemListaParametrica(nombreLista, formData.id, formData)
