@@ -28,6 +28,7 @@ export class ListaParametricaItemsComponent implements OnInit {
 
   public listaParametricaPadre: ListaParametrica | null = null;
   public items: any[] = [];
+  public itemsListaPadre: any[] = [];
 
   public itemsListaParametricaForm: FormGroup;
 
@@ -66,6 +67,10 @@ export class ListaParametricaItemsComponent implements OnInit {
         tap((lista: any) => {
           this.listaParametricaPadre = lista;
           this.updateFormValidators();
+          
+          if (this.listaParametricaPadre?.nombreTablaPadre) {
+            this.obtenerItemsDePadre(this.listaParametricaPadre?.nombreTablaPadre);
+          }
         }),
         tap(() => this.loadItems())
       )
@@ -88,6 +93,13 @@ export class ListaParametricaItemsComponent implements OnInit {
             life: 3000
           });
         }
+      });
+  }
+
+  obtenerItemsDePadre(nombrePadre: string): void {
+    this.listasParametricasService.getItemListaParametricas(nombrePadre)
+      .subscribe({
+        next: (value) => this.itemsListaPadre = value
       });
   }
 
@@ -197,6 +209,7 @@ export class ListaParametricaItemsComponent implements OnInit {
   private updateFormValidators(): void {
     const festivoControl = this.itemsListaParametricaForm.get('festivo');
     const nombreControl = this.itemsListaParametricaForm.get('nombre');
+    const categoriaAlertaIdControl = this.itemsListaParametricaForm.get('categoriaAlertaId');
 
     // Limpiamos validadores previos
     festivoControl?.clearValidators();
@@ -206,6 +219,13 @@ export class ListaParametricaItemsComponent implements OnInit {
       festivoControl?.setValidators([Validators.required]);
     } else {
       nombreControl?.setValidators([Validators.required]);
+    }
+
+    if (this.listaParametricaPadre?.tablaPadre) {
+      categoriaAlertaIdControl?.enable();
+    } else {
+      categoriaAlertaIdControl?.disable();
+      categoriaAlertaIdControl?.setValue('N/A');
     }
 
     festivoControl?.updateValueAndValidity();
