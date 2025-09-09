@@ -328,15 +328,6 @@
 
 <p-dialog header="Reasignar seguimiento" [(visible)]="showDialogAgente" [modal]="true" [style]="{width: '600px'}">
 
-  <p class="text-muted mb-4">
-    <ng-container *ngIf="selectedRecords.length === 1">
-      <strong>{{ selectedRecords[0].nombreCompleto }}</strong> - Seguimiento No. {{ selectedRecords[0].noCaso }}
-    </ng-container>
-    <ng-container *ngIf="selectedRecords.length !== 1">
-      Casos seleccionados: <strong>{{ selectedRecords.length }}</strong>
-    </ng-container>
-  </p>
-
   <!-- Info seleccionados -->
   <p class="text-muted mb-4">
     <ng-container *ngIf="selectedRecords.length === 1">
