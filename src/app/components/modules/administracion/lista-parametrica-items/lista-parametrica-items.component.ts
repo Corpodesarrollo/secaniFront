@@ -172,7 +172,18 @@ export class ListaParametricaItemsComponent implements OnInit {
       accept: () => {
         if (itemListaParametrica) {
           this.itemsListaParametricaForm.reset({...itemListaParametrica, isDeleted: true, activo: false });
-          const formData = this.itemsListaParametricaForm.getRawValue();
+          let formData = this.itemsListaParametricaForm.getRawValue();
+
+          if (this.listaParametricaPadre?.nombre === "subcategoriaalerta") {
+            formData = {
+              id: formData.id,
+              subCategoriaAlerta: formData.nombre,
+              categoriaAlertaId: formData.categoriaAlertaId,
+              indicador: formData.indicador,
+              isDeleted: formData.isDeleted
+            }
+          }
+
           this.listasParametricasService.deleteItemListaParametrica(this.listaParametricaPadre!.nombre, itemListaParametrica.id, formData)
             .pipe(tap(() => this.loadItems()))
             .subscribe({
