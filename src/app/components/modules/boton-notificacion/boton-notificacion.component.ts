@@ -6,6 +6,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { CommonModule } from '@angular/common';
 import { GenericService } from '../../../services/generic.services';
 import { Router } from '@angular/router';
+import { User } from '../../../core/services/user';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-boton-notificacion',
@@ -15,6 +17,7 @@ import { Router } from '@angular/router';
   styleUrl: './boton-notificacion.component.css'
 })
 export class BotonNotificacionComponent implements OnInit {
+  xUser = new User();
   showDialog: boolean = false;
   idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
   cntNotificaciones: number = 0;
@@ -26,6 +29,11 @@ export class BotonNotificacionComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
+    if (this.xUser.id != null) {
+      this.idUsuario = this.xUser.id;
+    } else{
+      window.location.href = environment.url_Sispro;
+    }
     this.consultarNotificaciones();
   }
   

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
@@ -24,17 +24,18 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PersonaService } from '../../../../core/services/personaService';
 import { Persona } from '../../../../models/persona.model';
 import { NNAService } from '../../../../core/services/nnaService';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-estado-seguimiento',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, CommonModule, StepsModule, RouterModule, DialogModule, ButtonModule, SeguimientoStepsComponent, DropdownModule, InputTextModule, FormsModule, ReactiveFormsModule, ToastModule],
+  imports: [TableModule, BadgeModule, CardModule, CommonModule, StepsModule, RouterModule, DialogModule, ButtonModule, SeguimientoStepsComponent, DropdownModule, InputTextModule, FormsModule, ReactiveFormsModule, ToastModule, SpinnerComponent],
   templateUrl: './estado-seguimiento.component.html',
   styleUrl: './estado-seguimiento.component.css',
   providers: [MessageService]
 })
-export class EstadoSeguimientoComponent {
-
+export class EstadoSeguimientoComponent implements OnInit {
+  cargado = false;
   nna: NNA = new NNA();
   idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
   // idUsuario?: string;
@@ -128,6 +129,11 @@ export class EstadoSeguimientoComponent {
     this.repos.get('Seguimiento/GetSeguimientosEstados/', `${filter}`, 'Seguimiento').subscribe({
       next: (data: any) => {
         this.seguimientos = data;
+        this.cargado = true;
+      },
+      error: (err) => {
+        this.cargado = true;
+        console.error(err);
       }
     });
   }
@@ -242,7 +248,7 @@ export class EstadoSeguimientoComponent {
             }
           } else {
             this.hayRecaida = false;
-            console.log("No se encontró el NNA con el número de identificación proporcionado.");
+            console.log("No se encontró el NNA con el número de identificación proporcionado. xx");
           }
         }
         else {

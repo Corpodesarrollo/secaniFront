@@ -7,6 +7,7 @@ import { GenericService } from "../../services/generic.services";
 })
 export class User {
     id?: string;
+    idRol?: string;
     alias?: string;
     email?: string;
     name?: string;
@@ -18,7 +19,11 @@ export class User {
     enterpriseName?: string;
     enterpriseIdentification?: string;
     isMinSalud?: string;
-    isAuth?: boolean = false;
+    isCoordinadorAdmin?: boolean = false;
+    isAgenteSeguimiento?: boolean = false;
+    isCuidador?: boolean = false;
+    isET?: boolean = false;
+    isEAPB?: boolean = false;
 
 
     constructor(  )  {
@@ -30,6 +35,7 @@ export class User {
         if (usuarioJson) {
             const usuarioData = JSON.parse(usuarioJson);
             this.id = usuarioData.id;
+            this.idRol = usuarioData.idRol;
             this.alias = usuarioData.alias;
             this.email = usuarioData.email;
             this.name = usuarioData.name;
@@ -41,7 +47,11 @@ export class User {
             this.enterpriseName = usuarioData.enterpriseName;
             this.enterpriseIdentification = usuarioData.enterpriseIdentification;
             this.isMinSalud = usuarioData.isMinSalud;
-            this.isAuth = usuarioData.isAuth;
+            this.isCoordinadorAdmin = usuarioData.isCoordinadorAdmin
+            this.isAgenteSeguimiento = usuarioData.isAgenteSeguimiento
+            this.isCuidador = usuarioData.isCuidador
+            this.isET = usuarioData.isET
+            this.isEAPB = usuarioData.isEAPB
         }
     }
 }
