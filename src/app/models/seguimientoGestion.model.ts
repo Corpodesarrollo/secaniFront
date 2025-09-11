@@ -9,7 +9,7 @@ export interface SeguimientoGestion {
     contactoNNAId: number;
     telefono: string;
     usuarioId: string;
-    solicitanteId: number;
+    solicitanteId?: string;
     fechaSolicitud: Date;
     tieneDiagnosticos: boolean;
     observacionesSolicitante: string; 

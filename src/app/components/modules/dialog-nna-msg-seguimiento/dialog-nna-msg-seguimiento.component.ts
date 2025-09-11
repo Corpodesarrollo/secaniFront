@@ -66,7 +66,7 @@ export class DialogNnaMsgSeguimientoComponent {
     contactoNNAId: 0,
     telefono: '',
     usuarioId: this.userId,
-    solicitanteId: 0,
+    solicitanteId: "0",
     fechaSolicitud: new Date(),
     tieneDiagnosticos: false,
     observacionesSolicitante: '', 

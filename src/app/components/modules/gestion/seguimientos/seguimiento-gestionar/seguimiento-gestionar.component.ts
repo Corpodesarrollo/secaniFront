@@ -67,7 +67,7 @@ export class SeguimientoGestionarComponent {
     contactoNNAId: 0,
     telefono: '',
     usuarioId: '',
-    solicitanteId: 0,
+    solicitanteId: "0",
     fechaSolicitud: new Date(),
     tieneDiagnosticos: false,
     observacionesSolicitante: '',
@@ -176,7 +176,7 @@ export class SeguimientoGestionarComponent {
     this.seguimiento.contactoNNAId = this.contacto.id;
     this.seguimiento.telefono = this.contacto.telefonos;
     this.seguimiento.usuarioId = this.user.id ?? "";
-    this.seguimiento.solicitanteId = 1;
+    this.seguimiento.solicitanteId = "1";
     this.seguimiento.fechaSolicitud = new Date();
     this.seguimiento.tieneDiagnosticos = this.nna.diagnosticoId > 0;
   }
@@ -214,7 +214,7 @@ export class SeguimientoGestionarComponent {
       contactoNNAId: this.contacto.id,
       telefono: this.contacto.telefonos,
       usuarioId: this.user.id ?? "",
-      solicitanteId: 1,
+      solicitanteId: "1",
       fechaSolicitud: new Date(),
       tieneDiagnosticos: this.nna.diagnosticoId > 0,
       observacionesSolicitante: '',
