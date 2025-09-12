@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
@@ -24,17 +24,21 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PersonaService } from '../../../../core/services/personaService';
 import { Persona } from '../../../../models/persona.model';
 import { NNAService } from '../../../../core/services/nnaService';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
+import { User } from '../../../../core/services/user';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-estado-seguimiento',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, CommonModule, StepsModule, RouterModule, DialogModule, ButtonModule, SeguimientoStepsComponent, DropdownModule, InputTextModule, FormsModule, ReactiveFormsModule, ToastModule],
+  imports: [TableModule, BadgeModule, CardModule, CommonModule, StepsModule, RouterModule, DialogModule, ButtonModule, SeguimientoStepsComponent, DropdownModule, InputTextModule, FormsModule, ReactiveFormsModule, ToastModule, SpinnerComponent],
   templateUrl: './estado-seguimiento.component.html',
   styleUrl: './estado-seguimiento.component.css',
   providers: [MessageService]
 })
-export class EstadoSeguimientoComponent {
-
+export class EstadoSeguimientoComponent implements OnInit {
+  cargado = false;
+  xUser = new User();
   nna: NNA = new NNA();
   idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
   // idUsuario?: string;
@@ -100,19 +104,25 @@ export class EstadoSeguimientoComponent {
   }
   
   async ngOnInit(): Promise<void> {
-    this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
-    this.isLoadingTipoID = false;
+    if (this.xUser.id != null) {
+      this.idUsuario = this.xUser.id;
+      this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
+      this.isLoadingTipoID = false;
 
-    this.parentescos = await this.tpp.getParentescos();
-    this.isLoadingParentesco = false;
-    
-    this.CargarDatos('1');
+      this.parentescos = await this.tpp.getParentescos();
+      this.isLoadingParentesco = false;
+      
+      this.CargarDatos(this.xUser.id);
+      //his.CargarDatos("0");
 
-    //(!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado)
-    this.estaFallecido = false;
-    this.esMenorEdad = false;
-    this.hayRecaida = false;
-    this.estaRegistrado = true;
+      //(!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado)
+      this.estaFallecido = false;
+      this.esMenorEdad = false;
+      this.hayRecaida = false;
+      this.estaRegistrado = true;
+    } else{
+      window.location.href = environment.url_Sispro;
+    }
   }
 
   ngAfterViewInit() {
@@ -125,11 +135,29 @@ export class EstadoSeguimientoComponent {
   }
 
   CargarDatos(filter: string) {
-    this.repos.get('Seguimiento/GetSeguimientosEstados/', `${filter}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.seguimientos = data;
-      }
-    });
+    if (this.xUser.isCuidador) {
+      this.repos.get('Seguimiento/GetSeguimientosCuidador/', `${filter}`, 'Seguimiento').subscribe({
+        next: (data: any) => {
+          this.seguimientos = data;
+          this.cargado = true;
+        },
+        error: (err) => {
+          this.cargado = true;
+          console.error(err);
+        }
+      });
+    } else{
+      this.repos.get('Seguimiento/GetSeguimientosEstados/', `${filter}`, 'Seguimiento').subscribe({
+        next: (data: any) => {
+          this.seguimientos = data;
+          this.cargado = true;
+        },
+        error: (err) => {
+          this.cargado = true;
+          console.error(err);
+        }
+      });
+    }
   }
 
   consultarSeguimiento(data: Seguimiento) {

@@ -153,27 +153,52 @@ export class LayoutComponent {
   }
 
   async loadAuth(): Promise<any> {
+      let jsonUsuario = {
+        id: 'd54fc3db-060c-4bb3-aef2-d8b4e3e5f8c9',
+        idRol: '4C4016ED-B56D-4953-B8D3-C6A0A45A3850',
+        alias: 'CC3216549873',
+        email: 'fermanjarres3@gmail.com',
+        name: 'TRES FERNANDO MANJARRES',
+        state: true,
+        rolCode: ['Perfil PISIS Neo','SINTRA-ENT','SECANI-CoordinadorAdmin'],
+        enterpriseCode: 'CC 3216549873',
+        enterpriseDeptoCode: '',
+        enterpriseEmail: 'fermanjarres3@gmail.com',
+        enterpriseName: 'TRES FERNANDO MANJARRES',
+        enterpriseIdentification: '3216549873',
+        isMinSalud: false,
+        isCoordinadorAdmin: false,
+        isAgenteSeguimiento: false, 
+        isCuidador: true,
+        isET: false,
+        isEAPB: false
+      }
     if (environment.cookie) {
       let data = await this.userServise.get();
       if (data){
-        localStorage.setItem('user', JSON.stringify(data));
+        jsonUsuario = data;
       }
-    } else {
-      localStorage.setItem('user', JSON.stringify({
-        id: '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5',
-        alias: 'CC51644243',
-        email: 'CHARLESROCK96@GMAIL.COM',
-        name: 'CLAUDIA MARTINEZ',
-        state: true,
-        rolCode: ['Perfil PISIS Neo','SINTRA-ENT'],
-        enterpriseCode: 'NI 800114312',
-        enterpriseDeptoCode: '80',
-        enterpriseEmail: 'lidertic@saluddecaldas.gov.co',
-        enterpriseName: 'DIRECCION TERRITORIAL DE SALUD DE CALDAS',
-        enterpriseIdentification: '800114312',
-        isMinSalud: false,
-        isAuth: true
-      }));
+    }
+
+    if (jsonUsuario.id == '') {
+      let userToSave = {
+        email: jsonUsuario.email,
+        identificacion: `Pass-${jsonUsuario.enterpriseIdentification}`,
+        fullName: jsonUsuario.name,
+        alias: jsonUsuario.alias,
+        roles: []
+      }
+      this.repos.post('User/Create', userToSave, 'Authentication').subscribe({
+          next: (data: any) => {
+            jsonUsuario.id = data;
+            localStorage.setItem('user', JSON.stringify(jsonUsuario));
+          },
+          error: (err) => {
+            console.error(err);
+          }
+      });
+    } else{
+      localStorage.setItem('user', JSON.stringify(jsonUsuario));
     }
   }
 }

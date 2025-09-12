@@ -8,7 +8,7 @@
 export const environment = {
   cookie : false,
   production: false,
-  url: 'https://localhost:4200/',
+  url: 'https://localhost:7084/',
   url_MsAuthention: 'https://localhost:7084/',
   url_MSEntidad: 'https://localhost:7084/',
   url_MSPermisos: 'https://localhost:7084/',
@@ -18,6 +18,7 @@ export const environment = {
   url_MSSeguimiento: 'https://localhost:7085/',
   url_MSParametricas: 'https://localhost:7294/',
   url_MSUsuarioyRoles: 'https://localhost:7084/',
+  url_Sispro: 'https://web.sispropreprod.gov.co/'
 };
 
 // RUTAS DE AZURE

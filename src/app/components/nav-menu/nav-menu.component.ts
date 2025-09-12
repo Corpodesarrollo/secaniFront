@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { MenuModel } from '../../models/MenuModel';
 import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
+import { User } from '../../core/services/user';
 
 @Component({
   selector: 'app-nav-menu',
@@ -13,6 +14,7 @@ import { MenuService } from '../../services/menu.service';
   styleUrl: './nav-menu.component.css'
 })
 export class NavMenuComponent implements OnInit {
+  xUser = new User();
   items: MenuItem[] | undefined;
   menuRows: MenuModel[] = [];
   arregloMenu: any[] = [];
@@ -22,26 +24,31 @@ export class NavMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.xUser.id != null) {
+      var parameters = {
+        'roleId': this.xUser.idRol
+      };
+      this.service.post('Permisos/MenuXRolId', parameters, 'Authentication').subscribe({
+        next: (data: any) => {
+          this.menuRows = data;
+          this.cargarMenus();
+        }
+      });
+    } else{
+      window.location.href = environment.url_Sispro;
+    }
+
     var url = environment.url_MsAuthention;
 
     //Cordinador
-    sessionStorage.setItem('roleId','311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
+    //sessionStorage.setItem('roleId','311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
     //Agente seguimiento
     //sessionStorage.setItem('roleId','14CDDEA5-FA06-4331-8359-036E101C5046');
     //Es requerido para crear un nna es el usuario createdByUserId
     //  sessionStorage.setItem('userId','12413');
 
     //Parametro ejemplo agente de seguimiento
-    var parameters = {
-      'roleId': sessionStorage.getItem('roleId')
-    };
 
-    this.service.post('Permisos/MenuXRolId', parameters, 'Authentication').subscribe({
-      next: (data: any) => {
-        this.menuRows = data;
-        this.cargarMenus();
-      }
-    });
   }
 
   cargarMenus() {

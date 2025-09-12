@@ -151,7 +151,7 @@ export class SeguimientoAdherenciaComponent implements OnInit {
       contactoNNAId: this.idContacto ? Number(this.idContacto): 0,
       telefono: '',
       usuarioId: '',
-      solicitanteId: 0,
+      solicitanteId: "0",
       fechaSolicitud: new Date(),
       tieneDiagnosticos: false,
       observacionesSolicitante: '',
