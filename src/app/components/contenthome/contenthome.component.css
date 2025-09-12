@@ -51,3 +51,8 @@ a {
     margin-top: 10px;
     opacity: 0.9;
 }
+
+.saludo {
+  font-family: Montserrat;font-size: 24px;font-weight: 500;line-height: 29.26px;text-align: left;
+  color: #000000;
+}
