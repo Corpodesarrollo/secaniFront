@@ -49,8 +49,18 @@ export class ReportesService {
     return this.generico.put(url, reporte, 'Seguimiento');
   }
 
-  getReporteInconsistencias(fechaInicial: string, fechaFinal: string) {
-    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechaInicial}&FechaFin=${fechaFinal}`;
-    return this.generico.get(url, '', 'Seguimiento');
+  getReporteInconsistenciasGeneral(fechaInicial: Date, fechaFinal: Date) {
+    const url: string = `ReporteInconsistenciaPersona/GetReporteInconsistencias?FechaInicio=${fechaInicial.toISOString()}&FechaFin=${fechaFinal.toISOString()}`;
+    return this.generico.get(url, '', 'NNA');
+  }
+
+  getReporteInconsistenciasPorNNA(nnaId: string) {
+    const url: string = `ReporteInconsistenciaPersona/ReporteInconsistenciaPersona/${nnaId}`;
+    return this.generico.get(url, '', 'NNA');
+  }
+
+  getNNA() {
+    const url: string = `NNA/ConsultarNNAFiltro`;
+    return this.generico.post(url, { "estado": 0, "agente": "", "buscar": "", "orden": 1 }, 'NNA');
   }
 }
