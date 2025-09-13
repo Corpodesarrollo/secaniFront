@@ -56,10 +56,20 @@ export class ReportesService {
     return this.generico.put(url, { observacion: observaciones }, 'Seguimiento');
   }
 
-  getReporteInconsistencias(fechaInicial: string, fechaFinal: string) {
+  getReporteInconsistenciasGeneral(fechaInicial: string, fechaFinal: string) {
     const fechas = this.convertirFechasEntrada(fechaInicial, fechaFinal);
-    const url: string = `ReporteGeneralLlamadas/GetReporteGeneralLlamadas?FechaInicio=${fechas.fechaInicio}&FechaFin=${fechas.fechaFin}`;
-    return this.generico.get(url, '', 'Seguimiento');
+    const url: string = `ReporteInconsistenciaPersona/GetReporteInconsistencias?FechaInicio=${fechas.fechaInicio}&FechaFin=${fechas.fechaFin}`;
+    return this.generico.get(url, '', 'NNA');
+  }
+
+  getReporteInconsistenciasPorNNA(nnaId: string) {
+    const url: string = `ReporteInconsistenciaPersona/ReporteInconsistenciaPersona/${nnaId}`;
+    return this.generico.get(url, '', 'NNA');
+  }
+
+  getNNA() {
+    const url: string = `NNA/ConsultarNNAFiltro`;
+    return this.generico.post(url, { "estado": 0, "agente": "", "buscar": "", "orden": 1 }, 'NNA');
   }
 
   private formatearFecha(fechaISO: string, formato: 'dd-mm-yyyy'|'yyyy-mm-dd'|'mm-dd-yyyy' = 'yyyy-mm-dd'): string {
