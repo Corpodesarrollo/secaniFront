@@ -153,26 +153,26 @@ export class LayoutComponent {
   }
 
   async loadAuth(): Promise<any> {
-      let jsonUsuario = {
-        id: 'd54fc3db-060c-4bb3-aef2-d8b4e3e5f8c9',
-        idRol: '4C4016ED-B56D-4953-B8D3-C6A0A45A3850',
-        alias: 'CC3216549873',
-        email: 'fermanjarres3@gmail.com',
-        name: 'TRES FERNANDO MANJARRES',
-        state: true,
-        rolCode: ['Perfil PISIS Neo','SINTRA-ENT','SECANI-CoordinadorAdmin'],
-        enterpriseCode: 'CC 3216549873',
-        enterpriseDeptoCode: '',
-        enterpriseEmail: 'fermanjarres3@gmail.com',
-        enterpriseName: 'TRES FERNANDO MANJARRES',
-        enterpriseIdentification: '3216549873',
-        isMinSalud: false,
-        isCoordinadorAdmin: false,
-        isAgenteSeguimiento: false, 
-        isCuidador: true,
-        isET: false,
-        isEAPB: false
-      }
+    let jsonUsuario = {
+      id: 'd54fc3db-060c-4bb3-aef2-d8b4e3e5f8c9',
+      idRol: '4C4016ED-B56D-4953-B8D3-C6A0A45A3850',
+      alias: 'CC3216549873',
+      email: 'fermanjarres3@gmail.com',
+      name: 'TRES FERNANDO MANJARRES',
+      state: true,
+      rolCode: ['Perfil PISIS Neo','SINTRA-ENT','SECANI-CoordinadorAdmin'],
+      enterpriseCode: 'CC 3216549873',
+      enterpriseDeptoCode: '',
+      enterpriseEmail: 'fermanjarres3@gmail.com',
+      enterpriseName: 'TRES FERNANDO MANJARRES',
+      enterpriseIdentification: '3216549873',
+      isMinSalud: false,
+      isCoordinadorAdmin: false,
+      isAgenteSeguimiento: false, 
+      isCuidador: true,
+      isET: false,
+      isEAPB: false
+    }
     if (environment.cookie) {
       let data = await this.userServise.get();
       if (data){
