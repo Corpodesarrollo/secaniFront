@@ -184,7 +184,7 @@ export class MiPerfilComponent implements OnInit {
   onEstadoChange(nuevoEstado: boolean) {
     const data = { ...this.usuario, estado: nuevoEstado };
     this.dataService.put("Authentication", data, `user/edituserprofile/${this.idUser}`).subscribe({
-      next: (value) => { this.usuario = { ...this.usuario, estado: nuevoEstado } },
+      next: (value) => { this.usuario = { ...this.usuario, estado: `${nuevoEstado}` } },
       error: (err) => { console.log },
     });
   }
