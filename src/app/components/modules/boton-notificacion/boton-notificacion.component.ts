@@ -8,6 +8,7 @@ import { GenericService } from '../../../services/generic.services';
 import { Router } from '@angular/router';
 import { User } from '../../../core/services/user';
 import { environment } from '../../../../environments/environment';
+import { apis } from '../../../models/apis.model';
 
 @Component({
   selector: 'app-boton-notificacion',
@@ -50,12 +51,8 @@ export class BotonNotificacionComponent implements OnInit {
   }
 
   openUrl(url:string, id: number){
-    this.repos.get('Notificacion/EliminarNotificacion/', `${id}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.consultarNotificaciones();
-      }
-    });
-
+    this.repos.post('Notificacion/EliminarNotificacion/', { idNotificacionUsuario: id, idUsuario: this.idUsuario }, apis.seguimiento)
+      .subscribe({ next: () => {} });
     this.router.navigate([url]);
   }
 }

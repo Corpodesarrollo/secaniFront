@@ -6,13 +6,13 @@
   <span class="ms-3">Notificaciones</span>
 </button>
 
-<p-dialog header="Notificaciones" [(visible)]="showDialog" [modal]="true" [style]="{width: '400px'}">
-  <div *ngFor="let notificacion of notificaciones" class="notification-item">
+<p-dialog header="Notificaciones" [(visible)]="showDialog" [modal]="true" [style]="{width: '480px', height: '550px'}" [baseZIndex]="10000" [closable]="true" (onHide)="showDialog = false">
+  <div *ngFor="let notificacion of notificaciones" class="notification-item text-left">
     <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="notification-text fw-bold">
+      <div class="col notification-text" [ngClass]="{'fw-bold': !notificacion.leida}">
         {{notificacion.textoNotificacion}}
       </div>
-      <button class="btn rounded-3 btn-sm px-3" style="background-color: lightgray;" (click)="openUrl(notificacion.uRLNotificacion, notificacion.idNotificacion )">Ver</button>
+      <button class="col-auto btn rounded-3 me-0" style="background-color: lightgray; width: 70px;" [ngClass]="{'text-success': notificacion.leida}" (click)="openUrl(notificacion.url, notificacion.idNotificacion )"><i *ngIf="notificacion.leida" class="pi pi-check-circle"></i> Ver</button>
     </div>
     <div class="notification-date text-muted">{{notificacion.fechaNotificacion | date:'dd/MM/yyyy' }}</div>
     <hr>
