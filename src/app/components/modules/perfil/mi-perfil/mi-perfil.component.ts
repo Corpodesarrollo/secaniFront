@@ -40,20 +40,15 @@ export class MiPerfilComponent implements OnInit {
   rows = 10;
 
   vistaPerfil: string = '';
-
-  telefonoContacto: string = '+573121654328';
-
-  aux: Boolean = true;
-
   // Datos para la primera tabla
-  datosHorarioAgente = [
-    { diaActivo: true, dia: 'Lunes', horaInicio: '', horaFin: '' },
-    { diaActivo: true, dia: 'Martes', horaInicio: '', horaFin: '' },
-    { diaActivo: true, dia: 'Miercoles', horaInicio: '', horaFin: '' },
-    { diaActivo: true, dia: 'Jueves', horaInicio: '', horaFin: '' },
-    { diaActivo: true, dia: 'Viernes', horaInicio: '', horaFin: '' },
-    { diaActivo: true, dia: 'Sabado', horaInicio: '', horaFin: '' },
-    { diaActivo: true, dia: 'Domingo', horaInicio: '', horaFin: '' }
+  public datosHorarioAgente = [
+    { diaActivo: false, dia: 'Lunes', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Martes', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Miercoles', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Jueves', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Viernes', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Sabado', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Domingo', horaInicio: '', horaFin: '' }
   ];
 
   // Datos para la segunda tabla
@@ -66,31 +61,31 @@ export class MiPerfilComponent implements OnInit {
 
   async ngOnInit() {
     this.idUser = localStorage.getItem('id') ?? '0';
-
     //this.vistaSegunPerfiil(this.user.enterpriseCode);
+    this.obtenerDatosUsuario();
     this.vistaSegunPerfiil('M');
+    this.obtenerHorarioAgente();
+  }
 
+  obtenerDatosUsuario() {
+    if (!this.idUser || this.idUser === '0') return;
     this.dataService.get('User/GetUserDetails/', this.idUser, 'UsuariosRoles').subscribe({
       next: (data: any) => {
         this.usuario = data;
-        if (this.usuario.estado === 'Activo') {
-          this.estadoUsuario = true;
-        } else {
-          this.estadoUsuario = false;
-        }
+        this.estadoUsuario = this.usuario.estado === 'Activo';
         console.log(this.usuario);
       },
       error: (e) => console.error('Se presento un error al consultar el usuario', e),
       complete: () => console.info('Consulta usuario exitosa')
     });
+  }
 
-    this.dataService.get_withoutParameters(`Seguimiento/GetSeguimientoHorarioAgente?UsuarioId=${this.idUser}`, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.datosHorarioAgente = this.actualizarHorario(data);
-        console.log(this.datosHorarioAgente)
-      },
-      error: (e) => console.error('Se presento un error al consultar el usuario', e),
-      complete: () => console.info('Consulta usuario exitosa')
+  obtenerHorarioAgente(): void {
+    if (!this.idUser || this.idUser === '0') return;
+    this.dataService.get('/api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento').subscribe({
+      next: (data: any[]) => { this.actualizarHorarios(data)},
+      error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
+      complete: () => console.info('Consulta del horario del usuario existosa')
     });
   }
 
@@ -102,57 +97,43 @@ export class MiPerfilComponent implements OnInit {
     }
   }
 
-  actualizarHorario(datosHoras: Array<{ dia: number, horaEntrada: string, horaSalida: string }>): Array<{ diaActivo: boolean, dia: string, horaInicio: string, horaFin: string }> {
-    // Array base con los días de la semana
-    let diasSemana = [
-      { diaActivo: true, dia: 'Lunes', horaInicio: '', horaFin: '' },
-      { diaActivo: true, dia: 'Martes', horaInicio: '', horaFin: '' },
-      { diaActivo: true, dia: 'Miercoles', horaInicio: '', horaFin: '' },
-      { diaActivo: true, dia: 'Jueves', horaInicio: '', horaFin: '' },
-      { diaActivo: true, dia: 'Viernes', horaInicio: '', horaFin: '' },
-      { diaActivo: true, dia: 'Sabado', horaInicio: '', horaFin: '' },
-      { diaActivo: true, dia: 'Domingo', horaInicio: '', horaFin: '' }
-    ];
-
-    // Mapeo de los días de la semana a números
-    const mapeoDias: { [key: number]: string } = {
-      1: 'Lunes',
-      2: 'Martes',
-      3: 'Miercoles',
-      4: 'Jueves',
-      5: 'Viernes',
-      6: 'Sabado',
-      7: 'Domingo'
-    };
-
-    // Función que recorre el array de días y actualiza las horas basadas en el array de datosHoras
-    diasSemana = diasSemana.map(dia => {
-      // Busca si hay datos para el día actual
-      const diaNumero = Object.keys(mapeoDias).find(key => mapeoDias[+key] === dia.dia);
-      const datosDia = datosHoras.find(d => d.dia.toString() === diaNumero);
-
-      if (datosDia) {
-        // Si hay datos, actualiza las horas y mantiene activo
-        return {
-          ...dia,
-          diaActivo: true,
-          horaInicio: datosDia.horaEntrada,
-          horaFin: datosDia.horaSalida
-        };
-      } else {
-        // Si no hay datos, desactiva el día
-        return {
-          ...dia,
-          diaActivo: false,
-          horaInicio: 'N/A',
-          horaFin: 'N/A'
-        };
-      }
+  actualizarHorarios(horariosRecibidos: any[]) {
+    // Primero, resetear todos los días a inactivos
+    this.datosHorarioAgente.forEach(dia => {
+      dia.diaActivo = false;
+      dia.horaInicio = '';
+      dia.horaFin = '';
     });
 
-    return diasSemana;
+    // Mapeo de número de día a índice del arreglo
+    // Nota: Los días suelen empezar en 1 (Lunes) a 7 (Domingo)
+    const mapeoDias = {
+      1: 0, // Lunes
+      2: 1, // Martes
+      3: 2, // Miércoles
+      4: 3, // Jueves
+      5: 4, // Viernes
+      6: 5, // Sábado
+      7: 6  // Domingo
+    };
+
+    // Actualizar solo los días que vienen en la respuesta
+    horariosRecibidos.forEach(horario => {
+      const indice = mapeoDias[horario.dia as keyof typeof mapeoDias];
+
+      if (indice !== undefined && indice >= 0 && indice < this.datosHorarioAgente.length) {
+        this.datosHorarioAgente[indice].diaActivo = true;
+        this.datosHorarioAgente[indice].horaInicio = this.formatearHora(horario.horaEntrada);
+        this.datosHorarioAgente[indice].horaFin = this.formatearHora(horario.horaSalida);
+      }
+    });
   }
 
+  // Función auxiliar para formatear la hora (opcional)
+  formatearHora(horaCompleta: string): string {
+    // Convierte "08:00:00" a "08:00"
+    return horaCompleta.substring(0, 5);
+  }
 
   /**Modal Crear y Editar**/
 
@@ -201,9 +182,9 @@ export class MiPerfilComponent implements OnInit {
   }
 
   onEstadoChange(nuevoEstado: boolean) {
-    const data = { ...this.usuario, estado: nuevoEstado};
+    const data = { ...this.usuario, estado: nuevoEstado };
     this.dataService.put("Authentication", data, `user/edituserprofile/${this.idUser}`).subscribe({
-      next: (value) => { this.usuario = {...this.usuario, estado: nuevoEstado } },
+      next: (value) => { this.usuario = { ...this.usuario, estado: nuevoEstado } },
       error: (err) => { console.log },
     });
   }
