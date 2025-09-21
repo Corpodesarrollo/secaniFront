@@ -21,7 +21,7 @@
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="estadoUsuario"></p-inputSwitch>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
                 </p-card>
             </div>
         </div>
