@@ -66,11 +66,7 @@ export class MiPerfilComponent implements OnInit {
   constructor(private dataService: GenericService, private user: User) { }
 
   async ngOnInit() {
-    sessionStorage.setItem('roleId', '311882D4-EAD0-4B0B-9C5D-4A434D49D16D');
-    sessionStorage.setItem('userId', '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5');
-    sessionStorage.setItem('enterpriseType', 'MU');
-
-    this.idUser = sessionStorage.getItem('userId') ?? '0';
+    this.idUser = localStorage.getItem('id') ?? '0';
 
     //this.vistaSegunPerfiil(this.user.enterpriseCode);
     this.vistaSegunPerfiil('M');
@@ -203,5 +199,13 @@ export class MiPerfilComponent implements OnInit {
 
   isFirstPage(): boolean {
     return this.data ? this.first === 0 : true;
+  }
+
+  onEstadoChange(nuevoEstado: boolean) {
+    const data = { ...this.usuario, estado: nuevoEstado};
+    this.dataService.put("Authentication", data, `user/edituserprofile/${this.idUser}`).subscribe({
+      next: (value) => { this.usuario = {...this.usuario, estado: nuevoEstado } },
+      error: (err) => { console.log },
+    });
   }
 }
