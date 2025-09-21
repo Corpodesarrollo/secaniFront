@@ -8,12 +8,13 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { DropdownModule } from 'primeng/dropdown';
+import { ReporteInconsistenciaGeneral} from '../../../../models/reporteInconsistenciaGeneral';
 
 export enum TipoReporte {
   GENERAL = 'GENERAL',
@@ -28,7 +29,10 @@ export enum TipoReporte {
   styleUrl: './reporte-inconsistencia.component.css'
 })
 export class ReporteInconsistenciaComponent implements OnInit {
-  public reportes: any[] = [];
+  public reportesInconsistenciaNNA: any[] = [];
+  public reportesInconsistenciaGeneral: ReporteInconsistenciaGeneral | null = null;
+  public NNA: any[] = [];
+
   public camposForm!: FormGroup;
 
   public tipoReporte: TipoReporte = TipoReporte.GENERAL;
@@ -45,28 +49,53 @@ export class ReporteInconsistenciaComponent implements OnInit {
       {
         fechaInicio: ['', Validators.required],
         fechaFin: ['', Validators.required],
-        camposSeleccionados: this.fb.array([]),
       },
       {
         validators: [FormUtils.validarFechas('fechaInicio', 'fechaFin')],
       } as AbstractControlOptions
     );
+
+    this.getNNA();
   }
 
   onSubmit() {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
 
     const { fechaInicio, fechaFin } = this.camposForm.value;
-    const fechaInicialString = fechaInicio.toISOString().split('T')[0];
-    const fechaFinalString = fechaFin.toISOString().split('T')[0];
 
-    this.reportesService.getReporteInconsistencias(fechaInicialString, fechaFinalString)
-      .subscribe((reportes: any) => this.reportes = reportes);
+    if (this.tipoReporte != TipoReporte.GENERAL) return;
+    this.reportesService.getReporteInconsistenciasGeneral(fechaInicio, fechaFin)
+      .subscribe({
+        next: (reportes: any) => this.reportesInconsistenciaGeneral = reportes,
+        error: (err) => console.error('Error fetching general report:', err)
+      });
+  }
+
+  onNNAChange(event: any) {
+    const selectedValue = event.value;
+    this.getReporteNNA(selectedValue);
+  }
+
+  getReporteNNA(nnaId: string) {
+    if (this.tipoReporte != TipoReporte.POR_NNA) return;
+    this.reportesService.getReporteInconsistenciasPorNNA(nnaId)
+      .subscribe({
+        next: (reportes: any) => this.reportesInconsistenciaNNA = reportes,
+        error: (err) => console.error('Error fetching general report:', err)
+      });
+  }
+
+  getNNA() {
+    this.reportesService.getNNA()
+      .subscribe({
+        next: (nna: any) => this.NNA = nna,
+        error: (err) => console.error('Error fetching general report:', err)
+      });
   }
 
   exportExcel() {
     this.excelExportService.exportToExcel<any>(
-      { rows: this.reportes, sheetName: `Reporte Inconsistencias` },
+      { rows: this.reportesInconsistenciaNNA, sheetName: `Reporte Inconsistencias` },
       'Reporte Inconsistencias',
     );
   }

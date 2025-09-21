@@ -21,7 +21,7 @@
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="estadoUsuario"></p-inputSwitch>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
                 </p-card>
             </div>
         </div>
@@ -127,8 +127,8 @@
                                 <p-checkbox [binary]="true" [(ngModel)]="dato.diaActivo"></p-checkbox>
                             </td>
                             <td>{{ dato.dia }}</td>
-                            <td>{{ dato.horaInicio }}</td>
-                            <td>{{ dato.horaFin }}</td>
+                            <td>{{ dato.horaEntrada }}</td>
+                            <td>{{ dato.horaSalida }}</td>
                             <td class="table-actions">
                                 <button class="btn-round" (click)="onEdit(data)">
                                     <i class="pi pi-pencil"></i>

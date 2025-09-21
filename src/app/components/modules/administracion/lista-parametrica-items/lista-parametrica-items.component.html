@@ -93,6 +93,7 @@
                       [text]="true"
                       severity="secondary"
                       (click)="openItemForEdit(item)"
+                      [disabled]="isListaProtegida()"
                     />
                     <p-button
                       icon="pi pi-trash"
@@ -100,6 +101,7 @@
                       [text]="true"
                       severity="secondary"
                       (click)="confirmDelete($event, item)"
+                      [disabled]="isListaProtegida()"
                     />
                   </div>
                 </td>

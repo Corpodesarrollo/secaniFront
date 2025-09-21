@@ -30,6 +30,12 @@ export class ListaParametricaItemsComponent implements OnInit {
   public items: any[] = [];
   public itemsListaPadre: any[] = [];
 
+  private listasProtegidas: string[] = [
+    'TPEstadoNNA',
+    'TPEstadoSeguimiento',
+    'TPEstadoAlerta'
+  ];
+
   public itemsListaParametricaForm: FormGroup;
 
   constructor(
@@ -79,6 +85,12 @@ export class ListaParametricaItemsComponent implements OnInit {
       });
   }
 
+  isListaProtegida(): boolean {
+    return this.listaParametricaPadre 
+          ? this.listasProtegidas.includes(this.listaParametricaPadre.nombre) 
+          : false;
+  }
+
   private loadItems(): void {
     if (!this.listaParametricaPadre) return;
     this.listasParametricasService.getItemListaParametricas(this.listaParametricaPadre.nombre)
@@ -104,6 +116,16 @@ export class ListaParametricaItemsComponent implements OnInit {
   }
 
   openItemForEdit(itemListaParematrica: any): void {
+    if (this.listaParametricaPadre && this.listasProtegidas.includes(this.listaParametricaPadre.nombre)) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Edición no permitida',
+        detail: 'Esta lista paramétrica no se puede modificar.',
+        life: 3000
+      });
+      return;
+    }
+
     this.itemsListaParametricaForm.reset(itemListaParematrica);
   }
 
@@ -160,6 +182,16 @@ export class ListaParametricaItemsComponent implements OnInit {
   }
 
   confirmDelete(event: Event, itemListaParametrica: any) {
+    if (this.listaParametricaPadre && this.listasProtegidas.includes(this.listaParametricaPadre.nombre)) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Eliminación no permitida',
+        detail: 'Esta lista paramétrica no se puede eliminar.',
+        life: 3000
+      });
+      return;
+    }
+
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: '¿Estás seguro de que quieres eliminar el item de lista parametrica?',
