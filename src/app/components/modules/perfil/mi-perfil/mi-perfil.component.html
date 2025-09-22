@@ -14,7 +14,7 @@
                 <!-- Componentes alineados a la izquierda -->
                 <h2>Nombre entidad territorial</h2>
                 <span style="font-weight: bold;">Representante Legal: </span>
-                <span>{{ usuario.fullName }}</span><br>
+                <span>{{ usuario.fullName ?? '' }}</span><br>
                 <span style="font-weight: bold;">Correo: </span>
                 <span>{{ usuario.email }}</span>
             </div>
@@ -83,22 +83,22 @@
     <p-card>
         <div class="card-content">
             <div class="left-content">
-                <span>{{ usuario.fullName }}</span><br>
-                <span>{{ usuario.email }}</span><br>
+                <span>{{ usuario.fullName ?? '' }}</span><br>
+                <span>{{ usuario.email ?? '' }}</span><br>
                 <span style="font-weight: bold;">Rol: </span>
-                <span>{{ usuario.roles?.join(', ') || 'Ninguno' }}</span>
+                <span>{{ (usuario.roles?.join(', ') ?? '') || 'Ninguno' }}</span>
             </div>
             <br>
             <div class="right-content">
                 <label>Telefono de Contacto</label>
                 <input type="text" id="exampleInput" class="form-control" style="text-align: center;"
-                    value="{{ usuario.telefonos }}" disabled>
+                    value="{{ usuario.telefonos ?? '' }}" disabled>
             </div>
             <br>
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="estadoUsuario"></p-inputSwitch>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
                 </p-card>
             </div>
         </div>

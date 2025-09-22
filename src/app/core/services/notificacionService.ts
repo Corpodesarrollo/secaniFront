@@ -4,6 +4,7 @@ import { apis } from "../../models/apis.model";
 import { Oficio } from "../../models/oficio.model";
 import { notificacionOficio } from "../../models/notificacionOficio.model";
 import { Respuesta } from "../../models/respuesta.model";
+import { Notificaciones } from "../../models/notificaciones.model";
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,21 @@ export class NotificacionService {
     public async postEnviarOficio(notificacion: notificacionOficio): Promise<Respuesta> {
         return new Promise((resolve, reject) => {
             this.repos.post('Notificacion/EnviarOficioNotificacion', notificacion, apis.seguimiento).subscribe({
+                next: (data: any) => {
+                    console.log(data);
+                resolve(data);
+                },
+                error: (err) => {
+                console.error(err);
+                reject(err);
+                }
+            });
+        });
+    }
+
+    public async set(notificacion: Notificaciones): Promise<Respuesta> {
+        return new Promise((resolve, reject) => {
+            this.repos.post('Notificacion/SetNotification', notificacion, apis.seguimiento).subscribe({
                 next: (data: any) => {
                     console.log(data);
                 resolve(data);

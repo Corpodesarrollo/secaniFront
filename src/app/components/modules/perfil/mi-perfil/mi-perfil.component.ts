@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { ModalCrearComponent } from '../../usuarios/eapb/modal-crear/modal-crear.component';
 import { Usuario } from '../../../../models/usuario.model';
 import { GenericService } from '../../../../services/generic.services';
+import { NotificacionService } from '../../../../core/services/notificacionService';
+import { User } from '../../../../core/services/user';
+import { apis } from '../../../../models/apis.model';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -25,6 +28,7 @@ export class MiPerfilComponent implements OnInit {
   fecha: string = '';
   usuario!: Usuario;
   idUser: string = "";
+  user = new User();
 
   data: any[] = [
     { nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987514', correo: 'luz1@sanitas.com', estado: 'Activo' },
@@ -57,10 +61,11 @@ export class MiPerfilComponent implements OnInit {
     { fecha: '30/09/2024', motivo: 'Calamidad domestica' }
   ];
 
-  constructor(private dataService: GenericService) { }
+  constructor(private dataService: GenericService, private notificacionService: NotificacionService) { }
 
   async ngOnInit() {
-    this.idUser = localStorage.getItem('id') ?? '0';
+    
+    this.idUser = this.user.id ?? '0';
     //this.vistaSegunPerfiil(this.user.enterpriseCode);
     this.obtenerDatosUsuario();
     this.vistaSegunPerfiil('M');
@@ -73,7 +78,7 @@ export class MiPerfilComponent implements OnInit {
       next: (data: any) => {
         this.usuario = data;
         this.estadoUsuario = this.usuario.estado === 'Activo';
-        console.log(this.usuario);
+        
       },
       error: (e) => console.error('Se presento un error al consultar el usuario', e),
       complete: () => console.info('Consulta usuario exitosa')
@@ -183,8 +188,26 @@ export class MiPerfilComponent implements OnInit {
 
   onEstadoChange(nuevoEstado: boolean) {
     const data = { ...this.usuario, estado: nuevoEstado };
-    this.dataService.put("Authentication", data, `user/edituserprofile/${this.idUser}`).subscribe({
-      next: (value) => { this.usuario = { ...this.usuario, estado: `${nuevoEstado}` } },
+    console.log(data);
+    this.dataService.put(`user/EditUserProfile/${this.idUser}`, data, apis.authentication).subscribe({
+      next: async (value) => {
+        console.log('Estado actualizado con éxito');
+        this.usuario = { ...this.usuario, estado: `${nuevoEstado}` } 
+        await this.notificacionService.set({
+          idAgenteOrigen: this.usuario.id ?? '',
+          agenteOrigen: '',
+          rolAgenteOrigen: '',
+          idAgenteDestino: '',
+          agenteDestino: '',
+          rolAgenteDestino: '',
+          tipoNotificacion: 6,
+          idSeguimiento: 0,
+          textoNotificacion: '',
+          fechaNotificacion: new Date().toISOString(),
+          uRLNotificacion: '',
+          idNotificacion: 0,
+        });
+      },
       error: (err) => { console.log },
     });
   }
