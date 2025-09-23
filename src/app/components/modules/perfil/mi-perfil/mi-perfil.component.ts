@@ -341,8 +341,8 @@ cancelAbsenceDialog(): void {
   this.visibleAbsenceForm = false;
 }
 
-deleteAbsence(id: string): void {
-  this.dataService.deleteWithApi(`/api/ausencias/${id}`, '' ,"Seguimiento").subscribe({
+deleteAbsence(data: any): void {
+  this.dataService.deleteWithApi(`/api/ausencias/${data.id}`, '' ,"Seguimiento").subscribe({
     next: () => {
       this.messageService.add({
         severity: 'info',
