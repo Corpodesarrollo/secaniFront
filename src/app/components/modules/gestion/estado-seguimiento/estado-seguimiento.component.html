@@ -110,7 +110,7 @@
           <!-- Parentesco -->
           <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
             <div class="col-12">
-                <label for="tipoDocumento" class="fw-bold mb-1">Parentesco*</label>
+                <label for="tipoDocumento" class="fw-bold mb-1">Parentesco del cuidador</label>
                 <p-dropdown
                   [(ngModel)]="selectedParentesco"
                   [options]="parentescos"
@@ -126,6 +126,17 @@
                   </div>
             </div>
           </div>
+
+          <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+            <div class="col-12">
+                <label for="telefono" class="fw-bold mb-1">Número teléfono/celular del cuidador*</label>
+                <input id="telefono" type="text" pInputText [(ngModel)]="nna.cuidadorTelefono">
+                <div *ngIf="submitted && (!nna.cuidadorTelefono || nna.cuidadorTelefono.trim() === '')" class="text-danger">
+                  Campo requerido
+                </div>
+            </div>
+          </div>
+
           <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
             <div class="col-12">
                 <label for="tipoDocumento" class="fw-bold mb-1">Tipo de identificación del menor*</label>
@@ -148,7 +159,7 @@
 
           <div class="row align-items-center mb-5 flex flex-wrap p-fluid">
             <div class="col-12">
-                <label for="tipoDocumento" class="fw-bold mb-1">Número de identificación del menor*</label>
+                <label for="numeroIdentificacion" class="fw-bold mb-1">Número de identificación del menor*</label>
                 <input id="numeroIdentificacion" type="text" pInputText [(ngModel)]="nna.numeroIdentificacion">
                 <div *ngIf="submitted && (!nna.numeroIdentificacion || nna.numeroIdentificacion.trim() === '')" class="text-danger">
                   Campo requerido
