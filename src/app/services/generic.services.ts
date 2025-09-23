@@ -179,6 +179,16 @@ export class GenericService {
       return this.http.delete(`${this.url}${modulo}${parameters}`);
     }
   }
+  
+  public deleteWithApi(modulo: string, parameters: string, api: string = ''): Observable<any> {
+    const apiUrl = this.getApiUrl(api);
+    if (environment.cookie){
+      return this.http.delete(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
+    }else{
+      return this.http.delete(`${apiUrl}${modulo}${parameters}`);
+    }
+  }
+
   public async deleteAsync(modulo: string, parameters: string) {
     if (environment.cookie){
       return await this.http

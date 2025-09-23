@@ -21,7 +21,8 @@
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario"
+                        (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
                 </p-card>
             </div>
         </div>
@@ -147,14 +148,11 @@
                 <h5>Fechas de ausencia</h5><br>
 
                 <div class="d-flex" style="gap: 10px;"> <!-- Utiliza d-flex para un diseño flexible -->
-                    <input type="date" 
-                           id="fechaInput" 
-                           class="form-control" 
-                           [(ngModel)]="fecha"
-                           placeholder="Selecciona una fecha" 
-                           style="margin-bottom: 10px;"/>
-                    
-                    <button class="btn-round" (click)="onEdit(data)">
+                    <p-calendar [(ngModel)]="selectedDate" dateFormat="dd/mm/yy" placeholder="Selecciona una fecha"
+                        [showIcon]="true" styleClass="w-full">
+                    </p-calendar>
+
+                    <button class="btn-round" (click)="openAbsenceDialog()">
                         <i class="pi pi-plus"></i>
                     </button>
                 </div>
@@ -172,7 +170,7 @@
                             <td>{{ dato.fecha }}</td>
                             <td>{{ dato.motivo }}</td>
                             <td class="table-actions">
-                                <button class="btn-round" (click)="onEdit(data)">
+                                <button class="btn-round" (click)="deleteAbsence(data.id)">
                                     <i class="pi pi-trash"></i>
                                 </button>
                             </td>
@@ -187,54 +185,86 @@
 
 
 <p-dialog [(visible)]="visibleWorkScheduleForm" [modal]="true" [closable]="false" [style]="{width: '400px'}">
-  <ng-template pTemplate="header">
-    <h3>Work Schedule</h3>
-  </ng-template>
+    <ng-template pTemplate="header">
+        <h3>Work Schedule</h3>
+    </ng-template>
 
-  <form [formGroup]="workScheduleForm" class="p-fluid space-y-3">
-    <div>
-      <strong>Monday</strong>
-    </div>
-
-    <!-- Start -->
-    <div class="field grid" formGroupName="start">
-      <label class="col-3">Start:</label>
-      <div class="col-9 flex gap-2">
-        <input pInputText type="number" formControlName="hh" placeholder="HH" class="w-12" />
-        <input pInputText type="number" formControlName="mm" placeholder="MM" class="w-12" />
-
-        <div class="flex items-center gap-2">
-          <p-radioButton formControlName="meridiem" value="AM" inputId="am-start"></p-radioButton>
-          <label for="am-start">AM</label>
+    <form [formGroup]="workScheduleForm" class="p-fluid space-y-3">
+        <div>
+            <strong>Monday</strong>
         </div>
-        <div class="flex items-center gap-2">
-          <p-radioButton formControlName="meridiem" value="PM" inputId="pm-start"></p-radioButton>
-          <label for="pm-start">PM</label>
-        </div>
-      </div>
-    </div>
 
-    <!-- End -->
-    <div class="field grid" formGroupName="end">
-      <label class="col-3">End:</label>
-      <div class="col-9 flex gap-2">
-        <input pInputText type="number" formControlName="hh" placeholder="HH" class="w-12" />
-        <input pInputText type="number" formControlName="mm" placeholder="MM" class="w-12" />
+        <!-- Start -->
+        <div class="field grid" formGroupName="start">
+            <label class="col-3">Start:</label>
+            <div class="col-9 flex gap-2">
+                <input pInputText type="number" formControlName="hh" placeholder="HH" class="w-12" />
+                <input pInputText type="number" formControlName="mm" placeholder="MM" class="w-12" />
 
-        <div class="flex items-center gap-2">
-          <p-radioButton formControlName="meridiem" value="AM" inputId="am-end"></p-radioButton>
-          <label for="am-end">AM</label>
+                <div class="flex items-center gap-2">
+                    <p-radioButton formControlName="meridiem" value="AM" inputId="am-start"></p-radioButton>
+                    <label for="am-start">AM</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <p-radioButton formControlName="meridiem" value="PM" inputId="pm-start"></p-radioButton>
+                    <label for="pm-start">PM</label>
+                </div>
+            </div>
         </div>
-        <div class="flex items-center gap-2">
-          <p-radioButton formControlName="meridiem" value="PM" inputId="pm-end"></p-radioButton>
-          <label for="pm-end">PM</label>
+
+        <!-- End -->
+        <div class="field grid" formGroupName="end">
+            <label class="col-3">End:</label>
+            <div class="col-9 flex gap-2">
+                <input pInputText type="number" formControlName="hh" placeholder="HH" class="w-12" />
+                <input pInputText type="number" formControlName="mm" placeholder="MM" class="w-12" />
+
+                <div class="flex items-center gap-2">
+                    <p-radioButton formControlName="meridiem" value="AM" inputId="am-end"></p-radioButton>
+                    <label for="am-end">AM</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <p-radioButton formControlName="meridiem" value="PM" inputId="pm-end"></p-radioButton>
+                    <label for="pm-end">PM</label>
+                </div>
+            </div>
         </div>
-      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="CANCEL" class="p-button-secondary" (click)="closeWorkScheduleDialog()"></button>
+        <button pButton label="SAVE" class="p-button-success" (click)="saveSchedule()"></button>
+    </ng-template>
+</p-dialog>
+
+<!-- Modal para registrar ausencia -->
+<p-dialog header="Fecha de ausencia"
+          [(visible)]="visibleAbsenceForm"
+          [modal]="true"
+          [closable]="true"
+          [style]="{width: '400px'}">
+
+  <div class="text-center mb-3">
+    <h3>{{ selectedDate | date:'dd/MM/yyyy' }}</h3>
+  </div>
+
+  <form [formGroup]="absenceForm">
+    <div class="p-field">
+      <label for="reason">Motivo*</label>
+      <input id="reason"
+             type="text"
+             pInputText
+             formControlName="reason"
+             placeholder="Escribe el motivo"/>
+      <small *ngIf="absenceForm.get('reason')?.invalid && absenceForm.get('reason')?.touched"
+             class="p-error">
+        El motivo es obligatorio.
+      </small>
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <button pButton label="CANCEL" class="p-button-secondary" (click)="closeWorkScheduleDialog()"></button>
-    <button pButton label="SAVE" class="p-button-success" (click)="saveSchedule()"></button>
+    <button pButton label="Cancelar" class="p-button-secondary" (click)="cancelAbsenceDialog()"></button>
+    <button pButton label="Guardar" class="p-button-success" (click)="saveAbsence()"></button>
   </ng-template>
 </p-dialog>

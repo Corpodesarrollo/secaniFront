@@ -57,14 +57,15 @@ export class MiPerfilComponent implements OnInit {
   ];
 
   // Datos para la segunda tabla
-  datosAusenciasAgente = [
-    { fecha: '12/09/2024', motivo: 'Cita Medica' },
-    { fecha: '30/09/2024', motivo: 'Calamidad domestica' }
-  ];
+  public datosAusenciasAgente: { id: string, fecha: Date; motivo: string }[] = [];
 
   public workScheduleForm: FormGroup;
   public visibleWorkScheduleForm: boolean = false;
   public selectedSchedule: any = null;
+
+  public selectedDate: Date | null = null;
+  public visibleAbsenceForm = false;
+  public absenceForm: FormGroup;
 
   constructor(private dataService: GenericService, private user: User, private fb: FormBuilder, private messageService: MessageService) {
     this.workScheduleForm = this.fb.group({
@@ -79,6 +80,10 @@ export class MiPerfilComponent implements OnInit {
         meridiem: ['PM', Validators.required]
       })
     });
+
+    this.absenceForm = this.fb.group({
+      reason: ['', Validators.required]
+    });
   }
 
   async ngOnInit() {
@@ -91,7 +96,7 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerDatosUsuario() {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('User/GetUserDetails/', this.idUser, 'UsuariosRoles').subscribe({
+    this.dataService.get('UsuariosRoles', this.idUser, 'User/GetUserDetails/').subscribe({
       next: (data: any) => {
         this.usuario = data;
         this.estadoUsuario = this.usuario.estado === 'Activo';
@@ -104,8 +109,17 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerHorarioAgente(): void {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('Seguimiento', this.idUser, '/api/horario-laboral/obtener-usuario/').subscribe({
+    this.dataService.get('/api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento').subscribe({
       next: (data: any[]) => { this.actualizarHorarios(data) },
+      error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
+      complete: () => console.info('Consulta del horario del usuario existosa')
+    });
+  }
+
+  obtenerDatosAusenciaAgente(): void {
+    if (!this.idUser || this.idUser === '0') return;
+    this.dataService.get('/api/Ausencias/usuario', this.idUser, 'Seguimiento').subscribe({
+      next: (data: { id: string, fecha: Date; motivo: string }[]) => { this.datosAusenciasAgente = data },
       error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
       complete: () => console.info('Consulta del horario del usuario existosa')
     });
@@ -192,7 +206,7 @@ export class MiPerfilComponent implements OnInit {
 
   onEstadoChange(nuevoEstado: boolean) {
     const data = { ...this.usuario, estado: nuevoEstado };
-    this.dataService.put("Authentication", data, `user/edituserprofile/${this.idUser}`).subscribe({
+    this.dataService.put(`user/edituserprofile/${this.idUser}`, data, "Authentication").subscribe({
       next: (value) => { this.usuario = { ...this.usuario, estado: `${nuevoEstado}` } },
       error: (err) => { console.log },
     });
@@ -217,7 +231,7 @@ export class MiPerfilComponent implements OnInit {
         horaSalida: this.convertFormToTime(formValue.end)
       };
 
-      this.dataService.post("Seguimiento", payload, `/api/horario-laboral/guardar-dia`).subscribe({
+      this.dataService.post(`/api/horario-laboral/guardar-dia`, payload, "Seguimiento").subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',
@@ -237,7 +251,7 @@ export class MiPerfilComponent implements OnInit {
           console.error('Error al guardar el horario:', err);
         }
       });
-      
+
     } else {
       this.workScheduleForm.markAllAsTouched();
     }
@@ -274,4 +288,79 @@ export class MiPerfilComponent implements OnInit {
     const mm = value.mm.toString().padStart(2, '0');
     return `${hh}:${mm}:00`;
   }
+
+  openAbsenceDialog(): void {
+  if (!this.selectedDate) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Selecciona una fecha',
+      detail: 'Debes seleccionar una fecha antes de registrar la ausencia.',
+      life: 3000
+    });
+    return;
+  }
+  this.visibleAbsenceForm = true;
+}
+
+saveAbsence(): void {
+  if (this.absenceForm.valid && this.selectedDate) {
+    const payload = {
+      usuarioId: this.idUser,
+      fechaAusencia: this.selectedDate.toISOString().split('T')[0],
+      motivoAusencia: this.absenceForm.value.reason
+    };
+
+    this.dataService.post("Seguimiento", payload, `/api/ausencias`).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Ausencia guardada',
+          detail: 'La ausencia se guardó correctamente.',
+          life: 3000
+        });
+        this.absenceForm.reset();
+        this.visibleAbsenceForm = false;
+        this.obtenerDatosAusenciaAgente(); // refrescar tabla
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al guardar',
+          detail: 'Ocurrió un problema al guardar la ausencia.',
+          life: 3000
+        });
+        console.error('Error al guardar ausencia:', err);
+      }
+    });
+  } else {
+    this.absenceForm.markAllAsTouched();
+  }
+}
+
+cancelAbsenceDialog(): void {
+  this.visibleAbsenceForm = false;
+}
+
+deleteAbsence(id: string): void {
+  this.dataService.deleteWithApi(`/api/ausencias/${id}`, '' ,"Seguimiento").subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Ausencia eliminada',
+        detail: 'La ausencia se eliminó correctamente.',
+        life: 3000
+      });
+      this.obtenerDatosAusenciaAgente(); // refrescar tabla
+    },
+    error: (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al eliminar',
+        detail: 'Ocurrió un problema al eliminar la ausencia.',
+        life: 3000
+      });
+      console.error('Error al eliminar ausencia:', err);
+    }
+  });
+}
 }
