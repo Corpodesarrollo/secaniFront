@@ -130,7 +130,7 @@
                             <td>{{ dato.horaEntrada }}</td>
                             <td>{{ dato.horaSalida }}</td>
                             <td class="table-actions">
-                                <button class="btn-round" (click)="onEdit(data)">
+                                <button class="btn-round" (click)="showWorkScheduleDialog(data)">
                                     <i class="pi pi-pencil"></i>
                                 </button>
                             </td>
@@ -184,3 +184,57 @@
     </p-card>
 
 </body>
+
+
+<p-dialog [(visible)]="visibleWorkScheduleForm" [modal]="true" [closable]="false" [style]="{width: '400px'}">
+  <ng-template pTemplate="header">
+    <h3>Work Schedule</h3>
+  </ng-template>
+
+  <form [formGroup]="workScheduleForm" class="p-fluid space-y-3">
+    <div>
+      <strong>Monday</strong>
+    </div>
+
+    <!-- Start -->
+    <div class="field grid" formGroupName="start">
+      <label class="col-3">Start:</label>
+      <div class="col-9 flex gap-2">
+        <input pInputText type="number" formControlName="hh" placeholder="HH" class="w-12" />
+        <input pInputText type="number" formControlName="mm" placeholder="MM" class="w-12" />
+
+        <div class="flex items-center gap-2">
+          <p-radioButton formControlName="meridiem" value="AM" inputId="am-start"></p-radioButton>
+          <label for="am-start">AM</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radioButton formControlName="meridiem" value="PM" inputId="pm-start"></p-radioButton>
+          <label for="pm-start">PM</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- End -->
+    <div class="field grid" formGroupName="end">
+      <label class="col-3">End:</label>
+      <div class="col-9 flex gap-2">
+        <input pInputText type="number" formControlName="hh" placeholder="HH" class="w-12" />
+        <input pInputText type="number" formControlName="mm" placeholder="MM" class="w-12" />
+
+        <div class="flex items-center gap-2">
+          <p-radioButton formControlName="meridiem" value="AM" inputId="am-end"></p-radioButton>
+          <label for="am-end">AM</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radioButton formControlName="meridiem" value="PM" inputId="pm-end"></p-radioButton>
+          <label for="pm-end">PM</label>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="CANCEL" class="p-button-secondary" (click)="closeWorkScheduleDialog()"></button>
+    <button pButton label="SAVE" class="p-button-success" (click)="saveSchedule()"></button>
+  </ng-template>
+</p-dialog>
