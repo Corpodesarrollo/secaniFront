@@ -107,6 +107,10 @@ export class AsignacionSeguimientoComponent implements OnInit {
     });
   }
 
+  cargarAgentes(): void {
+    
+  }
+
   intentosLlamada(id: number) {
     this.router.navigate(['/intento-seguimiento'], { state: { id_seguimiento : id} });
   }
