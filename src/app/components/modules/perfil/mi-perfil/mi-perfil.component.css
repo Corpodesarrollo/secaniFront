@@ -25,22 +25,16 @@
     text-align: center;
 }
 
-/* Cambiar el color del fondo cuando el interruptor está activado */
-::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-    background-color: #73B7AD;
-    /* Cambia este color por el que desees */
-}
-
-/* Cambiar el color del fondo cuando el interruptor está desactivado */
-::ng-deep .p-inputswitch-slider {
+p-inputswitch.custom-switch .p-inputswitch-slider {
     background-color: #ccc;
-    /* Cambia este color por el que desees */
 }
 
-/* Cambiar el color del interruptor (círculo) */
-::ng-deep .p-inputswitch-slider:before {
+p-inputswitch.custom-switch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: #73B7AD;
+}
+
+p-inputswitch.custom-switch .p-inputswitch-slider:before {
     background-color: #ffffff;
-    /* Cambia este color por el que desees */
 }
 
 .header {
