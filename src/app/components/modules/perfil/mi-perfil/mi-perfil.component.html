@@ -1,4 +1,4 @@
-<body *ngIf="vistaPerfil === 'vistaEntidadEAPB'" class="formato-fondo fuente-letra">
+<div *ngIf="vistaPerfil === 'vistaEntidadEAPB'" class="formato-fondo fuente-letra">
     <div class="header-container">
         <h1>Mi Perfil</h1>
         <div class="top-right-buttons">
@@ -21,7 +21,7 @@
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="estadoUsuario"
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" class="custom-switch"
                         (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
                 </p-card>
             </div>
@@ -69,9 +69,9 @@
     </p-card>
 
     <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
-</body>
+</div>
 
-<body *ngIf="vistaPerfil === 'vistaUsuario'" class="formato-fondo fuente-letra">
+<div *ngIf="vistaPerfil === 'vistaUsuario'" class="formato-fondo fuente-letra">
     <div class="header-container">
         <h1>Mi Perfil</h1>
         <div class="top-right-buttons">
@@ -99,7 +99,7 @@
             <div class="right-content">
                 <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                     <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)" class="custom-switch"></p-inputSwitch>
                 </p-card>
             </div>
         </div>
@@ -122,14 +122,14 @@
                             <th>Editar</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-dato>
+                    <ng-template pTemplate="body" let-data>
                         <tr>
                             <td>
-                                <p-checkbox [binary]="true" [(ngModel)]="dato.diaActivo"></p-checkbox>
+                                <p-checkbox [binary]="true" [(ngModel)]="data.diaActivo"></p-checkbox>
                             </td>
-                            <td>{{ dato.dia }}</td>
-                            <td>{{ dato.horaEntrada }}</td>
-                            <td>{{ dato.horaSalida }}</td>
+                            <td>{{ data.dia }}</td>
+                            <td>{{ data.horaEntrada }}</td>
+                            <td>{{ data.horaSalida }}</td>
                             <td class="table-actions">
                                 <button class="btn-round" (click)="showWorkScheduleDialog(data)">
                                     <i class="pi pi-pencil"></i>
@@ -165,10 +165,10 @@
                             <th></th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-dato>
+                    <ng-template pTemplate="body" let-data>
                         <tr>
-                            <td>{{ dato.fecha }}</td>
-                            <td>{{ dato.motivo }}</td>
+                            <td>{{ data.fecha }}</td>
+                            <td>{{ data.motivo }}</td>
                             <td class="table-actions">
                                 <button class="btn-round" (click)="deleteAbsence(data)">
                                     <i class="pi pi-trash"></i>
@@ -181,7 +181,7 @@
         </div>
     </p-card>
 
-</body>
+</div>
 
 
 <p-dialog [(visible)]="visibleWorkScheduleForm" [modal]="true" [closable]="false" [style]="{width: '400px'}">
@@ -238,33 +238,25 @@
 </p-dialog>
 
 <!-- Modal para registrar ausencia -->
-<p-dialog header="Fecha de ausencia"
-          [(visible)]="visibleAbsenceForm"
-          [modal]="true"
-          [closable]="true"
-          [style]="{width: '400px'}">
+<p-dialog header="Fecha de ausencia" [(visible)]="visibleAbsenceForm" [modal]="true" [closable]="true"
+    [style]="{width: '400px'}">
 
-  <div class="text-center mb-3">
-    <h3>{{ selectedDate | date:'dd/MM/yyyy' }}</h3>
-  </div>
-
-  <form [formGroup]="absenceForm">
-    <div class="p-field">
-      <label for="reason">Motivo*</label>
-      <input id="reason"
-             type="text"
-             pInputText
-             formControlName="reason"
-             placeholder="Escribe el motivo"/>
-      <small *ngIf="absenceForm.get('reason')?.invalid && absenceForm.get('reason')?.touched"
-             class="p-error">
-        El motivo es obligatorio.
-      </small>
+    <div class="text-center mb-3">
+        <h3>{{ selectedDate | date:'dd/MM/yyyy' }}</h3>
     </div>
-  </form>
 
-  <ng-template pTemplate="footer">
-    <button pButton label="Cancelar" class="p-button-secondary" (click)="cancelAbsenceDialog()"></button>
-    <button pButton label="Guardar" class="p-button-success" (click)="saveAbsence()"></button>
-  </ng-template>
+    <form [formGroup]="absenceForm">
+        <div class="p-field">
+            <label for="reason">Motivo*</label>
+            <input id="reason" type="text" pInputText formControlName="reason" placeholder="Escribe el motivo" />
+            <small *ngIf="absenceForm.get('reason')?.invalid && absenceForm.get('reason')?.touched" class="p-error">
+                El motivo es obligatorio.
+            </small>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="Cancelar" class="p-button-secondary" (click)="cancelAbsenceDialog()"></button>
+        <button pButton label="Guardar" class="p-button-success" (click)="saveAbsence()"></button>
+    </ng-template>
 </p-dialog>
