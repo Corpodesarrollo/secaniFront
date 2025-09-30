@@ -60,12 +60,7 @@ export class AsignacionSeguimientoComponent implements OnInit {
   showDialogSeleccionados: boolean = false;
   showDialogAgente: boolean = false;
 
-  agentes = [
-    { label: 'Agente 1', value: 'agente1' },
-    { label: 'Agente 2', value: 'agente2' },
-    { label: 'Agente 3', value: 'agente3' }
-  ];
-
+  agentes = [];
   agente: any;
   motivo: any = '';
 
@@ -106,6 +101,10 @@ export class AsignacionSeguimientoComponent implements OnInit {
           fechaUltimaActuacion: s.fechaUltimaActuacion ? this.toDateOnly(s.fechaUltimaActuacion) : null
         }));
       }
+    });
+
+    this.repos.get('NNA/VwAgentesAsignados', '', 'NNA').subscribe({
+      next: (data: any) => { this.agente = data }
     });
   }
 
