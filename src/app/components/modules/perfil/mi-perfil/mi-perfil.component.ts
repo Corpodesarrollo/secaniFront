@@ -96,7 +96,7 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerDatosUsuario() {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('UsuariosRoles', this.idUser, 'User/GetUserDetails/').subscribe({
+    this.dataService.get('User/GetUserDetails', this.idUser, 'Permisos').subscribe({
       next: (data: any) => {
         this.usuario = data;
         this.estadoUsuario = this.usuario.estado === 'Activo';
@@ -109,7 +109,7 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerHorarioAgente(): void {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('/api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento').subscribe({
+    this.dataService.get('api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento').subscribe({
       next: (data: any[]) => { this.actualizarHorarios(data) },
       error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
       complete: () => console.info('Consulta del horario del usuario existosa')
@@ -118,7 +118,7 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerDatosAusenciaAgente(): void {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('/api/Ausencias/usuario', this.idUser, 'Seguimiento').subscribe({
+    this.dataService.get('api/Ausencias/usuario', this.idUser, 'Seguimiento').subscribe({
       next: (data: { id: string, fecha: Date; motivo: string }[]) => { this.datosAusenciasAgente = data },
       error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
       complete: () => console.info('Consulta del horario del usuario existosa')
@@ -231,7 +231,7 @@ export class MiPerfilComponent implements OnInit {
         horaSalida: this.convertFormToTime(formValue.end)
       };
 
-      this.dataService.post(`/api/horario-laboral/guardar-dia`, payload, "Seguimiento").subscribe({
+      this.dataService.post(`api/horario-laboral/guardar-dia`, payload, "Seguimiento").subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',
@@ -310,7 +310,7 @@ saveAbsence(): void {
       motivoAusencia: this.absenceForm.value.reason
     };
 
-    this.dataService.post("Seguimiento", payload, `/api/ausencias`).subscribe({
+    this.dataService.post("api/ausencias", payload, 'Seguimiento').subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -342,7 +342,7 @@ cancelAbsenceDialog(): void {
 }
 
 deleteAbsence(data: any): void {
-  this.dataService.deleteWithApi(`/api/ausencias/${data.id}`, '' ,"Seguimiento").subscribe({
+  this.dataService.deleteWithApi(`api/ausencias/${data.id}`, '' ,"Seguimiento").subscribe({
     next: () => {
       this.messageService.add({
         severity: 'info',
