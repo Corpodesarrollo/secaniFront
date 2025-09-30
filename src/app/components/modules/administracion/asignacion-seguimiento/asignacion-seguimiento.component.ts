@@ -60,7 +60,7 @@ export class AsignacionSeguimientoComponent implements OnInit {
   showDialogSeleccionados: boolean = false;
   showDialogAgente: boolean = false;
 
-  agentes = [];
+  agentes: { id: string, fullName: string }[] = [];
   agente: any;
   motivo: any = '';
 

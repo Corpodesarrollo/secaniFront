@@ -343,7 +343,7 @@
     <label for="agente" class="form-label fw-bold">Agente de seguimiento*</label>
     <select id="agente"class="form-select"aria-label="Seleccionar agente"[(ngModel)]="agente">
       <option value="" disabled selected>Seleccione un agente</option>
-      <option *ngFor="let ag of agentes" [value]="ag.value">{{ ag.label }}</option>
+      <option *ngFor="let ag of agentes" [value]="ag.id">{{ ag.fullName }}</option>
     </select>
   </div>
 
