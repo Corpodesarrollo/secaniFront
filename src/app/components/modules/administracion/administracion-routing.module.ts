@@ -19,10 +19,42 @@ const routes: Routes = [
   {
     path: 'lista_parametricas',
     children: [
-      { path: '', component: ListasParametricasComponent },
-      { path: ':id', component: ListaParametricaComponent },
-      { path: ':id/historico', component: ListaParametricaHistoricoComponent },
-      { path: ':id/items', component: ListaParametricaItemsComponent },
+      { 
+        path: '', component: 
+        ListasParametricasComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        }
+      },
+      { 
+        path: ':id', 
+        component: ListaParametricaComponent, 
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        }
+      },
+      { 
+        path: ':id/historico', 
+        component: ListaParametricaHistoricoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        }
+      },
+      { 
+        path: ':id/items', 
+        component: ListaParametricaItemsComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        } 
+      },
       { path: '**', redirectTo: '' }
     ]
   },

@@ -15,11 +15,12 @@ import { ToastModule } from 'primeng/toast';
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
 import { CommonModule } from '@angular/common';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-lista-parametrica-items',
   standalone: true,
-  imports: [CommonModule, ButtonModule, DropdownModule, InputTextModule, ReactiveFormsModule, TableModule, ConfirmDialogModule, ToastModule, CalendarModule],
+  imports: [CommonModule, ButtonModule, DropdownModule, InputTextModule, ReactiveFormsModule, TableModule, ConfirmDialogModule, ToastModule, CalendarModule, PermisoDirective],
   templateUrl: './lista-parametrica-items.component.html',
   styleUrl: './lista-parametrica-items.component.css',
   providers: [ConfirmationService, MessageService]
