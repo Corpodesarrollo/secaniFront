@@ -11,11 +11,12 @@ import { TableModule } from 'primeng/table';
 
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-listas-parametricas',
   standalone: true,
-  imports: [ButtonModule, DialogModule, DropdownModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, RouterModule, TableModule],
+  imports: [ButtonModule, DialogModule, DropdownModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, RouterModule, TableModule, PermisoDirective],
   templateUrl: './listas-parametricas.component.html',
   styleUrl: './listas-parametricas.component.css'
 })

@@ -8,11 +8,12 @@ import { TableModule } from 'primeng/table';
 import { ListasParametricasService } from '../../../../services/listas-parametricas.service';
 import { ListaParametrica } from '../../../../models/listaParametrica.model';
 import { filter, map, switchMap } from 'rxjs';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-lista-parametrica',
   standalone: true,
-  imports: [ButtonModule, CommonModule, RouterModule, TableModule],
+  imports: [ButtonModule, CommonModule, RouterModule, TableModule, PermisoDirective],
   templateUrl: './lista-parametrica.component.html',
   styleUrl: './lista-parametrica.component.css'
 })

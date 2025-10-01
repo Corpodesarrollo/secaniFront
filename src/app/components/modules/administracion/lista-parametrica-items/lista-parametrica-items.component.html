@@ -40,7 +40,7 @@
             </div>
 
             <div class="d-flex justify-content-center mt-5">
-              <p-button type="button"
+              <p-button [appPermiso]="'canAdd'" [path]="'administracion/lista_parametricas'" type="button"
                 styleClass="me-3" severity="success"
                 (onClick)="resetFormToDefaults()"
               >
@@ -88,6 +88,8 @@
                 <td>
                   <div>
                     <p-button
+                      [appPermiso]="'canEdit'" 
+                      [path]="'administracion/lista_parametricas'"
                       icon="pi pi-pencil"
                       [rounded]="true"
                       [text]="true"
@@ -96,6 +98,8 @@
                       [disabled]="isListaProtegida()"
                     />
                     <p-button
+                      [appPermiso]="'canDelete'" 
+                      [path]="'administracion/lista_parametricas'"
                       icon="pi pi-trash"
                       [rounded]="true"
                       [text]="true"

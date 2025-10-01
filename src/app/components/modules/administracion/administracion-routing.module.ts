@@ -12,27 +12,93 @@ import { PlantillaCorreoHistoricoComponent } from './plantilla-correo-historico/
 import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-plantilla-correo.component';
 
 import { AsignacionSeguimientoComponent } from '../administracion/asignacion-seguimiento/asignacion-seguimiento.component';
+import { permisoGuard } from '../../../guards/permiso.guard';
 
 const routes: Routes = [
   { path: 'permisos', component: PermisosComponent },
   {
     path: 'lista_parametricas',
     children: [
-      { path: '', component: ListasParametricasComponent },
-      { path: ':id', component: ListaParametricaComponent },
-      { path: ':id/historico', component: ListaParametricaHistoricoComponent },
-      { path: ':id/items', component: ListaParametricaItemsComponent },
+      { 
+        path: '', component: 
+        ListasParametricasComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        }
+      },
+      { 
+        path: ':id', 
+        component: ListaParametricaComponent, 
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        }
+      },
+      { 
+        path: ':id/historico', 
+        component: ListaParametricaHistoricoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        }
+      },
+      { 
+        path: ':id/items', 
+        component: ListaParametricaItemsComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/lista_parametricas',
+          permiso: 'canView'
+        } 
+      },
       { path: '**', redirectTo: '' }
     ]
   },
   {
     path: 'plantilla_de_correo',
     children: [
-      { path: '', component: PlantillasCorreoComponent },
-      { path: ':id/historico', component: PlantillaCorreoHistoricoComponent },
-      { path: 'nueva', component: NuevaPlantillaCorreoComponent },
-      { path: ':id/editar', component: NuevaPlantillaCorreoComponent },
-      { path: '**', redirectTo: '' }
+      { 
+        path: '', component: PlantillasCorreoComponent, 
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/plantilla_de_correo',
+          permiso: 'canView'
+        } 
+      },
+      { 
+        path: ':id/historico', 
+        component: PlantillaCorreoHistoricoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/plantilla_de_correo',
+          permiso: 'canView'
+        } 
+      },
+      { 
+        path: 'nueva', 
+        component: NuevaPlantillaCorreoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/plantilla_de_correo',
+          permiso: 'canAdd'
+        } 
+      },
+      { 
+        path: ':id/editar', 
+        component: NuevaPlantillaCorreoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'administracion/plantilla_de_correo',
+          permiso: 'canEdit'
+        } 
+      },
+      { 
+        path: '**', redirectTo: '' 
+      }
     ]
   },
   { path: 'asignacion_de_seguimiento', component: AsignacionSeguimientoComponent },
