@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex align-items-center justify-content-between mt-5 mb-4">
     <h1>Plantillas de correo</h1>
-    <p-button class="me-3" severity="success" label="Crear"
+    <p-button [appPermiso]="'canAdd'" [path]="'administracion/plantilla_de_correo'" class="me-3" severity="success" label="Crear"
       [routerLink]="['/administracion/plantilla_de_correo/nueva']"
     />
   </div>
@@ -83,11 +83,11 @@
             <td>{{ plantillaCorreo.estado=='1'?'Activo':'Inactivo' }}</td>
             <th>
               <div>
-                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                <p-button [appPermiso]="'canEdit'" [path]="'administracion/plantilla_de_correo'" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
                   [routerLink]="['/administracion/plantilla_de_correo', plantillaCorreo.id, 'editar']"
                 />
-                <p-button icon="pi pi-eye" (click)="openViewModal(plantillaCorreo.id)" [rounded]="true" [text]="true" severity="secondary"/>
-                <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary"
+                <p-button [appPermiso]="'canView'" [path]="'administracion/plantilla_de_correo'" icon="pi pi-eye" (click)="openViewModal(plantillaCorreo.id)" [rounded]="true" [text]="true" severity="secondary"/>
+                <p-button [appPermiso]="'canView'" [path]="'administracion/plantilla_de_correo'" icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary"
                   [routerLink]="['/administracion/plantilla_de_correo', plantillaCorreo.id, 'historico']"
                 />
                 <p-button (onClick)="confirm($event, plantillaCorreo.id)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>

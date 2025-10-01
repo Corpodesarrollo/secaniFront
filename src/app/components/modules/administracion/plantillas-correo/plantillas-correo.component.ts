@@ -15,13 +15,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
 import { EliminarPlantillaCorreo } from '../../../../models/eliminarPlantillaCorreo.model';
 import { Plantilla } from '../../../../models/plantilla.model';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 
 
 @Component({
   selector: 'app-plantillas-correo',
   standalone: true,
-  imports: [ButtonModule, ConfirmDialogModule, CommonModule, DialogModule, DropdownModule, FormsModule, RouterModule, TableModule, ToastModule],
+  imports: [ButtonModule, ConfirmDialogModule, CommonModule, DialogModule, DropdownModule, FormsModule, RouterModule, TableModule, ToastModule, PermisoDirective],
   templateUrl: './plantillas-correo.component.html',
   styleUrl: './plantillas-correo.component.css',
   providers: [ConfirmationService, MessageService]
