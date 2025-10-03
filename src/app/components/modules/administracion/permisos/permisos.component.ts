@@ -116,7 +116,7 @@ export class PermisosComponent implements OnInit {
   onGuardarClick(): void {
     this.tableData.forEach(permiso => {
       console.log(permiso);
-      this.dataService.put(`Permisos/${permiso.id}`, permiso, 'Permisos').subscribe({
+      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').subscribe({
         next: (data: any) => {
           console.log(data)
           alert('¡Se guardo de forma exitosa!')
