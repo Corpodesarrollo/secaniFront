@@ -29,7 +29,7 @@ export class PermisosService {
             return of(this.permisosCache[key]);
         }
 
-        return this.generico.get(`permisos/cansbypathandroleid/${path}/${roleId}`, "", "Entidad")
+        return this.generico.get(`permisos/cansbypathandroleid/${encodeURIComponent(path)}/${roleId}`, "", "Entidad")
             .pipe(
                 tap(permisos => {
                     this.permisosCache[key] = permisos;
