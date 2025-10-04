@@ -4,6 +4,7 @@ import { PermisosService } from '../services/permisos.service';
 import { catchError, map, of } from 'rxjs';
 
 export const permisoGuard: CanActivateFn = (route, state) => {
+  console.log("****** permisoGuard ******")
   const permisosService = inject(PermisosService);
   const router = inject(Router);
 
@@ -12,6 +13,9 @@ export const permisoGuard: CanActivateFn = (route, state) => {
 
   return permisosService.getPermisos(path).pipe(
     map(permisos => {
+      console.log("****** permisos ******");
+      console.log(permisos);
+      
       if (permisos?.[permiso]) {
         return true;
       } else {
