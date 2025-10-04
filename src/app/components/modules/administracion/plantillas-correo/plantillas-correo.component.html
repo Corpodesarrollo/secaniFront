@@ -90,7 +90,7 @@
                 <p-button [appPermiso]="'canView'" [path]="'administracion/plantilla_de_correo'" icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary"
                   [routerLink]="['/administracion/plantilla_de_correo', plantillaCorreo.id, 'historico']"
                 />
-                <p-button [appPermiso]="'canDelete'" [path]="'administracion/plantilla_de_correo'" (onClick)="confirm($event, plantillaCorreo.id)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>
+                <p-button [appPermiso]="'canDele'" [path]="'administracion/plantilla_de_correo'" (onClick)="confirm($event, plantillaCorreo.id)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"/>
               </div>
             </th>
           </tr>

@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from "@angular/core";
 import { PermisosService } from "../services/permisos.service";
 
-export type PermisoKey = 'canAdd' | 'canEdit' | 'canView' | 'canDelete';
+export type PermisoKey = 'canAdd' | 'canEdit' | 'canView' | 'canDele';
 
 @Directive({
     selector: '[appPermiso]',
