@@ -2,167 +2,163 @@
 
 <body class="formato-fondo fuente-letra">
   <div class="row mb-3">
-      <div class="col-12 d-flex justify-content-between align-items-center">
-          <h3>Asignación de seguimientos</h3>
-          <app-boton-notificacion></app-boton-notificacion>
-      </div>
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <h3>Asignación de seguimientos</h3>
+      <app-boton-notificacion></app-boton-notificacion>
+    </div>
   </div>
   <div class="row mb-3">
-      <div class="col-12 d-flex justify-content-between align-items-center">
-          <div class="button-group">
-              <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0 " [ngClass]="{'active': activeFilter === '1'}" style="width: 150px;" (click)="applyFilter('1')">
-                  <div class="row">
-                      <div class="col">
-                          Hoy
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col">
-                          <h3 class="fw-bold mb-0">{{cntFiltros.hoy}}</h3>
-                      </div>
-                  </div>
-              </button>
-              <button class="btn col-auto  bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '2'}" style="width: 150px;" (click)="applyFilter('2')">
-                  <div class="row">
-                      <div class="col">
-                          Con alerta
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col">
-                          <h3 class="fw-bold mb-0">{{cntFiltros.conAlerta}}</h3>
-                      </div>
-                  </div>
-              </button>
-              <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '3'}" style="width: 150px;" (click)="applyFilter('3')">
-                  <div class="row">
-                      <div class="col">
-                          Todos
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col">
-                          <h3 class="fw-bold mb-0">{{cntFiltros.todos}}</h3>
-                      </div>
-                  </div>
-              </button>
-              <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0" [ngClass]="{'active': activeFilter === '4'}" style="width: 240px;" (click)="applyFilter('4')">
-                  <div class="row">
-                      <div class="col">
-                          Solicitados por cuidador
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col">
-                          <h3 class="fw-bold mb-0">{{cntFiltros.solicitadosPorCuidador}}</h3>
-                      </div>
-                  </div>
-              </button>
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <div class="button-group">
+        <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0 "
+          [ngClass]="{'active': activeFilter === '1'}" style="width: 150px;" (click)="applyFilter('1')">
+          <div class="row">
+            <div class="col">
+              Hoy
+            </div>
           </div>
+          <div class="row">
+            <div class="col">
+              <h3 class="fw-bold mb-0">{{cntFiltros.hoy}}</h3>
+            </div>
+          </div>
+        </button>
+        <button class="btn col-auto  bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0"
+          [ngClass]="{'active': activeFilter === '2'}" style="width: 150px;" (click)="applyFilter('2')">
+          <div class="row">
+            <div class="col">
+              Con alerta
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h3 class="fw-bold mb-0">{{cntFiltros.conAlerta}}</h3>
+            </div>
+          </div>
+        </button>
+        <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0"
+          [ngClass]="{'active': activeFilter === '3'}" style="width: 150px;" (click)="applyFilter('3')">
+          <div class="row">
+            <div class="col">
+              Todos
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h3 class="fw-bold mb-0">{{cntFiltros.todos}}</h3>
+            </div>
+          </div>
+        </button>
+        <button class="btn col-auto bg-white rounded-4 text-center me-2 py-0 mb-2 mb-md-0"
+          [ngClass]="{'active': activeFilter === '4'}" style="width: 240px;" (click)="applyFilter('4')">
+          <div class="row">
+            <div class="col">
+              Solicitados por cuidador
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h3 class="fw-bold mb-0">{{cntFiltros.solicitadosPorCuidador}}</h3>
+            </div>
+          </div>
+        </button>
       </div>
+    </div>
   </div>
 
   <div class="row">
-      <div class="col-12">
-          <p-card>
-              <p-table
-              [value]="seguimientos"
-              [responsive]="true"
-              [paginator]="true"
-              [rows]="20"
-              [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
-              [showCurrentPageReport]="true"
-              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
-              [(selection)]="selectedRecords"
-              (selectionChange)="onSelectionChange($event)"
-              [globalFilterFields]="['noCaso','fechaNotificacion','nombreCompleto','estado.nombre','asuntoUltimaActuacion','fechaUltimaActuacion','nombreAgenteActual','alertas.nombre']"
-            >
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>
-                    No. Caso
-                    <p-columnFilter type="text" field="noCaso" display="menu" />
-                  </th>
-                  <th>
-                    Fecha Notificación
-                    <p-columnFilter type="date" field="fechaNotificacion" display="menu" />
-                  </th>
-                  <th>
-                    Nombre
-                    <p-columnFilter type="text" field="nombreCompleto" display="menu" />
-                  </th>
-                  <th>
-                    Estado
-                    <p-columnFilter type="text" field="estado.nombre" display="menu" />
-                  </th>
-                  <th>
-                    Asunto Última Actuación
-                    <p-columnFilter type="text" field="asuntoUltimaActuacion" display="menu" />
-                  </th>
-                  <th>
-                    Fecha Última Actuación
-                    <p-columnFilter type="date" field="fechaUltimaActuacion" display="menu" />
-                  </th>
-                  <th>
-                    Agente Actual
-                    <p-columnFilter type="text" field="nombreAgenteActual" display="menu" />
-                  </th>
-                  <th>
-                    Alertas
-                    <p-columnFilter type="text" field="alertas.nombre" display="menu" />
-                  </th>
-                  <th>
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                  </th>
-                </tr>
-              </ng-template>
+    <div class="col-12">
+      <p-card>
+        <p-table [value]="seguimientos" [responsive]="true" [paginator]="true" [rows]="20"
+          [rowsPerPageOptions]="[5, 10, 20, 50, 100]" [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}" [(selection)]="selectedRecords"
+          (selectionChange)="onSelectionChange($event)"
+          [globalFilterFields]="['noCaso','fechaNotificacion','nombreCompleto','estado.nombre','asuntoUltimaActuacion','fechaUltimaActuacion','nombreAgenteActual','alertas.nombre']">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>
+                No. Caso
+                <p-columnFilter type="text" field="noCaso" display="menu" />
+              </th>
+              <th>
+                Fecha Notificación
+                <p-columnFilter type="date" field="fechaNotificacion" display="menu" />
+              </th>
+              <th>
+                Nombre
+                <p-columnFilter type="text" field="nombreCompleto" display="menu" />
+              </th>
+              <th>
+                Estado
+                <p-columnFilter type="text" field="estado.nombre" display="menu" />
+              </th>
+              <th>
+                Asunto Última Actuación
+                <p-columnFilter type="text" field="asuntoUltimaActuacion" display="menu" />
+              </th>
+              <th>
+                Fecha Última Actuación
+                <p-columnFilter type="date" field="fechaUltimaActuacion" display="menu" />
+              </th>
+              <th>
+                Agente Actual
+                <p-columnFilter type="text" field="nombreAgenteActual" display="menu" />
+              </th>
+              <th>
+                Alertas
+                <p-columnFilter type="text" field="alertas.nombre" display="menu" />
+              </th>
+              <th>
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+            </tr>
+          </ng-template>
 
-              <ng-template pTemplate="body" let-seguimiento>
-                <tr>
-                  <td>
-                    <a [routerLink]="">{{ seguimiento.noCaso }}</a>
-                  </td>
-                  <td>{{ seguimiento.fechaNotificacion | date: 'dd/MM/yyyy' }}</td>
-                  <td>{{ seguimiento.nombreCompleto }}</td>
-                  <td>
-                    <span class="badge w-100" [ngStyle]="{ 'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText }">
-                      {{ seguimiento.estado.nombre }}
-                    </span>
-                  </td>
-                  <td>{{ seguimiento.asuntoUltimaActuacion }}</td>
-                  <td>{{ seguimiento.fechaUltimaActuacion | date: 'dd/MM/yyyy' }}</td>
-                  <td>{{ seguimiento.nombreAgenteActual }}</td>
-                  <td>
-                    <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
-                      {{ alerta.nombre }}
-                    </span>
-                  </td>
-                  <td class="accion-container">
-                    <p-tableCheckbox [value]="seguimiento" class="accion-item" />
-                    <i
-                      *ngIf="seguimiento.asuntoUltimaActuacion?.toLowerCase() == 'solicitado por cuidador'"
-                      class="bi bi-eye-fill accion-item"
-                      style="color: #73b7ad; cursor: pointer;"
-                      (click)="solicitudCuidador(seguimiento.noCaso)"
-                    ></i>
-                  </td>
-                </tr>
-              </ng-template>
+          <ng-template pTemplate="body" let-seguimiento>
+            <tr>
+              <td>
+                <a [routerLink]="">{{ seguimiento.noCaso }}</a>
+              </td>
+              <td>{{ seguimiento.fechaNotificacion | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ seguimiento.nombreCompleto }}</td>
+              <td>
+                <span class="badge w-100"
+                  [ngStyle]="{ 'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText }">
+                  {{ seguimiento.estado.nombre }}
+                </span>
+              </td>
+              <td>{{ seguimiento.asuntoUltimaActuacion }}</td>
+              <td>{{ seguimiento.fechaUltimaActuacion | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ seguimiento.nombreAgenteActual }}</td>
+              <td>
+                <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)"
+                  class="badge text-white me-1">
+                  {{ alerta.nombre }}
+                </span>
+              </td>
+              <td class="accion-container">
+                <p-tableCheckbox [value]="seguimiento" class="accion-item" />
+                <i *ngIf="seguimiento.asuntoUltimaActuacion?.toLowerCase() == 'solicitado por cuidador'"
+                  class="bi bi-eye-fill accion-item" style="color: #73b7ad; cursor: pointer;"
+                  (click)="solicitudCuidador(seguimiento.noCaso)"></i>
+              </td>
+            </tr>
+          </ng-template>
 
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td colspan="9">No hay resultados</td>
-                </tr>
-              </ng-template>
-            </p-table>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="9">No hay resultados</td>
+            </tr>
+          </ng-template>
+        </p-table>
 
-          </p-card>
-      </div>
+      </p-card>
+    </div>
   </div>
 
   <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
     <div>
-        <button class="btn btn-asignar-nna" (click)="asignarSeleccion()">ASIGNAR</button>
+      <button class="btn btn-asignar-nna" (click)="asignarSeleccion()">ASIGNAR</button>
     </div>
   </div>
 </body>
@@ -173,96 +169,97 @@
     <!-- Aquí puedes poner tu spinner de loading, por ejemplo de Bootstrap o un icono -->
   </div>
   <div class="px-3" *ngIf="!isLoading">
-      <div class="row mb-3">
-          <div class="col-12 text-center">
-              <span class="fw-bold">Solicitud de seguimiento</span>
-          </div>
-          <div class="col-12 text-center">
-              <span class="fw-bold">No. CASO: {{nna.id}}</span>
-          </div>
+    <div class="row mb-3">
+      <div class="col-12 text-center">
+        <span class="fw-bold">Solicitud de seguimiento</span>
       </div>
-      <div class="row mb-3">
-          <div class="col-12">
-              <div class="usuario">
-                  <i class="bi bi-person-circle foto-perfil"></i>
-                  <div class="datos-usuario">
-                      <p><strong>{{nna.primerNombre}} {{nna.segundoNombre}} {{nna.primerApellido}} {{nna.segundoApellido}}</strong></p>
-                      <p *ngIf="nna.sexoId == 'M'">Femenino</p>
-                      <p *ngIf="nna.sexoId == 'H'">Masculino</p>
-                      <p>{{nna.edad}}</p>
-                  </div>
+      <div class="col-12 text-center">
+        <span class="fw-bold">No. CASO: {{nna.id}}</span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="usuario">
+          <i class="bi bi-person-circle foto-perfil"></i>
+          <div class="datos-usuario">
+            <p><strong>{{nna.primerNombre}} {{nna.segundoNombre}} {{nna.primerApellido}}
+                {{nna.segundoApellido}}</strong></p>
+            <p *ngIf="nna.sexoId == 'M'">Femenino</p>
+            <p *ngIf="nna.sexoId == 'H'">Masculino</p>
+            <p>{{nna.edad}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="detalles-seguimiento">
+          <div class="row mb-1">
+            <div class="col-4">
+              <span class="fw-bold">Nombre Solicitante:</span>
+            </div>
+            <div class="col-8">
+              <span>{{ nna.cuidadorNombres }}</span>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <div class="col-4">
+              <span class="fw-bold">Parentesco:</span>
+            </div>
+            <div class="col-8">
+              <span>{{ parentesco?.nombre }}</span>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <div class="col-4">
+              <span class="fw-bold">Correo:</span>
+            </div>
+            <div class="col-8">
+              <span>{{ nna.cuidadorEmail }}</span>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <div class="col-4">
+              <span class="fw-bold">Teléfono:</span>
+            </div>
+            <div class="col-8">
+              <span>{{ nna.cuidadorTelefono }}</span>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <div class="col-4">
+              <span class="fw-bold">Diagnóstico:</span>
+            </div>
+            <div class="col-8">
+              <span>{{ diagnostico?.nombre }}</span>
+            </div>
+          </div>
+          <div class="row mb-1">
+            <div class="col-4">
+              <span class="fw-bold">Fecha diagnóstico:</span>
+            </div>
+            <div class="col-8">
+              <span>{{ nna.fechaDiagnostico | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <span class="fw-bold">Observación:</span>
+            </div>
+            <div class="col-8">
+              <div class="observacion">
+                <span>{{ nna.tratamientoObservaciones }}</span>
               </div>
+            </div>
           </div>
-      </div>
-      <div class="row">
-          <div class="col-12">
-              <div class="detalles-seguimiento">
-                  <div class="row mb-1">
-                      <div class="col-4">
-                          <span class="fw-bold">Nombre Solicitante:</span>
-                      </div>
-                      <div class="col-8">
-                          <span>{{ nna.cuidadorNombres }}</span>
-                      </div>
-                  </div>
-                  <div class="row mb-1">
-                      <div class="col-4">
-                          <span class="fw-bold">Parentesco:</span>
-                      </div>
-                      <div class="col-8">
-                          <span>{{ parentesco?.nombre }}</span>
-                      </div>
-                  </div>
-                  <div class="row mb-1">
-                      <div class="col-4">
-                          <span class="fw-bold">Correo:</span>
-                      </div>
-                      <div class="col-8">
-                          <span>{{ nna.cuidadorEmail }}</span>
-                      </div>
-                  </div>
-                  <div class="row mb-1">
-                      <div class="col-4">
-                          <span class="fw-bold">Teléfono:</span>
-                      </div>
-                      <div class="col-8">
-                          <span>{{ nna.cuidadorTelefono }}</span>
-                      </div>
-                  </div>
-                  <div class="row mb-1">
-                      <div class="col-4">
-                          <span class="fw-bold">Diagnóstico:</span>
-                      </div>
-                      <div class="col-8">
-                          <span>{{ diagnostico?.nombre }}</span>
-                      </div>
-                  </div>
-                  <div class="row mb-1">
-                      <div class="col-4">
-                          <span class="fw-bold">Fecha diagnóstico:</span>
-                      </div>
-                      <div class="col-8">
-                          <span>{{ nna.fechaDiagnostico | date:'dd/MM/yyyy' }}</span>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-4">
-                          <span class="fw-bold">Observación:</span>
-                      </div>
-                      <div class="col-8">
-                          <div class="observacion">
-                              <span>{{ nna.tratamientoObservaciones }}</span>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- <div class="row mb-1">
+          <!-- <div class="row mb-1">
                       <div class="col-8 offset-4">
                           <a href="ruta/a/anexo.pdf" class="anexo-link">Anexo-Diagnóstico Francy.pdf</a>
                       </div>
                   </div> -->
-              </div>
-          </div>
+        </div>
       </div>
+    </div>
   </div>
 </p-dialog>
 
@@ -271,55 +268,46 @@
   <span class="p-text-secondary block mb-8">Total casos seleccionados: {{selectedRecords.length}}</span>
 
   <div class="flex items-center gap-4 mb-4">
-    <p-table
-        [responsive]="true"
-        [value]="selectedRecords"
-        [paginator]="true" [rows]="5"
-        [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
-    >
-        <ng-template pTemplate="header">
-            <tr>
-                <th class="header-th" [width]="100">No. Caso</th>
-                <th class="header-th">Nombre</th>
-                <th class="header-th" [width]="200">Estado</th>
-                <th class="header-th" [width]="100">Alertas</th>
-                <th class="header-th" [width]="100">Acción</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-seguimiento>
-            <tr>
-                <td><a [routerLink]="">{{ seguimiento.noCaso }}</a></td>
-                <td>{{ seguimiento.nombreCompleto }}</td>
-                <td><span class="badge w-100" [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{ seguimiento.estado.nombre }}</span></td>
-                <td>
-                    <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)" class="badge text-white me-1">
-                    {{ alerta.nombre }}
-                    </span>
-                </td>
-                <td class="accion-container justify-content-center align-items-center">
-                  <button
-                      pButton pRipple
-                      type="button"
-                      icon="pi pi-times"
-                      (click)="onRowEditCancel(seguimiento)"
-                      class="p-button-rounded p-button-text p-button-danger">
-                  </button>
-                </td>
-            </tr>
-        </ng-template>
+    <p-table [responsive]="true" [value]="selectedRecords" [paginator]="true" [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="header-th" [width]="100">No. Caso</th>
+          <th class="header-th">Nombre</th>
+          <th class="header-th" [width]="200">Estado</th>
+          <th class="header-th" [width]="100">Alertas</th>
+          <th class="header-th" [width]="100">Acción</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-seguimiento>
+        <tr>
+          <td><a [routerLink]="">{{ seguimiento.noCaso }}</a></td>
+          <td>{{ seguimiento.nombreCompleto }}</td>
+          <td><span class="badge w-100"
+              [ngStyle]="{'background-color': seguimiento.estado.colorBG, 'color': seguimiento.estado.colorText}">{{
+              seguimiento.estado.nombre }}</span></td>
+          <td>
+            <span *ngFor="let alerta of seguimiento.alertas" [ngClass]="getBadgeColor(alerta.id)"
+              class="badge text-white me-1">
+              {{ alerta.nombre }}
+            </span>
+          </td>
+          <td class="accion-container justify-content-center align-items-center">
+            <button pButton pRipple type="button" icon="pi pi-times" (click)="onRowEditCancel(seguimiento)"
+              class="p-button-rounded p-button-text p-button-danger">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
   </div>
 
   <div class="seleccion-dialog">
-    <button
-      class="btn-vista-previa-close"
-      (click)="closeVistaPrevia()">
+    <button class="btn-vista-previa-close" (click)="closeVistaPrevia()">
       Cancelar
     </button>
-    <button
-      class="btn-vista-previa-confirmar"
-      (click)="openSeleccionarAgente()">
+    <button class="btn-vista-previa-confirmar" (click)="openSeleccionarAgente()">
       Confirmar
     </button>
   </div>
@@ -341,16 +329,14 @@
   <!-- Campo agente -->
   <div class="mb-4">
     <label for="agente" class="form-label fw-bold">Agente de seguimiento*</label>
-    <select id="agente"class="form-select"aria-label="Seleccionar agente" [(ngModel)]="agente">
-      <option value="" disabled selected>Seleccione un agente</option>
-      <option *ngFor="let ag of agentes" [value]="ag.id">{{ ag.fullName }}</option>
-    </select>
+    <p-dropdown [options]="agentes" [(ngModel)]="agente" optionLabel="fullName" optionValue="id"
+      placeholder="Seleccione un agente" />
   </div>
 
   <!-- Campo motivo -->
   <div class="mb-4">
     <label for="motivo" class="form-label fw-bold">Motivo*</label>
-    <textarea id="motivo" [(ngModel)]="motivo" rows="3" class="form-control" placeholder="Ingrese el motivo"></textarea>
+    <textarea id="motivo" rows="3" cols="30" placeholder="Ingrese el motivo" pInputTextarea [(ngModel)]="motivo"></textarea>
   </div>
 
   <!-- Botones -->
