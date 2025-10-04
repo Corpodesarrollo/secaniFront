@@ -1,5 +1,5 @@
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .banner {
@@ -8,41 +8,40 @@ a {
 }
 
 .banner-text {
-    color: #d18452;
-    font-size: 13pt;
+  color: #d18452;
+  font-size: 13pt;
 }
 
 .banner-title {
-    color: white;
-    font-weight: 800;
-    font-size: 40pt;
+  color: white;
+  font-weight: 800;
+  font-size: 60pt;
 }
 
 .btn-custom {
-  width: auto;
-  min-width: 220px;
-  padding: 12px 20px;
-  font-size: 14px;
-  display: inline-flex;
-  flex-direction: row;
-  gap: 8px;
+  display: flex;
+  width: 100%;
+  padding: 20px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
 }
 
 .btn-primary-custom {
-    background: #72b4aa;
-    color: white;
+  background: #72b4aa;
+  color: white;
 }
 
 .btn-success-custom {
-    background: #ff9600;
-    color: white;
+  background: #ff9600;
+  color: white;
 }
 
 .link-text {
-    font-size: 14px;
-    font-weight: 400;
-    margin-top: 10px;
-    opacity: 0.9;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 10px;
+  opacity: 0.9;
 }
 
 .saludo {
