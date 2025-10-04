@@ -102,7 +102,7 @@ export class AsignacionSeguimientoComponent implements OnInit {
     });
 
     this.repos.get('NNA/VwAgentesAsignados', '', 'NNA').subscribe({
-      next: (data: any) => { this.agente = data }
+      next: (data: any) => { this.agentes = data }
     });
   }
 
