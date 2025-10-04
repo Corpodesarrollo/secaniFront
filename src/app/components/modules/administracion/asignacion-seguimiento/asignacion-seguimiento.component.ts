@@ -23,11 +23,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @Component({
   selector: 'app-asignacion-seguimiento',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule, DialogModule, CheckboxModule, ButtonModule, ToastModule, FormsModule, InputTextModule, CalendarModule, DropdownModule, MultiSelectModule],
+  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule, DialogModule, CheckboxModule, ButtonModule, ToastModule, FormsModule, InputTextModule, InputTextareaModule, CalendarModule, DropdownModule, MultiSelectModule],
   templateUrl: './asignacion-seguimiento.component.html',
   styleUrls: ['./asignacion-seguimiento.component.css'],
   providers: [MessageService]
@@ -60,8 +61,8 @@ export class AsignacionSeguimientoComponent implements OnInit {
   showDialogAgente: boolean = false;
 
   agentes: { id: string, fullName: string }[] = [];
-  agente: any;
-  motivo: any = '';
+  agente: { id: string, fullName: string } | undefined = undefined;
+  motivo: string = '';
 
   constructor(
     private router: Router,
