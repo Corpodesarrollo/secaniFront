@@ -13,7 +13,10 @@ export class PermisosService {
 
     getPermisos(path: string): Observable<any> {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const roleId = user?.roleId;
+        const roleId = user?.idRol;
+
+        console.log("****** permisos service ******");
+        console.log({ user, roleId });
 
         if (!roleId) {
             console.error('RoleId no encontrado en el usuario.');
