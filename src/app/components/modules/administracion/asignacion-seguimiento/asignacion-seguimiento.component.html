@@ -328,15 +328,15 @@
 
   <!-- Campo agente -->
   <div class="mb-4">
-    <label for="agente" class="form-label fw-bold">Agente de seguimiento*</label>
+    <label for="agente" class="form-label fw-bold d-block">Agente de seguimiento*</label>
     <p-dropdown [options]="agentes" [(ngModel)]="agente" optionLabel="fullName" optionValue="id"
-      placeholder="Seleccione un agente" />
+      placeholder="Seleccione un agente" class="w-100"/>
   </div>
 
   <!-- Campo motivo -->
   <div class="mb-4">
-    <label for="motivo" class="form-label fw-bold">Motivo*</label>
-    <textarea id="motivo" rows="3" cols="30" placeholder="Ingrese el motivo" pInputTextarea [(ngModel)]="motivo"></textarea>
+    <label for="motivo" class="form-label fw-bold d-block">Motivo*</label>
+    <textarea id="motivo" rows="3" cols="30" placeholder="Ingrese el motivo" pInputTextarea [(ngModel)]="motivo" class="w-100"></textarea>
   </div>
 
   <!-- Botones -->
