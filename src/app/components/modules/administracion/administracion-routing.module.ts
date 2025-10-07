@@ -15,7 +15,15 @@ import { AsignacionSeguimientoComponent } from '../administracion/asignacion-seg
 import { permisoGuard } from '../../../guards/permiso.guard';
 
 const routes: Routes = [
-  { path: 'permisos', component: PermisosComponent },
+  { 
+    path: 'permisos', 
+    component: PermisosComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'administracion/permisos',
+      permiso: 'canView'
+    } 
+  },
   {
     path: 'lista_parametricas',
     children: [
@@ -101,7 +109,15 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'asignacion_de_seguimiento', component: AsignacionSeguimientoComponent },
+  { 
+    path: 'asignacion_de_seguimiento', 
+    component: AsignacionSeguimientoComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'administracion/asignacion_de_seguimiento',
+      permiso: 'canView'
+    } 
+  },
   { path: '**', redirectTo: 'permisos' }
 ];
 

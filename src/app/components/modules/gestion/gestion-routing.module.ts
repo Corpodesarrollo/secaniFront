@@ -14,21 +14,131 @@ import { SeguimientoGestionarComponent } from './seguimientos/seguimiento-gestio
 import { ConsultarAlertasComponent } from './consultar-alertas/consultar-alertas.component';
 import { CargueMasivoComponent } from './cargue-masivo/cargue-masivo.component';
 import { confirmExitGuard } from './seguimientos/guards/confirm-exit.guard';
+import { permisoGuard } from '../../../guards/permiso.guard';
 
 const routes: Routes = [
-  { path: 'cargue_masivo', component: CargueMasivoComponent},
-  { path: 'seguimientos', component: ConsultarSeguimientosComponent },
-  { path: 'seguimientos/datos-seguimiento/:idNNA/:idContacto', component: SeguimientoDatosComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/estado-seguimiento/:id', component: SeguimientoEstadoComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/traslado-seguimiento/:id', component: SeguimientoTrasladoComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/dificultades-seguimiento/:id', component: SeguimientoDificultadesComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/adherencia-seguimiento/:id', component: SeguimientoAdherenciaComponent, canDeactivate: [confirmExitGuard] },
-  { path: 'seguimientos/sin-diagnostico-seguimiento/:id', component: SeguimientoSinDiagnosticoComponent},
-  { path: 'seguimientos/sin-tratamiento-seguimiento/:id', component: SeguimientoSinTratamientoComponent},
-  { path: 'seguimientos/fallecido-seguimiento/:id', component: SeguimientoFallecidoComponent},
-  { path: 'seguimientos/gestionar-seguimiento/:id', component: SeguimientoGestionarComponent},
-  { path: 'detalle_seguimiento/:idSeguimiento', component: DetalleSeguimientosComponent },
-  { path: 'consultar-alertas/:id', component: ConsultarAlertasComponent }
+  { 
+    path: 'gestion', 
+    component: CargueMasivoComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/cargue_masivo',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'seguimientos', 
+    component: ConsultarSeguimientosComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    } 
+  },
+  { 
+    path: 'seguimientos/datos-seguimiento/:idNNA/:idContacto', 
+    component: SeguimientoDatosComponent, 
+    canDeactivate: [confirmExitGuard],
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    } 
+  },
+  { 
+    path: 'seguimientos/estado-seguimiento/:id', 
+    component: SeguimientoEstadoComponent, 
+    canDeactivate: [confirmExitGuard],
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    } 
+  },
+  { 
+    path: 'seguimientos/traslado-seguimiento/:id', 
+    component: SeguimientoTrasladoComponent, 
+    canDeactivate: [confirmExitGuard],
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    } 
+  },
+  { 
+    path: 'seguimientos/dificultades-seguimiento/:id', 
+    component: SeguimientoDificultadesComponent, 
+    canDeactivate: [confirmExitGuard],
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'seguimientos/adherencia-seguimiento/:id', 
+    component: SeguimientoAdherenciaComponent, 
+    canDeactivate: [confirmExitGuard],
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'seguimientos/sin-diagnostico-seguimiento/:id', 
+    component: SeguimientoSinDiagnosticoComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'seguimientos/sin-tratamiento-seguimiento/:id', 
+    component: SeguimientoSinTratamientoComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'seguimientos/fallecido-seguimiento/:id', 
+    component: SeguimientoFallecidoComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'seguimientos/gestionar-seguimiento/:id', 
+    component: SeguimientoGestionarComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+  },
+  { 
+    path: 'detalle_seguimiento/:idSeguimiento', 
+    component: DetalleSeguimientosComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+   },
+  { 
+    path: 'consultar-alertas/:id', 
+    component: ConsultarAlertasComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'cuidador/seguimientos',
+      permiso: 'canView'
+    }
+   }
 ];
 
 @NgModule({

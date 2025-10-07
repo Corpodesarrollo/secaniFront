@@ -4,13 +4,38 @@ import { RouterModule, Routes } from '@angular/router';
 import { NuevoSeguimientoComponent } from './nuevo-seguimiento/nuevo-seguimiento.component';
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { EstadoSeguimientoComponent } from '../gestion/estado-seguimiento/estado-seguimiento.component';
+import { permisoGuard } from '../../../guards/permiso.guard';
 const routes: Routes = [
   {
     path: 'seguimientos',
     children: [
-      { path: '', component: EstadoSeguimientoComponent },
-      { path: 'nuevo', component: NuevoSeguimientoComponent },
-      { path: ':id', component: SeguimientoComponent },
+      { 
+        path: '', 
+        component: EstadoSeguimientoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'cuidador/seguimientos',
+          permiso: 'canView'
+        }  
+      },
+      { 
+        path: 'nuevo', 
+        component: NuevoSeguimientoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'cuidador/seguimientos',
+          permiso: 'canAdd'
+        } 
+      },
+      { 
+        path: ':id', 
+        component: SeguimientoComponent,
+        canActivate: [permisoGuard],
+        data: {
+          path: 'cuidador/seguimientos',
+          permiso: 'canView'
+        } 
+      },
       { path: '**', redirectTo: '' }
     ]
   },
