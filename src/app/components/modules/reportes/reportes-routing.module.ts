@@ -11,24 +11,94 @@ import { ReporteDinamicoEapbComponent } from './reporte-dinamico-eapb/reporte-di
 import { ReporteGeneralLlamadasComponent } from './reporte-general-llamadas/reporte-general-llamadas.component';
 import { IndicadoresComponent } from './indicadores/indicadores.component';
 import { ReporteDinamicoEntidadTerritorialComponent } from './reporte-dinamico-entidad-territorial/reporte-dinamico-entidad-territorial.component';
+import { permisoGuard } from '../../../guards/permiso.guard';
 
 const routes: Routes = [
-  { path: 'indicadores', component: IndicadoresComponent },
+  {
+    path: 'indicadores',
+    component: IndicadoresComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/indicadores',
+      permiso: 'canView'
+    }
+  },
   {
     path: 'depuracion_p115',
     children: [
       { path: '', component: ReporteDepuracionComponent },
       { path: ':id', component: ReporteDetalleNuevoDepuradosComponent },
       { path: '**', redirectTo: '' }
-    ]
+    ],
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/depuracion_p115',
+      permiso: 'canView'
+    },
   },
-  { path: 'alertas', component: ReporteDinamicoAlertasComponent },
-  { path: 'nna', component: ReporteDinamicoNnaComponent },
-  { path: 'seguimientos', component: ReporteDinamicoSeguimientoComponent },
-  { path: 'eapb', component: ReporteDinamicoEapbComponent },
-  { path: 'llamadas', component: ReporteGeneralLlamadasComponent },
-  { path: 'reporte-dinamico-entidad-territorial', component: ReporteDinamicoEntidadTerritorialComponent },
-  { path: 'inconsistencias', component: ReporteInconsistenciaComponent },
+  {
+    path: 'alertas',
+    component: ReporteDinamicoAlertasComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/alertas',
+      permiso: 'canView'
+    },
+  },
+  {
+    path: 'nna',
+    component: ReporteDinamicoNnaComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/nna',
+      permiso: 'canView'
+    },
+  },
+  {
+    path: 'seguimientos',
+    component: ReporteDinamicoSeguimientoComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/seguimientos',
+      permiso: 'canView'
+    },
+  },
+  {
+    path: 'eapb',
+    component: ReporteDinamicoEapbComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/eapb',
+      permiso: 'canView'
+    },
+  },
+  {
+    path: 'llamadas',
+    component: ReporteGeneralLlamadasComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/llamadas',
+      permiso: 'canView'
+    },
+  },
+  {
+    path: 'reporte-dinamico-entidad-territorial',
+    component: ReporteDinamicoEntidadTerritorialComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/reporte-dinamico-entidad-territorial',
+      permiso: 'canView'
+    },
+  },
+  {
+    path: 'inconsistencias',
+    component: ReporteInconsistenciaComponent,
+    canActivate: [permisoGuard],
+    data: {
+      path: 'reportes/inconsistencias',
+      permiso: 'canView'
+    },
+  },
   { path: '**', redirectTo: 'indicadores' }
 ];
 
