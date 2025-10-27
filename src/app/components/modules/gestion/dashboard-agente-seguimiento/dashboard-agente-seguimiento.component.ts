@@ -11,6 +11,7 @@ import { DashboardAgenteSeguimientoService } from './dashboard-agente-seguimient
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
+import { User } from '../../../../core/services/user';
 
 
 
@@ -52,7 +53,7 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
   formFechas: FormGroup;
 
   usuarioId: any;
-
+  user = new User();
   cargado = false;
 
 
@@ -69,25 +70,13 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
     // Registrar el plugin de DataLabels
     Chart.register(ChartDataLabels);
-
-
-
-
-
-
-
   }
 
 
   async ngOnInit() {
-
-
+    this.usuario = this.user.name;
     await this.dataBarra();
-
     await this.filtroFechas(this.fechaInicial, this.fechaFinal);
-
-
-
   }
 
 

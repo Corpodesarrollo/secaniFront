@@ -15,13 +15,11 @@ import { User } from '../../core/services/user';
 })
 
 export class ContenthomeComponent implements OnInit {
-  usuario: any = "Invitado";
   cargado = false;
   xUser = new User();
   constructor(public router: Router) { }
   ngOnInit() {
     if (this.xUser.id != null) {
-      this.usuario = this.xUser.name;
       if (this.xUser.isCoordinadorAdmin) {
         this.router.navigate(['dashboard-coordinador'], { skipLocationChange: true });
       }

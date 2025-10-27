@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
 import { CommonModule } from '@angular/common';
+import { User } from '../../../../core/services/user';
 
 @Component({
   selector: 'app-tarjeta-cabecera',
@@ -12,12 +13,15 @@ import { CommonModule } from '@angular/common';
   imports: [BotonNotificacionComponent, CommonModule],
 })
 export class TarjetaCabeceraComponent implements OnInit {
-  @Input() usuario: any;
+  usuario: any;
   @Input() visible: any = 'true';
+
+  user = new User();
 
   constructor() { }
 
   ngOnInit() {
+    this.usuario = this.user.name;
   }
 
 }
