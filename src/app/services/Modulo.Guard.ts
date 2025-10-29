@@ -9,6 +9,8 @@ export class ModuloGuard implements CanActivate {
     constructor(private user: UserService, private router: Router) {}
 
     async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
+        if (this.hasAccess) { return true; }
+
         let jsonUsuario = {
             id: 'd54fc3db-060c-4bb3-aef2-d8b4e3e5f8c9',
             idRol: '14CDDEA5-FA06-4331-8359-036E101C5046',
@@ -33,8 +35,6 @@ export class ModuloGuard implements CanActivate {
         localStorage.setItem('user', JSON.stringify(jsonUsuario));
 
         if (environment.cookie) {
-            if (this.hasAccess) { return true;}
-
             try {
                 const data = await this.user.get();
 

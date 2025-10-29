@@ -334,6 +334,15 @@ export class GenericService {
     }
   }
 
+  public deleteWithApi(modulo: string, parameters: string, api: string = ''): Observable<any> {
+    const apiUrl = this.getApiUrl(api);
+    if (environment.cookie){
+      return this.http.delete(`${apiUrl}${modulo}${parameters}`, { withCredentials: true });
+    }else{
+      return this.http.delete(`${apiUrl}${modulo}${parameters}`);
+    }
+  }
+
   async postJson(modulo: string, parameters: any) {
     const httpOptions = {
       headers: new HttpHeaders({
