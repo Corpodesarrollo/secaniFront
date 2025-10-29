@@ -150,12 +150,5 @@ export class LayoutComponent {
       this.isMenuCollapsed = isCollapsed;
     });
   }
-
-  /*
-  14CDDEA5-FA06-4331-8359-036E101C5046	Agentes de seguimiento
-  311882D4-EAD0-4B0B-9C5D-4A434D49D16D	Coordinador Admin
-  4C4016ED-B56D-4953-B8D3-C6A0A45A3850	Cuidador
-  88775B35-E8A7-4A73-A603-841C9DB3DBAD	Externos
-  */
 }
 

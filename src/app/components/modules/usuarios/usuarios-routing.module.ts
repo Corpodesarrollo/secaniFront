@@ -9,13 +9,13 @@ import { CasosTerritorioComponent } from './casos-territorio/casos-territorio.co
 import { PendienteReportarComponent } from './nna/pendiente-reportar/pendiente-reportar.component';
 import { CuidadoresComponent } from './cuidadores/cuidadores.component';
 import { ContactoEntidadComponent } from './contacto-entidad/contacto-entidad.component';
-import { permisoGuard } from '../../../guards/permiso.guard';
+import { ModuloGuard } from '../../../services/modulo.guard';
 
 const routes: Routes = [
   { 
     path: 'cuidadores', 
     component: CuidadoresComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/cuidadores',
       permiso: 'canView'
@@ -24,7 +24,7 @@ const routes: Routes = [
   { 
     path: 'consultar_eapb', 
     component:  EAPBComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/consultar_eapb',
       permiso: 'canView'
@@ -33,7 +33,7 @@ const routes: Routes = [
   { 
     path: 'externos_et', 
     component:  ContactoEntidadComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/externos_et',
       permiso: 'canView'
@@ -42,7 +42,7 @@ const routes: Routes = [
   { 
     path: 'historico_nna', 
     component: HistoricoNnaComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/historico_nna',
       permiso: 'canView'
@@ -51,7 +51,7 @@ const routes: Routes = [
   { 
     path: 'crear_nna', 
     component: CrearNnaComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/crear_nna',
       permiso: 'canView'
@@ -60,7 +60,7 @@ const routes: Routes = [
   { 
     path: 'detalle_nna/:idNna', 
     component: DetalleNnaComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/detalle_nna',
       permiso: 'canView'
@@ -69,7 +69,7 @@ const routes: Routes = [
   { 
     path: 'editar_nna/:idNna', 
     component: EditarNnaComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/editar_nna',
       permiso: 'canEdit'
@@ -78,7 +78,7 @@ const routes: Routes = [
   { 
     path: 'casos-territorio', 
     component: CasosTerritorioComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/casos-territorio',
       permiso: 'canView'
@@ -87,7 +87,7 @@ const routes: Routes = [
   { 
     path: 'pendiente-reportar', 
     component: PendienteReportarComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/pendiente-reportar',
       permiso: 'canView'

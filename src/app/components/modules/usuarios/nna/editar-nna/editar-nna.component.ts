@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
@@ -105,6 +105,7 @@ export class EditarNnaComponent implements OnInit {
 
   alertas: AlertasTratamiento[] = [];
   idContacto: string | undefined;
+  saving: boolean = false;
 
   constructor(
     private routerUrl: Router, 
@@ -112,7 +113,8 @@ export class EditarNnaComponent implements OnInit {
     private repos: GenericService,
     private tpp: TpParametros,
     private tp: TablasParametricas,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cd: ChangeDetectorRef
   ) { }
 
   async ngOnInit() {
@@ -206,6 +208,7 @@ export class EditarNnaComponent implements OnInit {
         this.fechaRecaidaInput = this.formatDate(this.datosNNA.fechaUltimaRecaida);
         this.deptoMuniOrigen(nnaData.residenciaOrigenMunicipioId);
         this.deptoMuniResiActual(nnaData.residenciaActualMunicipioId);
+        this.setFechaRecaida();
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
@@ -628,12 +631,6 @@ export class EditarNnaComponent implements OnInit {
       return false;
     }
 
-    // Validar parentesco obligatorio
-    if (!this.datosNNA.cuidadorParentescoId || this.datosNNA.cuidadorParentescoId === 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El parentesco es obligatorio.' });
-      return false;
-    }
-
     // Validar recaídas obligatorio
     if (this.datosNNA.recaida === undefined || this.datosNNA.recaida === null) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El campo recaídas es obligatorio.' });
@@ -642,6 +639,7 @@ export class EditarNnaComponent implements OnInit {
 
     // Validar fecha última recaída obligatoria
     if (this.datosNNA.recaida && !this.datosNNA.fechaUltimaRecaida) {
+      console.log('Fecha última recaída:', this.datosNNA.fechaUltimaRecaida);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La fecha de la última recaída es obligatoria.' });
       return false;
     }
@@ -791,22 +789,36 @@ export class EditarNnaComponent implements OnInit {
       console.log('Lista de alertas recibidas:', this.listaContactos);
     }
 
-  async guardarCambios(){
+  async guardarCambios() {
+    console.log('Guardando cambios...');
+
+    if (this.saving) {
+      return; // Evita múltiples envíos si ya se está guardando
+    }
+
+    this.saving = true;
 
     if (!this.validarDatos()) {
+      this.saving = false;
       return;
     }
 
-    (await this.repos.put('NNA/Actualizar', this.datosNNA, 'NNA')).subscribe({
-      next: async (nnaData: any) => {
-        this.loadNNAData();
-        this.fechaConsultaDiagnosticoInput = this.formatDate(this.datosNNA.fechaConsultaDiagnostico);
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Los datos del NNA han sido actualizados correctamente.' });
-      },
-      error: (err: any) => console.error('Error al cargar datos del NNA', err)
-    });
-
+    // Permite que el spinner pueda mostrarse
+    this.repos.put('NNA/Actualizar', this.datosNNA, 'NNA').subscribe({
+        next: (result) => {
+          console.log('Resultado de la actualización:', result);
+          this.loadNNAData();
+          this.fechaConsultaDiagnosticoInput = this.formatDate(this.datosNNA.fechaConsultaDiagnostico);
+          this.saving = false;   // ✅ FIN DEL GUARDADO
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Los cambios se han guardado correctamente.' });
+        },
+        error: (err) => {
+          console.error('Error al actualizar NNA:', err);
+          this.saving = false;   // ✅ SI HUBO ERROR, TAMBIÉN LIBERA
+        }
+      });
   }
+
 
   visibleCrearContacto: boolean = false;
   visibleEditarContacto: boolean = false;

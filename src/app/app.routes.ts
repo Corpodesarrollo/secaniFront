@@ -8,7 +8,7 @@ import { EstadoSeguimientoComponent } from './components/modules/gestion/estado-
 import { HealthComponent } from './components/health/health.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutSecondaryComponent } from './layout-secondary/layout-secondary.component';
-import { ModuloGuard } from './services/Modulo.Guard';
+import { ModuloGuard } from './services/modulo.guard';
 
 
 export const routes: Routes = [

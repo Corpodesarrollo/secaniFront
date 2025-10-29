@@ -249,7 +249,7 @@ export class GenericService {
   }
 
   // 🔹 PUT con HttpClient
-  public put(modulo: string, parameters: any, api: string = '') {
+  public put(modulo: string, parameters: any, api: string = ''): Observable<any> {
     const apiUrl = this.getApiUrl(api);
     const fullUrl = `${apiUrl}${modulo}`;
 

@@ -11,9 +11,16 @@ export class ModuloGuard implements CanActivate {
     async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
         if (this.hasAccess) { return true; }
 
+        /*
+        14CDDEA5-FA06-4331-8359-036E101C5046	Agentes de seguimiento
+        311882D4-EAD0-4B0B-9C5D-4A434D49D16D	Coordinador Admin
+        4C4016ED-B56D-4953-B8D3-C6A0A45A3850	Cuidador
+        88775B35-E8A7-4A73-A603-841C9DB3DBAD	Externos
+        */
+
         let jsonUsuario = {
             id: 'd54fc3db-060c-4bb3-aef2-d8b4e3e5f8c9',
-            idRol: '14CDDEA5-FA06-4331-8359-036E101C5046',
+            idRol: '311882D4-EAD0-4B0B-9C5D-4A434D49D16D',
             alias: 'CC3216549873',
             email: 'fermanjarres3@gmail.com',
             name: 'TRES FERNANDO MANJARRES',
