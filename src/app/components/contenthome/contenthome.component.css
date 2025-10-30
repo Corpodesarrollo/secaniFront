@@ -16,6 +16,7 @@ a {
   color: white;
   font-weight: 800;
   font-size: 60pt;
+  -webkit-text-stroke: 1px #d18452;
 }
 
 .btn-custom {

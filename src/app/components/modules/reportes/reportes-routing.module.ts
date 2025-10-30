@@ -11,13 +11,13 @@ import { ReporteDinamicoEapbComponent } from './reporte-dinamico-eapb/reporte-di
 import { ReporteGeneralLlamadasComponent } from './reporte-general-llamadas/reporte-general-llamadas.component';
 import { IndicadoresComponent } from './indicadores/indicadores.component';
 import { ReporteDinamicoEntidadTerritorialComponent } from './reporte-dinamico-entidad-territorial/reporte-dinamico-entidad-territorial.component';
-import { permisoGuard } from '../../../guards/permiso.guard';
+import { ModuloGuard } from '../../../services/modulo.guard';
 
 const routes: Routes = [
   {
     path: 'indicadores',
     component: IndicadoresComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/indicadores',
       permiso: 'canView'
@@ -30,7 +30,7 @@ const routes: Routes = [
       { path: ':id', component: ReporteDetalleNuevoDepuradosComponent },
       { path: '**', redirectTo: '' }
     ],
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/depuracion_p115',
       permiso: 'canView'
@@ -39,7 +39,7 @@ const routes: Routes = [
   {
     path: 'alertas',
     component: ReporteDinamicoAlertasComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/alertas',
       permiso: 'canView'
@@ -48,7 +48,7 @@ const routes: Routes = [
   {
     path: 'nna',
     component: ReporteDinamicoNnaComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/nna',
       permiso: 'canView'
@@ -57,7 +57,7 @@ const routes: Routes = [
   {
     path: 'seguimientos',
     component: ReporteDinamicoSeguimientoComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/seguimientos',
       permiso: 'canView'
@@ -66,7 +66,7 @@ const routes: Routes = [
   {
     path: 'eapb',
     component: ReporteDinamicoEapbComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/eapb',
       permiso: 'canView'
@@ -75,7 +75,7 @@ const routes: Routes = [
   {
     path: 'llamadas',
     component: ReporteGeneralLlamadasComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/llamadas',
       permiso: 'canView'
@@ -84,7 +84,7 @@ const routes: Routes = [
   {
     path: 'reporte-dinamico-entidad-territorial',
     component: ReporteDinamicoEntidadTerritorialComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/reporte-dinamico-entidad-territorial',
       permiso: 'canView'
@@ -93,7 +93,7 @@ const routes: Routes = [
   {
     path: 'inconsistencias',
     component: ReporteInconsistenciaComponent,
-    canActivate: [permisoGuard],
+    canActivate: [ModuloGuard],
     data: {
       path: 'reportes/inconsistencias',
       permiso: 'canView'

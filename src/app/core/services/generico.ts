@@ -40,8 +40,25 @@ export class Generico {
     url: string,
     data?: any
   ): Promise<T | null> {
-    const request = axios({ method, url, data });
-    return this.handleRequest(request);
+    try {
+      const request = axios({
+        method,
+        url,
+        data,
+        withCredentials: environment.cookie
+      });
+
+      return await this.handleRequest<T>(request);
+    } catch (error: any) {
+      console.error('❌ Error en request:', error);
+
+      if (error.response && error.response.status === 401) {
+        console.warn('⛔ Sesión expirada o no autenticada. Redirigiendo al login de Sispro...');
+        window.location.href = environment.url_Sispro;
+      }
+
+      throw error;
+    }
   }
 
   async retorno_post(urltemp: string, data: any, withToken: boolean = true,baseUrl:string = this.BASE_URL): Promise<any> {

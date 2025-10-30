@@ -2,17 +2,15 @@
 <app-spinner *ngIf="!cargado"></app-spinner>
 <div class="container-fluid" *ngIf="cargado">
   <div class="p-6 bg-gray-50 min-h-screen">
-    <app-tarjeta-cabecera [usuario]=usuario></app-tarjeta-cabecera>
+    <app-tarjeta-cabecera visible="visible"></app-tarjeta-cabecera>
 
     <!-- Banner principal -->
     <div class="banner rounded rounded-3 px-4 pt-5 pb-4 mb-5">
       <div class="d-flex flex-column">
         <p class="banner-text mb-4">Le damos la bienvenida a</p>
-        <h1 class="banner-title">SECÁNI</h1>
+        <h1 class="banner-title mt-3">SECÁNI</h1>
         <p class="banner-text mt-4">
-          Le damos la bienvenida a SECÁNI Estrategia de seguimiento de alertas tempranas para la atención de niños,
-          niñas
-          y adolescentes con cáncer infantil.
+          Estrategia de seguimiento de alertas tempranas para la atención de niños, niñas y adolescentes con cáncer infantil.
         </p>
       </div>
     </div>
@@ -20,8 +18,8 @@
     <!-- Botones de acción -->
     <div class="row mb-5">
       <div class="col-md-6 col-12">
-        <button class="btn-custom btn-primary-custom">
-          Manual de usuario SERCÁNI
+        <button class="btn-custom btn-primary-custom" (click)="abrirManual()">
+          Manual de usuario SECÁNI
         </button>
       </div>
       <div class="col-md-6 col-12">

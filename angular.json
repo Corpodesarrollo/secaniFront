@@ -49,8 +49,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "3mb"
+                  "maximumWarning": "4mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -70,8 +70,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "4mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -92,8 +92,8 @@
         "serve": {
           "options":{
             "ssl": false,
-            "sslKey": "certificados/localhost.key",
-            "sslCert": "certificados/localhost.crt",
+            "sslKey": "certificados/localhost+2-key.pem",
+            "sslCert": "certificados/localhost+2.pem",
             "allowedHosts": [
               "localhost",
               "secani.sispropreprod.gov.co"]

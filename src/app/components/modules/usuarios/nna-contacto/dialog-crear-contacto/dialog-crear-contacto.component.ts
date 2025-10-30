@@ -151,6 +151,7 @@ export class DialogCrearContactoComponent {
             }
             this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto actualizado exitosamente.' });
             this.datosGuardados.emit();
+            this.dataToParent.emit(this.contacto);
             this.show = false;
           },
           error: (error) => {
@@ -167,6 +168,7 @@ export class DialogCrearContactoComponent {
             }
             this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contacto creado exitosamente.' });
             this.datosGuardados.emit();
+            this.dataToParent.emit(this.contacto);
             this.show = false;
           },
           error: (error) => {
