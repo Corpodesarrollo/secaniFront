@@ -22,7 +22,7 @@ const routes: Routes = [
     component: CargueMasivoComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/cargue_masivo',
+      path: 'gestion',
       permiso: 'canView'
     }
   },
@@ -31,7 +31,7 @@ const routes: Routes = [
     component: ConsultarSeguimientosComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     } 
   },
@@ -41,7 +41,7 @@ const routes: Routes = [
     canDeactivate: [confirmExitGuard],
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     } 
   },
@@ -51,7 +51,7 @@ const routes: Routes = [
     canDeactivate: [confirmExitGuard],
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     } 
   },
@@ -61,7 +61,7 @@ const routes: Routes = [
     canDeactivate: [confirmExitGuard],
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     } 
   },
@@ -71,7 +71,7 @@ const routes: Routes = [
     canDeactivate: [confirmExitGuard],
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
@@ -81,7 +81,7 @@ const routes: Routes = [
     canDeactivate: [confirmExitGuard],
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
@@ -90,7 +90,7 @@ const routes: Routes = [
     component: SeguimientoSinDiagnosticoComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
@@ -99,7 +99,7 @@ const routes: Routes = [
     component: SeguimientoSinTratamientoComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
@@ -108,7 +108,7 @@ const routes: Routes = [
     component: SeguimientoFallecidoComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
@@ -117,7 +117,7 @@ const routes: Routes = [
     component: SeguimientoGestionarComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
@@ -126,7 +126,7 @@ const routes: Routes = [
     component: DetalleSeguimientosComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
    },
@@ -135,7 +135,7 @@ const routes: Routes = [
     component: ConsultarAlertasComponent,
     canActivate: [permisoGuard],
     data: {
-      path: 'cuidador/seguimientos',
+      path: 'gestion/seguimientos',
       permiso: 'canView'
     }
    }
