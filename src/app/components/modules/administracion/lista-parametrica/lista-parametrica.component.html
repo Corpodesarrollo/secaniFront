@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="card border border-0 pt-2">
+  <div class="card border-0 pt-2">
     <div class="card-body">
       <p-table [value]="itemsListaParametricas" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
         [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
@@ -70,7 +70,7 @@
             @if (listaParametrica?.nombre == 'festivos') {
               <td>{{ item.nombre  | date: 'dd/MM/yyyy' }}</td>
             } @else {
-              <td>{{ item.nombre }}</td>
+              <td>{{ titulos[item.nombre] }}</td>
             }
             <td>{{ item.indicador || 'No aplica' }}</td>
             <td>{{ item.orden || 'No aplica' }}</td>
