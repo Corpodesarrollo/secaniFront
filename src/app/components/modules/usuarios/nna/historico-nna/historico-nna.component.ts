@@ -15,11 +15,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BotonNotificacionComponent } from "../../../boton-notificacion/boton-notificacion.component";
 import { NNA } from '../../../../../models/nna.model';
 import { apis } from '../../../../../models/apis.model';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-historico-nna',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, ProgressSpinnerModule, CommonModule, IconFieldModule, InputIconModule, InputTextModule, ReactiveFormsModule, FormsModule, BotonNotificacionComponent],
+  imports: [TableModule, BadgeModule, CardModule, ProgressSpinnerModule, CommonModule, IconFieldModule, InputIconModule, InputTextModule, ReactiveFormsModule, FormsModule, BotonNotificacionComponent, PermisoDirective],
   templateUrl: './historico-nna.component.html',
   styleUrls: ['../../general.component.css', './historico-nna.component.css']
 })
