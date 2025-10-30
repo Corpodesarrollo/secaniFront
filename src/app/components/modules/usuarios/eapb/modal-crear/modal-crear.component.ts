@@ -25,7 +25,20 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   listaContactos: any[] = [];
 
-  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {}
+  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {
+    this.contactForm = this.fb.group({
+      id: [''],
+      entidadId: ['', [Validators.required]],
+      nombres: [''],
+      cargo: [''],
+      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
+      email: ['', [Validators.required, 
+        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
+        this.validarEmailUnico.bind(this)]],
+      estado: ['Activo'],
+      activo: [true]
+    });
+  }
 
   ngOnInit(): void {
     this.dataService.get_withoutParameters('EAPB', 'TablaParametrica').subscribe({
@@ -39,19 +52,6 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
     this.compartirDatosService.listaContactos$.subscribe(lista => {
       this.listaContactos = lista;
-    });
-
-    this.contactForm = this.fb.group({
-      id: [''],
-      entidadId: ['', [Validators.required]],
-      nombres: [''],
-      cargo: [''],
-      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      email: ['', [Validators.required, 
-        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
-        this.validarEmailUnico.bind(this)]],
-      estado: ['Activo'],
-      activo: [true]
     });
 
     this.contactForm.get('estado')?.disable(); 
