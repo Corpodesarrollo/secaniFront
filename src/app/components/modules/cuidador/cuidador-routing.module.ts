@@ -5,6 +5,7 @@ import { NuevoSeguimientoComponent } from './nuevo-seguimiento/nuevo-seguimiento
 import { SeguimientoComponent } from './seguimiento/seguimiento.component';
 import { EstadoSeguimientoComponent } from '../gestion/estado-seguimiento/estado-seguimiento.component';
 import { permisoGuard } from '../../../guards/permiso.guard';
+import { ModuloGuard } from '../../../services/modulo.guard';
 const routes: Routes = [
   {
     path: 'seguimientos',
@@ -12,7 +13,7 @@ const routes: Routes = [
       { 
         path: '', 
         component: EstadoSeguimientoComponent,
-        canActivate: [permisoGuard],
+        canActivate: [ModuloGuard],
         data: {
           path: 'cuidador/seguimientos',
           permiso: 'canView'
@@ -21,7 +22,7 @@ const routes: Routes = [
       { 
         path: 'nuevo', 
         component: NuevoSeguimientoComponent,
-        canActivate: [permisoGuard],
+        canActivate: [ModuloGuard],
         data: {
           path: 'cuidador/seguimientos',
           permiso: 'canAdd'
@@ -30,7 +31,7 @@ const routes: Routes = [
       { 
         path: ':id', 
         component: SeguimientoComponent,
-        canActivate: [permisoGuard],
+        canActivate: [ModuloGuard],
         data: {
           path: 'cuidador/seguimientos',
           permiso: 'canView'

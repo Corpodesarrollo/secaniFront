@@ -47,14 +47,14 @@ export class NuevaPlantillaCorreoComponent {
     private router: Router
   ) {
     this.plantillaCorreoForm = this.formBuilder.group({
-      id: null,
+      id: [null],
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
       tipoPlantilla: ['', Validators.required],
       firmante: ['', Validators.required],
       estado: ['', Validators.required],
       asunto: ['', [Validators.required, Validators.maxLength(50)]],
       mensaje: ['', [Validators.required, Validators.maxLength(10000)]],
-      cierre: ['', []]
+      cierre: ['']
     });
   }
 
@@ -66,7 +66,10 @@ export class NuevaPlantillaCorreoComponent {
         switchMap(id => this.plantillasCorreoService.getPlantillaCorreo(id)),
       )
       .subscribe({
-        next: (plantillaCorreo: any) => this.plantillaCorreoForm.patchValue(plantillaCorreo),
+        next: (plantillaCorreo: any) => {
+          console.log(plantillaCorreo);
+          this.plantillaCorreoForm.patchValue(plantillaCorreo);
+        },
       });
     
     this.plantillasCorreoService.getFirmantes().subscribe({
@@ -113,6 +116,7 @@ export class NuevaPlantillaCorreoComponent {
       return this.plantillaCorreoForm.markAllAsTouched();;
 
     const formData = this.plantillaCorreoForm.value;
+    console.log(formData);
     this.plantillasCorreoService.crearEditarPlantillaCorreo(formData)
       .subscribe({
         next: () => {
