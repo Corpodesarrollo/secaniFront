@@ -100,7 +100,7 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerDatosUsuario() {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('User/GetUserDetails', this.idUser, 'Permisos').subscribe({
+    this.dataService.get('User/GetUserDetails/', this.idUser, 'Permisos').subscribe({
       next: (data: any) => {
         this.usuario = data;
         this.estadoUsuario = this.usuario.estado === 'Activo';
