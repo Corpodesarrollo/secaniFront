@@ -2,17 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
+
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+
+import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { ModalCrearComponent } from '../../usuarios/eapb/modal-crear/modal-crear.component';
 import { Usuario } from '../../../../models/usuario.model';
 import { GenericService } from '../../../../services/generic.services';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { NotificacionService } from '../../../../core/services/notificacionService';
 import { User } from '../../../../core/services/user';
 import { apis } from '../../../../models/apis.model';
@@ -106,7 +108,14 @@ export class MiPerfilComponent implements OnInit {
         this.estadoUsuario = this.usuario.estado === 'Activo';
         
       },
-      error: (e) => console.error('Se presento un error al consultar el usuario', e),
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al obtener los del usuario',
+          detail: 'Ocurrió un problema al obtener los datos del usuario en el sistema.',
+          life: 3000
+        });
+      },
       complete: () => console.info('Consulta usuario exitosa')
     });
   }
@@ -122,9 +131,16 @@ export class MiPerfilComponent implements OnInit {
 
   obtenerDatosAusenciaAgente(): void {
     if (!this.idUser || this.idUser === '0') return;
-    this.dataService.get('api/Ausencias/usuario', this.idUser, 'Seguimiento').subscribe({
+    this.dataService.get('api/Ausencias/usuario/', this.idUser, 'Seguimiento').subscribe({
       next: (data: { id: string, fecha: Date; motivo: string }[]) => { this.datosAusenciasAgente = data },
-      error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al obtener los datos de ausencia',
+          detail: 'Ocurrió un problema al obtener los datos de las ausencia registradas.',
+          life: 3000
+        });
+      },
       complete: () => console.info('Consulta del horario del usuario existosa')
     });
   }
@@ -325,38 +341,56 @@ export class MiPerfilComponent implements OnInit {
 }
 
 saveAbsence(): void {
-  if (this.absenceForm.valid && this.selectedDate) {
-    const payload = {
-      usuarioId: this.idUser,
-      fechaAusencia: this.selectedDate.toISOString().split('T')[0],
-      motivoAusencia: this.absenceForm.value.reason
-    };
-
-    this.dataService.post("api/ausencias", payload, 'Seguimiento').subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Ausencia guardada',
-          detail: 'La ausencia se guardó correctamente.',
-          life: 3000
-        });
-        this.absenceForm.reset();
-        this.visibleAbsenceForm = false;
-        this.obtenerDatosAusenciaAgente(); // refrescar tabla
-      },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al guardar',
-          detail: 'Ocurrió un problema al guardar la ausencia.',
-          life: 3000
-        });
-        console.error('Error al guardar ausencia:', err);
-      }
-    });
-  } else {
+  if (!this.absenceForm.valid || !this.selectedDate) {
     this.absenceForm.markAllAsTouched();
+    return;
   }
+
+  // Construir payload
+  const payload = {
+    usuarioId: this.idUser,
+    fechaAusencia: this.selectedDate.toISOString().split('T')[0],
+    motivoAusencia: this.absenceForm.value.reason
+  };
+
+  // Enviar solicitud al backend
+  this.dataService.post("api/ausencias", payload, 'Seguimiento').subscribe({
+    next: () => {
+      // Éxito
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Ausencia guardada',
+        detail: 'La ausencia se guardó correctamente.',
+        life: 3000
+      });
+
+      // Limpiar formulario y cerrar modal
+      this.absenceForm.reset();
+      this.visibleAbsenceForm = false;
+
+      // Refrescar tabla o datos relacionados
+      this.obtenerDatosAusenciaAgente();
+    },
+
+    error: (err) => {
+      // Mensaje original del backend
+      const rawMessage = err?.error?.MESSAGE || 'Ocurrió un error desconocido.';
+
+      // Limpiar UUID del mensaje para mostrarlo al usuario
+      const cleanedMessage = rawMessage.replace(
+        /para\s+[\w-]+\s+en\s+/,
+        'para este usuario en '
+      );
+
+      // Mostrar mensaje de error
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: cleanedMessage,
+        life: 4000
+      });
+    }
+  });
 }
 
 cancelAbsenceDialog(): void {
