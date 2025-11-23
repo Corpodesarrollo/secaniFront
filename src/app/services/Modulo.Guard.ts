@@ -16,7 +16,7 @@ export class ModuloGuard implements CanActivate {
             idRol: '311882D4-EAD0-4B0B-9C5D-4A434D49D16D',
             alias: 'CC3216549873',
             email: 'fermanjarres3@gmail.com',
-            name: 'TRES FERNANDO MANJARRES',
+            name: 'FERNANDO MANJARRES',
             state: true,
             rolCode: ['Perfil PISIS Neo','SINTRA-ENT','SECANI-CoordinadorAdmin'],
             enterpriseCode: 'CC 3216549873',
