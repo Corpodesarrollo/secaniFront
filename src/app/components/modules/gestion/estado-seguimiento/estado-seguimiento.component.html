@@ -98,149 +98,186 @@
 
 
   <p-dialog
-      header="Solicitar seguimiento"
-      [modal]="true"
-      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-      [style]="{ width: '30vw' }"
-      [(visible)]="visible"
-      (onHide)="hiddenDialog()"
-    >
-      <div *ngIf="!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado && firstLoad">
-        <div class="p-4">
-          <!-- Parentesco -->
-          <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
-            <div class="col-12">
-                <label for="tipoDocumento" class="fw-bold mb-1">Parentesco del cuidador</label>
-                <p-dropdown
-                  [(ngModel)]="selectedParentesco"
-                  [options]="parentescos"
-                  [loading]="isLoadingParentesco"
-                  optionLabel="nombre"
-                  [filter]="true"
-                  filterBy="nombre"
-                  [showClear]="true"
-                  appendTo="body"
-                  placeholder="Seleccione el parentesco" />
-                  <div *ngIf="submitted && (!nna.cuidadorParentescoId)" class="text-danger">
-                    Campo requerido
-                  </div>
-            </div>
-          </div>
-
-          <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
-            <div class="col-12">
-                <label for="telefono" class="fw-bold mb-1">Número teléfono/celular del cuidador*</label>
-                <input id="telefono" type="text" pInputText [(ngModel)]="nna.cuidadorTelefono">
-                <div *ngIf="submitted && (!nna.cuidadorTelefono || nna.cuidadorTelefono.trim() === '')" class="text-danger">
-                  Campo requerido
-                </div>
-            </div>
-          </div>
-
-          <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
-            <div class="col-12">
-                <label for="tipoDocumento" class="fw-bold mb-1">Tipo de identificación del menor*</label>
-                <p-dropdown
-                  [(ngModel)]="selectedTipoID"
-                  [options]="tipoID"
-                  [loading]="isLoadingTipoID"
-                  optionLabel="nombre"
-                  [filter]="true"
-                  filterBy="nombre"
-                  [showClear]="true"
-                  name="tipoID"
-                  appendTo="body"
-                  placeholder="Seleccione el tipo de documento" />
-                  <div *ngIf="submitted && (!nna.tipoIdentificacionId)" class="text-danger">
-                    Campo requerido
-                  </div>
-            </div>
-          </div>
-
-          <div class="row align-items-center mb-5 flex flex-wrap p-fluid">
-            <div class="col-12">
-                <label for="numeroIdentificacion" class="fw-bold mb-1">Número de identificación del menor*</label>
-                <input id="numeroIdentificacion" type="text" pInputText [(ngModel)]="nna.numeroIdentificacion">
-                <div *ngIf="submitted && (!nna.numeroIdentificacion || nna.numeroIdentificacion.trim() === '')" class="text-danger">
-                  Campo requerido
-                </div>
-            </div>
-          </div>
-
-          <!-- Botones -->
-          <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-cancelar me-2 button" (click)="hiddenDialog()">Cancelar</button>
-            <button type="button" class="btn btn-exitoso button" (click)="onSubmitSeguimiento()"><i *ngIf="validating" class="pi pi-spin pi-spinner"></i> Solicitar</button>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="(estaFallecido || !esMenorEdad) && !hayRecaida && estaRegistrado && !firstLoad">
-        <div class="text-center px-4 my-4">
-          <div class="mb-3">
-              <div *ngIf="!esMenorEdad">
-                La solicitud no puede ser generada dado que el seguimiento solicitado es para un Mayor de edad.
-              </div>
-              <div *ngIf="estaFallecido">
-                La solicitud no puede ser generada debido a que el menor se encuentra reportado como fallecido.
-              </div>
-          </div>
-          <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
-          <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
-        </div>
-
-        <div class="d-flex justify-content-center mt-3">
-          <p-button type="button" (click)="closeInformacionDialog()" severity="secondary" label="Volver"></p-button>
-        </div>
-      </div>
-
-      <div *ngIf="!estaRegistrado">
-        <div class="text-center px-4 my-4">
-          <p class="mb-1">El menor no ha sido registrado en el sistema.</p>
-          <p class="mb-3">¿Esta seguro que los datos son correctos?</p>
-
-          <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
-          <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
-        </div>
-
-        <div class="d-flex justify-content-center mt-4">
-          <p-button type="button" styleClass="me-1" (click)="closeInformacionDialog()" severity="secondary" label="No, corregir"></p-button>
-          <p-button type="button" severity="success" (onClick)="continuar()" label="Si, continuar"></p-button>
-        </div>
-      </div>
-
-      <div *ngIf="!estaFallecido && esMenorEdad && estaRegistrado">
-        <div class="px-5 mt-4">
-          <div class="text-center mb-4">
-            <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
-            <p class="fw-bold">{{ nnaInfo.identificacion }}</p>
-          </div>
-
-          <!-- Recaída -->
-          <div class="mb-3 p-fluid" *ngIf="hayRecaida">
-            <label class="mb-1" for="recaida">¿Tuvo recaída?</label>
+    header="Solicitar seguimiento"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [(visible)]="visible"
+    (onHide)="hiddenDialog()"
+  >
+    <div class="p-4">
+      <!-- Parentesco -->
+      <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+        <div class="col-12">
+            <label for="tipoDocumento" class="fw-bold mb-1">Parentesco del cuidador</label>
             <p-dropdown
-              [(ngModel)]="selectedRecaidad"
-                  [options]="recaidaOpciones"
-                  optionLabel="nombre"
-                  [filter]="true"
-                  filterBy="nombre"
-                  [showClear]="true"
-                  name="recaida"
-                  appendTo="body"
-                  placeholder="Seleccione"
-            ></p-dropdown>
-          </div>
-
-          <!-- Botón Siguiente -->
-          <div class="d-flex justify-content-center mt-4">
-            <p-button type="button" severity="success" label="Siguiente" (onClick)="onSubmitRecaida()"></p-button>
-          </div>
+              [(ngModel)]="selectedParentesco"
+              [options]="parentescos"
+              [loading]="isLoadingParentesco"
+              optionLabel="nombre"
+              [filter]="true"
+              filterBy="nombre"
+              [showClear]="true"
+              appendTo="body"
+              placeholder="Seleccione el parentesco" />
+              <div *ngIf="submitted && (!nna.cuidadorParentescoId)" class="text-danger">
+                Campo requerido
+              </div>
         </div>
       </div>
+
+      <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+        <div class="col-12">
+            <label for="telefono" class="fw-bold mb-1">Número teléfono/celular del cuidador*</label>
+            <input id="telefono" type="text" pInputText [(ngModel)]="nna.cuidadorTelefono">
+            <div *ngIf="submitted && (!nna.cuidadorTelefono || nna.cuidadorTelefono.trim() === '')" class="text-danger">
+              Campo requerido
+            </div>
+        </div>
+      </div>
+
+      <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
+        <div class="col-12">
+            <label for="tipoDocumento" class="fw-bold mb-1">Tipo de identificación del menor*</label>
+            <p-dropdown
+              [(ngModel)]="selectedTipoID"
+              [options]="tipoID"
+              [loading]="isLoadingTipoID"
+              optionLabel="nombre"
+              [filter]="true"
+              filterBy="nombre"
+              [showClear]="true"
+              name="tipoID"
+              appendTo="body"
+              placeholder="Seleccione el tipo de documento" />
+              <div *ngIf="submitted && (!nna.tipoIdentificacionId)" class="text-danger">
+                Campo requerido
+              </div>
+        </div>
+      </div>
+
+      <div class="row align-items-center mb-5 flex flex-wrap p-fluid">
+        <div class="col-12">
+            <label for="numeroIdentificacion" class="fw-bold mb-1">Número de identificación del menor*</label>
+            <input id="numeroIdentificacion" type="text" pInputText [(ngModel)]="nna.numeroIdentificacion">
+            <div *ngIf="submitted && (!nna.numeroIdentificacion || nna.numeroIdentificacion.trim() === '')" class="text-danger">
+              Campo requerido
+            </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-cancelar me-2 button" (click)="hiddenDialog()">Cancelar</button>
+        <button type="button" class="btn btn-exitoso button" (click)="onSubmitSeguimiento()"><i *ngIf="validating" class="pi pi-spin pi-spinner"></i> Solicitar</button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog
+    header="Solicitar seguimiento"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [visible]="estaFallecido || !esMenorEdad"
+    (onHide)="hiddenDialog()"
+  >
+    <div class="text-center px-4 my-4">
+      <div class="mb-3">
+          <div *ngIf="!esMenorEdad">
+            La solicitud no puede ser generada dado que el seguimiento solicitado es para un Mayor de edad.
+          </div>
+          <div *ngIf="estaFallecido">
+            La solicitud no puede ser generada debido a que el menor se encuentra reportado como fallecido.
+          </div>
+      </div>
+      <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
+      <p class="fw-bold">{{ nna.tipoIdentificacionId }} {{ nnaInfo.identificacion }}</p>
+    </div>
+
+    <div class="d-flex justify-content-center mt-3">
+      <p-button type="button" (click)="closeInformacionDialog()" severity="secondary" label="Volver"></p-button>
+    </div>
+  </p-dialog>
+
+  <p-dialog
+    header="Solicitar seguimiento"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [visible]="!estaRegistrado"
+    (onHide)="hiddenDialog()"
+  >
+    <div *ngIf="!estaRegistrado">
+      <div class="text-center px-4 my-4">
+        <p class="mb-1">El menor no ha sido registrado en el sistema.</p>
+        <p class="mb-3">¿Esta seguro que los datos son correctos?</p>
+      </div>
+
+      <div class="d-flex justify-content-center mt-4">
+        <p-button type="button" styleClass="me-1" (click)="closeInformacionDialog()" severity="secondary" label="No, corregir"></p-button>
+        <p-button type="button" severity="success" (onClick)="continuar()" label="Si, continuar" *ngIf="persona"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog
+    header="Solicitar seguimiento"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [(visible)]="hayRecaida"
+    (onHide)="hiddenDialog()"
+  >
+    <div class="px-5 mt-4">
+      <div class="text-center mb-4">
+        <p class="fw-bold mt-4 mb-1">{{ nnaInfo.nombre }}</p>
+        <p class="fw-bold">{{ nna.tipoIdentificacionId }} {{ nnaInfo.identificacion }}</p>
+      </div>
+
+      <!-- Recaída -->
+      <div class="mb-1 p-fluid" *ngIf="hayRecaida">
+        <label class="mb-1" for="recaida">¿Tuvo recaída?</label>
+        <p-dropdown
+          [(ngModel)]="selectedRecaidad"
+              [options]="recaidaOpciones"
+              optionLabel="nombre"
+              [filter]="true"
+              filterBy="nombre"
+              [showClear]="true"
+              name="recaida"
+              appendTo="body"
+              placeholder="Seleccione"
+        ></p-dropdown>
+      </div>
+      <div *ngIf="submitted && (!selectedRecaidad)" class="text-danger">
+        Campo requerido
+      </div>
+
+      <!-- Botón Siguiente -->
+      <div class="d-flex justify-content-center mt-4">
+        <p-button type="button" severity="success" label="Siguiente" (onClick)="onSubmitRecaida()"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog
+    header="Seguimiento Creado"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [(visible)]="mostrarMensaje"
+    (onHide)="hiddenDialog()"
+  >
+    <div class="text-center px-4 my-4">
+      <p>El seguimiento ha sido creado exitosamente.</p>
+    </div>
+
+    <div class="d-flex justify-content-center mt-3">
+      <p-button type="button" (click)="hiddenDialog()" severity="success" label="Aceptar"></p-button>
+    </div>
   </p-dialog>
 
   <p-toast />
-
 
 </div>

@@ -27,6 +27,7 @@ import { NNAService } from '../../../../core/services/nnaService';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { User } from '../../../../core/services/user';
 import { environment } from '../../../../../environments/environment';
+import { ReportesSIVIGILA } from '../../../../models/reporteSIVIGILA.model';
 
 @Component({
   selector: 'app-estado-seguimiento',
@@ -54,7 +55,9 @@ export class EstadoSeguimientoComponent implements OnInit {
   colorMensaje: string = 'text-primary';
   activeFilter: string = '1';
   show: boolean = false;
+  persona: boolean = false;
   isLoading = false;
+  mostrarMensaje: boolean = false;
 
   itemsStep = [
     { label: 'Solicitado', date: '12/06/2024' },
@@ -78,7 +81,7 @@ export class EstadoSeguimientoComponent implements OnInit {
   public visible: boolean = false;
   public estaFallecido: boolean = false; // Controla el diálogo de mensaje de fallecimiento
   public hayRecaida: boolean = false;
-  public esMenorEdad: boolean = false;
+  public esMenorEdad: boolean = true;
   public estaRegistrado: boolean = true;
   public submitted: boolean = false;
   public validating: boolean = false;
@@ -113,13 +116,6 @@ export class EstadoSeguimientoComponent implements OnInit {
       this.isLoadingParentesco = false;
       
       this.CargarDatos(this.xUser.id);
-      //his.CargarDatos("0");
-
-      //(!estaFallecido && !esMenorEdad && !hayRecaida && estaRegistrado)
-      this.estaFallecido = false;
-      this.esMenorEdad = false;
-      this.hayRecaida = false;
-      this.estaRegistrado = true;
     } else{
       window.location.href = environment.url_Sispro;
     }
@@ -185,9 +181,13 @@ export class EstadoSeguimientoComponent implements OnInit {
   }
 
   showDialog(): void {
+    this.nna = new NNA();
+    this.selectedParentesco = undefined;
+    this.selectedTipoID = undefined;
+    this.submitted = false;
     this.visible = true;
     this.estaFallecido = false;
-    this.esMenorEdad = false;
+    this.esMenorEdad = true;
     this.hayRecaida = false;
     this.estaRegistrado = true;
     this.firstLoad = true;
@@ -195,27 +195,26 @@ export class EstadoSeguimientoComponent implements OnInit {
 
   hiddenDialog(): void {
     this.visible = false;
-    this.estaFallecido = false;
-    this.esMenorEdad = false;
-    this.hayRecaida = false;
+    this.mostrarMensaje = false;
     this.estaRegistrado = true;
   }
 
   closeInformacionDialog() {
-    this.visible = false;
+    this.visible = true;
+    this.estaRegistrado = true;
   }
 
   async onSubmitSeguimiento(): Promise<void> {
-      if(this.validating){
-        return;
-      }
-      
-      this.submitted = true;
-      this.validating = true;
-      if (this.validarCamposRequeridos()){
-        await this.buscar();
-      }
-      this.validating = false;
+    if(this.validating){
+      return;
+    }
+    
+    this.submitted = true;
+    this.validating = true;
+    if (this.validarCamposRequeridos()){
+      await this.buscar();
+    }
+    this.validating = false;
   }
 
   validarCamposRequeridos(): boolean {
@@ -241,74 +240,53 @@ export class EstadoSeguimientoComponent implements OnInit {
     return true;
   }
   
-    async buscar() {
-      this.validating = true;
+  async buscar() {
+    this.validating = true;
+    this.hayRecaida = false;
+    this.esMenorEdad = true;
+    this.estaFallecido = false;
+    this.estaRegistrado = true;
+    
+    let nna : NNA | null = await this.nnaService.getByIdentificacion(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
+    if (nna) {
+      this.nnaInfo.nombre = nna.primerNombre + ' ' + nna.segundoNombre + ' ' + nna.primerApellido + ' ' + nna.segundoApellido;
+      this.nnaInfo.identificacion = this.nna.numeroIdentificacion;
+      console.log("Esta en secani: ", true);
+      console.log("nna: ", nna);
+      if (nna.estadoId == 9 || nna.estadoId == 12) {
+        this.hayRecaida = true;
+      } else if (nna.estadoId == 10) {
+        this.estaFallecido = true;
+      } else if (nna.estadoId == 11) {
+        this.esMenorEdad = false;
+      } else {
+        await this.crearSeguimiento();
+      }
+    } else {
       let persona : Persona | null = await this.personaService.get(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
       if (persona) {
+        persona.primer_nombre = persona.primer_nombre ?? '';
+        persona.segundo_nombre = persona.segundo_nombre ?? '';
+        persona.primer_apellido = persona.primer_apellido ?? '';
+        persona.segundo_apellido = persona.segundo_apellido ?? '';
+
         this.nnaInfo.nombre = persona.primer_nombre + ' ' + persona.segundo_nombre + ' ' + persona.primer_apellido + ' ' + persona.segundo_apellido;
         this.nnaInfo.identificacion = this.nna.numeroIdentificacion;
-
-        this.estaRegistrado = true;
-        this.edad = this.calcularEdad(persona.fecha_nacimiento);
-        this.esMenorEdad = this.edad < 18;
-        this.estaFallecido = persona.esFallecido;
-
-        console.log("Edad: ", this.edad);
-        console.log("Es menor de edad: ", this.esMenorEdad);
-        console.log("Es fallecido: ", this.estaFallecido);
-        console.log("Esta en persona: ", true);
-
-        if (this.esMenorEdad) {
-          let nna : NNA | null = await this.nnaService.getByIdentificacion(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
-          if (nna) {
-            console.log("Esta en secani: ", true);
-            console.log("nna: ", nna);
-            if (nna.estadoId == 9 || nna.estadoId == 12) {
-              this.hayRecaida = true;
-            } else {
-              this.hayRecaida = false;
-            }
-          } else {
-            this.hayRecaida = false;
-            console.log("No se encontró el NNA con el número de identificación proporcionado.");
-          }
-        }
-        else {
-          this.hayRecaida = false;
-          console.log("No se encontró el NNA con el número de identificación proporcionado.");
-        }
-
-        console.log("Hay Recaida: ", this.hayRecaida);
+        this.persona = true;
+        this.estaRegistrado = false;
       } else {
+        this.persona = false;
         this.estaRegistrado = false;
         console.log("No se encontró la persona con el número de identificación proporcionado.");
       }
-
-      console.log("Esta Registrado: ", this.estaRegistrado);
-      this.firstLoad = false;
-      this.validating = false;
     }
-
-  calcularEdad(fecha_nacimiento: string): number {
-    const fechaNacimiento = new Date(fecha_nacimiento);
-    const hoy = new Date();
-    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-    const mes = hoy.getMonth() - fechaNacimiento.getMonth();
-    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
-      edad--;
-    }
-    return edad;
+    this.firstLoad = false;
+    this.validating = false;
   }
 
-  onSubmitRecaida(): void {
-    // if ( this.recaidaForm.invalid ) return;
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Seguimiento solicitado con éxito',
-    });
-
-    this.hiddenDialog();
+  async onSubmitRecaida(): Promise<void> {
+     if (!this.selectedRecaidad) return;
+    await this.crearSeguimiento();
   }
 
   continuar() {
@@ -316,6 +294,26 @@ export class EstadoSeguimientoComponent implements OnInit {
       state: { tipoId: this.selectedTipoID?.codigo, numero: this.nna.numeroIdentificacion, parentescoId: this.selectedParentesco?.codigo }
     }).then(() => {
       window.scrollTo(0, 0);
+    });
+  }
+
+  async crearSeguimiento(): Promise<any> {
+    let reporte = {
+      tipoIdentificacion: this.nna.tipoIdentificacionId,
+      numeroIdentificacion: this.nna.numeroIdentificacion,
+    };
+    return new Promise((resolve, reject) => {
+        this.repos.post('ReportesSIVIGILA/CrearSeguimiento', reporte, 'NNA').subscribe({
+            next: (data: any) => {
+              console.log('Respuesta del servidor:', data);
+              this.mostrarMensaje = true;
+              resolve(data);
+            },
+            error: (err) => {
+              console.error(err);
+              reject(err);
+            }
+        });
     });
   }
 }
