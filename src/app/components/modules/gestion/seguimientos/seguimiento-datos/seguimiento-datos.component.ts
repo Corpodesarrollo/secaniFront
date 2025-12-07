@@ -140,6 +140,14 @@ export class SeguimientoDatosComponent implements OnInit {
     this.selectedParentesco = this.parentescos.find(x => x.id == Number(this.contacto.parentescoId));
     this.isLoadingParentesco = false;
 
+    //this.contacto.nombres
+    this.contactForm.patchValue({
+      nombres: this.contacto.nombres,
+      parentesco: this.selectedParentesco,
+      telefono1: this.contacto.telefonos.split(',')[0] || '',
+      telefono2: this.contacto.telefonos.split(',')[1] || ''
+    });
+
     this.items = [
       { label: 'Seguimientos', routerLink: '/gestion/seguimientos' },
       { label: `${this.nna.primerNombre} ${this.nna.primerApellido}`, routerLink: `/gestion/seguimientos/datos-seguimiento/${this.id}` },
