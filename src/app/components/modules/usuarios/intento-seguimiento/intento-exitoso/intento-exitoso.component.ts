@@ -78,6 +78,7 @@ export class IntentoExitosoComponent implements OnInit {
 
     this.seguimiento = history.state.seguimiento;
     this.ContactoNNA = history.state.ContactoNNA;
+    console.log("ContactoNNA:", this.ContactoNNA);
 
     //Obtenemos los datos simples del NNA
     this.NNA = await this.servicio.GetNNaById(this.ContactoNNA.nnaId);

@@ -8,6 +8,7 @@ export interface Persona {
     segundo_apellido: string;
     primer_nombre: string;
     segundo_nombre: string;
+    nombre_completo: string;
     fecha_nacimiento: string;
     sexo: string;
     fecha_expedicion: string;

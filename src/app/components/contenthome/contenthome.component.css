@@ -3,20 +3,20 @@ a {
 }
 
 .banner {
-  background: #F3DAA4;
+  background: linear-gradient(90deg, #fdf3e3, #ffe0b2);
   border-left: 6px solid #ff9600;
 }
 
 .banner-text {
-  color: #E17132;
+  color: #d18452;
   font-size: 13pt;
 }
 
 .banner-title {
   color: white;
-  font-weight: 5000;
-  font-size: 70pt;
-  font-family: "Arial Rounded MT"
+  font-weight: 800;
+  font-size: 60pt;
+  -webkit-text-stroke: 1px #d18452;
 }
 
 .btn-custom {
@@ -26,8 +26,6 @@ a {
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  align-items: center;      
-   
 }
 
 .btn-primary-custom {

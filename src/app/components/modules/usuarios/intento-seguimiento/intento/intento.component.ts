@@ -49,6 +49,7 @@ export class IntentoComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("ContactoNNA:", this.ContactoNNA);
   }
 
   ngOnChanges() {

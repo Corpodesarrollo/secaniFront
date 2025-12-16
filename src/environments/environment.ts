@@ -38,14 +38,14 @@ export const environment = {
 // };
 
  // RUTAS DE MINISTERIO
-const baseUrl = 'https://nna.sispropreprod.gov.co/';
+//const baseUrl = 'https://nna.sispropreprod.gov.co/';
 // const baseUrl = 'https://nna.sisprodesa.local/';
 // const baseUrl = 'http://192.168.110.12/';
 
 
 // export const environment = {
 //   cookie: true,
-//   url: `${baseUrl}auth/`,
+//   url: `https://secani.sispropreprod.gov.co`,
 //   url_MsAuthention: `${baseUrl}auth/`,
 //   url_MSEntidad: `${baseUrl}auth/`,
 //   url_MSPermisos: `${baseUrl}auth/`,
@@ -55,4 +55,5 @@ const baseUrl = 'https://nna.sispropreprod.gov.co/';
 //   url_MSSeguimiento: `${baseUrl}seguimiento/`,
 //   url_MSParametricas: `${baseUrl}tablas/`,
 //   url_MSUsuarioyRoles: `${baseUrl}auth/`,
+//   url_Sispro: 'https://web.sispropreprod.gov.co/'
 // };
