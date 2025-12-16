@@ -53,10 +53,10 @@ export class NNA {
     RazonesSinIniciarTratamientoOtros!: string;
     recaida!: boolean;
     cantidadRecaidas!: number;
-    fechaUltimaRecaida!: Date;
+    fechaUltimaRecaida!: Date |null;
     tipoDiagnosticoId!: string;
     diagnosticoId!: number;
-    fechaDiagnostico!: Date;
+    fechaDiagnostico!: Date | null;
     motivoNoDiagnosticoId!: number;
     motivoNoDiagnosticoOtro!: string;
     fechaConsultaDiagnostico!: Date;

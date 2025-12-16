@@ -151,6 +151,8 @@ export class DetalleNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
+        this.datosNNA.fechaDiagnostico = this.datosNNA?.fechaDiagnostico ? new Date(this.datosNNA.fechaDiagnostico) : null;
+        this.datosNNA.fechaUltimaRecaida = this.datosNNA?.fechaUltimaRecaida ? new Date(this.datosNNA.fechaUltimaRecaida) : null;
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
