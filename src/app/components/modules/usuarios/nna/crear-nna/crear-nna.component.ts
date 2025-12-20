@@ -152,6 +152,10 @@ export class CrearNnaComponent {
     this.isLoadingTipoID = false;
 
     this.origenReporte = await this.tpParametros.getTPOrigenReporte();
+    console.log('origenReporte', this.origenReporte);
+    if(this.origenReporte == null){
+      this.origenReporte = [];
+    }
     this.selectedOrigenReporte = this.origenReporte.find(
       (x) => x.id == this.nna.origenReporteId,
     );
@@ -180,10 +184,16 @@ export class CrearNnaComponent {
     this.isLoadingRegimenAfiliacion = false;
 
     this.EAPB = await this.tpParametros.getTPEAPB();
+    if(this.EAPB == null){
+      this.EAPB = [];
+    }
     this.selectedEAPB = this.EAPB.find((x) => x.id == this.nna.eapbId);
     this.isLoadingEAPB = false;
 
     this.estadosIngresoEstrategia = await this.tpParametros.getEstadosIngresoEstrategia();
+    if(this.estadosIngresoEstrategia == null){
+      this.estadosIngresoEstrategia = [];
+    }
     this.selectedEstadoIngresoEstrategia = this.estadosIngresoEstrategia.find(x => x.id == this.nna.estadoIngresoEstrategiaId);
     this.isLoadingEstadosIngresoEstrategia = false;
 
