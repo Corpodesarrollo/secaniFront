@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // Importa FormsModule aquí
 
@@ -16,8 +16,9 @@ import { TableModule } from 'primeng/table';
 import { ContentComponent } from './components/content/content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import localeEs from '@angular/common/locales/es';
 
 import { UsuariosModule } from './components/modules/usuarios/usuarios.module';
 import { TablasParametricas } from './core/services/tablasParametricas';
@@ -36,6 +37,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutSecondaryComponent } from './layout-secondary/layout-secondary.component';
+
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [
@@ -75,9 +78,11 @@ import { LayoutSecondaryComponent } from './layout-secondary/layout-secondary.co
 
 
   ],
-  providers: [TablasParametricas,
+  providers: [
+    TablasParametricas,
     DialogService,
-    { provide: HTTP_INTERCEPTORS, useClass: HealthCheckInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HealthCheckInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: 'es' }
   ],
   bootstrap: [AppComponent]
 })
