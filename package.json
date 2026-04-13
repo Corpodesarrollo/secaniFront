@@ -7,6 +7,7 @@
     "build": "ng build",
     "prod": "ng build --configuration production",
     "qa": "ng build --configuration qa",
+    "docker": "ng build --configuration docker",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "sonar": "sonar-scanner -X"
