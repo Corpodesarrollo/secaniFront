@@ -1,0 +1,17 @@
+# Dockerfile para despliegue en EC2
+# Usa environment.ec2.ts con IP publica y puertos 9110-9116
+
+FROM node:20 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build -- --configuration ec2
+
+FROM nginx:1.28-alpine
+
+COPY --from=build /app/dist/secani-front/browser /usr/share/nginx/html
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
