@@ -104,7 +104,9 @@ async function loginAs(page: Page, role: RoleName) {
       return originalSetItem.call(this, key, value);
     };
   }, userData);
-  await page.goto('/', { waitUntil: 'networkidle', timeout: 15000 });
+  // Usar domcontentloaded en lugar de networkidle para evitar timeouts
+  // por saturación cuando se corren muchos tests en paralelo
+  await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 30000 });
 }
 
 // Fixture personalizado con loginAs disponible
