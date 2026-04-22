@@ -1,38 +1,101 @@
 <div class="profile-container">
-  <p-card header="Mi Perfil - {{ tipoEntidad }}">
-    <div class="profile-grid">
+  <p-card [header]="'Mi Perfil - ' + tipoEntidad">
+    <div class="top-section">
       <div class="field">
-        <label>Nombre</label>
-        <div class="value">{{ xUser.name || '—' }}</div>
+        <label>Razón Social</label>
+        <div class="value">{{ xUser.enterpriseName || '—' }}</div>
       </div>
       <div class="field">
-        <label>Identificación</label>
-        <div class="value">{{ xUser.alias || xUser.enterpriseIdentification || '—' }}</div>
+        <label>Cargo contacto principal</label>
+        <div class="value">{{ contactoPrincipal.cargo || '—' }}</div>
       </div>
       <div class="field">
-        <label>Email</label>
-        <div class="value">{{ xUser.email || '—' }}</div>
+        <label>Nombre contacto principal</label>
+        <div class="value">{{ contactoPrincipal.nombre || '—' }}</div>
       </div>
       <div class="field">
-        <label>Tipo Entidad</label>
-        <div class="value">{{ tipoEntidad }}</div>
+        <label>Correo contacto principal</label>
+        <div class="value">{{ contactoPrincipal.correo || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>
+          Estado
+          <i class="pi pi-info-circle info-icon"
+             [pTooltip]="tooltipEstado"
+             tooltipPosition="right"></i>
+        </label>
+        <div class="value">
+          <span class="badge" [class.active]="estadoActivo" [class.inactive]="!estadoActivo">
+            {{ estadoActivo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
       </div>
       <div class="field">
         <label>Código Entidad</label>
         <div class="value">{{ xUser.enterpriseCode || '—' }}</div>
       </div>
-      <div class="field">
-        <label>Nombre Entidad</label>
-        <div class="value">{{ xUser.enterpriseName || '—' }}</div>
-      </div>
-      <div class="field">
-        <label>Email Entidad</label>
-        <div class="value">{{ xUser.enterpriseEmail || '—' }}</div>
-      </div>
-      <div class="field">
-        <label>NIT / Identificación</label>
-        <div class="value">{{ xUser.enterpriseIdentification || '—' }}</div>
-      </div>
+    </div>
+  </p-card>
+
+  <p-card header="Contactos" styleClass="mt-3">
+    <div class="actions-bar">
+      <button pButton icon="pi pi-pencil" label="Editar" class="p-button-outlined"
+              [disabled]="contactos.length === 0"
+              (click)="contactos[0] && abrirEditar(contactos[0])"></button>
+      <button pButton icon="pi pi-plus" label="Crear" class="p-button-success" (click)="abrirCrear()"></button>
+    </div>
+
+    <p-table [value]="contactos" *ngIf="contactos.length > 0" styleClass="p-datatable-sm mt-2">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Cargo</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-c>
+        <tr>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.cargo }}</td>
+          <td>{{ c.telefono }}</td>
+          <td>{{ c.correo }}</td>
+          <td>
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="abrirEditar(c)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div *ngIf="contactos.length === 0" class="empty-state">
+      No se ha encontrado ningún registro
     </div>
   </p-card>
 </div>
+
+<p-dialog [(visible)]="mostrarDialogo" [header]="modoEdicion ? 'Editar contacto' : 'Crear contacto'"
+          [modal]="true" [style]="{width:'500px'}">
+  <div class="form-grid">
+    <div>
+      <label>Nombre *</label>
+      <input pInputText [(ngModel)]="contactoForm.nombre" maxlength="30" />
+    </div>
+    <div>
+      <label>Cargo</label>
+      <input pInputText [(ngModel)]="contactoForm.cargo" maxlength="30" />
+    </div>
+    <div>
+      <label>Teléfono</label>
+      <input pInputText [(ngModel)]="contactoForm.telefono" maxlength="15" />
+    </div>
+    <div>
+      <label>Correo *</label>
+      <input pInputText [(ngModel)]="contactoForm.correo" maxlength="30" type="email" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" class="p-button-text" (click)="cancelar()"></button>
+    <button pButton label="Guardar" icon="pi pi-check" (click)="guardar()"></button>
+  </ng-template>
+</p-dialog>
