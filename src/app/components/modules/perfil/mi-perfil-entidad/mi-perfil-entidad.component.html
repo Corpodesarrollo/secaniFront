@@ -1,0 +1,38 @@
+<div class="profile-container">
+  <p-card header="Mi Perfil - {{ tipoEntidad }}">
+    <div class="profile-grid">
+      <div class="field">
+        <label>Nombre</label>
+        <div class="value">{{ xUser.name || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>Identificación</label>
+        <div class="value">{{ xUser.alias || xUser.enterpriseIdentification || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <div class="value">{{ xUser.email || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>Tipo Entidad</label>
+        <div class="value">{{ tipoEntidad }}</div>
+      </div>
+      <div class="field">
+        <label>Código Entidad</label>
+        <div class="value">{{ xUser.enterpriseCode || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>Nombre Entidad</label>
+        <div class="value">{{ xUser.enterpriseName || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>Email Entidad</label>
+        <div class="value">{{ xUser.enterpriseEmail || '—' }}</div>
+      </div>
+      <div class="field">
+        <label>NIT / Identificación</label>
+        <div class="value">{{ xUser.enterpriseIdentification || '—' }}</div>
+      </div>
+    </div>
+  </p-card>
+</div>

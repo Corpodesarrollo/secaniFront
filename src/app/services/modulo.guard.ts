@@ -11,28 +11,14 @@ export class ModuloGuard implements CanActivate {
     async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
         if (this.hasAccess) { return true; }
 
-        let jsonUsuario = {
-            id: 'd54fc3db-060c-4bb3-aef2-d8b4e3e5f8c9',
-            idRol: '311882D4-EAD0-4B0B-9C5D-4A434D49D16D',
-            alias: 'CC3216549873',
-            email: 'fermanjarres3@gmail.com',
-            name: 'FERNANDO MANJARRES',
-            state: true,
-            rolCode: ['Perfil PISIS Neo','SINTRA-ENT','SECANI-CoordinadorAdmin'],
-            enterpriseCode: 'CC 3216549873',
-            enterpriseDeptoCode: '',
-            enterpriseEmail: 'fermanjarres3@gmail.com',
-            enterpriseName: 'TRES FERNANDO MANJARRES',
-            enterpriseIdentification: '3216549873',
-            isMinSalud: false,
-            isCoordinadorAdmin: false,
-            isAgenteSeguimiento: false, 
-            isCuidador: true,
-            isET: false,
-            isEAPB: false
-        };
+        // Si no hay user en localStorage, redirigir a selector QA
+        const existingUser = localStorage.getItem('user');
+        if (!existingUser) {
+            this.router.navigate(['/qa-login']);
+            return false;
+        }
 
-        localStorage.setItem('user', JSON.stringify(jsonUsuario));
+        let jsonUsuario = JSON.parse(existingUser);
 
         if (environment.cookie) {
             try {

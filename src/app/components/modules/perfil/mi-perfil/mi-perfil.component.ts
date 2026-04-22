@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -69,7 +70,7 @@ export class MiPerfilComponent implements OnInit {
   public dialogoAusenciaVisible: boolean = false;
   public formularioAusencia: FormGroup;
 
-  constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService) {
+  constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService, private router: Router) {
     this.formularioHorarioLaboral = this.fb.group({
       inicio: this.fb.group({
         hh: ['', [Validators.required, Validators.min(1), Validators.max(12)]],
@@ -89,6 +90,11 @@ export class MiPerfilComponent implements OnInit {
   }
 
   ngOnInit() {
+    // BUG-007: Redirigir EAPB/ET a perfil entidad, HU RQ09-HU05
+    if (this.user.isEAPB || this.user.isET) {
+      this.router.navigate(['/perfil/mi-perfil-entidad']);
+      return;
+    }
     this.idUser = this.user.id ?? '0';
     this.cargarPerfilCompleto();
   }

@@ -1,0 +1,35 @@
+<div class="qa-login-container">
+  <div class="qa-login-card">
+    <div class="qa-header">
+      <h1>SECÁNI - Selector de Rol (QA)</h1>
+      <p>Elige un rol para probar la aplicación</p>
+    </div>
+
+    <div *ngIf="currentUser" class="current-user">
+      <i class="pi pi-user"></i>
+      <span>Sesión actual: <strong>{{ currentUser }}</strong></span>
+      <button (click)="logout()" class="btn-logout">Cerrar sesión</button>
+    </div>
+
+    <div class="roles-grid">
+      <button
+        *ngFor="let role of roles"
+        (click)="loginAs(role)"
+        class="role-card"
+        [style.border-color]="role.color">
+        <div class="role-icon" [style.background]="role.color">
+          <i class="pi" [ngClass]="role.icon"></i>
+        </div>
+        <div class="role-info">
+          <h3>{{ role.label }}</h3>
+          <p>{{ role.description }}</p>
+        </div>
+        <i class="pi pi-arrow-right role-arrow"></i>
+      </button>
+    </div>
+
+    <div class="qa-footer">
+      <p><i class="pi pi-info-circle"></i> Ambiente de pruebas QA — selector temporal</p>
+    </div>
+  </div>
+</div>

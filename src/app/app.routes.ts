@@ -39,13 +39,19 @@ export const routes: Routes = [
       { path: 'reportes', loadChildren: () => import('./components/modules/reportes/reportes.module').then((m) => m.ReportesModule), canActivate: [ModuloGuard] },
       { path: 'usuarios', component: ContentComponent, loadChildren: () => import('./components/modules/usuarios/usuarios.module').then((m) => m.UsuariosModule), canActivate: [ModuloGuard] },
       { path: 'prueba', loadComponent: () => import('./components/modules/gestion/consultar-alertas/consultar-alertas.component').then((m) => m.ConsultarAlertasComponent), canActivate: [ModuloGuard] },
+      { path: 'casos_nna_cancer_infantil', loadComponent: () => import('./components/wrappers/casos-nna-wrapper.component').then((c) => c.CasosNnaWrapperComponent), canActivate: [ModuloGuard] },
+      { path: 'gestion_de_alertas', redirectTo: 'gestionar-alertas', pathMatch: 'full' },
+      { path: 'perfil_rol', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard] },
+      { path: 'perfil/mi-perfil-entidad', loadComponent: () => import('./components/modules/perfil/mi-perfil-entidad/mi-perfil-entidad.component').then((c) => c.MiPerfilEntidadComponent), canActivate: [ModuloGuard] },
+      { path: 'perfil/mi-perfil', loadComponent: () => import('./components/modules/perfil/mi-perfil/mi-perfil.component').then((c) => c.MiPerfilComponent), canActivate: [ModuloGuard] },
     ]
   },
   {
     path: '',
     component: LayoutSecondaryComponent,
     children: [
-      { path: 'respuesta-notificacion/:id', loadComponent: () => import('./components/modules/notificacion-respuesta/notificacion-respuesta.component').then((c) => c.NotificacionRespuestaComponent) }
+      { path: 'respuesta-notificacion/:id', loadComponent: () => import('./components/modules/notificacion-respuesta/notificacion-respuesta.component').then((c) => c.NotificacionRespuestaComponent) },
+      { path: 'qa-login', loadComponent: () => import('./components/qa-login/qa-login.component').then((c) => c.QaLoginComponent) }
     ]
   }
 ];

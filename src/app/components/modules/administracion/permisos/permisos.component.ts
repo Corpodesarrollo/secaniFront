@@ -10,6 +10,7 @@ import { CardModule } from 'primeng/card';
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { Entidad } from '../../../../models/entidad.model';
 import { Rol } from '../../../../models/rol.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-permisos',
@@ -66,13 +67,16 @@ export class PermisosComponent implements OnInit {
       complete: () => console.info('Se lleno la lista de Entidades')
     });
 
-    this.dataService.get_withoutParameters('User/GetAllUserDetails', 'Authentication').subscribe({
+    // BUG-003: usuarios vienen de SISPRO API, no de BD local
+    this.dataService.get_withoutParameters('User/GetAllFromSispro', 'Authentication').subscribe({
       next: (data: any) => {
-        this.dataUsers = data
-        console.log(data)
+        this.dataUsers = Array.isArray(data) ? data : (data?.data ?? []);
+        console.log('SISPRO users:', this.dataUsers);
       },
-      error: (e) => console.error('Se presento un error al llenar la lista de usuarios', e),
-      complete: () => console.info('Se lleno la lista de usuarios')
+      error: (e) => {
+        console.error('Error consultando usuarios SISPRO', e);
+        this.dataUsers = [];
+      }
     });
   }
 
@@ -114,16 +118,19 @@ export class PermisosComponent implements OnInit {
   }
 
   onGuardarClick(): void {
-    this.tableData.forEach(permiso => {
-      console.log(permiso);
-      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').subscribe({
-        next: (data: any) => {
-          console.log(data)
-          alert('¡Se guardo de forma exitosa!')
-        },
-        error: (e) => console.error('Se presento un error al actualizar los permisos', e),
-        complete: () => console.info('Se actualizaron los permisos')
-      });
+    if (!this.tableData?.length) return;
+    const requests = this.tableData.map(permiso =>
+      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos')
+    );
+    forkJoin(requests).subscribe({
+      next: () => {
+        alert('¡Permisos guardados exitosamente! Se recargará la página para aplicar cambios.');
+        window.location.reload();
+      },
+      error: (e) => {
+        console.error('Error al actualizar permisos', e);
+        alert('Error al guardar permisos. Revise la consola.');
+      }
     });
   }
 
