@@ -9,6 +9,17 @@
 
     <app-modal-crear [item]="selectedItem" [isEditing]="isEditing" (nuevoEAPB)="agregarNuevaEntidad($event)"></app-modal-crear>
 
+    <div class="contadores">
+        <div class="contador contador-activo">
+            <span class="contador-label">Activos</span>
+            <span class="contador-valor">{{ totalActivos }}</span>
+        </div>
+        <div class="contador contador-inactivo">
+            <span class="contador-label">Inactivos</span>
+            <span class="contador-valor">{{ totalInactivos }}</span>
+        </div>
+    </div>
+
     <p-card>
         <div>
             <div class="row">
@@ -17,16 +28,15 @@
                     <select class="form-select" aria-label="eapb" [(ngModel)]="filtroEntidad" (change)="onFiltroEntidadChange()"
                         [value]="filtroEntidad" id="eapb" name="eapb">
                         <option value="">Todas las Entidades Territoriales</option>
-                        <option *ngFor="let eapb of listaEntidades" [value]="eapb.codigo" style="width: 100%; white-space: nowrap; overflow-x: hidden;">
+                        <option *ngFor="let eapb of listaEntidades" [value]="eapb.codigo">
                             {{ eapb.nombre }}
                         </option>
                     </select>
                 </div>
                 <div class="col-6">
-                    <label for="buscar" class="form-label">&nbsp; <span
-                            class="pi pi-search"></span></label>
-                    <input type="text" class="form-control" id="buscar" name="buscar" (change)="onFiltroBuscarChange()"
-                        placeholder="Buscar" [value]="filtroBuscar" [(ngModel)]="filtroBuscar">
+                    <label for="buscar" class="form-label">&nbsp; <span class="pi pi-search"></span></label>
+                    <input type="text" class="form-control" id="buscar" name="buscar" (input)="onFiltroBuscarChange()"
+                        placeholder="Buscar" [(ngModel)]="filtroBuscar">
                 </div>
             </div>
             <div class="row">
@@ -41,40 +51,106 @@
 
         <br>
 
-        <div>
+        <div class="table-wrapper">
             <p-table [value]="data" [first]="first"
-                [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
-                [paginator]="true" [rows]="5"
+                [tableStyle]="{ 'min-width': '70rem' }" (onPage)="pageChange($event)"
+                [paginator]="true" [rows]="10"
                 [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
-                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
-            >
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
                 <ng-template pTemplate="header">
                     <tr>
+                        <th>ID</th>
                         <th>Entidad Territorial</th>
-                        <th>Nombres y apellidos</th>
-                        <th>Cargo</th>
-                        <th>Numero de contacto</th>
-                        <th>Correo electronico</th>
+                        <th>Tipo Id</th>
+                        <th>Número Id</th>
+                        <th>Representante Legal</th>
+                        <th>Número de Contacto</th>
+                        <th>Correo Electrónico</th>
+                        <th>Departamento</th>
+                        <th>Municipio</th>
                         <th>Estado</th>
-                        <th>Editar</th>
+                        <th>Acciones</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-data>
+                <ng-template pTemplate="body" let-row>
                     <tr>
-                        <td>{{ buscarNombreEntidadPorId(data.entidadId) }}</td>
-                        <td>{{ data.nombres }}</td>
-                        <td>{{ data.cargo }}</td>
-                        <td>{{ data.telefonos }}</td>
-                        <td>{{ data.email }}</td>
-                        <td>{{ data.estado }}</td>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.entidadNombre }}</td>
+                        <td>{{ row.tipoIdentificacion }}</td>
+                        <td>{{ row.numeroIdentificacion }}</td>
+                        <td>{{ row.representanteLegal }}</td>
+                        <td>{{ row.numeroContacto }}</td>
+                        <td>{{ row.correoElectronico }}</td>
+                        <td>{{ row.departamento }}</td>
+                        <td>{{ row.municipio }}</td>
+                        <td>
+                            <span class="badge-estado"
+                                [class.badge-activo]="row.estado?.toLowerCase() === 'activo'"
+                                [class.badge-inactivo]="row.estado?.toLowerCase() === 'inactivo'">
+                                {{ row.estado }}
+                            </span>
+                        </td>
                         <td class="table-actions">
-                            <button class="btn-round" (click)="onEdit(data)">
+                            <button class="btn-round" title="Editar" (click)="onEdit(row)">
                                 <i class="pi pi-pencil"></i>
                             </button>
+                            <button class="btn-round btn-historico" title="Histórico" (click)="onHistorico(row)">
+                                <i class="pi pi-history"></i>
+                            </button>
                         </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="11" class="no-records">No se encontraron registros</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </p-card>
+
+    <p-dialog header="Histórico del contacto"
+              [(visible)]="historicoDialogVisible"
+              [modal]="true"
+              [style]="{ width: '640px' }"
+              [draggable]="false"
+              [resizable]="false"
+              (onHide)="cerrarHistorico()">
+        <ng-container *ngIf="historicoSeleccionado">
+            <div class="historico-meta mb-3">
+                <div><strong>Entidad:</strong> {{ historicoSeleccionado.entidadNombre }}</div>
+                <div><strong>Contacto ID:</strong> {{ historicoSeleccionado.id }}</div>
+                <div><strong>Estado actual:</strong> {{ historicoSeleccionado.estado }}</div>
+            </div>
+            <table class="table table-sm historico-tabla">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Acción</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="historicoSeleccionado.dateCreated">
+                        <td>{{ historicoSeleccionado.dateCreated | date: 'dd/MM/yyyy HH:mm' }}</td>
+                        <td>Creación</td>
+                        <td>{{ historicoSeleccionado.createdByUserId || '-' }}</td>
+                    </tr>
+                    <tr *ngIf="historicoSeleccionado.dateUpdated">
+                        <td>{{ historicoSeleccionado.dateUpdated | date: 'dd/MM/yyyy HH:mm' }}</td>
+                        <td>Actualización</td>
+                        <td>{{ historicoSeleccionado.updatedByUserId || '-' }}</td>
+                    </tr>
+                    <tr *ngIf="historicoSeleccionado.dateDeleted">
+                        <td>{{ historicoSeleccionado.dateDeleted | date: 'dd/MM/yyyy HH:mm' }}</td>
+                        <td>Eliminación</td>
+                        <td>{{ historicoSeleccionado.deletedByUserId || '-' }}</td>
+                    </tr>
+                    <tr *ngIf="!historicoSeleccionado.dateCreated && !historicoSeleccionado.dateUpdated && !historicoSeleccionado.dateDeleted">
+                        <td colspan="3" class="no-records">Sin registros de auditoría</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </p-dialog>
 </body>

@@ -9,8 +9,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { ModalCrearComponent } from '../../usuarios/eapb/modal-crear/modal-crear.component';
@@ -25,10 +26,10 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule],
+  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule, ConfirmDialogModule],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css',
-  providers: [MessageService]
+  providers: [MessageService, ConfirmationService]
 })
 export class MiPerfilComponent implements OnInit {
   @ViewChild(ModalCrearComponent) modalCrearComponent!: ModalCrearComponent;
@@ -70,7 +71,7 @@ export class MiPerfilComponent implements OnInit {
   public dialogoAusenciaVisible: boolean = false;
   public formularioAusencia: FormGroup;
 
-  constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService, private router: Router) {
+  constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService, private confirmationService: ConfirmationService, private router: Router) {
     this.formularioHorarioLaboral = this.fb.group({
       inicio: this.fb.group({
         hh: ['', [Validators.required, Validators.min(1), Validators.max(12)]],
@@ -103,7 +104,8 @@ export class MiPerfilComponent implements OnInit {
     this.dataService.get('User/GetUserDetails/', this.idUser, 'Permisos').pipe(
       tap((data: any) => {
         this.usuario = data;
-        this.estadoUsuario = data.estado === 'Activo';
+        // BUG-015: backend retorna bool, legacy string 'Activo'
+        this.estadoUsuario = data.estado === true || data.estado === 'Activo' || data.activo === true;
         this.vistaEntidad = this.esVistaEntidad(data.enterpriseCode);
       }),
 
@@ -165,14 +167,31 @@ export class MiPerfilComponent implements OnInit {
     }
   }
 
-  // Función para manejar el cambio de estado del usuario
+  // BUG-015: Cambio de estado con confirmación + regla único agente
   onEstadoChange(nuevoEstado: boolean) {
+    if (nuevoEstado === false) {
+      this.confirmationService.confirm({
+        header: 'Inactivar usuario',
+        message: '¿Está seguro de inactivar el usuario? Todos sus casos serán reasignados a otros agentes. Al activarse nuevamente los casos asignados serán diferentes a los actuales.',
+        acceptLabel: 'Inactivar usuario',
+        rejectLabel: 'Volver',
+        accept: () => this.aplicarCambioEstado(false),
+        reject: () => {
+          this.estadoUsuario = true;
+        }
+      });
+      return;
+    }
+    this.aplicarCambioEstado(true);
+  }
+
+  private aplicarCambioEstado(nuevoEstado: boolean) {
     const data = { ...this.usuario, estado: nuevoEstado };
-    console.log(data);
     this.dataService.put(`user/EditUserProfile/${this.idUser}`, data, apis.authentication).subscribe({
-      next: async (value) => {
-        console.log('Estado actualizado con éxito');
-        this.usuario = { ...this.usuario, estado: `${nuevoEstado}` }
+      next: async () => {
+        this.usuario = { ...this.usuario, estado: nuevoEstado ? 'Activo' : 'Inactivo' };
+        this.estadoUsuario = nuevoEstado;
+        this.messageService.add({ severity: 'success', summary: 'Estado actualizado', detail: nuevoEstado ? 'Usuario activado' : 'Usuario inactivado', life: 3000 });
         await this.notificacionService.set({
           idAgenteOrigen: this.usuario.id ?? '',
           agenteOrigen: '',
@@ -188,7 +207,11 @@ export class MiPerfilComponent implements OnInit {
           idNotificacion: 0,
         });
       },
-      error: (err) => { console.log },
+      error: (err) => {
+        const msg = err?.error?.message || 'No fue posible actualizar el estado';
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg, life: 6000, sticky: false });
+        this.estadoUsuario = !nuevoEstado;
+      }
     });
   }
 

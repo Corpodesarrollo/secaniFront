@@ -67,6 +67,7 @@ export class DetalleNnaComponent implements OnInit {
   estratos: Parametricas[] = [];
   tiposOrigenReporte: Parametricas[] = [];
   estadosNNA: any[] = [];
+  estadosIngresoEstrategia: any[] = [];
   regimenesAfiliacion: Parametricas[] = [];
 
   constructor(
@@ -98,6 +99,7 @@ export class DetalleNnaComponent implements OnInit {
     this.loadEstratos();
     this.loadTiposOrigen();
     this.loadEstadosNNA();
+    this.loadEstadosIngresoEstrategia();
     this.loadRegimenes();
 
   }
@@ -348,6 +350,20 @@ export class DetalleNnaComponent implements OnInit {
   getNombreEstadoNNAPorId(id: any): string | undefined {
     const resultado = this.estadosNNA.find(item => item.id === id);
     console.log('No se encuentra el ID: ' + id);
+    return resultado ? resultado.nombre : 'Dato no encontrado';
+  }
+
+  loadEstadosIngresoEstrategia(){
+    this.repos.get_withoutParameters(`EstadoIngresoEstrategia`, 'TablaParametrica').subscribe({
+      next: (data: any) => {
+        this.estadosIngresoEstrategia = data;
+      },
+      error: (err: any) => console.error('Error al cargar Estado Ingreso Estrategia', err)
+    });
+  }
+
+  getNombreEstadoIngresoEstrategiaPorId(id: any): string {
+    const resultado = this.estadosIngresoEstrategia.find(item => String(item.id) === String(id) || String(item.codigo) === String(id));
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 

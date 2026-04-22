@@ -28,6 +28,7 @@ export class NNA {
     fechaNacimiento: Date | null = null;
     edad!: string;
     municipioNacimientoId!: string;
+    departamentoNacimientoId!: string;
     sexoId!: string;
     sexo!: string;
     tipoRegimenSSId!: string;

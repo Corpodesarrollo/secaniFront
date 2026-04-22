@@ -40,4 +40,9 @@ export class MiSemanaService {
     return await  this.comun.retorno_put(url, data);
   }
 
+  GetAusenciasUsuario = async (UsuarioId: string) => {
+    let url = `api/ausencias/usuario/${UsuarioId}`;
+    return await this.comun.retorno_get(url);
+  }
+
 }

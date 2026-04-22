@@ -270,7 +270,13 @@ export class CrearNnaComponent {
             this.nna.segundoNombre = persona.segundo_nombre;
             this.nna.primerApellido = persona.primer_apellido;
             this.nna.segundoApellido = persona.segundo_apellido;
-            this.nna.fechaNacimiento = new Date(persona.fecha_nacimiento);
+            // BUG-010: parsear solo componente fecha (YYYY-MM-DD) como Date local
+            // para evitar corrimiento por timezone (UTC -> local restaba un día)
+            if (persona.fecha_nacimiento) {
+              const fechaStr = persona.fecha_nacimiento.toString().substring(0, 10);
+              const [y, m, d] = fechaStr.split('-').map(Number);
+              this.nna.fechaNacimiento = new Date(y, m - 1, d);
+            }
             this.CalcularEdad();
             if (persona.sexo == 'F') {
               this.applySexo('M');

@@ -68,15 +68,11 @@ export class EAPBComponent implements OnInit {
     )
     .subscribe({
       next: (contactos: ContactoEAPB[]) => {
-        const idsValidos = new Set(this.listaEAPB.map(e => String(e.codigo)));
-        const dataFiltrada = contactos.filter(contacto => idsValidos.has(String(contacto.entidadId)));
-        this.data = dataFiltrada;
-        this.originalData = dataFiltrada;
+        this.data = contactos || [];
+        this.originalData = this.data;
         this.compartirDatosService.actualizarListaContactos(this.originalData);
-        console.log('Contactos: ', contactos);
       },
-      error: (e) => console.error('Error en alguna de las llamadas', e),
-      complete: () => console.info('Ambas listas se cargaron exitosamente')
+      error: (e) => console.error('Error cargando contactos EAPB', e)
     });
 
     this.compartirDatosService.nuevoContactoEAPB$.subscribe({
@@ -146,9 +142,9 @@ export class EAPBComponent implements OnInit {
     }
   }
 
-  buscarNombreEntidadPorId(id: number): string {
-    const item = this.listaEAPB.find(eapb => eapb.codigo === id);
-    return item ? item.nombre : 'No encontrado';
+  buscarNombreEntidadPorId(id: any): string {
+    const item = this.listaEAPB.find(eapb => String(eapb.codigo) === String(id));
+    return item ? item.nombre : (id != null ? String(id) : '-');
   }
 
   onFiltroBuscarChange(): void {

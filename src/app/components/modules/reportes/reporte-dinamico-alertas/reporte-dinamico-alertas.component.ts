@@ -33,13 +33,13 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     { header: 'Fecha notificación', field: 'fechaNotificacion' },
     { header: 'Fecha de resolución', field: 'fechaResolucion' },
     { header: 'Gestión de correos', field: 'correo' },
-    { header: 'Nombres y apellidos NNA', field: 'primerNombre' },
+    { header: 'Nombres y apellidos NNA', field: 'nombreCompleto' },
     { header: 'Observación', field: 'observacion' }
   ];
 
   public columnasOpcionales: Columna<any>[] = [
-    { header: 'Nombre NNA', field: 'nombreNNA' },
-    { header: 'EAPB', field: 'eapb' },
+    { header: 'Nombre NNA', field: 'nombreCompleto' },
+    { header: 'EAPB', field: 'eps' },
     { header: 'Categoría alerta', field: 'categoriaAlerta' },
     { header: 'Procesos con dificultad', field: 'procesosConDificultad' },
     { header: 'Edad NNA', field: 'edad' },

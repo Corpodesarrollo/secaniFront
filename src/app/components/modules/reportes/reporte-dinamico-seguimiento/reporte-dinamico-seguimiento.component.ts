@@ -96,10 +96,14 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   onCheckboxChange(event: any, columna: Columna<ReporteDinamicoSeguimiento>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
+    // PrimeNG p-checkbox sin binary emite event.checked como array de valores seleccionados
+    const isChecked = Array.isArray(event.checked)
+      ? event.checked.includes(columna.field)
+      : !!event.checked;
 
-    if (event.checked && index === -1) {
+    if (isChecked && index === -1) {
       selected.push(new FormControl(columna));
-    } else if (!event.checked && index !== -1) {
+    } else if (!isChecked && index !== -1) {
       selected.removeAt(index);
     }
   }
