@@ -44,6 +44,7 @@ export class DetalleNnaComponent implements OnInit {
 
   seguimientos: { fechaSeguimiento?: Date, categoriaAlerta: string, subcategoriaAlerta: string, descripcion: string, entidad: string, fechaNotifi?: Date, fechaRespuesta?: Date, idSeguimiento: number }[] = [];
 
+  estadoSeguimientoNombre: string = '';
 
   optionsDiagnostico: any[] = [];
   optionsIps: any[] = [];
@@ -87,6 +88,7 @@ export class DetalleNnaComponent implements OnInit {
       this.loadDatosBasicosNNA();
       this.loadNNAData();
       this.loadSeguimientoAlertas();
+      this.loadEstadoSeguimiento();
       this.loadContactosNna();
     });
 
@@ -195,6 +197,48 @@ export class DetalleNnaComponent implements OnInit {
     });
   }
 
+  loadEstadoSeguimiento() {
+    this.repos.get_withoutParameters(`Seguimiento/GetSeguimientosByNNA/${this.idNna}`, 'Seguimiento').subscribe({
+      next: (data: any) => {
+        const list = Array.isArray(data) ? data : [];
+        if (list.length === 0) { this.estadoSeguimientoNombre = ''; return; }
+        const ordered = [...list].sort((a, b) => {
+          const da = new Date(a?.fechaUltimaActuacion || a?.fechaSeguimiento || 0).getTime();
+          const db = new Date(b?.fechaUltimaActuacion || b?.fechaSeguimiento || 0).getTime();
+          return db - da;
+        });
+        this.estadoSeguimientoNombre = ordered[0]?.estado?.nombre || '';
+      },
+      error: (err: any) => console.error('Error al cargar estado de seguimiento', err)
+    });
+  }
+
+  getNombreDeptoNacimiento(): string {
+    if (this.datosNNA?.departamentoNacimientoId) {
+      return this.getNombreDeptoPorId(this.datosNNA.departamentoNacimientoId) || 'Dato no encontrado';
+    }
+    if (this.datosNNA?.municipioNacimientoId) {
+      return this.getNombreDeptoPorId(this.datosNNA.municipioNacimientoId) || 'Dato no encontrado';
+    }
+    return 'Dato no encontrado';
+  }
+
+  private getActualOrOrigenMunicipioId(): any {
+    const actual = this.datosNNA?.residenciaActualMunicipioId;
+    if (actual !== null && actual !== undefined && actual !== '') return actual;
+    return this.datosNNA?.residenciaOrigenMunicipioId;
+  }
+
+  getNombreDeptoResidenciaActual(): string {
+    const codigo = this.getActualOrOrigenMunicipioId();
+    return this.getNombreDeptoPorId(codigo) || 'Dato no encontrado';
+  }
+
+  getNombreMuniResidenciaActual(): string {
+    const codigo = this.getActualOrOrigenMunicipioId();
+    return this.getNombreMuniPorId(codigo) || 'Dato no encontrado';
+  }
+
   loadContactosNna(){
     this.repos.get_withoutParameters(`ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
       next: async (data: any) => {
@@ -250,12 +294,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreDeptoPorId(codigo: any): string | undefined {
-    const extraerDosPrimeros = (codigo: string): string => {
-      return codigo.substring(0, 2);
-    };
-    let codDepto: string = extraerDosPrimeros.toString();
-    const resultado = this.listaDepartamentos.find(item => item.codigo === codDepto);
-    console.log('No se encuentra el ID: ' + codigo);
+    if (codigo === null || codigo === undefined || codigo === '') return 'Dato no encontrado';
+    const raw = String(codigo).trim();
+    const codDepto = raw.length >= 2 ? raw.substring(0, 2) : raw.padStart(2, '0');
+    const resultado = this.listaDepartamentos.find(item => String(item.codigo) === codDepto);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -269,12 +311,10 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreMuniPorId(codigo: any): string | undefined {
-    const completarCodigo = (codigo: string): string => {
-      return codigo.padEnd(5, '0');
-    };
-    let codigoCompleto: string = completarCodigo.toString();
-    const resultado = this.listaMunicipios.find(item => item.codigo === codigoCompleto);
-    console.log('No se encuentra el ID: ' + codigo);
+    if (codigo === null || codigo === undefined || codigo === '') return 'Dato no encontrado';
+    const raw = String(codigo).trim();
+    const codigoCompleto = raw.length >= 5 ? raw.substring(0, 5) : raw.padStart(5, '0');
+    const resultado = this.listaMunicipios.find(item => String(item.codigo) === codigoCompleto);
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 
@@ -288,8 +328,8 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   getNombreGrupoPoblaPorId(id: any): string | undefined {
-    const resultado = this.gruposponlacional.find(item => item.codigo === id);
-    console.log('No se encuentra el ID: ' + id);
+    if (id === null || id === undefined || id === '') return 'Dato no encontrado';
+    const resultado = this.gruposponlacional.find(item => String(item.codigo) === String(id));
     return resultado ? resultado.nombre : 'Dato no encontrado';
   }
 

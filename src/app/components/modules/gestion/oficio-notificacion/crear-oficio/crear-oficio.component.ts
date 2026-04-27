@@ -47,6 +47,7 @@ export class CrearOficioComponent implements OnInit {
   @Input() edadNNA: any;
   @Input() diagnosticoNNA: any;
   @Input() show: boolean = false;
+  @Input() plantillaPrefill: any = null;
   @Output() closeModal = new EventEmitter<void>();
 
   idNotificacion: number = 0;
@@ -125,6 +126,13 @@ export class CrearOficioComponent implements OnInit {
     this.isLoadingEntidades = false;
     this.selectedEntidad = this.entidades.find(e => e.id === this.oficio.idEntidad);
 
+    // BUG-024: prefilling desde plantilla seleccionada
+    if (this.plantillaPrefill) {
+      if (!this.oficio.asunto && this.plantillaPrefill.asunto) this.oficio.asunto = this.plantillaPrefill.asunto;
+      if (!this.oficio.mensaje && this.plantillaPrefill.mensaje) this.oficio.mensaje = this.plantillaPrefill.mensaje;
+      if (!this.oficio.cierre && this.plantillaPrefill.cierre) this.oficio.cierre = this.plantillaPrefill.cierre;
+      if (!this.oficio.firma && this.plantillaPrefill.firmante) this.oficio.firma = this.plantillaPrefill.firmante;
+    }
   }
 
   async enviar(){

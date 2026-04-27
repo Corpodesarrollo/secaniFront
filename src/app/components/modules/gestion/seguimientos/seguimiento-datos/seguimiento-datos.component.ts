@@ -194,9 +194,13 @@ export class SeguimientoDatosComponent implements OnInit {
   }
 
   validarSeguimiento(id: number) {
+    // BUG-019: si viene de flujo navegacion con skipGuard, no redirigir
+    const navState = this.router.getCurrentNavigation()?.extras?.state;
+    if (navState && (navState as any).skipGuard) {
+      return;
+    }
     this.gs.getAsync('Seguimiento/GetCntSeguimientoByNNA', `/${id}`, apis.seguimiento).then((data: any) => {
       let cnt = Number(data);
-      console.log('cnt', cnt);
       if (cnt > 1) {
         this.router.navigate([`/gestion/seguimientos/estado-seguimiento/${this.id}`], {
           state: { idContacto: this.idContacto, skipGuard: true }

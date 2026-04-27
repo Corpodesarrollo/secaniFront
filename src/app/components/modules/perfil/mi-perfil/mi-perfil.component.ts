@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { ModalCrearComponent } from '../../usuarios/eapb/modal-crear/modal-crear.component';
@@ -26,7 +27,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule, ConfirmDialogModule],
+  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule, ConfirmDialogModule, TooltipModule],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css',
   providers: [MessageService, ConfirmationService]
@@ -70,6 +71,7 @@ export class MiPerfilComponent implements OnInit {
   public fechaSeleccionada: Date | null = null;
   public dialogoAusenciaVisible: boolean = false;
   public formularioAusencia: FormGroup;
+  public minFechaAusencia: Date = (() => { const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(0,0,0,0); return d; })();
 
   constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService, private confirmationService: ConfirmationService, private router: Router) {
     this.formularioHorarioLaboral = this.fb.group({
@@ -215,22 +217,30 @@ export class MiPerfilComponent implements OnInit {
     });
   }
 
-  // Función para actualizar los horarios laborales del agente
+  // BUG-LZ-002: backend retorna 7 dias siempre (faltantes con 00:00:00).
+  // Solo marcar diaActivo si tiene horas configuradas (!= 00:00:00).
   private actualizarHorarios(horariosRecibidos: any[]) {
     this.datosHorarioAgente.forEach(d => {
       d.diaActivo = false;
       d.horaEntrada = '';
       d.horaSalida = '';
     });
-    // Actualizar solo los días que vienen en la respuesta
     horariosRecibidos.forEach(horario => {
       const indice = horario.dia;
-      if (indice !== undefined && indice >= 0 && indice < this.datosHorarioAgente.length) {
-        this.datosHorarioAgente[indice].diaActivo = true;
-        this.datosHorarioAgente[indice].horaEntrada = horario.horaEntrada;
-        this.datosHorarioAgente[indice].horaSalida = horario.horaSalida;
-      }
+      if (indice === undefined || indice < 0 || indice >= this.datosHorarioAgente.length) return;
+      const entrada = (horario.horaEntrada || '').toString();
+      const salida = (horario.horaSalida || '').toString();
+      const inactivo = this.esHoraVacia(entrada) && this.esHoraVacia(salida);
+      this.datosHorarioAgente[indice].diaActivo = !inactivo;
+      this.datosHorarioAgente[indice].horaEntrada = inactivo ? '' : entrada;
+      this.datosHorarioAgente[indice].horaSalida = inactivo ? '' : salida;
     });
+  }
+
+  private esHoraVacia(t: string): boolean {
+    if (!t) return true;
+    const norm = t.trim();
+    return norm === '' || norm === '00:00:00' || norm === '00:00' || norm.startsWith('00:00:00');
   }
 
   private cargarHorarios(): void {
@@ -381,14 +391,28 @@ export class MiPerfilComponent implements OnInit {
       return;
     }
 
-    // Construir payload
+    // BUG-LZ-003: validar minimo 1 dia anticipacion antes de enviar
+    const seleccion = new Date(this.fechaSeleccionada);
+    seleccion.setHours(0, 0, 0, 0);
+    const manana = new Date();
+    manana.setHours(0, 0, 0, 0);
+    manana.setDate(manana.getDate() + 1);
+    if (seleccion < manana) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Fecha inválida',
+        detail: 'La fecha de ausencia debe registrarse con al menos un día de anticipación.',
+        life: 4000
+      });
+      return;
+    }
+
     const payload = {
       usuarioId: this.idUser,
       fechaAusencia: this.fechaSeleccionada.toISOString().split('T')[0],
       motivoAusencia: this.formularioAusencia.value.motivo
     };
 
-    // Enviar solicitud al backend
     this.dataService.post("api/ausencias", payload, 'Seguimiento').subscribe({
       next: () => {
         this.messageService.add({
@@ -397,32 +421,34 @@ export class MiPerfilComponent implements OnInit {
           detail: 'La ausencia se guardó correctamente.',
           life: 3000
         });
-
-        // Limpiar formulario y cerrar modal
         this.formularioAusencia.reset();
         this.cerrarDialogoAusencia();
-        this.cargarAusencias(); // Refrescar tabla de ausencias después de guardar
+        this.cargarAusencias();
       },
 
       error: (err) => {
-        // Mensaje original del backend
-        const rawMessage = err?.error?.MESSAGE || 'Ocurrió un error desconocido.';
-
-        // Limpiar UUID del mensaje para mostrarlo al usuario
-        const cleanedMessage = rawMessage.replace(
-          /para\s+[\w-]+\s+en\s+/,
-          'para este usuario en '
-        );
-
-        // Mostrar mensaje de error
+        // BUG-LZ-003: backend retorna array [{code, message, field}]; antes leía MESSAGE (uppercase)
+        const detail = this.extraerMensajeError(err) || 'Ocurrió un error al guardar la ausencia.';
+        const cleaned = detail.replace(/para\s+[\w-]+\s+en\s+/, 'para este usuario en ');
         this.messageService.add({
           severity: 'error',
           summary: 'Error al guardar',
-          detail: cleanedMessage,
-          life: 4000
+          detail: cleaned,
+          life: 5000
         });
       }
     });
+  }
+
+  private extraerMensajeError(err: any): string {
+    const body = err?.error;
+    if (!body) return '';
+    if (Array.isArray(body) && body.length > 0) {
+      const first = body[0];
+      return first?.message || first?.Message || '';
+    }
+    if (typeof body === 'string') return body;
+    return body?.message || body?.Message || body?.MESSAGE || '';
   }
 
   cerrarDialogoAusencia(): void {

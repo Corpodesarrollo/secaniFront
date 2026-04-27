@@ -269,5 +269,21 @@
   [nombreNNA]="datosBasicosNNA.nombreCompleto"
   [edadNNA]="tiempoTranscurrido"
   [diagnosticoNNA]="datosBasicosNNA.diagnostico"
+  [plantillaPrefill]="plantillaSeleccionada"
   (closeModal)="closeCrearOficio()"
   ></app-crear-oficio>
+
+<p-dialog header="Seleccionar plantilla de oficio" [(visible)]="verDialogPlantilla" [modal]="true" [style]="{ width: '520px' }" [draggable]="false" [resizable]="false" (onHide)="cerrarDialogPlantilla()">
+  <div class="p-2">
+    <p *ngIf="cargandoPlantillas">Cargando plantillas...</p>
+    <div *ngIf="!cargandoPlantillas && plantillasOficio.length === 0">No hay plantillas de tipo oficio disponibles.</div>
+    <div *ngIf="!cargandoPlantillas && plantillasOficio.length > 0">
+      <label class="form-label fw-bold">Plantilla</label>
+      <p-dropdown [options]="plantillasOficio" [(ngModel)]="plantillaSeleccionada" optionLabel="nombre" placeholder="Seleccione una plantilla" [filter]="true" filterBy="nombre" [style]="{ width: '100%' }" [appendTo]="'body'" [autoDisplayFirst]="false"></p-dropdown>
+    </div>
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <button class="btn btn-secondary" (click)="cerrarDialogPlantilla()">Cancelar</button>
+      <button class="btn btn-primary" (click)="confirmarPlantillaYAbrirOficio()" [disabled]="!plantillaSeleccionada">Continuar</button>
+    </div>
+  </div>
+</p-dialog>

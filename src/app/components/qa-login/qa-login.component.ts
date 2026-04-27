@@ -148,6 +148,33 @@ export class QaLoginComponent {
         isET: true,
         isEAPB: false,
       }
+    },
+    {
+      key: 'agente2',
+      label: 'Agente de Seguimiento 2',
+      description: 'QA Agente 2 - CC9000000005',
+      icon: 'pi-user',
+      color: '#0ea5e9',
+      user: {
+        id: 'qa-agente-005',
+        idRol: '14CDDEA5-FA06-4331-8359-036E101C5046',
+        alias: 'CC9000000005',
+        email: 'qa.agente2@secani.test',
+        name: 'QA Agente Seguimiento 2',
+        state: true,
+        rolCode: ['SECANI-AgenteSeguimiento'],
+        enterpriseCode: '',
+        enterpriseDeptoCode: '',
+        enterpriseEmail: 'qa.agente2@secani.test',
+        enterpriseName: 'QA Agente Seguimiento 2',
+        enterpriseIdentification: '9000000005',
+        isMinSalud: false,
+        isCoordinadorAdmin: false,
+        isAgenteSeguimiento: true,
+        isCuidador: false,
+        isET: false,
+        isEAPB: false,
+      }
     }
   ];
 

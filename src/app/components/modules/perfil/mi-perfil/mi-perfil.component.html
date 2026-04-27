@@ -106,7 +106,12 @@
                         <p-card [style]="{ backgroundColor: '#73b7ad48' }">
                             <span style="margin-right: 150px; font-weight: bold;">Estado</span>
                             <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"
-                                class="custom-switch"></p-inputSwitch>
+                                class="custom-switch"
+                                pTooltip="{{ estadoUsuario ? 'Estado activo: el agente recibe asignaciones automáticas de seguimientos.' : 'Estado inactivo: no recibe nuevas asignaciones; los casos se reasignan a otros agentes.' }}"
+                                tooltipPosition="left"></p-inputSwitch>
+                            <i class="pi pi-info-circle ms-2" style="cursor: help;"
+                                pTooltip="{{ estadoUsuario ? 'Estado activo: el agente recibe asignaciones automáticas de seguimientos.' : 'Estado inactivo: no recibe nuevas asignaciones; los casos se reasignan a otros agentes.' }}"
+                                tooltipPosition="left"></i>
                         </p-card>
                     </div>
                 </div>
@@ -155,7 +160,7 @@
                             <div class="flex-fill">
                                 <p-calendar [(ngModel)]="fechaSeleccionada" dateFormat="dd/mm/yy"
                                     placeholder="Selecciona una fecha" [showIcon]="true" inputStyleClass="w-100"
-                                    styleClass="w-100">
+                                    styleClass="w-100" [minDate]="minFechaAusencia">
                                 </p-calendar>
                             </div>
 

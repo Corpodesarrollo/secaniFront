@@ -257,6 +257,17 @@ export class SeguimientoEstadoComponent  implements OnInit {
   validarCamposRequeridos(): boolean {
     this.nna.diagnosticoId = this.selectedDiagnostico?.id ?? 0;
     this.nna.estadoId = this.selectedEstado?.id ?? 0;
+    // BUG-023: persistir selecciones que antes no llegaban al PUT
+    if (this.selectedIPS?.id) {
+      this.nna.ipsId = this.selectedIPS.id;
+      this.nna.ipsIdTratamiento = true;
+    }
+    if (this.selectedDiagnostico?.codigo) {
+      this.nna.tipoDiagnosticoId = this.selectedDiagnostico.codigo;
+    }
+    if (this.selectedRazonSinDiagnostico?.id) {
+      this.nna.motivoNoDiagnosticoId = this.selectedRazonSinDiagnostico.id;
+    }
 
     let camposAValidar: any[] = [];
 

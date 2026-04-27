@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../models/parametricas.model';
 import { Injectable } from "@angular/core";
+import { User } from '../../../../core/services/user';
 
 @Component({
   selector: 'app-consultar-seguimientos',
@@ -26,8 +27,8 @@ import { Injectable } from "@angular/core";
 
 export class ConsultarSeguimientosComponent implements OnInit {
   nna: NNA = new NNA();
-  idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
-  // idUsuario?: string;
+  xUser = new User();
+  idUsuario: string = '';
   cntFiltros: SeguimientoCntFiltros = {
     hoy: 0,
     conAlerta: 0,
@@ -54,8 +55,12 @@ export class ConsultarSeguimientosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.idUsuario = this.user.id;
-    console.log("idUsuario", this.idUsuario);
+    // BUG-017: usar userId real desde localStorage (antes UUID hardcoded)
+    this.idUsuario = this.xUser.id ?? '';
+    if (!this.idUsuario) {
+      console.warn('Usuario no autenticado');
+      return;
+    }
 
     this.CargarDatos('1');
 

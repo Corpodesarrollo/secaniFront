@@ -207,6 +207,12 @@ export class SeguimientoGestionarComponent {
 
   guardar() {
     this.saving = true;
+    // BUG-023: propagar primera alerta a NNA antes del save para que PUT NNA/Actualizar lleve categoria/subcategoria
+    if (this.alertas?.length > 0) {
+      const primera: any = this.alertas[0];
+      if (primera?.idCategoriaAlerta) this.nna.categoriaAlertaId = primera.idCategoriaAlerta;
+      if (primera?.idSubcategoriaAlerta) this.nna.subcategoriaAlertaId = primera.idSubcategoriaAlerta;
+    }
     this.seguimiento = {
       nnaId: this.nna.id,
       fechaSeguimiento: this.seguimiento.fechaSeguimiento,

@@ -51,7 +51,7 @@
         </div>
 
         <span [ngClass]="['bg-info', 'fixed-width-badge', 'text-wrap', 'fs-6', 'p-3']" class="badge text-white me-2">
-          Estado del seguimiento
+          {{ estadoSeguimientoNombre || 'Sin estado' }}
         </span>
       </div>
 
@@ -92,7 +92,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento de nacimiento: <br></div>
-              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.departamentoNacimientoId)}}</span><br></div>
+              <div class="col"><span>{{getNombreDeptoNacimiento()}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Ciudad de nacimiento: <br></div>
@@ -110,11 +110,11 @@
             <br>
             <div class="row">
               <div class="col" style="font-weight: bold;">Departamento: <br></div>
-              <div class="col"><span>{{getNombreDeptoPorId(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
+              <div class="col"><span>{{getNombreDeptoResidenciaActual()}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Municipio: <br></div>
-              <div class="col"><span>{{getNombreMuniPorId(datosNNA.residenciaActualMunicipioId)}}</span><br></div>
+              <div class="col"><span>{{getNombreMuniResidenciaActual()}}</span><br></div>
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">Barrio: <br></div>
@@ -164,7 +164,7 @@
             </div>
             <div class="row">
               <div class="col" style="font-weight: bold;">IPS: <br></div>
-              <div class="col"><span>{{datosNNA.epsNombre}}</span><br></div>
+              <div class="col"><span>{{datosNNA.ipsNombre}}</span><br></div>
             </div>
             <br>
 
@@ -327,10 +327,7 @@
                       <label for="departamentoProce" class="form-label fw-bold">Departamento:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="departamentoProce" [(ngModel)]="datosNNA.residenciaOrigenMunicipioId" [disabled]="true">
-                        <option>Antioquia</option>
-                        <!-- Más opciones -->
-                      </select>
+                      <span>{{ getNombreDeptoPorId(datosNNA.residenciaOrigenMunicipioId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -341,10 +338,7 @@
                       <label for="municipio" class="form-label fw-bold">Municipio:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="municipio" [(ngModel)]="datosNNA.residenciaOrigenMunicipioId" [disabled]="true">
-                        <option>Apartadó</option>
-                        <!-- Más opciones -->
-                      </select>
+                      <span>{{ getNombreMuniPorId(datosNNA.residenciaOrigenMunicipioId) }}</span>
                     </div>
                   </div>
                 </div>

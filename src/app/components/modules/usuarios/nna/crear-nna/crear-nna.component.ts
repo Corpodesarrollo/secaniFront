@@ -228,6 +228,21 @@ export class CrearNnaComponent {
     this.nna.sexoId = this.sexoId;
   }
 
+  // BUG-025: helper para validar mayoria de edad desde fecha string del endpoint Persona
+  private esMayorDeEdad(fechaNacimientoStr: any): boolean {
+    if (!fechaNacimientoStr) return false;
+    const fechaStr = fechaNacimientoStr.toString().substring(0, 10);
+    const [y, m, d] = fechaStr.split('-').map(Number);
+    if (!y || !m || !d) return false;
+    const nacimiento = new Date(y, m - 1, d);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mesActual = hoy.getMonth();
+    const diaActual = hoy.getDate();
+    if (mesActual < (m - 1) || (mesActual === (m - 1) && diaActual < d)) edad--;
+    return edad >= 18;
+  }
+
   CalcularEdad() {
     if (this.nna.fechaNacimiento) {
       const nacimiento = new Date(this.nna.fechaNacimiento);
@@ -266,6 +281,24 @@ export class CrearNnaComponent {
         } else {
           let persona = await this.personaService.get(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
           if (persona) {
+            // BUG-025: rechazar fallecidos y mayores de edad antes de habilitar formulario
+            if (persona.esFallecido === true) {
+              this.visible2 = true;
+              this.isPersona = false;
+              this.nnaFormCrearSinActivar = true;
+              this.msg = 'No es posible crear el NNA: la persona figura como fallecida en la consulta de identidad.';
+              this.buscando = false;
+              return;
+            }
+            if (this.esMayorDeEdad(persona.fecha_nacimiento)) {
+              this.visible2 = true;
+              this.isPersona = false;
+              this.nnaFormCrearSinActivar = true;
+              this.msg = 'No es posible crear el NNA: la persona es mayor de edad (≥ 18 años).';
+              this.buscando = false;
+              return;
+            }
+
             this.nna.primerNombre = persona.primer_nombre;
             this.nna.segundoNombre = persona.segundo_nombre;
             this.nna.primerApellido = persona.primer_apellido;
@@ -317,13 +350,18 @@ export class CrearNnaComponent {
     this.isLoadingMunicipio = true;
     this.municipios = [];
     if (this.selectedDepartamento) {
+      this.nna.departamentoNacimientoId = this.selectedDepartamento.codigo ?? '';
       this.municipios = await this.tpParametros.getTPCiudad(
         this.selectedDepartamento.codigo,
       );
+    } else {
+      this.nna.departamentoNacimientoId = '';
     }
-    this.selectedMunicipio = this.municipios.find(
-      (x) => x.codigo == this.nna.residenciaActualMunicipioId,
-    );
+    const prev = this.selectedMunicipio?.codigo ?? this.nna.municipioNacimientoId;
+    this.selectedMunicipio = prev
+      ? this.municipios.find((x) => x.codigo == prev)
+      : undefined;
+    if (!this.selectedMunicipio) this.nna.municipioNacimientoId = '';
     this.isLoadingMunicipio = false;
   }
 
@@ -356,12 +394,16 @@ export class CrearNnaComponent {
       }
     }
     else {
-      this.msg = 'Por favor, complete todos los campos requeridos.';
+      this.msg = this.campoFaltante
+        ? `Campo requerido: ${this.campoFaltante}`
+        : 'Por favor, complete todos los campos requeridos.';
       this.visible2 = true;
       console.log('Error en la validación de los campos');
     }
     this.saving = false;
   }
+
+  campoFaltante: string = '';
 
   validarCamposRequeridos(): boolean {
     this.nna.cuidadorParentescoId = this.selectedParentesco?.id ?? 0;
@@ -372,57 +414,45 @@ export class CrearNnaComponent {
     this.nna.tipoRegimenSSId = this.selectedRegimenAfiliacion?.codigo ?? '';
     this.nna.eapbId = this.selectedEAPB?.id ?? 0;
     this.nna.origenReporteId = this.selectedOrigenReporte?.id ?? 0;
+    this.nna.departamentoNacimientoId = this.selectedDepartamento?.codigo ?? '';
     this.nna.municipioNacimientoId = this.selectedMunicipio?.codigo ?? '';
     this.nna.estadoIngresoEstrategiaId = this.selectedEstadoIngresoEstrategia?.id ?? 0;
     this.nna.contactos = this.listaContactos;
 
-    let camposAValidar: (string | number | Date | ContactoNNA[])[] = [];
+    const esColombia = this.nna.paisId == '170';
 
-    if(this.nna.paisId == '170'){
-      camposAValidar = [
-        this.nna.origenReporteId,
-        this.nna.primerNombre,
-        this.nna.primerApellido,
-        this.nna.tipoIdentificacionId,
-        this.nna.numeroIdentificacion,
-        this.nna.fechaNacimiento ?? '',
-        this.nna.sexoId,
-        this.nna.paisId,
-        this.nna.municipioNacimientoId,
-        this.nna.etniaId,
-        this.nna.tipoRegimenSSId,
-        this.nna.eapbId,
-        this.nna.estadoIngresoEstrategiaId,
-        this.nna.contactos,
-      ];
-    }
-    else{
-      camposAValidar = [
-        this.nna.origenReporteId,
-        this.nna.primerNombre,
-        this.nna.primerApellido,
-        this.nna.tipoIdentificacionId,
-        this.nna.numeroIdentificacion,
-        this.nna.fechaNacimiento ?? '',
-        this.nna.sexoId,
-        this.nna.paisId,
-        this.nna.tipoRegimenSSId,
-        this.nna.eapbId,
-        this.nna.estadoIngresoEstrategiaId,
-        this.nna.contactos,
-      ];
-    }
+    const camposBase: { nombre: string, valor: any }[] = [
+      { nombre: 'Origen del reporte', valor: this.nna.origenReporteId },
+      { nombre: 'Primer nombre', valor: this.nna.primerNombre },
+      { nombre: 'Primer apellido', valor: this.nna.primerApellido },
+      { nombre: 'Tipo de identificación', valor: this.nna.tipoIdentificacionId },
+      { nombre: 'Número de identificación', valor: this.nna.numeroIdentificacion },
+      { nombre: 'Fecha de nacimiento', valor: this.nna.fechaNacimiento ?? '' },
+      { nombre: 'Sexo', valor: this.nna.sexoId },
+      { nombre: 'País de nacimiento', valor: this.nna.paisId },
+      { nombre: 'Régimen de afiliación', valor: this.nna.tipoRegimenSSId },
+      { nombre: 'EAPB', valor: this.nna.eapbId },
+      { nombre: 'Estado de ingreso a la estrategia', valor: this.nna.estadoIngresoEstrategiaId },
+      { nombre: 'Contactos', valor: this.nna.contactos },
+    ];
 
-    console.log('Campos a validar:', this.selectedRegimenAfiliacion);
+    const camposColombia: { nombre: string, valor: any }[] = [
+      { nombre: 'Departamento de nacimiento', valor: this.nna.departamentoNacimientoId },
+      { nombre: 'Ciudad de nacimiento', valor: this.nna.municipioNacimientoId },
+      { nombre: 'Etnia', valor: this.nna.etniaId },
+    ];
 
+    const campos = esColombia ? [...camposBase, ...camposColombia] : camposBase;
 
-    // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
-    let pos = 0;
-    for (const campo of camposAValidar) {
-      pos++;
-      if (!campo || campo.toString().trim() === '' || campo.toString() === '0') {
-        console.log('Campo requerido vacío:', campo);
-        console.log('Posición:', pos);
+    this.campoFaltante = '';
+    for (const { nombre, valor } of campos) {
+      const esArray = Array.isArray(valor);
+      const vacio = esArray
+        ? valor.length === 0
+        : (valor === null || valor === undefined || valor.toString().trim() === '' || valor.toString() === '0');
+      if (vacio) {
+        this.campoFaltante = nombre;
+        console.log('Campo requerido vacío:', nombre);
         return false;
       }
     }

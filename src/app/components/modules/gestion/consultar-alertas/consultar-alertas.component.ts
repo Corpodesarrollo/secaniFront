@@ -25,12 +25,15 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
 import { CrearOficioComponent } from '../oficio-notificacion/crear-oficio/crear-oficio.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { apis } from '../../../../models/apis.model';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
 
 
 @Component({
   selector: 'app-consultar-alertas',
   standalone: true,
-  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, VerNotificacionComponent, VerRespuestaComponent, ToastModule, CrearOficioComponent,ConfirmDialogModule
+  imports: [CommonModule, BadgeModule, CardModule, TableModule, RouterModule, ButtonModule, DividerModule, DialogModule, VerNotificacionComponent, VerRespuestaComponent, ToastModule, CrearOficioComponent,ConfirmDialogModule, DropdownModule, FormsModule
   ],
   templateUrl: './consultar-alertas.component.html',
   styleUrls: ['./consultar-alertas.component.css'],
@@ -83,6 +86,12 @@ export class ConsultarAlertasComponent implements OnInit {
 
 
 
+  // BUG-024: selección plantilla oficio
+  verDialogPlantilla: boolean = false;
+  cargandoPlantillas: boolean = false;
+  plantillasOficio: any[] = [];
+  plantillaSeleccionada: any = null;
+
   constructor(
     private route: ActivatedRoute,
     private repos: GenericService,
@@ -90,6 +99,7 @@ export class ConsultarAlertasComponent implements OnInit {
     private messageService: MessageService,
     private excelExportService: ExcelExportService,
     private confirmationService: ConfirmationService,
+    private plantillasService: PlantillasCorreoService,
   ) { }
 
   ngOnInit() {
@@ -313,12 +323,36 @@ export class ConsultarAlertasComponent implements OnInit {
   verCrearOficio: boolean = false;
 
   showDialog(alerta:any) {
+    // BUG-024: abrir primero dialog seleccion plantilla
     this.alertaSeleccionada = alerta;
+    this.plantillaSeleccionada = null;
+    this.verDialogPlantilla = true;
+    this.cargandoPlantillas = true;
+    this.plantillasService.getPlantillasCorreo().subscribe({
+      next: (data: any) => {
+        const items = Array.isArray(data) ? data : [];
+        this.plantillasOficio = items.filter((p: any) => (p.tipoPlantilla || '').toLowerCase().includes('oficio'));
+        this.cargandoPlantillas = false;
+      },
+      error: () => {
+        this.plantillasOficio = [];
+        this.cargandoPlantillas = false;
+      }
+    });
+  }
+
+  cerrarDialogPlantilla() {
+    this.verDialogPlantilla = false;
+  }
+
+  confirmarPlantillaYAbrirOficio() {
+    this.verDialogPlantilla = false;
     this.verCrearOficio = true;
   }
 
   closeCrearOficio(){
     this.verCrearOficio = false;
+    this.plantillaSeleccionada = null;
   }
 
   verNotificaciones: boolean = false;
