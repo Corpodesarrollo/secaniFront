@@ -37,6 +37,7 @@ export class ReporteInconsistenciaComponent implements OnInit {
 
   public tipoReporte: TipoReporte = TipoReporte.GENERAL;
   public TipoReporte = TipoReporte;
+  public periodoLabel: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -62,6 +63,7 @@ export class ReporteInconsistenciaComponent implements OnInit {
     if (this.camposForm.invalid) return this.camposForm.markAllAsTouched();
 
     const { fechaInicio, fechaFin } = this.camposForm.value;
+    this.periodoLabel = `${this.fmt(fechaInicio)} - ${this.fmt(fechaFin)}`;
 
     if (this.tipoReporte != TipoReporte.GENERAL) return;
     this.reportesService.getReporteInconsistenciasGeneral(fechaInicio, fechaFin)
@@ -69,6 +71,15 @@ export class ReporteInconsistenciaComponent implements OnInit {
         next: (reportes: any) => this.reportesInconsistenciaGeneral = reportes,
         error: (err) => console.error('Error fetching general report:', err)
       });
+  }
+
+  private fmt(d: any): string {
+    if (!d) return '';
+    const dt = d instanceof Date ? d : new Date(d);
+    if (isNaN(dt.getTime())) return '';
+    const dd = String(dt.getDate()).padStart(2, '0');
+    const mm = String(dt.getMonth() + 1).padStart(2, '0');
+    return `${dd}/${mm}/${dt.getFullYear()}`;
   }
 
   onNNAChange(event: any) {
@@ -94,8 +105,23 @@ export class ReporteInconsistenciaComponent implements OnInit {
   }
 
   exportExcel() {
+    if (this.tipoReporte === TipoReporte.GENERAL) {
+      const g = this.reportesInconsistenciaGeneral;
+      if (!g) return;
+      const rows = [
+        { seccion: 'Total inconsistencias', valor: g.totalInconsistencias },
+        ...(g.inconsistenciasPorCampo || []).map(c => ({ seccion: 'Por campo', ...c })),
+        ...(g.inconsistenciasPorDepartamento || []).map(c => ({ seccion: 'Por departamento', ...c })),
+        ...(g.inconsistenciasPorDiagnostico || []).map(c => ({ seccion: 'Por diagnóstico', ...c })),
+      ];
+      this.excelExportService.exportToExcel<any>(
+        { rows, sheetName: 'Reporte Inconsistencias General' },
+        'Reporte Inconsistencias General',
+      );
+      return;
+    }
     this.excelExportService.exportToExcel<any>(
-      { rows: this.reportesInconsistenciaNNA, sheetName: `Reporte Inconsistencias` },
+      { rows: this.reportesInconsistenciaNNA, sheetName: 'Reporte Inconsistencias' },
       'Reporte Inconsistencias',
     );
   }

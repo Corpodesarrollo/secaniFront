@@ -86,36 +86,40 @@ const routes: Routes = [
       permiso: 'canView'
     }
   },
-  { 
-    path: 'seguimientos/sin-diagnostico-seguimiento/:id', 
+  {
+    path: 'seguimientos/sin-diagnostico-seguimiento/:id',
     component: SeguimientoSinDiagnosticoComponent,
+    canDeactivate: [confirmExitGuard],
     canActivate: [ModuloGuard],
     data: {
       path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
-  { 
-    path: 'seguimientos/sin-tratamiento-seguimiento/:id', 
+  {
+    path: 'seguimientos/sin-tratamiento-seguimiento/:id',
     component: SeguimientoSinTratamientoComponent,
+    canDeactivate: [confirmExitGuard],
     canActivate: [ModuloGuard],
     data: {
       path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
-  { 
-    path: 'seguimientos/fallecido-seguimiento/:id', 
+  {
+    path: 'seguimientos/fallecido-seguimiento/:id',
     component: SeguimientoFallecidoComponent,
+    canDeactivate: [confirmExitGuard],
     canActivate: [ModuloGuard],
     data: {
       path: 'gestion/seguimientos',
       permiso: 'canView'
     }
   },
-  { 
-    path: 'seguimientos/gestionar-seguimiento/:id', 
+  {
+    path: 'seguimientos/gestionar-seguimiento/:id',
     component: SeguimientoGestionarComponent,
+    canDeactivate: [confirmExitGuard],
     canActivate: [ModuloGuard],
     data: {
       path: 'gestion/seguimientos',

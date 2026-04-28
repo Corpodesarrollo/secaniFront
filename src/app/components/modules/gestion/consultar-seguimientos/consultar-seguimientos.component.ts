@@ -55,7 +55,8 @@ export class ConsultarSeguimientosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // BUG-017: usar userId real desde localStorage (antes UUID hardcoded)
+    // BUG-017 + BUG-LZ-006: leer userId fresco desde localStorage (no via field-init que cachea entre cambios de usuario)
+    this.xUser = new User();
     this.idUsuario = this.xUser.id ?? '';
     if (!this.idUsuario) {
       console.warn('Usuario no autenticado');

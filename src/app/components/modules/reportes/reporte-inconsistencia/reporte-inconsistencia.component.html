@@ -65,6 +65,10 @@
           </div>
         </form>
 
+        <div class="d-flex justify-content-end mb-2" *ngIf="reportesInconsistenciaGeneral">
+          <p-button severity="success" icon="pi pi-file-excel" label="Exportar a Excel" (onClick)="exportExcel()" />
+        </div>
+
         <!-- Reporte de Inconsistencias -->
         <div class="p-4 my-3">
           <table class="custom-table text-center align-middle">
@@ -79,7 +83,7 @@
             </tr>
             <tr>
               <td class="fw-bold">Periodo</td>
-              <td>dd/mm/yyyy</td>
+              <td>{{ periodoLabel || '—' }}</td>
             </tr>
           </table>
         </div>
@@ -206,12 +210,13 @@
           <div class="row align-items-end mb-3">
             <div class="col-12 col-md-5">
               <label for="nna" class="form-label fw-semibold">NNA:</label>
-              <p-dropdown 
-                optionLabel="nombre"  
+              <p-dropdown
+                optionLabel="nombre"
                 optionValue="codigo"
-                [options]="NNA" 
-                styleClass="w-100" 
+                [options]="NNA"
+                styleClass="w-100"
                 placeholder="Seleccione"
+                (onChange)="onNNAChange($event)"
               />
             </div>
 
@@ -229,23 +234,24 @@
 
         <div class="mt-3">
           <p-table #tabla [value]="reportesInconsistenciaNNA" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
-            [globalFilterFields]="['agente', 'fechaIntento', 'observaciones']" [rowsPerPageOptions]="[5, 10, 25, 50]"
+            [globalFilterFields]="['id','fechaReporte','tipoIdentificacionSIVIGILA','tipoIdentificacion','numeroIdentificacionSIVIGILA','numeroIdentificacion','primerNombreSIVIGILA','primerNombre','segundoNombreSIVIGILA','segundoNombre','primerApellidoSIVIGILA','primerApellido','segundoApellidoSIVIGILA','segundoApellido','sexoIdSIVIGILA','sexoId']"
+            [rowsPerPageOptions]="[5, 10, 25, 50]"
             [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
             <ng-template pTemplate="caption">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="text-center justify-content-between">
                   Inconsistencias
                 </div>
-                <p-button severity="success" icon="pi pi-file-excel" />
+                <p-button severity="success" icon="pi pi-file-excel" (onClick)="exportExcel()" />
               </div>
             </ng-template>
             <ng-template pTemplate="header">
               <tr>
                 <th>ID</th>
-                <th>fecha reporte</th>
+                <th>Fecha reporte</th>
                 <th>Tipo identificación SIVIGILA</th>
-                <th>Tipo afiliación REAL</th>
-                <th>Número indentificación SIVIGILA</th>
+                <th>Tipo identificación REAL</th>
+                <th>Número identificación SIVIGILA</th>
                 <th>Número identificación REAL</th>
                 <th>Primer Nombre SIVIGILA</th>
                 <th>Primer Nombre REAL</th>
@@ -265,32 +271,32 @@
             </ng-template>
             <ng-template pTemplate="body" let-reporte>
               <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
-                <td>10</td>
-                <td>11</td>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td>16</td>
-                <td>17</td>
-                <td>18</td>
-                <td>19</td>
-                <td>20</td>
+                <td>{{ reporte.id }}</td>
+                <td>{{ reporte.fechaReporte | date:'dd/MM/yyyy' }}</td>
+                <td>{{ reporte.tipoIdentificacionSIVIGILA }}</td>
+                <td>{{ reporte.tipoIdentificacion }}</td>
+                <td>{{ reporte.numeroIdentificacionSIVIGILA }}</td>
+                <td>{{ reporte.numeroIdentificacion }}</td>
+                <td>{{ reporte.primerNombreSIVIGILA }}</td>
+                <td>{{ reporte.primerNombre }}</td>
+                <td>{{ reporte.segundoNombreSIVIGILA }}</td>
+                <td>{{ reporte.segundoNombre }}</td>
+                <td>{{ reporte.primerApellidoSIVIGILA }}</td>
+                <td>{{ reporte.primerApellido }}</td>
+                <td>{{ reporte.segundoApellidoSIVIGILA }}</td>
+                <td>{{ reporte.segundoApellido }}</td>
+                <td>{{ reporte.fechaNacimientoSIVIGILA | date:'dd/MM/yyyy' }}</td>
+                <td>{{ reporte.fechaNacimiento | date:'dd/MM/yyyy' }}</td>
+                <td>{{ reporte.sexoIdSIVIGILA }}</td>
+                <td>{{ reporte.sexoId }}</td>
+                <td>{{ reporte.fechaDefuncionSIVIGILA | date:'dd/MM/yyyy' }}</td>
+                <td>{{ reporte.fechaDefuncion | date:'dd/MM/yyyy' }}</td>
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
               <tr>
                 <td colspan="20" class="text-center">
-                  Reportes no encotrados.
+                  No se ha encontrado ningún registro.
                 </td>
               </tr>
             </ng-template>
