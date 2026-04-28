@@ -314,7 +314,7 @@
 
 
 <p-dialog  [(visible)]="displayModalContacto" [modal]="true"  (onHide)="onModalHide()">
-  <app-nna-contacto-lista [nnaId]="NNA?.id" />
+  <app-nna-contacto-lista [nnaId]="NNA?.idNNA ?? NNA?.id ?? ContactoNNA?.nnaId" />
 </p-dialog>
 
-<app-dialog-crear-contacto [show]="displayModalEditContacto" [contactoId]="ContactoNNA.id" [nnaId]="NNA?.id"></app-dialog-crear-contacto>
+<app-dialog-crear-contacto [show]="displayModalEditContacto" [contactoId]="ContactoNNA.id" [nnaId]="NNA?.idNNA ?? NNA?.id ?? ContactoNNA?.nnaId"></app-dialog-crear-contacto>

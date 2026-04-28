@@ -10,7 +10,8 @@ import { CardModule } from 'primeng/card';
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { Entidad } from '../../../../models/entidad.model';
 import { Rol } from '../../../../models/rol.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-permisos',
@@ -119,18 +120,22 @@ export class PermisosComponent implements OnInit {
 
   onGuardarClick(): void {
     if (!this.tableData?.length) return;
+    // BUG-LUZ-007: backend retorna 204 No Content; capturar errores por request para no rechazar todo el forkJoin
+    // y reportar resumen real (antes 1 fallo aparente cancelaba success aunque PUTs ya se ejecutaron en backend).
     const requests = this.tableData.map(permiso =>
-      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos')
+      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').pipe(
+        catchError((err: any) => of({ __error: err, permiso }))
+      )
     );
-    forkJoin(requests).subscribe({
-      next: () => {
+    forkJoin(requests).subscribe((results: any[]) => {
+      const errores = results.filter(r => r && r.__error);
+      if (errores.length === 0) {
         alert('¡Permisos guardados exitosamente! Se recargará la página para aplicar cambios.');
-        window.location.reload();
-      },
-      error: (e) => {
-        console.error('Error al actualizar permisos', e);
-        alert('Error al guardar permisos. Revise la consola.');
+      } else {
+        console.error('Permisos con error:', errores);
+        alert(`Guardado parcial: ${results.length - errores.length} OK, ${errores.length} con error. Se recargará la página.`);
       }
+      window.location.reload();
     });
   }
 

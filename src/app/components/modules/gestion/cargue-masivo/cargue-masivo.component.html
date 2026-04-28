@@ -37,6 +37,19 @@
         <button pButton [disabled]="cargando" label="Cancelar" class="p-button-secondary" (click)="cancelUpload()"></button>
       </div>
     }
+
+    @if (errorTitulo) {
+      <div class="alert alert-danger mt-4" role="alert">
+        <strong>{{ errorTitulo }}</strong>
+        @if (errores.length > 0) {
+          <ul class="mt-2 mb-0" style="max-height: 280px; overflow-y: auto;">
+            @for (e of errores; track e) {
+              <li>{{ e }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
   </div>
 </div>
 

@@ -260,6 +260,8 @@ export class MiPerfilComponent implements OnInit {
   }
 
   mostrarDialogoHorarioLaboral(item: any): void {
+    // BUG-LZ INC-08: reset antes de patch para evitar arrastre del dia anterior
+    this.formularioHorarioLaboral.reset();
     this.horarioSeleccionado = item;
     this.formularioHorarioLaboral.patchValue({
       inicio: this.convertTimeToForm(item.horaEntrada || '08:00:00'),

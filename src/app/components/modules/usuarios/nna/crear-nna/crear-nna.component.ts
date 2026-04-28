@@ -24,6 +24,7 @@ import { DialogModule } from 'primeng/dialog';
 import { NNAService } from '../../../../../core/services/nnaService';
 import { Persona } from '../../../../../models/persona.model';
 import { PersonaService } from '../../../../../core/services/personaService';
+import { User } from '../../../../../core/services/user';
 
 @Component({
   selector: 'app-crear-nna',
@@ -115,7 +116,9 @@ export class CrearNnaComponent {
   ciudadSeleccion: any;
 
   sexoId: any;
-  rolIdGeneral = sessionStorage.getItem('roleId');
+  // BUG-027: leer rol/userId desde User (localStorage), antes leia sessionStorage que esta vacio con qa-login
+  private userSession = new User();
+  rolIdGeneral: string | null = this.userSession.idRol ?? null;
 
   listaContactos: ContactoNNA[] = [];
 
@@ -136,7 +139,7 @@ export class CrearNnaComponent {
     private personaService: PersonaService,
   ) {
     //createdByUserId
-    this.userId = sessionStorage.getItem('userId');
+    this.userId = this.userSession.id ?? null;
   }
 
   async ngOnInit() {
@@ -205,7 +208,7 @@ export class CrearNnaComponent {
 
     //Inicializando form
     this.nna.edad = '';
-    this.userId = sessionStorage.getItem('userId');
+    this.userId = this.userSession.id ?? null;
 
     if (this.rolIdGeneral == '14CDDEA5-FA06-4331-8359-036E101C5046') {
       //Agente de seguimiento
@@ -320,11 +323,12 @@ export class CrearNnaComponent {
             this.isPersona = true;
           }
           else{
+            // BUG-LZ-005: si Maestro Personas no encuentra el documento, mantener form bloqueado (no permitir crear personas no validadas)
             console.log('Response is empty or invalid');
-            this.nnaFormCrearSinActivar = false;
+            this.nnaFormCrearSinActivar = true;
             this.visible2 = true;
             this.isPersona = false;
-            this.msg = 'No se encontró información de la persona con el número de identificación proporcionado.';
+            this.msg = 'No se encontró información de la persona con el número de identificación proporcionado. No es posible crear el NNA sin validación contra Maestro de Personas.';
           }
         }
       } catch (error) {
@@ -366,10 +370,12 @@ export class CrearNnaComponent {
   }
 
   //Guardar formulario
-  async onSubmit() {    
+  async onSubmit() {
     this.submitted = true;
     if (this.validarCamposRequeridos() && !this.saving) {
       this.saving = true;
+      // BUG-028: enviar createdByUserId para que backend cree Seguimiento + UsuarioAsignados al agente correcto
+      this.nna.createdByUserId = this.userId ?? '';
       let result = await this.nnaService.postNNA(this.nna);
       console.log('Resultado de guardar el NNA:', result);
       if (result.estado) {

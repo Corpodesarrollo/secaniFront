@@ -103,6 +103,7 @@ export class DetalleNnaComponent implements OnInit {
     this.loadEstadosNNA();
     this.loadEstadosIngresoEstrategia();
     this.loadRegimenes();
+    this.loadCIE10();
 
   }
 
@@ -405,6 +406,17 @@ export class DetalleNnaComponent implements OnInit {
   getNombreEstadoIngresoEstrategiaPorId(id: any): string {
     const resultado = this.estadosIngresoEstrategia.find(item => String(item.id) === String(id) || String(item.codigo) === String(id));
     return resultado ? resultado.nombre : 'Dato no encontrado';
+  }
+
+  // INC-04: cargar CIE10 desde MSTablasParametricas para dropdown diagnostico en acordeon Tratamiento
+  loadCIE10() {
+    this.repos.get_withoutParameters(`CIE10`, 'TablaParametrica').subscribe({
+      next: (data: any) => {
+        const items = Array.isArray(data) ? data : [];
+        this.optionsDiagnostico = items.map((d: any) => ({ label: d.nombre, value: d.id, ...d }));
+      },
+      error: (err: any) => console.error('Error al cargar CIE10', err)
+    });
   }
 
   loadRegimenes(){
