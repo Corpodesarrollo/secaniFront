@@ -1,0 +1,27 @@
+.contadores {
+  display: flex;
+  gap: 1rem;
+}
+
+.contador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+  min-width: 120px;
+}
+
+.contador-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.contador-valor {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.contador-activo .contador-valor { color: #198754; }
+.contador-inactivo .contador-valor { color: #6c757d; }
