@@ -9,6 +9,7 @@ import { CasosTerritorioComponent } from './casos-territorio/casos-territorio.co
 import { PendienteReportarComponent } from './nna/pendiente-reportar/pendiente-reportar.component';
 import { CuidadoresComponent } from './cuidadores/cuidadores.component';
 import { ContactoEntidadComponent } from './contacto-entidad/contacto-entidad.component';
+import { AgentesSeguimientoComponent } from './agentes-seguimiento/agentes-seguimiento.component';
 import { ModuloGuard } from '../../../services/modulo.guard';
 
 const routes: Routes = [
@@ -84,12 +85,21 @@ const routes: Routes = [
       permiso: 'canView'
     }
   },
-  { 
-    path: 'pendiente-reportar', 
+  {
+    path: 'pendiente-reportar',
     component: PendienteReportarComponent,
     canActivate: [ModuloGuard],
     data: {
       path: 'usuarios/pendiente-reportar',
+      permiso: 'canView'
+    }
+  },
+  {
+    path: 'agentes_seguimiento',
+    component: AgentesSeguimientoComponent,
+    canActivate: [ModuloGuard],
+    data: {
+      path: 'usuarios/agentes_seguimiento',
       permiso: 'canView'
     }
   }
