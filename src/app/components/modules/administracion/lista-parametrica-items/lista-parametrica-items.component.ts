@@ -127,15 +127,26 @@ export class ListaParametricaItemsComponent implements OnInit {
       return;
     }
 
-    this.itemsListaParametricaForm.reset(itemListaParematrica);
+    // BUG-LZ-011: p-calendar requiere Date; ISO string deja el control vacío
+    const item: any = { ...itemListaParematrica };
+    if (this.listaParametricaPadre?.nombre === 'festivos' && typeof item.festivo === 'string') {
+      const d = new Date(item.festivo);
+      item.festivo = isNaN(d.getTime()) ? null : d;
+    }
+    this.itemsListaParametricaForm.reset(item);
   }
 
   onSubmit() {
-    if(this.itemsListaParametricaForm.invalid || !this.listaParametricaPadre) 
+    if(this.itemsListaParametricaForm.invalid || !this.listaParametricaPadre)
       return this.itemsListaParametricaForm.markAllAsTouched();
 
     let formData = this.itemsListaParametricaForm.getRawValue();
     const nombreLista = this.listaParametricaPadre.nombre;
+
+    // BUG-LZ-010: backend TPFestivos.Festivo es DateOnly; serializar a yyyy-MM-dd
+    if (this.listaParametricaPadre.nombre === 'festivos') {
+      formData.festivo = this.toDateOnly(formData.festivo);
+    }
 
     if (this.listaParametricaPadre.nombre === "subcategoriaalerta") {
       formData = {
@@ -207,6 +218,11 @@ export class ListaParametricaItemsComponent implements OnInit {
           this.itemsListaParametricaForm.reset({...itemListaParametrica, isDeleted: true, activo: false });
           let formData = this.itemsListaParametricaForm.getRawValue();
 
+          // BUG-LZ-012: backend TPFestivos.Festivo es DateOnly; serializar a yyyy-MM-dd
+          if (this.listaParametricaPadre?.nombre === 'festivos') {
+            formData.festivo = this.toDateOnly(formData.festivo);
+          }
+
           if (this.listaParametricaPadre?.nombre === "subcategoriaalerta") {
             formData = {
               id: formData.id,
@@ -274,6 +290,17 @@ export class ListaParametricaItemsComponent implements OnInit {
 
     festivoControl?.updateValueAndValidity();
     nombreControl?.updateValueAndValidity();
+  }
+
+  // BUG-LZ-010/012: convierte Date | ISO string a yyyy-MM-dd para DateOnly del backend
+  private toDateOnly(value: any): string | null {
+    if (!value) return null;
+    const d = value instanceof Date ? value : new Date(value);
+    if (isNaN(d.getTime())) return null;
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
   resetFormToDefaults(): void {

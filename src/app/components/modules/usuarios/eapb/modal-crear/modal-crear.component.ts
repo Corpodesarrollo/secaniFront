@@ -45,6 +45,13 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       next: (data: any) => {
         this.listaEAPB = data
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        // BUG-LZ-016: re-aplica patchValue tras cargar opciones (la primera vez el select estaba vacío)
+        if (this.isEditing && this.item) {
+          this.contactForm.patchValue({
+            ...this.item,
+            entidadId: this.item.entidadId != null ? String(this.item.entidadId) : ''
+          });
+        }
       },
       error: (e) => console.error('Se presento un error al llenar la lista de EAPB para creacion', e),
       complete: () => console.info('Se lleno la lista de EAPB para creacion')
@@ -115,13 +122,17 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   updateForm(item: any) {
-    this.contactForm.patchValue(item);
+    // BUG-LZ-016: forzar string en entidadId para que coincida con [value] del select
+    this.contactForm.patchValue({
+      ...item,
+      entidadId: item?.entidadId != null ? String(item.entidadId) : ''
+    });
     if (this.isEditing) {
-      this.contactForm.get('entidadId')?.disable(); 
-      this.contactForm.get('estado')?.enable(); 
+      this.contactForm.get('entidadId')?.disable();
+      this.contactForm.get('estado')?.enable();
     } else {
-      this.contactForm.get('entidadId')?.enable(); 
-      this.contactForm.get('estado')?.disable(); 
+      this.contactForm.get('entidadId')?.enable();
+      this.contactForm.get('estado')?.disable();
     }
   }
 
