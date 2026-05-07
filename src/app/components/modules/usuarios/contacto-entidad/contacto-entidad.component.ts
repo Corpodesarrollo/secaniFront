@@ -57,6 +57,8 @@ export class ContactoEntidadComponent implements OnInit {
 
   first = 0;
   rows = 10;
+  // BUG-LZ-019: array literal en template recreaba referencia y truncaba opciones del dropdown
+  rowsPerPageOptions: number[] = [5, 10, 25, 50];
 
   historicoDialogVisible = false;
   historicoSeleccionado: EntidadTerritorialRow | null = null;

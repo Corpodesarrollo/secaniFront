@@ -32,6 +32,13 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       next: (data: any) => {
         this.listaEntidades = data
         this.listaEntidades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        // BUG-LZ-016: re-aplica patchValue tras cargar opciones
+        if (this.isEditing && this.item) {
+          this.contactForm.patchValue({
+            ...this.item,
+            entidadId: this.item.entidadId != null ? String(this.item.entidadId) : ''
+          });
+        }
       },
       error: (e) => console.error('Se presento un error al llenar la lista de ET para creacion', e),
       complete: () => console.info('Se lleno la lista de ET para creacion')
@@ -62,14 +69,27 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       return null; // No validar si el campo está vacío o si la lista no está cargada aún
     }
 
-    const emailExiste = this.listaContactos.some(contacto => 
-      contacto.email === control.value && (!this.item || contacto.id !== this.item.id) // 🔥 Ignora el contacto en edición
-    )
+    // BUG-LZ-021: comparar IDs como string para evitar falso positivo cuando el id viene como número/string
+    const itemIdStr = this.item?.id != null ? String(this.item.id) : null;
+    const emailExiste = this.listaContactos.some(contacto =>
+      contacto.email === control.value && (!itemIdStr || String(contacto.id) !== itemIdStr)
+    );
 
     return emailExiste ? { emailRepetido: true } : null;
   }
 
+  onCancel() {
+    // BUG-LZ-020: cierre explícito que descarta cambios sin emitir update
+    this.resetForm();
+    this.close();
+  }
+
   onSubmit() {
+    if (this.contactForm.invalid) {
+      // BUG-LZ-020: el botón Actualizar quedaba siempre disabled; ahora valida en click y muestra errores
+      this.contactForm.markAllAsTouched();
+      return;
+    }
     if (this.contactForm.valid) {
       this.contactForm.get('estado')?.enable(); 
       console.log(this.contactForm.value);
@@ -114,13 +134,17 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   updateForm(item: any) {
-    this.contactForm.patchValue(item);
+    // BUG-LZ-016 (analogo ET): coercion string para que el select encuentre la option
+    this.contactForm.patchValue({
+      ...item,
+      entidadId: item?.entidadId != null ? String(item.entidadId) : ''
+    });
     if (this.isEditing) {
-      this.contactForm.get('entidadId')?.disable(); 
-      this.contactForm.get('estado')?.enable(); 
+      this.contactForm.get('entidadId')?.disable();
+      this.contactForm.get('estado')?.enable();
     } else {
-      this.contactForm.get('entidadId')?.enable(); 
-      this.contactForm.get('estado')?.enable(); 
+      this.contactForm.get('entidadId')?.enable();
+      this.contactForm.get('estado')?.enable();
     }
   }
 

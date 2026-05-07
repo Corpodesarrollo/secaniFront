@@ -120,11 +120,17 @@ export class PermisosComponent implements OnInit {
 
   onGuardarClick(): void {
     if (!this.tableData?.length) return;
-    // BUG-LUZ-007: backend retorna 204 No Content; capturar errores por request para no rechazar todo el forkJoin
-    // y reportar resumen real (antes 1 fallo aparente cancelaba success aunque PUTs ya se ejecutaron en backend).
+    // BUG-LZ-008: backend retorna 204 NoContent. HttpClient con responseType:json puede fallar
+    // al parsear cuerpo vacio (SyntaxError). Status 2xx en HttpErrorResponse = success real.
     const requests = this.tableData.map(permiso =>
       this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').pipe(
-        catchError((err: any) => of({ __error: err, permiso }))
+        catchError((err: any) => {
+          const status = err?.status ?? 0;
+          if (status >= 200 && status < 300) {
+            return of(null);
+          }
+          return of({ __error: err, permiso });
+        })
       )
     );
     forkJoin(requests).subscribe((results: any[]) => {

@@ -208,6 +208,13 @@ export class DialogCrearContactoComponent {
       }
     }
 
+    // BUG-LZ-017: validar formato correo si fue diligenciado
+    const email = (this.contacto.email ?? '').trim();
+    if (email && !this.isValidEmail(email)) {
+      this.messageService.add({ severity: 'error', summary: 'Correo inválido', detail: 'El correo no tiene un formato válido (ej: usuario@dominio.com).' });
+      return false;
+    }
+
     return true;
   }
 
