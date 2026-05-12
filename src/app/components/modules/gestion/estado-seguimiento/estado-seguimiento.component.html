@@ -79,10 +79,10 @@
                           [activeIndex]="activeIndex">
                       </p-steps>
                       <div class="steps-dates mt-0">
-                          <div class="step-date" style="position: relative; left: -5px;">{{data?.fechaSolicitud | date:'dd/MM/yyyy'}}</div>
-                          <div class="step-date">{{data?.fechaAsignacion| date:'dd/MM/yyyy'}}</div>
-                          <div class="step-date" style="position: relative; left: 10px;">{{data?.fechaSeguimiento| date:'dd/MM/yyyy'}}</div>
-                          <div class="step-date">{{data?.fechaUltimaActuacion| date:'dd/MM/yyyy'}}</div>
+                          <div class="step-date" style="position: relative; left: -5px;">{{ esFechaPasada(data?.fechaSolicitud) ? (data?.fechaSolicitud | date:'dd/MM/yyyy') : '—' }}</div>
+                          <div class="step-date">{{ esFechaPasada(data?.fechaAsignacion) ? (data?.fechaAsignacion | date:'dd/MM/yyyy') : '—' }}</div>
+                          <div class="step-date" style="position: relative; left: 10px;">{{ data?.fechaSeguimiento ? (data?.fechaSeguimiento | date:'dd/MM/yyyy') : '—' }}</div>
+                          <div class="step-date">{{ esFechaPasada(data?.fechaUltimaActuacion) ? (data?.fechaUltimaActuacion | date:'dd/MM/yyyy') : '—' }}</div>
                       </div>
                   </div>
               </div>
