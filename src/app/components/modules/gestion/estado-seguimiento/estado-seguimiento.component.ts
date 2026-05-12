@@ -109,12 +109,26 @@ export class EstadoSeguimientoComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.xUser.id != null) {
       this.idUsuario = this.xUser.id;
-      this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
-      this.isLoadingTipoID = false;
 
-      this.parentescos = await this.tpp.getParentescos();
-      this.isLoadingParentesco = false;
-      
+      // BUG-LZ-024: try/finally para que el loading no quede colgado si la TP falla (deja el modal con spinner perpetuo)
+      try {
+        this.tipoID = await this.tp.getTP('APSTipoIdentificacion');
+      } catch (e) {
+        console.error('Error cargando tipos identificacion', e);
+        this.tipoID = [];
+      } finally {
+        this.isLoadingTipoID = false;
+      }
+
+      try {
+        this.parentescos = await this.tpp.getParentescos();
+      } catch (e) {
+        console.error('Error cargando parentescos', e);
+        this.parentescos = [];
+      } finally {
+        this.isLoadingParentesco = false;
+      }
+
       this.CargarDatos(this.xUser.id);
     } else{
       window.location.href = environment.url_Sispro;
@@ -159,25 +173,29 @@ export class EstadoSeguimientoComponent implements OnInit {
   consultarSeguimiento(data: Seguimiento) {
     this.isLoading = true;
     this.data = data;
-    
-    if (this.data.fechaUltimaActuacion != null) {
+
+    // BUG-LZ-025: solo avanzar el paso si la fecha realmente ya ocurrió.
+    // Antes el activeIndex usaba fechas futuras (Asignado/Contactado) marcando pasos no completados.
+    const ahora = new Date();
+    if (this.data.fechaUltimaActuacion != null && new Date(this.data.fechaUltimaActuacion) <= ahora) {
       this.activeIndex = 3;
-      console.log("fechaUltimaActuacion", this.data.fechaUltimaActuacion);
     } else if (this.data.fechaSeguimiento != null) {
+      // Agendado (fechaSeguimiento) puede ser futuro por diseño (programación)
       this.activeIndex = 2;
-      console.log("fechaSeguimiento", this.data.fechaSeguimiento);
-    } else if (this.data.fechaAsignacion != null) {
+    } else if (this.data.fechaAsignacion != null && new Date(this.data.fechaAsignacion) <= ahora) {
       this.activeIndex = 1;
-      console.log("fechaAsignacion", this.data.fechaAsignacion);
     } else if (this.data.fechaSolicitud != null) {
       this.activeIndex = 0;
-      console.log("fechaSolicitud", this.data.fechaSolicitud);
     }
-
-    console.log("activeIndex", this.activeIndex);
 
     this.show = true;
     this.isLoading = false;
+  }
+
+  // BUG-LZ-025: helper para template - oculta fechas futuras en pasos que ya deberían haber ocurrido
+  esFechaPasada(fecha: any): boolean {
+    if (!fecha) return false;
+    return new Date(fecha) <= new Date();
   }
 
   showDialog(): void {
@@ -208,13 +226,19 @@ export class EstadoSeguimientoComponent implements OnInit {
     if(this.validating){
       return;
     }
-    
+
     this.submitted = true;
     this.validating = true;
-    if (this.validarCamposRequeridos()){
-      await this.buscar();
+    // BUG-LZ-024: try/finally garantiza que validating se resetee aunque buscar() lance
+    try {
+      if (this.validarCamposRequeridos()){
+        await this.buscar();
+      }
+    } catch (e) {
+      console.error('Error en onSubmitSeguimiento', e);
+    } finally {
+      this.validating = false;
     }
-    this.validating = false;
   }
 
   validarCamposRequeridos(): boolean {
