@@ -45,11 +45,20 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       next: (data: any) => {
         this.listaEAPB = data
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        // BUG-LZ-016: re-aplica patchValue tras cargar opciones (la primera vez el select estaba vacío)
+        // BUG-LZ-016: si el contacto a editar apunta a una EAPB que ya no existe en la TP
+        // (eliminada por sincronizacion SISPRO), inyectar opcion sintetica para no perder el codigo.
         if (this.isEditing && this.item) {
+          const codigo = this.item.entidadId != null ? String(this.item.entidadId) : '';
+          const existe = this.listaEAPB.some(e => String(e.codigo) === codigo);
+          if (codigo && !existe) {
+            this.listaEAPB = [
+              { codigo: codigo, nombre: `EAPB no encontrada (código: ${codigo})` } as any,
+              ...this.listaEAPB
+            ];
+          }
           this.contactForm.patchValue({
             ...this.item,
-            entidadId: this.item.entidadId != null ? String(this.item.entidadId) : ''
+            entidadId: codigo
           });
         }
       },

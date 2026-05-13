@@ -142,9 +142,12 @@ export class EAPBComponent implements OnInit {
     }
   }
 
+  // BUG-LZ-016: cuando el codigo EAPB ya no existe en la TP (sincronizacion SISPRO eliminó/cambió),
+  // mostrar etiqueta descriptiva en lugar del codigo crudo.
   buscarNombreEntidadPorId(id: any): string {
+    if (id == null || String(id).trim() === '') return '-';
     const item = this.listaEAPB.find(eapb => String(eapb.codigo) === String(id));
-    return item ? item.nombre : (id != null ? String(id) : '-');
+    return item ? item.nombre : `EAPB no encontrada (código: ${id})`;
   }
 
   onFiltroBuscarChange(): void {

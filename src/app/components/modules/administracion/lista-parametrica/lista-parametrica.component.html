@@ -68,9 +68,9 @@
             <td>{{ item.id }}</td>
             <td>{{ item.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</td>
             @if (listaParametrica?.nombre == 'festivos') {
-              <td>{{ item.nombre  | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ (item.festivo || item.nombre) | date: 'dd/MM/yyyy' }}</td>
             } @else {
-              <td>{{ titulos[item.nombre] }}</td>
+              <td>{{ item.nombre || item.subCategoriaAlerta || 'Sin nombre' }}</td>
             }
             <td>{{ item.indicador || 'No aplica' }}</td>
             <td>{{ item.orden || 'No aplica' }}</td>
@@ -80,7 +80,9 @@
                 <p-button [appPermiso]="'canView'" [path]="'administracion/lista_parametricas'" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
                   [routerLink]="['/administracion/lista_parametricas', listaParametrica?.id, 'items']"
                 />
-                <p-button [appPermiso]="'canDele'" [path]="'administracion/lista_parametricas'" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary" />
+                <p-button [appPermiso]="'canDele'" [path]="'administracion/lista_parametricas'" icon="pi pi-trash" [rounded]="true" [text]="true" severity="secondary"
+                  (onClick)="confirmDelete($event, item)"
+                  [disabled]="isListaProtegida()" />
               </div>
             </td>
           </tr>
@@ -94,3 +96,6 @@
     </div>
   </div>
 </div>
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

@@ -55,7 +55,7 @@
             <p-table [value]="data" [first]="first"
                 [tableStyle]="{ 'min-width': '70rem' }" (onPage)="pageChange($event)"
                 [paginator]="true" [rows]="10"
-                [rowsPerPageOptions]="rowsPerPageOptions" [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="rowsPerPageOptions" [paginatorDropdownAppendTo]="'body'" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
                 <ng-template pTemplate="header">
                     <tr>
