@@ -27,7 +27,7 @@ export class NuevoSeguimientoComponent {
 
   sexoOptions = [{ label: 'Masculino', value: 'H' }, { label: 'Femenino', value: 'M' }];
   diagnosticoOptions = [{ label: 'Sí', value: true }, { label: 'No', value: false }];
-  readonly: boolean = true;
+  readonly: boolean = false;
   departamentos: Parametricas[] = [];
   municipios: Parametricas[] = [];
   IPS: Parametricas[] = [];
@@ -93,12 +93,18 @@ export class NuevoSeguimientoComponent {
     this.IPS = await this.tpp.getTPEAPB();
     this.isLoadingIPS = false;
 
-    this.reporte = await this.tpp.getByTipoIdNumeroId(tipoId ?? '', numero ?? '');
-    if (this.reporte?.fechaNacimiento) {
-      this.reporte.fechaNacimiento = new Date(this.reporte.fechaNacimiento);
-    }
-    if (!this.reporte){
+    // BUG-LZ-028: si NNA no tiene reporte previo SIVIGILA → formulario editable (nuevo reporte).
+    // Si ya existe reporte → mostrar readonly.
+    const data = await this.tpp.getByTipoIdNumeroId(tipoId ?? '', numero ?? '');
+    if (data) {
+      this.reporte = data;
+      if (this.reporte?.fechaNacimiento) {
+        this.reporte.fechaNacimiento = new Date(this.reporte.fechaNacimiento);
+      }
+      this.readonly = true;
+    } else {
       this.reporte = new ReportesSIVIGILA();
+      this.readonly = false;
     }
 
     this.selectedTipoID = this.tipoID.find(item => item.codigo === tipoId);
