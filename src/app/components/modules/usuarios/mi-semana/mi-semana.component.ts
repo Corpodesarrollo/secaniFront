@@ -141,8 +141,11 @@ export class MiSemanaComponent {
 
     this.diasLimite(this.currentDate);
     await this.horarioLaboral();
-    await this.ausencias();
+    // BUG-LZ-014: eventos() debe ejecutarse ANTES que ausencias() porque eventos() asigna
+    // this.events = eventosBD.map(...) sobreescribiendo cualquier ausencia agregada antes.
+    // Después ausencias() concatena con [...this.events, ...ausenciaEvents].
     await this.eventos();
+    await this.ausencias();
     await this.reprogramarSeguimientosEnAusencia();
 
 
@@ -352,7 +355,7 @@ export class MiSemanaComponent {
   }
 
   control = 2;
-  handlePrev() {
+  async handlePrev() {
     if(this.control > 1){
       const currentDate = new Date(this.currentDate);
       const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() - 7));
@@ -365,13 +368,15 @@ export class MiSemanaComponent {
         console.error('Calendar component is not initialized');
       }
       this.diasLimite(this.currentDate);
-      this.horarioLaboral();
-      this.eventos();
+      await this.horarioLaboral();
+      await this.eventos();
+      // BUG-LZ-014: re-cargar ausencias al cambiar de semana para que sigan visibles bloqueadas.
+      await this.ausencias();
       this.control--;
     }
   }
 
-  handleNext() {
+  async handleNext() {
     if(this.control < 3){
       const currentDate = new Date(this.currentDate);
       const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() + 7));
@@ -384,8 +389,10 @@ export class MiSemanaComponent {
         console.error('Calendar component is not initialized');
       }
       this.diasLimite(this.currentDate);
-      this.horarioLaboral();
-      this.eventos();
+      await this.horarioLaboral();
+      await this.eventos();
+      // BUG-LZ-014: re-cargar ausencias al cambiar de semana para que sigan visibles bloqueadas.
+      await this.ausencias();
       this.control++;
     //console.log(this.currentDate);
     }
