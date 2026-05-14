@@ -62,6 +62,22 @@ export class ContactoEntidadComponent implements OnInit {
 
   historicoDialogVisible = false;
   historicoSeleccionado: EntidadTerritorialRow | null = null;
+  // BUG-LZ-027: lista real de transacciones del contacto (no solo dateCreated/Updated/Deleted)
+  historicosDetalle: any[] = [];
+  historicosLoading = false;
+  // BUG-LZ-027: traducir nombres de campo del JSON ObtenerCamposModificados a etiquetas en español
+  private readonly camposEs: Record<string, string> = {
+    'IsDeleted': 'Eliminado',
+    'Activo': 'Activo',
+    'Estado': 'Estado',
+    'Nombres': 'Nombres',
+    'Cargo': 'Cargo',
+    'Email': 'Correo',
+    'Telefonos': 'Teléfono',
+    'EntidadId': 'Entidad',
+    'DateUpdated': 'Fecha actualización',
+    'UpdatedByUserId': 'Usuario actualizador'
+  };
 
   constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
@@ -164,11 +180,46 @@ export class ContactoEntidadComponent implements OnInit {
   onHistorico(row: EntidadTerritorialRow) {
     this.historicoSeleccionado = row;
     this.historicoDialogVisible = true;
+    this.historicosDetalle = [];
+    this.historicosLoading = true;
+
+    this.dataService.get('ContactoEntidad/Historico/', row.id, 'Entidad').subscribe({
+      next: (data: any) => {
+        this.historicosDetalle = Array.isArray(data) ? data : [];
+        this.historicosLoading = false;
+      },
+      error: (e) => {
+        console.error('Error cargando histórico ContactoEntidad', e);
+        this.historicosDetalle = [];
+        this.historicosLoading = false;
+      }
+    });
   }
 
   cerrarHistorico() {
     this.historicoDialogVisible = false;
     this.historicoSeleccionado = null;
+    this.historicosDetalle = [];
+    this.historicosLoading = false;
+  }
+
+  // BUG-LZ-027: traducir comentario (campos modificados) y mostrar etiquetas legibles
+  traducirComentario(historico: any): string {
+    const comentario = historico?.comentario ?? '';
+    if (!comentario) return '';
+    return comentario.split(',').map((f: string) => {
+      const k = f.trim();
+      return this.camposEs[k] ?? k;
+    }).join(', ');
+  }
+
+  // BUG-LZ-027: si comentario indica IsDeleted=true → mostrar transacción como Eliminar
+  formatTransaccion(historico: any): string {
+    const t = historico?.transaccion ?? '';
+    if (t === 'Actualizacion' && (historico?.comentario || '').includes('IsDeleted')) {
+      return 'Eliminar';
+    }
+    return t;
   }
 
   limpiar() {
