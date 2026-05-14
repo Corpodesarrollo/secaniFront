@@ -248,7 +248,8 @@ export class EstadoSeguimientoComponent implements OnInit {
     const camposAValidar = [
       this.nna.numeroIdentificacion,
       this.nna.tipoIdentificacionId,
-      this.nna.cuidadorParentescoId
+      this.nna.cuidadorParentescoId,
+      this.nna.cuidadorTelefono
     ];
 
     // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
@@ -261,7 +262,29 @@ export class EstadoSeguimientoComponent implements OnInit {
       }
     }
 
+    // BUG-LZ-030: el teléfono del cuidador debe ser exactamente 10 dígitos numéricos
+    if (!this.esTelefonoValido(this.nna.cuidadorTelefono)) {
+      return false;
+    }
+
     return true;
+  }
+
+  // BUG-LZ-030: solo permite caracteres numéricos en el input (sanitiza pegado / autocompletado)
+  onTelefonoInput(event: any): void {
+    const valor: string = event?.target?.value ?? '';
+    const soloNumeros = valor.replace(/[^0-9]/g, '').slice(0, 10);
+    if (soloNumeros !== valor) {
+      this.nna.cuidadorTelefono = soloNumeros;
+      if (event?.target) {
+        event.target.value = soloNumeros;
+      }
+    }
+  }
+
+  esTelefonoValido(telefono: string | undefined | null): boolean {
+    if (!telefono) return false;
+    return /^[0-9]{10}$/.test(telefono);
   }
   
   async buscar() {
@@ -330,11 +353,21 @@ export class EstadoSeguimientoComponent implements OnInit {
         this.repos.post('ReportesSIVIGILA/CrearSeguimiento', reporte, 'NNA').subscribe({
             next: (data: any) => {
               console.log('Respuesta del servidor:', data);
+              this.visible = false;
               this.mostrarMensaje = true;
               resolve(data);
             },
             error: (err) => {
+              // BUG-LZ-029: el POST fallaba silencioso (solo console.error) y el usuario veía
+              // que el botón "Solicitar" no hacía nada. Mostrar toast con detalle del error.
               console.error(err);
+              const detalle = err?.error?.message || err?.message || 'No fue posible crear el seguimiento. Intente nuevamente o contacte al administrador.';
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error al solicitar seguimiento',
+                detail: detalle,
+                life: 6000
+              });
               reject(err);
             }
         });

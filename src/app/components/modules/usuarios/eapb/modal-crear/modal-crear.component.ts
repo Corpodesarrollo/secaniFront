@@ -43,13 +43,14 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.dataService.get_withoutParameters('EAPB', 'TablaParametrica').subscribe({
       next: (data: any) => {
-        this.listaEAPB = data
+        // BUG-LZ-016: normalizar codigo a String para que <option [value]="eapb.codigo"> matchee
+        // con el formControl entidadId (siempre String). Antes los codigos numericos en TP no
+        // se mostraban como selected en el <select> aunque la EAPB existiera.
+        this.listaEAPB = (data || []).map((e: any) => ({ ...e, codigo: e.codigo != null ? String(e.codigo) : '' }));
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        // BUG-LZ-016: si el contacto a editar apunta a una EAPB que ya no existe en la TP
-        // (eliminada por sincronizacion SISPRO), inyectar opcion sintetica para no perder el codigo.
         if (this.isEditing && this.item) {
           const codigo = this.item.entidadId != null ? String(this.item.entidadId) : '';
-          const existe = this.listaEAPB.some(e => String(e.codigo) === codigo);
+          const existe = this.listaEAPB.some(e => e.codigo === codigo);
           if (codigo && !existe) {
             this.listaEAPB = [
               { codigo: codigo, nombre: `EAPB no encontrada (código: ${codigo})` } as any,
