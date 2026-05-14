@@ -50,7 +50,7 @@ export class ModalCrearComponent implements OnInit, OnChanges {
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
         if (this.isEditing && this.item) {
           const codigo = this.item.entidadId != null ? String(this.item.entidadId) : '';
-          const existe = this.listaEAPB.some(e => e.codigo === codigo);
+          const existe = this.listaEAPB.some(e => String(e.codigo) === codigo);
           if (codigo && !existe) {
             this.listaEAPB = [
               { codigo: codigo, nombre: `EAPB no encontrada (código: ${codigo})` } as any,
