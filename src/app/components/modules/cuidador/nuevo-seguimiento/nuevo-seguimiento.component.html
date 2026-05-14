@@ -1,5 +1,5 @@
-<div class="container">
-  <h1 class="mt-5 mb-4">Solicitar reporte por SIVIGILA</h1>
+<div class="container sivigila-scroll">
+  <h1 class="mt-4 mb-3">Solicitar reporte por SIVIGILA</h1>
   <div class="row">
       <!-- Columna izquierda -->
       <div class="col-md-6">
@@ -29,29 +29,43 @@
         </div>
         <div class="mb-3">
           <label for="primerNombre" class="mb-1">Primer nombre</label>
-          <input pInputText type="text" class="w-100" id="primerNombre" placeholder="Ingrese" [(ngModel)]="reporte.primerNombre" name="primerNombre" [readonly]="readonly"/>
+          <input pInputText type="text" class="w-100" id="primerNombre" placeholder="Ingrese"
+                 [ngModel]="reporte.primerNombre" (ngModelChange)="onNombreChange('primerNombre', $event)"
+                 name="primerNombre" [readonly]="readonly"/>
           <div *ngIf="submitted && (!reporte.primerNombre || reporte.primerNombre.trim() === '')" class="text-danger">
               Campo requerido
           </div>
         </div>
         <div class="mb-3">
           <label for="segundoNombre" class="mb-1">Segundo nombre</label>
-          <input pInputText type="text" class="w-100" id="segundoNombre" placeholder="Ingrese" [(ngModel)]="reporte.segundoNombre" name="segundoNombre" [readonly]="readonly"/>
+          <input pInputText type="text" class="w-100" id="segundoNombre" placeholder="Ingrese"
+                 [ngModel]="reporte.segundoNombre" (ngModelChange)="onNombreChange('segundoNombre', $event)"
+                 name="segundoNombre" [readonly]="readonly"/>
         </div>
         <div class="mb-3">
           <label for="primerApellido" class="mb-1">Primer apellido</label>
-          <input pInputText type="text" class="w-100" id="primerApellido" placeholder="Ingrese" [(ngModel)]="reporte.primerApellido" name="primerApellido" [readonly]="readonly"/>
+          <input pInputText type="text" class="w-100" id="primerApellido" placeholder="Ingrese"
+                 [ngModel]="reporte.primerApellido" (ngModelChange)="onNombreChange('primerApellido', $event)"
+                 name="primerApellido" [readonly]="readonly"/>
           <div *ngIf="submitted && (!reporte.primerApellido || reporte.primerApellido.trim() === '')" class="text-danger">
               Campo requerido
           </div>
         </div>
         <div class="mb-3">
           <label for="segundoApellido" class="mb-1">Segundo apellido</label>
-          <input pInputText type="text" class="w-100" id="segundoApellido" placeholder="Ingrese" [(ngModel)]="reporte.segundoApellido" name="segundoApellido" [readonly]="readonly"/>
+          <input pInputText type="text" class="w-100" id="segundoApellido" placeholder="Ingrese"
+                 [ngModel]="reporte.segundoApellido" (ngModelChange)="onNombreChange('segundoApellido', $event)"
+                 name="segundoApellido" [readonly]="readonly"/>
         </div>
         <div class="mb-3">
           <label for="evidenciaDiagnostico" class="mb-1">Evidencia del diagnóstico o sospecha</label>
-          <p-fileUpload #uploader name="diagnostico" customUpload="true" (uploadHandler)="onUpload($event, 'diagnostico')" (onSelect)="onFileSelect(uploader)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+          <p-fileUpload #uploader name="diagnostico" customUpload="true"
+                        (uploadHandler)="onUpload($event, 'diagnostico')" (onSelect)="onFileSelect(uploader, 'diagnostico', $event)"
+                        mode="basic" chooseLabel="Adjuntar" styleClass="w-100"
+                        accept=".pdf,.jpg,.jpeg,.png" [maxFileSize]="5242880"
+                        invalidFileTypeMessageDetail="Solo se permiten archivos PDF, JPG o PNG."
+                        invalidFileSizeMessageDetail="El archivo supera el límite de 5MB."></p-fileUpload>
+          <small class="text-muted">Formatos PDF, JPG, PNG · máximo 5MB</small>
           <div *ngIf="submitted && reporte.evidenciaDiagnostico == undefined " class="text-danger">
               Campo requerido
           </div>
@@ -68,8 +82,11 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="sexoAsignado" class="mb-1">Sexo asignado al nacer</label>
+          <label for="sexoAsignado" class="mb-1">Sexo asignado al nacer*</label>
           <p-dropdown [options]="sexoOptions" placeholder="Seleccione" styleClass="w-100" [(ngModel)]="reporte.sexoId" name="sexoAsignado" [readonly]="readonly"></p-dropdown>
+          <div *ngIf="submitted && !reporte.sexoId" class="text-danger">
+              Campo requerido
+          </div>
         </div>
         <div class="mb-3">
           <label for="tieneDiagnostico" class="mb-1">¿Tiene diagnóstico?</label>
@@ -133,7 +150,13 @@
         </div>
         <div class="mb-3">
           <label for="evidenciaParentesco" class="mb-1">Evidencia parentesco</label>
-          <p-fileUpload #uploader2 name="parentesco" customUpload="true" (uploadHandler)="onUpload($event, 'parentesco')" (onSelect)="onFileSelect(uploader2)" mode="basic" chooseLabel="Adjuntar" styleClass="w-100"></p-fileUpload>
+          <p-fileUpload #uploader2 name="parentesco" customUpload="true"
+                        (uploadHandler)="onUpload($event, 'parentesco')" (onSelect)="onFileSelect(uploader2, 'parentesco', $event)"
+                        mode="basic" chooseLabel="Adjuntar" styleClass="w-100"
+                        accept=".pdf,.jpg,.jpeg,.png" [maxFileSize]="5242880"
+                        invalidFileTypeMessageDetail="Solo se permiten archivos PDF, JPG o PNG."
+                        invalidFileSizeMessageDetail="El archivo supera el límite de 5MB."></p-fileUpload>
+          <small class="text-muted">Formatos PDF, JPG, PNG · máximo 5MB</small>
           <div *ngIf="submitted && reporte.evidenciaParentesco == undefined " class="text-danger">
               Campo requerido
           </div>
@@ -141,10 +164,12 @@
       </div>
     </div>
 
-    <div class="text-center mt-4">
+    <div class="text-center mt-4 mb-3">
       <button class="btn text-white rounded-3 btn-lg" type="button" style="background-color: #73B7AD; width: 200px;" (click)="guardar()" ><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> ENVIAR</button>
     </div>
 </div>
+<p-toast />
+
 <p-dialog 
   [(visible)]="mostrarMensaje" (onHide)="terminar()"
   modal="true" 

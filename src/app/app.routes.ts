@@ -35,7 +35,10 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, canActivate: [ModuloGuard] },
       { path: 'seguimientos', component: EstadoSeguimientoComponent, canActivate: [ModuloGuard] },
       { path: 'mi-semana', loadComponent: () => import('./components/modules/usuarios/mi-semana/mi-semana.component').then((c) => c.MiSemanaComponent), canActivate: [ModuloGuard] },
-      { path: 'perfil', component: ContentComponent, loadChildren: () => import('./components/modules/perfil/perfil.module').then((m) => m.PerfilModule), canActivate: [ModuloGuard] },
+      // BUG-LZ-036: enrutar /perfil a través del wrapper para que cada rol vea su pantalla correcta
+      // (Cuidador/EAPB/ET → mi-perfil-entidad; Agente → mi-perfil con horarios y ausencias).
+      { path: 'perfil', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard], pathMatch: 'full' },
+      { path: 'perfil-legacy', component: ContentComponent, loadChildren: () => import('./components/modules/perfil/perfil.module').then((m) => m.PerfilModule), canActivate: [ModuloGuard] },
       { path: 'reportes', loadChildren: () => import('./components/modules/reportes/reportes.module').then((m) => m.ReportesModule), canActivate: [ModuloGuard] },
       { path: 'usuarios', component: ContentComponent, loadChildren: () => import('./components/modules/usuarios/usuarios.module').then((m) => m.UsuariosModule), canActivate: [ModuloGuard] },
       { path: 'prueba', loadComponent: () => import('./components/modules/gestion/consultar-alertas/consultar-alertas.component').then((m) => m.ConsultarAlertasComponent), canActivate: [ModuloGuard] },

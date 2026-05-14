@@ -146,7 +146,12 @@ export class EstadoSeguimientoComponent implements OnInit {
 
   CargarDatos(filter: string) {
     if (this.xUser.isCuidador) {
-      this.repos.get('Seguimiento/GetSeguimientosCuidador/', `${filter}`, 'Seguimiento').subscribe({
+      // BUG-LZ-037: el endpoint /GetSeguimientosCuidador/{id} espera el ID del solicitante (Cuidador),
+      // no un filtro de estado. Si un botón llamaba CargarDatos("1"/"2"/...) el backend interpretaba
+      // ese número como SolicitanteId y devolvía los seguimientos de otro usuario (a veces 1 fila,
+      // a veces 26). Forzar siempre el ID del usuario autenticado.
+      const idUsuarioActual = this.xUser.id ?? this.idUsuario;
+      this.repos.get('Seguimiento/GetSeguimientosCuidador/', `${idUsuarioActual}`, 'Seguimiento').subscribe({
         next: (data: any) => {
           this.seguimientos = data;
           this.cargado = true;

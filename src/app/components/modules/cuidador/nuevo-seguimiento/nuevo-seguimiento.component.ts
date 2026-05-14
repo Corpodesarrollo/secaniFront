@@ -9,6 +9,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 import { Parametricas } from '../../../../models/parametricas.model';
 import { TpParametros } from '../../../../core/services/tpParametros';
@@ -19,9 +21,10 @@ import { GenericService } from '../../../../services/generic.services'
 @Component({
   selector: 'app-nuevo-seguimiento',
   standalone: true,
-  imports: [DialogModule, FormsModule, ReactiveFormsModule, CommonModule, ButtonModule, CalendarModule, DropdownModule, FileUploadModule, InputTextModule, ],
+  imports: [DialogModule, FormsModule, ReactiveFormsModule, CommonModule, ButtonModule, CalendarModule, DropdownModule, FileUploadModule, InputTextModule, ToastModule],
   templateUrl: './nuevo-seguimiento.component.html',
-  styleUrl: './nuevo-seguimiento.component.css'
+  styleUrl: './nuevo-seguimiento.component.css',
+  providers: [MessageService]
 })
 export class NuevoSeguimientoComponent {
 
@@ -60,7 +63,10 @@ export class NuevoSeguimientoComponent {
     primerApellido: '',
     segundoApellido: undefined,
     fechaNacimiento: null,
-    sexoId: 'H',
+    // BUG-LZ-035: antes el default era 'H' (Masculino), lo que hacía que el dropdown "Sexo asignado al
+    // nacer" siempre tuviera un valor aunque el usuario no lo seleccionara. Init vacío para forzar la
+    // selección explícita.
+    sexoId: '',
     tieneDiagnostico: false,
     aseguradora: 0,
     departamentoProcedenciaId: undefined,
@@ -69,7 +75,25 @@ export class NuevoSeguimientoComponent {
     evidenciaParentesco: undefined
     };
 
-  constructor(private router: Router, private repos: GenericService, private tp: TablasParametricas, private tpp: TpParametros, private formbuilder: FormBuilder, private routeAct: ActivatedRoute) {
+  // BUG-LZ-033: tamaño máximo permitido para evidencias (5MB) y extensiones aceptadas
+  private readonly maxFileSize = 5 * 1024 * 1024;
+  private readonly extensionesPermitidas = ['pdf', 'jpg', 'jpeg', 'png'];
+
+  constructor(
+    private router: Router,
+    private repos: GenericService,
+    private tp: TablasParametricas,
+    private tpp: TpParametros,
+    private formbuilder: FormBuilder,
+    private routeAct: ActivatedRoute,
+    private messageService: MessageService
+  ) {
+  }
+
+  // BUG-LZ-034: filtrar caracteres numéricos en nombres y apellidos del NNA
+  onNombreChange(campo: 'primerNombre' | 'segundoNombre' | 'primerApellido' | 'segundoApellido', valor: string): void {
+    const limpio = (valor || '').replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]/g, '');
+    (this.reporte as any)[campo] = limpio;
   }
 
   async ngOnInit(): Promise<void> {
@@ -125,14 +149,24 @@ export class NuevoSeguimientoComponent {
     if(this.saving){
       return;
     }
-    
+
     this.submitted = true;
     this.saving = true;
-    if (this.validarCamposRequeridos()){
-
-      await this.Actualizar();
+    try {
+      if (this.validarCamposRequeridos()){
+        await this.Actualizar();
+      } else {
+        // BUG-LZ-032: avisar al usuario por que no se envia el formulario; antes el boton no daba feedback
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Campos obligatorios',
+          detail: 'Complete todos los campos requeridos antes de enviar.',
+          life: 5000
+        });
+      }
+    } finally {
+      this.saving = false;
     }
-    this.saving = false;
   }
 
   validarCamposRequeridos(): boolean {
@@ -149,6 +183,7 @@ export class NuevoSeguimientoComponent {
       this.reporte.primerNombre,
       this.reporte.primerApellido,
       this.reporte.fechaNacimiento,
+      this.reporte.sexoId, // BUG-LZ-035: validar obligatoriedad
       this.reporte.aseguradora,
       this.reporte.departamentoProcedenciaId,
       this.reporte.municipioProcedenciaId,
@@ -160,7 +195,7 @@ export class NuevoSeguimientoComponent {
     let pos = 0;
     for (const campo of camposAValidar) {
       pos++;
-      if (!campo || campo.toString().trim() === '' || campo === '0') {
+      if (campo == null || campo.toString().trim() === '' || campo === '0' || campo === 0) {
         console.log('Campo requerido vacío', pos);
         return false;
       }
@@ -182,7 +217,15 @@ export class NuevoSeguimientoComponent {
               resolve(data);
               },
               error: (err) => {
+              // BUG-LZ-032: mostrar feedback al usuario cuando el POST falla
               console.error(err);
+              const detalle = err?.error?.message || err?.message || 'No fue posible enviar el reporte. Intente nuevamente.';
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error al enviar reporte',
+                detail: detalle,
+                life: 6000
+              });
               reject(err);
               }
           });
@@ -208,8 +251,36 @@ export class NuevoSeguimientoComponent {
       }
     };
   }
-  
-  onFileSelect(uploader: FileUpload) {
+
+  // BUG-LZ-033: validar tipo y tamaño del archivo antes de subir. p-fileUpload ya muestra
+  // los invalidFileTypeMessageDetail/invalidFileSizeMessageDetail, este metodo es defensivo
+  // (clean uploader si por algo pasa, descartar files invalidos, evitar guardarlos en el modelo).
+  onFileSelect(uploader: FileUpload, tipo: string, event: any) {
+    const file = event?.files?.[0];
+    if (!file) {
+      return;
+    }
+    const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
+    if (!this.extensionesPermitidas.includes(extension)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Archivo no permitido',
+        detail: 'Solo se permiten archivos PDF, JPG o PNG.',
+        life: 5000
+      });
+      uploader.clear();
+      return;
+    }
+    if (file.size > this.maxFileSize) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Archivo demasiado grande',
+        detail: 'El archivo supera el límite de 5MB.',
+        life: 5000
+      });
+      uploader.clear();
+      return;
+    }
     uploader.upload();
   }
 
