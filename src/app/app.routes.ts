@@ -47,9 +47,6 @@ export const routes: Routes = [
       { path: 'perfil_rol', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil-entidad', loadComponent: () => import('./components/modules/perfil/mi-perfil-entidad/mi-perfil-entidad.component').then((c) => c.MiPerfilEntidadComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil', loadComponent: () => import('./components/modules/perfil/mi-perfil/mi-perfil.component').then((c) => c.MiPerfilComponent), canActivate: [ModuloGuard] },
-      // BUG-smoke-B: wildcard para rutas inexistentes. Sin esto, tipear /usuarios/nna (que no existe)
-      // emitia NG04002 en consola y dejaba blank screen.
-      { path: '**', redirectTo: '/home', pathMatch: 'full' },
     ]
   },
   {
@@ -59,5 +56,10 @@ export const routes: Routes = [
       { path: 'respuesta-notificacion/:id', loadComponent: () => import('./components/modules/notificacion-respuesta/notificacion-respuesta.component').then((c) => c.NotificacionRespuestaComponent) },
       { path: 'qa-login', loadComponent: () => import('./components/qa-login/qa-login.component').then((c) => c.QaLoginComponent) }
     ]
-  }
+  },
+  // BUG-smoke-B: wildcard route a nivel RAIZ (no dentro de LayoutComponent children) para que
+  // Angular pueda evaluar primero el segundo bloque (LayoutSecondaryComponent) con /qa-login y
+  // /respuesta-notificacion. Antes el wildcard estaba dentro del primer bloque y atrapaba
+  // /qa-login antes que Angular evaluara el segundo bloque.
+  { path: '**', redirectTo: '/home', pathMatch: 'full' },
 ];
