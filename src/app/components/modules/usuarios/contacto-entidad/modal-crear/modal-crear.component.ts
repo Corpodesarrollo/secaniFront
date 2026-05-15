@@ -25,7 +25,24 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   listaContactos: any[] = [];
 
-  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {}
+  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {
+    // BUG-smoke-C: ngOnChanges puede ejecutarse ANTES de ngOnInit (lifecycle Angular). Antes
+    // contactForm se inicializaba en ngOnInit → resetForm en ngOnChanges crashea por undefined.
+    // Paridad con eapb/modal-crear.component.ts que ya lo hace bien.
+    this.contactForm = this.fb.group({
+      id: [''],
+      entidadId: ['', [Validators.required]],
+      nombres: [''],
+      cargo: [''],
+      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
+      email: ['', [Validators.required,
+        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
+        this.validarEmailUnico.bind(this)]],
+      estado: ['Activo'],
+      activo: [true]
+    });
+    this.contactForm.get('estado')?.disable();
+  }
 
   ngOnInit(): void {
     this.dataService.get_withoutParameters('ET', 'TablaParametrica').subscribe({
@@ -47,21 +64,6 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     this.compartirDatosService.listaContactos$.subscribe(lista => {
       this.listaContactos = lista;
     });
-
-    this.contactForm = this.fb.group({
-      id: [''],
-      entidadId: ['', [Validators.required]],
-      nombres: [''],
-      cargo: [''],
-      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      email: ['', [Validators.required, 
-        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
-        this.validarEmailUnico.bind(this)]],
-      estado: ['Activo'],
-      activo: [true]
-    });
-
-    this.contactForm.get('estado')?.disable(); 
   }
 
   validarEmailUnico(control: AbstractControl) {

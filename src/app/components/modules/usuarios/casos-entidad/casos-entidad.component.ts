@@ -20,7 +20,9 @@ import { CasosEntidadService } from './casos-entidad.services';
       CardModule, DialogModule, ButtonModule, TableModule, PaginatorModule, TagModule,  ]
 })
 export class CasosEntidadComponent implements OnInit {
-  casos: any = {};
+  // BUG-smoke-A: p-table [value]="casos" llama .slice() en render inicial. Antes era {} → TypeError
+  // hasta que ngOnInit async asignaba el array real.
+  casos: any[] = [];
   displayModal: boolean = false;
 
   estadosSeguimiento = [];

@@ -47,6 +47,9 @@ export const routes: Routes = [
       { path: 'perfil_rol', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil-entidad', loadComponent: () => import('./components/modules/perfil/mi-perfil-entidad/mi-perfil-entidad.component').then((c) => c.MiPerfilEntidadComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil', loadComponent: () => import('./components/modules/perfil/mi-perfil/mi-perfil.component').then((c) => c.MiPerfilComponent), canActivate: [ModuloGuard] },
+      // BUG-smoke-B: wildcard para rutas inexistentes. Sin esto, tipear /usuarios/nna (que no existe)
+      // emitia NG04002 en consola y dejaba blank screen.
+      { path: '**', redirectTo: '/home', pathMatch: 'full' },
     ]
   },
   {
