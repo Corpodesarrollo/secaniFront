@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { timeout, TimeoutError } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -210,7 +211,10 @@ export class NuevoSeguimientoComponent {
 
   public async post(Reporte: ReportesSIVIGILA): Promise<any> {
       return new Promise((resolve, reject) => {
-          this.repos.post('ReportesSIVIGILA', Reporte, 'NNA').subscribe({
+          // BUG-LZ-spinner-sivigila: timeout defensivo 30s. Si backend cuelga (ej. tabla faltante,
+          // SMTP/SISPRO bloqueado), el HttpClient default no tiene timeout y deja saving=true
+          // indefinido. timeout() emite TimeoutError → cae al error handler → resetea spinner.
+          this.repos.post('ReportesSIVIGILA', Reporte, 'NNA').pipe(timeout(30000)).subscribe({
               next: (data: any) => {
               console.log('Respuesta del servidor:', data);
               this.mostrarMensaje = true;
@@ -219,7 +223,9 @@ export class NuevoSeguimientoComponent {
               error: (err) => {
               // BUG-LZ-032: mostrar feedback al usuario cuando el POST falla
               console.error(err);
-              const detalle = err?.error?.message || err?.message || 'No fue posible enviar el reporte. Intente nuevamente.';
+              const detalle = err instanceof TimeoutError
+                ? 'El servidor no respondio en 30s. Intente nuevamente.'
+                : (err?.error?.message || err?.message || 'No fue posible enviar el reporte. Intente nuevamente.');
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error al enviar reporte',

@@ -100,7 +100,12 @@
                   "maximumError": "3mb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": { "minify": true, "inlineCritical": false },
+                "fonts": { "inline": false }
+              }
             },
             "docker": {
               "fileReplacements": [
