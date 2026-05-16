@@ -47,6 +47,8 @@ export const routes: Routes = [
       { path: 'perfil_rol', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil-entidad', loadComponent: () => import('./components/modules/perfil/mi-perfil-entidad/mi-perfil-entidad.component').then((c) => c.MiPerfilEntidadComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil', loadComponent: () => import('./components/modules/perfil/mi-perfil/mi-perfil.component').then((c) => c.MiPerfilComponent), canActivate: [ModuloGuard] },
+      // BUG-LZ-042: pantalla dedicada Cuidador (HU RQ08-HU06), distinta a mi-perfil-entidad (EAPB/ET).
+      { path: 'perfil/mi-perfil-cuidador', loadComponent: () => import('./components/modules/perfil/mi-perfil-cuidador/mi-perfil-cuidador.component').then((c) => c.MiPerfilCuidadorComponent), canActivate: [ModuloGuard] },
     ]
   },
   {

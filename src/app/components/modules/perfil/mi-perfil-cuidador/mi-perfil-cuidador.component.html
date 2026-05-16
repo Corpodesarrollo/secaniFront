@@ -1,0 +1,89 @@
+<div class="container my-4">
+  <h2 class="mb-4">Mi Perfil</h2>
+  <p-toast />
+
+  <div class="row g-4">
+    <!-- IZQUIERDA: datos personales (lectura + celular editable) -->
+    <div class="col-md-6">
+      <p-card header="Datos personales">
+        <div class="mb-3">
+          <label class="fw-bold">Nombre</label>
+          <div>{{ xUser.name || '-' }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Tipo de identificación</label>
+          <div>{{ tipoIdentificacion || '-' }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Número de identificación</label>
+          <div>{{ numeroIdentificacion || '-' }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Correo electrónico</label>
+          <div>{{ xUser.email || '-' }}</div>
+        </div>
+
+        <hr />
+
+        <div class="mb-3">
+          <label class="fw-bold d-block">Número de celular</label>
+          <div class="d-flex align-items-center gap-2">
+            <input *ngIf="celularEditando" pInputText type="text" [(ngModel)]="celular" maxlength="10" class="flex-grow-1" />
+            <span *ngIf="!celularEditando" class="flex-grow-1">{{ celular || '-' }}</span>
+
+            <button *ngIf="!celularEditando" pButton type="button" icon="pi pi-pencil" class="p-button-text"
+                    pTooltip="Editar" (click)="editarCelular()"></button>
+            <ng-container *ngIf="celularEditando">
+              <button pButton type="button" label="GUARDAR" class="btn-exitoso" (click)="guardarCelular()"></button>
+              <button pButton type="button" label="Cancelar" class="p-button-text" (click)="cancelarCelular()"></button>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-bold d-block">Estado</label>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge" [ngClass]="estadoActivo ? 'bg-success' : 'bg-secondary'">
+              {{ estadoActivo ? 'Activo' : 'Inactivo' }}
+            </span>
+            <i class="pi pi-info-circle" [pTooltip]="tooltipEstado"></i>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- DERECHA: datos contacto adicionales -->
+    <div class="col-md-6">
+      <p-card header="Datos de contacto adicionales">
+        <h5 class="mb-2">Teléfonos</h5>
+        <div *ngFor="let t of telefonos; let i = index" class="row g-2 mb-2 align-items-center">
+          <div class="col-5">
+            <input pInputText type="text" [(ngModel)]="t.numero" maxlength="10" placeholder="Número" class="w-100" />
+          </div>
+          <div class="col-6">
+            <input pInputText type="text" [(ngModel)]="t.descripcion" placeholder="Descripción" class="w-100" />
+          </div>
+          <div class="col-1">
+            <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-danger" (click)="eliminarTelefono(t.id)"></button>
+          </div>
+        </div>
+        <button pButton type="button" icon="pi pi-plus" label="Teléfono" class="p-button-outlined mb-3" (click)="agregarTelefono()"></button>
+
+        <h5 class="mb-2 mt-3">Correos electrónicos</h5>
+        <div *ngFor="let c of correos; let i = index" class="row g-2 mb-2 align-items-center">
+          <div class="col-11">
+            <input pInputText type="email" [(ngModel)]="c.correo" placeholder="Correo electrónico" class="w-100" />
+          </div>
+          <div class="col-1">
+            <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-danger" (click)="eliminarCorreo(c.id)"></button>
+          </div>
+        </div>
+        <button pButton type="button" icon="pi pi-plus" label="Correo electrónico" class="p-button-outlined" (click)="agregarCorreo()"></button>
+
+        <div class="text-end mt-4">
+          <button pButton type="button" label="GUARDAR" class="btn-exitoso" (click)="guardarAdicionales()"></button>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>
