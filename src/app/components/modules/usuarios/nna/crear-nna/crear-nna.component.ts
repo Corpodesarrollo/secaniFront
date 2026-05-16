@@ -369,6 +369,13 @@ export class CrearNnaComponent {
     this.isLoadingMunicipio = false;
   }
 
+  // BUG-LZ-034: filtrar caracteres no alfabéticos en nombres y apellidos del NNA.
+  // Aplica a primer/segundo nombre/apellido. Acepta letras (incluyendo acentos), Ñ, ü y espacios.
+  onNombreChange(campo: 'primerNombre' | 'segundoNombre' | 'primerApellido' | 'segundoApellido', valor: string): void {
+    const limpio = (valor || '').replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]/g, '');
+    (this.nna as any)[campo] = limpio;
+  }
+
   //Guardar formulario
   async onSubmit() {
     this.submitted = true;

@@ -161,6 +161,12 @@ export class SeguimientoGuardarComponent {
   }
 
   terminar(){
+    // BUG-LZ-041: cerrar dialogs ANTES de navegar y pasar skipGuard en ambas ramas para que
+    // el confirmExitGuard no intercepte y muestre el modal "¿Desea abandonar?" que producia un
+    // bucle infinito entre "Seguimiento gestionado con éxito" y "¿Desea abandonar?".
+    this.mostrarMensaje = false;
+    this.mostrarDialogo = false;
+    this.show = false;
     this.onClose.emit();
     if (this.seguimiento && this.seguimiento.nnaId !== undefined && this.seguimiento.nnaId !== null) {
       if (this.seguimiento.alertas && this.seguimiento.alertas.length > 0) {
@@ -168,11 +174,11 @@ export class SeguimientoGuardarComponent {
           window.scrollTo(0, 0);
         });
       } else {
-        this.router.navigate([`/gestion/seguimientos`]).then(() => {
+        this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true } }).then(() => {
           window.scrollTo(0, 0);
         });
       }
-      
+
     }
   }
 }
