@@ -226,30 +226,32 @@ export class ConsultarAlertasComponent implements OnInit {
     return filtrado.length > 0 ? filtrado[0].nombre : 'No encontrado';
   }
 
+  // BUG-LZ-050: getNombreMuni anterior pasaba codigo completo (ej "11001") a getTPCiudad
+  // que arma URL `/TablaParametrica/Municipios/{codigo}` esperando depto (2 chars). Resultado
+  // 404/lista vacia → 'No encontrado'. Fix: normalizar codigo + pasar prefijo depto al endpoint
+  // de municipios y filtrar por codigo completo.
   async getNombreDepto(codigo: string): Promise<string> {
-
-    if (!codigo) {
+    if (codigo === null || codigo === undefined || codigo === '') {
       return 'No encontrado';
     }
 
-    let cod = codigo.substring(0, 2);
-    let deptos: any[] = await this.tpp.getTPDepartamento(cod);
-
-    let filtrado = deptos.filter(objeto => objeto.codigo === cod);
-
+    const raw = String(codigo).trim();
+    const codDepto = raw.length >= 2 ? raw.substring(0, 2) : raw.padStart(2, '0');
+    let deptos: any[] = await this.tpp.getTPDepartamento(codDepto);
+    let filtrado = (deptos || []).filter(objeto => String(objeto.codigo) === codDepto);
     return filtrado.length > 0 ? filtrado[0].nombre : 'No encontrado';
   }
 
   async getNombreMuni(codigo: string): Promise<string> {
-
-    if (!codigo) {
+    if (codigo === null || codigo === undefined || codigo === '') {
       return 'No encontrado';
     }
 
-    let deptos: any[] = await this.tpp.getTPCiudad(codigo);
-
-    let filtrado = deptos.filter(objeto => objeto.codigo === codigo);
-
+    const raw = String(codigo).trim();
+    const codigoCompleto = raw.length >= 5 ? raw.substring(0, 5) : raw.padStart(5, '0');
+    const codDepto = codigoCompleto.substring(0, 2);
+    let municipios: any[] = await this.tpp.getTPCiudad(codDepto);
+    let filtrado = (municipios || []).filter(objeto => String(objeto.codigo) === codigoCompleto);
     return filtrado.length > 0 ? filtrado[0].nombre : 'No encontrado';
   }
 

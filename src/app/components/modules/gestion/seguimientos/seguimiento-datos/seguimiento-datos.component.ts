@@ -187,7 +187,19 @@ export class SeguimientoDatosComponent implements OnInit {
     this.isLoadingRegimenAfiliacion = false;
 
     this.EAPB = await this.tpp.getTPEAPB();
-    this.selectedEAPB = this.EAPB.find(x => x.id == this.nna.eapbId);
+    // BUG-LZ-053: forzar coercion numerica (eapbId puede llegar como string segun fuente)
+    // y comparar via dataKey en dropdown. Si no se encuentra coincidencia log defensivo
+    // para diagnostico EC2.
+    const eapbIdNum = Number(this.nna?.eapbId);
+    this.selectedEAPB = this.EAPB.find(x => Number(x.id) === eapbIdNum);
+    if (!this.selectedEAPB && this.nna?.eapbId) {
+      console.warn('[BUG-LZ-053] EAPB no resuelta en lista', {
+        eapbIdNna: this.nna.eapbId,
+        typeofEapbId: typeof this.nna.eapbId,
+        eapbCount: this.EAPB.length,
+        sampleIds: this.EAPB.slice(0, 3).map(e => ({ id: e.id, type: typeof e.id, nombre: e.nombre }))
+      });
+    }
     this.isLoadingEAPB = false;
 
     this.CalcularEdad();
