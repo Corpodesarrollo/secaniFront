@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Generico } from '../../../../core/services/generico';
+import { environment } from '../../../../../environments/environment';
 
 
 
@@ -14,9 +15,13 @@ export class IntentoSeguimientoService {
     return await  this.comun.retorno_get(url);
   }
 
+  // BUG-LZ-046: antes apuntaba a `Seguimiento/NNA/{id}` en MSSeguimiento (9113), donde el
+  // routing matcheaba `[HttpGet("{id}")]` con id="NNA" y devolvia el primer NNA (Juan Carlos
+  // Pérez García) consistentemente, sin importar el id real. El endpoint correcto es
+  // `NNA/{id}` en MSNNA (9112).
   GetNNaById = async (Id: number) => {
-    let url = `${'Seguimiento/NNA/'+Id}`;
-    return await  this.comun.retorno_get(url);
+    let url = `NNA/${Id}`;
+    return await this.comun.retorno_get(url, environment.url_MsNna);
   }
 
   GetIntentoContactoAgrupado = async (Id: number) => {

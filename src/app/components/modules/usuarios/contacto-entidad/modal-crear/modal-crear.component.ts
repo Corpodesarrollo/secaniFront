@@ -92,37 +92,35 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       this.contactForm.markAllAsTouched();
       return;
     }
-    if (this.contactForm.valid) {
-      this.contactForm.get('estado')?.enable(); 
-      console.log(this.contactForm.value);
-      console.log(this.isEditing);
-
-      this.contactForm.get('estado')?.valueChanges.subscribe((estadoValue) => {
-        this.contactForm.patchValue({
-          activo: estadoValue === 'Activo',
-        });
+    this.contactForm.get('estado')?.enable();
+    const payload = this.contactForm.value;
+    if (this.isEditing){
+      this.contactForm.get('entidadId')?.enable();
+      this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, payload, 'Entidad').subscribe({
+        // BUG-LZ-044: cerrar SOLO si backend confirmo.
+        next: (data: any) => {
+          this.compartirDatosService.emitirNuevoContactoEAPB(data);
+          this.resetForm();
+          this.close();
+        },
+        error: (e) => {
+          console.error('Error al actualizar contacto ET', e);
+          alert(e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible actualizar el contacto. Verifique los campos requeridos.');
+        }
       });
-
-      if (this.isEditing){
-        this.contactForm.get('entidadId')?.enable();
-        this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
-          error: (e) => console.error('Se presento un error al actualizar la ET', e),
-          complete: () => console.info('Se actualizo la ET')
-        });
-        console.log(`ContactoEntidad/${this.contactForm.get('id')?.value}`);
-      }else{
-        this.dataService.post('ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => {
-            this.compartirDatosService.emitirNuevoContactoEAPB(data)
-            //console.log("Ahora esto es lo que retorna",data)
-          },
-          error: (e) => console.error('Se presento un error al crear un contacto de ET', e),
-          complete: () => console.info('Se creo el nuevo contacto de ET')
-        });
-      }
-      this.resetForm();
-      this.close();
+    } else {
+      this.dataService.post('ContactoEntidad', payload, 'Entidad').subscribe({
+        // BUG-LZ-045: idem.
+        next: (data: any) => {
+          this.compartirDatosService.emitirNuevoContactoEAPB(data);
+          this.resetForm();
+          this.close();
+        },
+        error: (e) => {
+          console.error('Error al crear contacto ET', e);
+          alert(e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible crear el contacto. Verifique los campos requeridos.');
+        }
+      });
     }
   }
 

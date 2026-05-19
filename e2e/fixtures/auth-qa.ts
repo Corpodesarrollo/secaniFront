@@ -2,7 +2,7 @@ import { test as base, Page } from '@playwright/test';
 
 /**
  * Usuarios QA seedeados en BD EC2 (mismos que /qa-login del front).
- * Usar este fixture para tests E2E corriendo contra http://54.90.124.49:9110
+ * Usar este fixture para tests E2E corriendo contra http://18.232.27.199:9110
  * (los usuarios reales 2035/12745/etc solo existen en BD local dev).
  */
 export const QA_USERS = {

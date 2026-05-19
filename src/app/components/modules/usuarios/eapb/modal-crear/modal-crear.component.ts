@@ -26,13 +26,16 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   listaContactos: any[] = [];
 
   constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {
+    // BUG-LZ-044/045: backend FluentValidation exige Nombres NotEmpty. Antes el frontend no lo
+    // requeria -> form valido -> POST/PUT -> backend 400 BadRequest -> modal igual se cerraba
+    // (porque close() era sincrono despues del subscribe). User percibia que no guardaba.
     this.contactForm = this.fb.group({
       id: [''],
       entidadId: ['', [Validators.required]],
-      nombres: [''],
+      nombres: ['', [Validators.required]],
       cargo: [''],
       telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      email: ['', [Validators.required, 
+      email: ['', [Validators.required,
         Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
         this.validarEmailUnico.bind(this)]],
       estado: ['Activo'],
@@ -87,37 +90,44 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    if (this.contactForm.valid) {
-      this.contactForm.get('estado')?.enable(); 
-      console.log(this.contactForm.value);
-      console.log(this.isEditing);
+    if (this.contactForm.invalid) {
+      this.contactForm.markAllAsTouched();
+      return;
+    }
+    this.contactForm.get('estado')?.enable();
+    const payload = this.contactForm.value;
+    console.log('payload', payload, 'isEditing', this.isEditing);
 
-      this.contactForm.get('estado')?.valueChanges.subscribe((estadoValue) => {
-        this.contactForm.patchValue({
-          activo: estadoValue === 'Activo',
-        });
+    if (this.isEditing){
+      this.contactForm.get('entidadId')?.enable();
+      this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, payload, 'Entidad').subscribe({
+        // BUG-LZ-044: cerrar modal SOLO si backend confirmo. Antes close() era sincrono y
+        // ocurria aun con 400 BadRequest -> user pensaba que guardaba pero no.
+        next: (data: any) => {
+          this.compartirDatosService.emitirNuevoContactoEAPB(data);
+          this.resetForm();
+          this.close();
+        },
+        error: (e) => {
+          console.error('Error al actualizar contacto EAPB', e);
+          const detalle = e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible actualizar el contacto. Verifique los campos requeridos.';
+          alert(detalle);
+        }
       });
-
-      if (this.isEditing){
-        this.contactForm.get('entidadId')?.enable();
-        this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
-          error: (e) => console.error('Se presento un error al actualizar el EAPB', e),
-          complete: () => console.info('Se actualizo el EAPB')
-        });
-        console.log(`ContactoEntidad/${this.contactForm.get('id')?.value}`);
-      }else{
-        this.dataService.post('ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => {
-            this.compartirDatosService.emitirNuevoContactoEAPB(data)
-            console.log("Ahora esto es lo que retorna",data)
-          },
-          error: (e) => console.error('Se presento un error al crear un EAPB', e),
-          complete: () => console.info('Se creo el nuevo EAPB')
-        });
-      }
-      this.resetForm();
-      this.close();
+    } else {
+      this.dataService.post('ContactoEntidad', payload, 'Entidad').subscribe({
+        // BUG-LZ-045: idem que 044.
+        next: (data: any) => {
+          this.compartirDatosService.emitirNuevoContactoEAPB(data);
+          this.resetForm();
+          this.close();
+        },
+        error: (e) => {
+          console.error('Error al crear contacto EAPB', e);
+          const detalle = e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible crear el contacto. Verifique los campos requeridos.';
+          alert(detalle);
+        }
+      });
     }
   }
 

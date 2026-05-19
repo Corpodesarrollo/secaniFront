@@ -103,6 +103,12 @@ export class ConsultarAlertasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // BUG-LZ-049: PrimeNG dialog/modal de la pantalla previa puede dejar `overflow:hidden` en
+    // body al cerrarse, bloqueando scroll de esta pantalla hasta recargar (F5). Limpiar explícito.
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+      document.body.classList.remove('p-overflow-hidden');
+    }
     this.route.paramMap.subscribe(params => {
       this.idSeguimiento = params.get('id') || '';
       this.loadSeguimientoData();

@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: [['html', { open: 'never' }], ['list']],
   timeout: process.env.SECANI_URL ? 90000 : 30000,
   use: {
-    // Default localhost para desarrollo; SECANI_URL=http://54.90.124.49:9110 para correr contra EC2.
+    // Default localhost para desarrollo; SECANI_URL=http://18.232.27.199:9110 para correr contra EC2.
     baseURL: process.env.SECANI_URL || 'http://localhost:9110',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',

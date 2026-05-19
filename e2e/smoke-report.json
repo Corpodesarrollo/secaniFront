@@ -1,0 +1,32 @@
+[
+  {
+    "rol": "externo",
+    "ruta": "/reportes/nna",
+    "finalUrl": "http://18.232.27.199:9110/reportes/nna",
+    "redirected": false,
+    "consoleErrors": [],
+    "networkFails": [],
+    "spinnerColgado": false,
+    "duracionMs": 4532
+  },
+  {
+    "rol": "externo",
+    "ruta": "/reportes/reporte-dinamico-entidad-territorial",
+    "finalUrl": "http://18.232.27.199:9110/reportes/reporte-dinamico-entidad-territorial",
+    "redirected": false,
+    "consoleErrors": [],
+    "networkFails": [],
+    "spinnerColgado": false,
+    "duracionMs": 4703
+  },
+  {
+    "rol": "externo",
+    "ruta": "/reportes/seguimientos",
+    "finalUrl": "http://18.232.27.199:9110/reportes/seguimientos",
+    "redirected": false,
+    "consoleErrors": [],
+    "networkFails": [],
+    "spinnerColgado": false,
+    "duracionMs": 4568
+  }
+]
