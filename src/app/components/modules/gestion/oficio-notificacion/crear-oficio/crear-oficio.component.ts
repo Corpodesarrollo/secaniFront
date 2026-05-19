@@ -122,7 +122,15 @@ export class CrearOficioComponent implements OnInit {
       }
     }
 
-    this.entidades =  await this.entidadesService.getET();
+    // BUG-LZ-052: antes solo cargaba ET. Cargar tambien EAPB y combinarlas para que el oficio
+    // de notificacion permita seleccionar cualquiera de los dos tipos de entidad.
+    const [ets, eapbs] = await Promise.all([
+      this.entidadesService.getET(),
+      this.entidadesService.getEAPB()
+    ]);
+    this.entidades = [...(ets || []), ...(eapbs || [])].sort((a, b) =>
+      (a.nombre ?? '').localeCompare(b.nombre ?? '')
+    );
     this.isLoadingEntidades = false;
     this.selectedEntidad = this.entidades.find(e => e.id === this.oficio.idEntidad);
 

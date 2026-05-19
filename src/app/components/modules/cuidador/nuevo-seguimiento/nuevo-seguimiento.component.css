@@ -1,0 +1,13 @@
+/* BUG-LZ-031: contenedor con scroll vertical y limite de altura para que los botones queden accesibles
+   en resoluciones donde el formulario excede el alto de la pantalla. */
+.sivigila-scroll {
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .sivigila-scroll {
+    max-height: calc(100vh - 80px);
+  }
+}

@@ -35,7 +35,10 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, canActivate: [ModuloGuard] },
       { path: 'seguimientos', component: EstadoSeguimientoComponent, canActivate: [ModuloGuard] },
       { path: 'mi-semana', loadComponent: () => import('./components/modules/usuarios/mi-semana/mi-semana.component').then((c) => c.MiSemanaComponent), canActivate: [ModuloGuard] },
-      { path: 'perfil', component: ContentComponent, loadChildren: () => import('./components/modules/perfil/perfil.module').then((m) => m.PerfilModule), canActivate: [ModuloGuard] },
+      // BUG-LZ-036: enrutar /perfil a través del wrapper para que cada rol vea su pantalla correcta
+      // (Cuidador/EAPB/ET → mi-perfil-entidad; Agente → mi-perfil con horarios y ausencias).
+      { path: 'perfil', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard], pathMatch: 'full' },
+      { path: 'perfil-legacy', component: ContentComponent, loadChildren: () => import('./components/modules/perfil/perfil.module').then((m) => m.PerfilModule), canActivate: [ModuloGuard] },
       { path: 'reportes', loadChildren: () => import('./components/modules/reportes/reportes.module').then((m) => m.ReportesModule), canActivate: [ModuloGuard] },
       { path: 'usuarios', component: ContentComponent, loadChildren: () => import('./components/modules/usuarios/usuarios.module').then((m) => m.UsuariosModule), canActivate: [ModuloGuard] },
       { path: 'prueba', loadComponent: () => import('./components/modules/gestion/consultar-alertas/consultar-alertas.component').then((m) => m.ConsultarAlertasComponent), canActivate: [ModuloGuard] },
@@ -44,6 +47,8 @@ export const routes: Routes = [
       { path: 'perfil_rol', loadComponent: () => import('./components/wrappers/perfil-wrapper.component').then((c) => c.PerfilWrapperComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil-entidad', loadComponent: () => import('./components/modules/perfil/mi-perfil-entidad/mi-perfil-entidad.component').then((c) => c.MiPerfilEntidadComponent), canActivate: [ModuloGuard] },
       { path: 'perfil/mi-perfil', loadComponent: () => import('./components/modules/perfil/mi-perfil/mi-perfil.component').then((c) => c.MiPerfilComponent), canActivate: [ModuloGuard] },
+      // BUG-LZ-042: pantalla dedicada Cuidador (HU RQ08-HU06), distinta a mi-perfil-entidad (EAPB/ET).
+      { path: 'perfil/mi-perfil-cuidador', loadComponent: () => import('./components/modules/perfil/mi-perfil-cuidador/mi-perfil-cuidador.component').then((c) => c.MiPerfilCuidadorComponent), canActivate: [ModuloGuard] },
     ]
   },
   {
@@ -53,5 +58,10 @@ export const routes: Routes = [
       { path: 'respuesta-notificacion/:id', loadComponent: () => import('./components/modules/notificacion-respuesta/notificacion-respuesta.component').then((c) => c.NotificacionRespuestaComponent) },
       { path: 'qa-login', loadComponent: () => import('./components/qa-login/qa-login.component').then((c) => c.QaLoginComponent) }
     ]
-  }
+  },
+  // BUG-smoke-B: wildcard route a nivel RAIZ (no dentro de LayoutComponent children) para que
+  // Angular pueda evaluar primero el segundo bloque (LayoutSecondaryComponent) con /qa-login y
+  // /respuesta-notificacion. Antes el wildcard estaba dentro del primer bloque y atrapaba
+  // /qa-login antes que Angular evaluara el segundo bloque.
+  { path: '**', redirectTo: '/home', pathMatch: 'full' },
 ];

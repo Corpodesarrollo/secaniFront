@@ -5,14 +5,18 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 1 : 4,
+  workers: process.env.SECANI_URL ? 1 : 4,
   reporter: [['html', { open: 'never' }], ['list']],
-  timeout: 30000,
+  timeout: process.env.SECANI_URL ? 90000 : 30000,
   use: {
-    baseURL: 'http://localhost:9110',
+    // Default localhost para desarrollo; SECANI_URL=http://18.232.27.199:9110 para correr contra EC2.
+    baseURL: process.env.SECANI_URL || 'http://localhost:9110',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    ignoreHTTPSErrors: true,
+    actionTimeout: process.env.SECANI_URL ? 30000 : 15000,
+    navigationTimeout: process.env.SECANI_URL ? 60000 : 30000,
   },
   projects: [
     {

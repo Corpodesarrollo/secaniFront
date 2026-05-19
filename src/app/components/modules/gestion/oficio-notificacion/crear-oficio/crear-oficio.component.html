@@ -14,12 +14,14 @@
           <label for="ciudadFecha">{{ oficio.ciudad }}, {{ formattedDate }}</label>
         </div>
       </div>
+      <!-- BUG-LZ-051: input single-line truncaba membrete; textarea preserva saltos de linea
+           (Doctor/Cargo/Entidad parametrizados por la usuaria). -->
       <div class="row mb-3 p-fluid align-items-center">
         <div class="col-2">
           <label for="membrete" style="font-weight: bold;">Membrete</label>
         </div>
         <div class="col-10">
-          <input id="membrete" type="text" pInputText placeholder="" [(ngModel)]="oficio.membrete" />
+          <textarea id="membrete" pInputText rows="3" placeholder="Doctor/Cargo/Entidad destinataria" [(ngModel)]="oficio.membrete" style="white-space: pre-wrap;"></textarea>
         </div>
         <div *ngIf="submitted && (!oficio.membrete || oficio.membrete.trim() === '')" class="text-danger col-10 offset-2">
             Campo requerido
@@ -68,12 +70,17 @@
             Campo requerido
         </div>
       </div>
+      <!-- BUG-LZ-051: plantillas guardan mensaje con HTML (negritas, listas) creado en p-editor.
+           Renderizar en otro p-editor preserva formato; textarea mostraba etiquetas crudas. -->
       <div class="row mb-3 p-fluid">
         <div class="col-2">
           <label for="mensaje" style="font-weight: bold;">Mensaje*</label>
         </div>
         <div class="col-10">
-          <textarea id="mensaje" pInputText rows="8" placeholder="" [(ngModel)]="oficio.mensaje"></textarea>
+          <p-editor id="mensaje" [(ngModel)]="oficio.mensaje" [style]="{ height: '180px' }"></p-editor>
+        </div>
+        <div *ngIf="submitted && (!oficio.mensaje || oficio.mensaje.trim() === '')" class="text-danger col-10 offset-2">
+            Campo requerido
         </div>
       </div>
       <div class="row mb-3 p-fluid align-items-center">
@@ -114,12 +121,13 @@
           </div>
         </div>
       </div>
+      <!-- BUG-LZ-051: cierre tambien proviene de plantilla con HTML formateado. -->
       <div class="row mb-3 p-fluid">
         <div class="col-2">
           <label for="cierre" style="font-weight: bold;">Cierre*</label>
         </div>
         <div class="col-10">
-          <textarea id="cierre" pInputText rows="5" placeholder="" [(ngModel)]="oficio.cierre"></textarea>
+          <p-editor id="cierre" [(ngModel)]="oficio.cierre" [style]="{ height: '140px' }"></p-editor>
         </div>
         <div *ngIf="submitted && (!oficio.cierre || oficio.cierre.trim() === '')" class="text-danger col-10 offset-2">
             Campo requerido

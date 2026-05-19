@@ -55,7 +55,7 @@
             <p-table [value]="data" [first]="first"
                 [tableStyle]="{ 'min-width': '70rem' }" (onPage)="pageChange($event)"
                 [paginator]="true" [rows]="10"
-                [rowsPerPageOptions]="rowsPerPageOptions" [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="rowsPerPageOptions" [paginatorDropdownAppendTo]="'body'" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
                 <ng-template pTemplate="header">
                     <tr>
@@ -112,7 +112,7 @@
     <p-dialog header="Histórico del contacto"
               [(visible)]="historicoDialogVisible"
               [modal]="true"
-              [style]="{ width: '640px' }"
+              [style]="{ width: '760px' }"
               [draggable]="false"
               [resizable]="false"
               (onHide)="cerrarHistorico()">
@@ -122,32 +122,27 @@
                 <div><strong>Contacto ID:</strong> {{ historicoSeleccionado.id }}</div>
                 <div><strong>Estado actual:</strong> {{ historicoSeleccionado.estado }}</div>
             </div>
-            <table class="table table-sm historico-tabla">
+            <div *ngIf="historicosLoading" class="text-center my-3">
+                <i class="pi pi-spin pi-spinner"></i> Cargando histórico...
+            </div>
+            <table *ngIf="!historicosLoading" class="table table-sm historico-tabla">
                 <thead>
                     <tr>
                         <th>Fecha</th>
                         <th>Acción</th>
                         <th>Usuario</th>
+                        <th>Campos modificados</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngIf="historicoSeleccionado.dateCreated">
-                        <td>{{ historicoSeleccionado.dateCreated | date: 'dd/MM/yyyy HH:mm' }}</td>
-                        <td>Creación</td>
-                        <td>{{ historicoSeleccionado.createdByUserId || '-' }}</td>
+                    <tr *ngFor="let h of historicosDetalle">
+                        <td>{{ h.fechaTransaccion | date: 'dd/MM/yyyy HH:mm' }}</td>
+                        <td>{{ formatTransaccion(h) }}</td>
+                        <td>{{ h.usuarioId || '-' }}</td>
+                        <td>{{ traducirComentario(h) || '-' }}</td>
                     </tr>
-                    <tr *ngIf="historicoSeleccionado.dateUpdated">
-                        <td>{{ historicoSeleccionado.dateUpdated | date: 'dd/MM/yyyy HH:mm' }}</td>
-                        <td>Actualización</td>
-                        <td>{{ historicoSeleccionado.updatedByUserId || '-' }}</td>
-                    </tr>
-                    <tr *ngIf="historicoSeleccionado.dateDeleted">
-                        <td>{{ historicoSeleccionado.dateDeleted | date: 'dd/MM/yyyy HH:mm' }}</td>
-                        <td>Eliminación</td>
-                        <td>{{ historicoSeleccionado.deletedByUserId || '-' }}</td>
-                    </tr>
-                    <tr *ngIf="!historicoSeleccionado.dateCreated && !historicoSeleccionado.dateUpdated && !historicoSeleccionado.dateDeleted">
-                        <td colspan="3" class="no-records">Sin registros de auditoría</td>
+                    <tr *ngIf="historicosDetalle.length === 0">
+                        <td colspan="4" class="no-records">Sin registros de auditoría</td>
                     </tr>
                 </tbody>
             </table>

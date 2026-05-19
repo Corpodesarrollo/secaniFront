@@ -75,16 +75,17 @@
         <div class="row">
           <div class="col-4">
             <img src="iconos/cruz.png" alt="cruz" style="position:absolute"/>
-            <a><img src="iconos/intento_exitoso_nuevo_contacto.svg" alt="dia" (click)="nuevoContacto()"></a>
-
-
-
-
+            <!-- BUG-LZ-048: <a> sin href no recibia pointer cursor; el click registraba en el img
+                 pero usuario no percibia que era clickable. Convertir a button con cursor pointer. -->
+            <button type="button" class="btn p-0 border-0 bg-transparent" (click)="nuevoContacto()" style="cursor:pointer">
+              <img src="iconos/intento_exitoso_nuevo_contacto.svg" alt="Nuevo contacto"/>
+            </button>
           </div>
           <div class="col-4">
             <img src="iconos/cruz.png" alt="cruz" style="position:absolute"/>
-            <a><img src="iconos/intento_exitoso_agregar_telefono.svg" alt="dia" (click)="editarContacto()"></a>
-
+            <button type="button" class="btn p-0 border-0 bg-transparent" (click)="editarContacto()" style="cursor:pointer">
+              <img src="iconos/intento_exitoso_agregar_telefono.svg" alt="Agregar teléfono"/>
+            </button>
           </div>
           <div class="col-4"></div>
         </div>

@@ -41,9 +41,9 @@
           <ng-template pTemplate="body" let-historico>
               <tr>
                 <td>{{ historico.fechaTransaccion | date:'dd/MM/yyyy'}}</td>
-                <td>{{ historico.transaccion }}</td>
+                <td>{{ formatTransaccion(historico) }}</td>
                 <td>{{ historico.usuarioId }}</td>
-                <td>{{ historico.comentario }}</td>
+                <td>{{ traducirComentario(historico) }}</td>
               </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">

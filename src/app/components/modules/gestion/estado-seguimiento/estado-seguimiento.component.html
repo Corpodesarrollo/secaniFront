@@ -129,9 +129,14 @@
       <div class="row align-items-center mb-3 flex flex-wrap p-fluid">
         <div class="col-12">
             <label for="telefono" class="fw-bold mb-1">Número teléfono/celular del cuidador*</label>
-            <input id="telefono" type="text" pInputText [(ngModel)]="nna.cuidadorTelefono">
+            <input id="telefono" type="tel" pInputText [(ngModel)]="nna.cuidadorTelefono"
+                   maxlength="10" inputmode="numeric" pattern="[0-9]{10}"
+                   (input)="onTelefonoInput($event)">
             <div *ngIf="submitted && (!nna.cuidadorTelefono || nna.cuidadorTelefono.trim() === '')" class="text-danger">
               Campo requerido
+            </div>
+            <div *ngIf="submitted && nna.cuidadorTelefono && !esTelefonoValido(nna.cuidadorTelefono)" class="text-danger">
+              El teléfono debe tener 10 dígitos numéricos
             </div>
         </div>
       </div>

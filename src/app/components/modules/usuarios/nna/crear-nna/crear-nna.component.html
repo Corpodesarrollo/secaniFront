@@ -70,7 +70,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.primerNombre" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.primerNombre" (ngModelChange)="onNombreChange('primerNombre', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.primerNombre || nna.primerNombre.trim() === '')">
               Primer nombre es requerido.
             </div>
@@ -83,7 +83,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.segundoNombre" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.segundoNombre" (ngModelChange)="onNombreChange('segundoNombre', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
           </div>
         </div>
         <div class="row align-items-center">
@@ -93,7 +93,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.primerApellido" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.primerApellido" (ngModelChange)="onNombreChange('primerApellido', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.primerApellido || nna.primerApellido.trim() === '')">
               Primer apellido es requerido.
             </div>
@@ -106,7 +106,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.segundoApellido" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.segundoApellido" (ngModelChange)="onNombreChange('segundoApellido', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
           </div>
         </div>
         <div class="row align-items-center">

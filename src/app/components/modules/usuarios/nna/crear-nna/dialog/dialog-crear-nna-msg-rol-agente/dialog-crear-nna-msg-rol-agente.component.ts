@@ -110,7 +110,10 @@ export class DialogCrearNnaMsgRolAgenteComponent {
     var urlbase: string = environment.url_MSSeguimiento;
     var url_path = "Seguimiento/SetSeguimiento";
     var data = await this.axios.retorno_post(url_path, dataRow, true, urlbase);
-    alert(data);
+    // BUG-LZ-039: removido alert(data) que mostraba "null" tras crear NNA cuando
+    // SetSeguimiento devuelve body vacío/null aunque el registro si se guarda.
+    // El parent component muestra dialog de exito. No requiere alert nativo.
+    console.log('SetSeguimiento response:', data);
     this.router.navigate(["/usuarios/historico_nna"]);
 
   }

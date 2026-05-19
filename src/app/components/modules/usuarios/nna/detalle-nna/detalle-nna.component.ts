@@ -42,7 +42,7 @@ export class DetalleNnaComponent implements OnInit {
   datosNNA: NNA = new NNA();
   contactosNna: any[] = [];
 
-  seguimientos: { fechaSeguimiento?: Date, categoriaAlerta: string, subcategoriaAlerta: string, descripcion: string, entidad: string, fechaNotifi?: Date, fechaRespuesta?: Date, idSeguimiento: number }[] = [];
+  seguimientos: { fechaSeguimiento?: Date | null, categoriaAlerta: string, subcategoriaAlerta: string, descripcion: string, entidad: string, fechaNotifi?: Date | null, fechaRespuesta?: Date | null, idSeguimiento: number, respuestaEntidad?: string }[] = [];
 
   estadoSeguimientoNombre: string = '';
 
@@ -164,32 +164,38 @@ export class DetalleNnaComponent implements OnInit {
   }
 
   loadSeguimientoAlertas() {
+    // BUG-LZ-055: backend ahora retorna por-alerta entidadAlerta/fechaNotificacion/fechaRespuesta
+    // y elimina duplicacion por cartesiano. Frontend toma entidad/fecha de cada alerta, no del
+    // seguimiento (donde solo concatena todas).
     this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
       next: async (data: any) => {
-
+        this.seguimientos = [];
         for (let dat of data) {
-          const baseSeguimiento = {
-            fechaSeguimiento: dat.fechaSeguimiento,
-            descripcion: dat.observacion,
-            entidad: dat.nombreEntidad,
-            fechaNotifi: dat.fechaNotificacion,
-            fechaRespuesta: dat.fechaRespuesta,
-            idSeguimiento: dat.idSeguimiento
-          };
-
           if (dat.alertasSeguimientos && dat.alertasSeguimientos.length > 0) {
             for (let alerta of dat.alertasSeguimientos) {
               this.seguimientos.push({
-                ...baseSeguimiento,
+                fechaSeguimiento: dat.fechaSeguimiento,
+                descripcion: alerta.observaciones || dat.observacion,
+                entidad: alerta.entidadAlerta || '',
+                fechaNotifi: alerta.fechaNotificacion,
+                fechaRespuesta: alerta.fechaRespuesta,
+                idSeguimiento: dat.idSeguimiento,
                 categoriaAlerta: alerta.categoriaAlerta,
-                subcategoriaAlerta: alerta.subcategoriaAlerta
+                subcategoriaAlerta: alerta.subcategoriaAlerta,
+                respuestaEntidad: alerta.respuestaEntidad || ''
               });
             }
           } else {
             this.seguimientos.push({
-              ...baseSeguimiento,
+              fechaSeguimiento: dat.fechaSeguimiento,
+              descripcion: dat.observacion,
+              entidad: '',
+              fechaNotifi: null,
+              fechaRespuesta: null,
+              idSeguimiento: dat.idSeguimiento,
               categoriaAlerta: '',
-              subcategoriaAlerta: ''
+              subcategoriaAlerta: '',
+              respuestaEntidad: ''
             });
           }
         }

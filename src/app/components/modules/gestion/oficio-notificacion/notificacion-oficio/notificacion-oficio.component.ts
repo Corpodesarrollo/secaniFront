@@ -26,6 +26,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { environment } from '../../../../../../environments/environment';
 import { EntidadServices } from '../../../../../core/services/entidadServices';
 import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { timeout, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-notificacion-oficio',
@@ -198,31 +200,49 @@ export class NotificacionOficioComponent {
       } else {
         this.guardar();
       }
-      this.saving = false; // Reinicia el estado de guardado
+      // BUG-LZ-056: saving=false ahora se controla dentro del subscribe (next/error)
     }
   
     guardar(){
-      this.repos.post("Notificacion/EnviarOficioNotificacion", this.notificacion, apis.seguimiento).subscribe({
-        next: (response) => {
-          let result = response as {estado: boolean, datos: string};
-          this.mostrarDialogo = true;
-          if(result.estado){
-            this.msg = result.datos;
-            this.icono = 'pi-check-circle';
-            this.colorIcono = '#4CAF50';
-            this.error = false;
-          }
-          else{
-            this.msg = result.datos;
+      // BUG-LZ-056: timeout 30s defensivo + mostrar error visible si SMTP cuelga
+      this.repos.post("Notificacion/EnviarOficioNotificacion", this.notificacion, apis.seguimiento)
+        .pipe(
+          timeout(30000),
+          catchError((err) => {
+            const msg = err?.name === 'TimeoutError'
+              ? 'El envío del correo tomó demasiado tiempo. Verifique la configuración SMTP e intente de nuevo.'
+              : (err?.error?.descripcion ?? err?.message ?? 'Error al enviar la notificación.');
+            return throwError(() => ({ estado: false, datos: msg }));
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            let result = response as {estado: boolean, datos: string};
+            this.mostrarDialogo = true;
+            if(result.estado){
+              this.msg = result.datos;
+              this.icono = 'pi-check-circle';
+              this.colorIcono = '#4CAF50';
+              this.error = false;
+            }
+            else{
+              this.msg = result.datos;
+              this.icono = 'pi-times-circle';
+              this.colorIcono = '#F44336';
+              this.error = true;
+            }
+            this.saving = false;
+          },
+          error: (error) => {
+            console.error('Error al consumir el API:', error);
+            this.mostrarDialogo = true;
+            this.msg = error?.datos ?? 'Error al enviar la notificación.';
             this.icono = 'pi-times-circle';
             this.colorIcono = '#F44336';
             this.error = true;
+            this.saving = false;
           }
-        },
-        error: (error) => {
-          console.error('Error al consumir el API:', error);
-        }
-      });
+        });
     }
   
     limpiar(){

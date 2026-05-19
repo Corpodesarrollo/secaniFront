@@ -1,0 +1,8 @@
+.btn-exitoso {
+  background-color: #73B7AD !important;
+  color: white !important;
+  border: none !important;
+}
+.btn-exitoso:hover {
+  background-color: #5fa39a !important;
+}
