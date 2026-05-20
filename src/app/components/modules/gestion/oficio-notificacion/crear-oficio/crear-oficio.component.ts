@@ -152,6 +152,9 @@ export class CrearOficioComponent implements OnInit {
 
     if (this.validarCamposRequeridos()){
       await this.guardar();
+    } else {
+      // BUG-LZ-063: antes silenciosamente no hacia nada si validacion fallaba.
+      alert('Complete todos los campos requeridos (marcados con *) antes de continuar.');
     }
     this.saving = false;
   }
@@ -160,22 +163,28 @@ export class CrearOficioComponent implements OnInit {
     this.oficio.idEntidad = this.selectedEntidad?.id ?? 0;
     this.oficio.userName = this.user.email ?? "";
 
-    const camposAValidar = [
-      this.oficio.membrete,
-      this.oficio.idEntidad,
-      this.oficio.ciudad,
-      this.oficio.asunto,
-      this.oficio.mensaje,
-      this.oficio.cierre,
-      this.oficio.firmaJpg
+    // BUG-LZ-063: p-editor inicializa con HTML vacio "<p><br></p>" que pasa toString().trim()
+    // como no-vacio pero es contenido vacio visual. Strip HTML antes de validar.
+    const stripHtml = (v: any): string => {
+      if (v === null || v === undefined) return '';
+      const s = String(v).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+      return s;
+    };
+
+    const camposAValidar: { nombre: string; valor: any; esHtml: boolean }[] = [
+      { nombre: 'membrete', valor: this.oficio.membrete, esHtml: false },
+      { nombre: 'idEntidad', valor: this.oficio.idEntidad, esHtml: false },
+      { nombre: 'ciudad', valor: this.oficio.ciudad, esHtml: false },
+      { nombre: 'asunto', valor: this.oficio.asunto, esHtml: false },
+      { nombre: 'mensaje', valor: this.oficio.mensaje, esHtml: true },
+      { nombre: 'cierre', valor: this.oficio.cierre, esHtml: true },
+      { nombre: 'firmaJpg', valor: this.oficio.firmaJpg, esHtml: true }
     ];
 
-    // Valida que cada campo no sea nulo, vacío o solo espacios en blanco
-    let pos = 0;
     for (const campo of camposAValidar) {
-      pos++;
-      if (!campo || campo.toString().trim() === '' || campo === '0') {
-        console.log('Campo requerido vacío', pos);
+      const valorLimpio = campo.esHtml ? stripHtml(campo.valor) : (campo.valor?.toString().trim() ?? '');
+      if (!valorLimpio || valorLimpio === '0') {
+        console.log('[BUG-LZ-063] Campo requerido vacio:', campo.nombre, 'raw:', campo.valor);
         return false;
       }
     }
@@ -191,6 +200,7 @@ export class CrearOficioComponent implements OnInit {
       this.showDialog = true; // Muestra el modal de notificación.
     } else {
       console.error('Error al guardar el oficio:');
+      alert('No fue posible guardar el oficio. Verifique los campos requeridos.');
     }
   }
 

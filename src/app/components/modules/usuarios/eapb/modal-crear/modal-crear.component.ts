@@ -89,6 +89,31 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     return emailExiste ? { emailRepetido: true } : null;
   }
 
+  // BUG-LZ-059: parser de errores robusto cubriendo todos los shapes que ASP.NET puede emitir:
+  // - FluentValidation: array [{errorMessage}]
+  // - BadRequest objeto: {field, message}
+  // - ModelState problem details: {errors: {Email: [...]}}
+  // - String plano (500 sin formato)
+  // - Sin error explicito (status code)
+  // BUG-LZ-059 secundario: si el PUT retornaba 201 Created Location (que algunos clients tratan
+  // como error porque GET de Location no resuelve), tratarlo como exito si guard guarda.
+  private extraerMensajeError(e: any, defaultMsg: string): string {
+    if (!e) return defaultMsg;
+    const err = e.error;
+    if (err) {
+      if (typeof err === 'string' && err.trim()) return err;
+      if (err.message) return err.message;
+      if (err.title) return err.title;
+      if (err.errors) {
+        const firstKey = Object.keys(err.errors)[0];
+        const arr = firstKey ? err.errors[firstKey] : null;
+        if (Array.isArray(arr) && arr[0]) return `${firstKey}: ${arr[0]}`;
+      }
+      if (Array.isArray(err) && err[0]?.errorMessage) return err[0].errorMessage;
+    }
+    return `${defaultMsg} (HTTP ${e?.status ?? 'desconocido'})`;
+  }
+
   onSubmit() {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
@@ -101,17 +126,24 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     if (this.isEditing){
       this.contactForm.get('entidadId')?.enable();
       this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, payload, 'Entidad').subscribe({
-        // BUG-LZ-044: cerrar modal SOLO si backend confirmo. Antes close() era sincrono y
-        // ocurria aun con 400 BadRequest -> user pensaba que guardaba pero no.
+        // BUG-LZ-044: cerrar modal SOLO si backend confirmo.
         next: (data: any) => {
           this.compartirDatosService.emitirNuevoContactoEAPB(data);
           this.resetForm();
           this.close();
         },
         error: (e) => {
+          // BUG-LZ-059: backend retorna 201 CreatedAtAction con Location apuntando a GetById.
+          // HttpClient sigue Location y si la respuesta intermedia no es JSON puede caer aqui
+          // aunque el PUT haya guardado bien. Si status 2xx tratar como exito.
+          if (e?.status >= 200 && e?.status < 300) {
+            this.compartirDatosService.emitirNuevoContactoEAPB({ ...payload, id: this.contactForm.get('id')?.value });
+            this.resetForm();
+            this.close();
+            return;
+          }
           console.error('Error al actualizar contacto EAPB', e);
-          const detalle = e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible actualizar el contacto. Verifique los campos requeridos.';
-          alert(detalle);
+          alert(this.extraerMensajeError(e, 'No fue posible actualizar el contacto.'));
         }
       });
     } else {
@@ -123,9 +155,16 @@ export class ModalCrearComponent implements OnInit, OnChanges {
           this.close();
         },
         error: (e) => {
+          // BUG-LZ-061: idem 059 — POST puede retornar 201 con Location.
+          if (e?.status >= 200 && e?.status < 300) {
+            // No tenemos id del backend, pero refrescamos lista via parent reload signal
+            this.compartirDatosService.emitirNuevoContactoEAPB({ ...payload, id: null });
+            this.resetForm();
+            this.close();
+            return;
+          }
           console.error('Error al crear contacto EAPB', e);
-          const detalle = e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible crear el contacto. Verifique los campos requeridos.';
-          alert(detalle);
+          alert(this.extraerMensajeError(e, 'No fue posible crear el contacto.'));
         }
       });
     }
@@ -163,6 +202,11 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   open() {
+    // BUG-LZ-060: al cancelar + reabrir, form conservaba data porque ngOnChanges no se dispara
+    // si @Input() item no cambio. Reset explicito en open() para modo creacion.
+    if (!this.isEditing) {
+      this.resetForm();
+    }
     const modalElement = document.getElementById('exampleModal');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
