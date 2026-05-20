@@ -254,7 +254,8 @@
 
   <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
       <div>
-          <button class="btn btn-detalle-seguimiento">VOLVER</button>
+          <!-- BUG-LZ-064: boton sin handler. Volver al listado de seguimientos. -->
+          <button class="btn btn-detalle-seguimiento" type="button" (click)="volver()">VOLVER</button>
       </div>
   </div>
 </div>

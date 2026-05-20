@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { GenericService } from '../../../../services/generic.services';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
@@ -100,7 +101,19 @@ export class ConsultarAlertasComponent implements OnInit {
     private excelExportService: ExcelExportService,
     private confirmationService: ConfirmationService,
     private plantillasService: PlantillasCorreoService,
+    private router: Router,
+    private location: Location,
   ) { }
+
+  // BUG-LZ-064: boton VOLVER sin handler. Usar location.back() para retornar a pantalla anterior;
+  // fallback a /gestion/seguimientos si no hay historial (apertura directa por URL).
+  volver(): void {
+    try {
+      this.location.back();
+    } catch {
+      this.router.navigate(['/gestion/seguimientos']);
+    }
+  }
 
   ngOnInit() {
     // BUG-LZ-049: PrimeNG dialog/modal de la pantalla previa puede dejar `overflow:hidden` en
@@ -136,6 +149,23 @@ export class ConsultarAlertasComponent implements OnInit {
           this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
         }
         this.calcularTiempoTranscurrido();
+
+        // BUG-LZ-062: cuidadorTelefono en NNAs es NULL cuando el teléfono real esta en
+        // ContactoNNAs (Cuidador=true). Resolver via ContactoNNAs si NULL para que el oficio
+        // muestre el numero al notificar.
+        if (!this.datosNNA.cuidadorTelefono) {
+          this.repos.get_withoutParameters(`ContactoNNAs/ObtenerByNNAId/${this.idNna}`, 'NNA').subscribe({
+            next: (resp: any) => {
+              const contactos = resp?.datos ?? resp ?? [];
+              const cuidador = contactos.find((c: any) => c.cuidador) ?? contactos[0];
+              if (cuidador) {
+                this.datosNNA.cuidadorTelefono = (cuidador.telefonos ?? '').split(',')[0]?.trim() ?? '';
+                this.datosNNA.cuidadorNombres = cuidador.nombres ?? this.datosNNA.cuidadorNombres;
+              }
+            },
+            error: () => {}
+          });
+        }
 
         try {
           const [regimenAfiliacion, nombreDeptoOrigen, nombreMuniOrigen, nombreDeptoActual, nombreMuniActual] = await Promise.all([

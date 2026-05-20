@@ -77,20 +77,25 @@ export class EAPBComponent implements OnInit {
 
     this.compartirDatosService.nuevoContactoEAPB$.subscribe({
       next: (data: any) => {
-        if (this.isEditing) {
-          const index = this.data.findIndex(datanueva => datanueva.id === data.id);
-          if (index !== -1) {
-            this.data[index] = { ...this.data[index], ...data };
-          }
-        } else {
-          this.data.push(data);
-        }
-        this.originalData = this.data;
-        this.compartirDatosService.actualizarListaContactos(this.originalData);
-        console.log('Array actualizado:', this.data);
+        // BUG-LZ-061: en lugar de hacer push del payload (que puede llegar incompleto del backend
+        // o con shape distinto), refrescar la lista completa desde el endpoint. Garantiza que el
+        // contacto recien creado aparezca con todos sus campos y misma shape que el resto.
+        this.recargarContactos();
       },
       error: (e) => console.error('Error al recibir el nuevo dato', e),
       complete: () => console.info('Actualización del array completada')
+    });
+  }
+
+  // BUG-LZ-061: recargar lista contactos desde backend tras crear/editar.
+  private recargarContactos(): void {
+    this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad').subscribe({
+      next: (contactos: any) => {
+        this.data = (contactos as ContactoEAPB[]) || [];
+        this.originalData = this.data;
+        this.compartirDatosService.actualizarListaContactos(this.originalData);
+      },
+      error: (e) => console.error('Error recargando contactos EAPB', e)
     });
   }
 

@@ -448,11 +448,22 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadUnidadesMedida(){
+    // BUG-LZ-065: SISPRO TREF "UnidadMedida" retorna 204 No Content (endpoint sin items en
+    // referencia externa). Fallback local hardcoded para que el dropdown muestre opciones.
+    const fallback = [
+      { codigo: 'D', nombre: 'Días' },
+      { codigo: 'S', nombre: 'Semanas' },
+      { codigo: 'M', nombre: 'Meses' },
+      { codigo: 'A', nombre: 'Años' }
+    ];
     this.repos.get_withoutParameters(`TablaParametrica/UnidadMedida`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
-        this.unidadesMedida = data;
+        this.unidadesMedida = (Array.isArray(data) && data.length > 0) ? data : fallback;
       },
-      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+      error: (err: any) => {
+        console.error('Error al cargar UnidadMedida, usando fallback local', err);
+        this.unidadesMedida = fallback;
+      }
     });
   }
 

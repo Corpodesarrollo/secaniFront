@@ -773,9 +773,10 @@
                     <label for="subcategoriaAlerta" class="form-label fw-bold">Subcategoría alerta:</label>
                   </div>
                   <div class="col-8">
-                    <select class="form-select" aria-label="Default select example" name="categoriaalerta" [(ngModel)]="datosNNA.subcategoriaAlertaId">
+                    <!-- BUG-LZ-066: filtrar subcategorias por categoria seleccionada. Antes mostraba las 26. -->
+                    <select class="form-select" aria-label="Default select example" name="subcategoriaalerta" [(ngModel)]="datosNNA.subcategoriaAlertaId">
                       <option value="" selected>Seleccionar</option>
-                      <option *ngFor="let subcateg of subcategoriasAlerta" value="{{subcateg.id}}">{{subcateg.indicador}} - {{subcateg.subCategoriaAlerta}}</option>
+                      <option *ngFor="let subcateg of subcategoriasAlerta" [hidden]="datosNNA.categoriaAlertaId && +subcateg.categoriaAlertaId !== +datosNNA.categoriaAlertaId" value="{{subcateg.id}}">{{subcateg.indicador}} - {{subcateg.subCategoriaAlerta}}</option>
                     </select>
                   </div>
                 </div>
