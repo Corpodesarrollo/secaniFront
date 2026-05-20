@@ -92,10 +92,13 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       this.contactForm.markAllAsTouched();
       return;
     }
+    // BUG-LZ-059 root cause: contactForm.value excluye disabled controls. entidadId
+    // disabled en edit -> payload sin EntidadId -> backend SQL "Cannot insert NULL".
+    // Fix: enable + getRawValue() para incluir disabled.
     this.contactForm.get('estado')?.enable();
-    const payload = this.contactForm.value;
+    this.contactForm.get('entidadId')?.enable();
+    const payload = this.contactForm.getRawValue();
     if (this.isEditing){
-      this.contactForm.get('entidadId')?.enable();
       this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, payload, 'Entidad').subscribe({
         // BUG-LZ-044: cerrar SOLO si backend confirmo.
         next: (data: any) => {

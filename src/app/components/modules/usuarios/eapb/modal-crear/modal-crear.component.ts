@@ -119,12 +119,16 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       this.contactForm.markAllAsTouched();
       return;
     }
+    // BUG-LZ-059 root cause: contactForm.value EXCLUYE controles disabled. En modo edicion
+    // entidadId se deshabilita (line updateForm), entonces payload llegaba sin EntidadId ->
+    // backend insert SQL fallaba con "Cannot insert NULL into column EntidadId" -> 500.
+    // Fix: usar getRawValue() para incluir controles disabled.
     this.contactForm.get('estado')?.enable();
-    const payload = this.contactForm.value;
+    this.contactForm.get('entidadId')?.enable();
+    const payload = this.contactForm.getRawValue();
     console.log('payload', payload, 'isEditing', this.isEditing);
 
     if (this.isEditing){
-      this.contactForm.get('entidadId')?.enable();
       this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, payload, 'Entidad').subscribe({
         // BUG-LZ-044: cerrar modal SOLO si backend confirmo.
         next: (data: any) => {
