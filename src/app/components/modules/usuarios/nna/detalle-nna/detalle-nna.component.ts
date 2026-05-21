@@ -107,8 +107,27 @@ export class DetalleNnaComponent implements OnInit {
 
   }
 
+  // BUG-LZ-018: historial de cambios sobre contactos NNA (HistoricoTransaccion).
+  historialCambios: any[] = [];
+
   seleccionarPanel(numPanel:any){
     this.panelSeleccionado = numPanel;
+    if (numPanel === 4 && this.historialCambios.length === 0) {
+      this.loadHistorialCambios();
+    }
+  }
+
+  loadHistorialCambios() {
+    if (!this.idNna) return;
+    this.repos.get_withoutParameters(`ContactoNNAs/Historico/${this.idNna}`, 'NNA').subscribe({
+      next: (data: any) => {
+        this.historialCambios = Array.isArray(data) ? data : [];
+      },
+      error: (err: any) => {
+        console.error('Error cargando historial cambios NNA', err);
+        this.historialCambios = [];
+      }
+    });
   }
 
   loadDatosBasicosNNA() {
