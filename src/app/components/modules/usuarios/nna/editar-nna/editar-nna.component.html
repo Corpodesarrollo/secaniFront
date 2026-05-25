@@ -125,12 +125,17 @@
         <div class="row mb-3">
           <div class="col-6 fw-bold">EAPB:</div>
           <div class="col-6">
+            <!-- BUG-LZ-053: optionValue=codigo (string) NO matchea con datosNNA.eapbId (numero Id).
+                 Cambiar a id para que el value preseleccionado coincida. dataKey ayuda PrimeNG. -->
             <p-dropdown
               placeholder="Seleccionar"
               [(ngModel)]="datosNNA.eapbId"
               [options]="eapbs"
               optionLabel="nombre"
-              optionValue="codigo"
+              optionValue="id"
+              dataKey="id"
+              [filter]="true"
+              filterBy="nombre"
               name="eapbId"
               styleClass="w-100"
               appendTo="body"

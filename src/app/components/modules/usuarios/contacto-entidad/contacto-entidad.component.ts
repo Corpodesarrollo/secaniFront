@@ -86,16 +86,10 @@ export class ContactoEntidadComponent implements OnInit {
 
     this.compartirDatosService.nuevoContactoEAPB$.subscribe({
       next: (contacto: any) => {
-        if (!contacto) return;
-        const fila = this.contactoToRow(contacto);
-        if (this.isEditing) {
-          const idx = this.originalData.findIndex(r => r.id === fila.id);
-          if (idx !== -1) this.originalData[idx] = fila;
-        } else {
-          this.originalData = [...this.originalData, fila];
-        }
-        this.compartirDatosService.actualizarListaContactos(this.originalData.map(r => r.raw));
-        this.aplicarFiltros();
+        // BUG-LZ-045/061: en lugar de push payload (que puede llegar incompleto del backend
+        // CreatedAtAction sin shape consistente), recargar lista completa para garantizar
+        // que el nuevo contacto aparezca con todos los campos derivados (NIT, locacion).
+        this.cargarDatos();
       }
     });
   }

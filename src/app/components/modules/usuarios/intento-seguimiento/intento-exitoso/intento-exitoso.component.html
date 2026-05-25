@@ -164,7 +164,11 @@
           </div>
           <div class="col-4">
             <img src="iconos/cruz.png" alt="cruz" style="position:absolute"/>
-            <a><img src="iconos/intento_exitoso_agregar_telefono.svg" alt="dia" (click)="editarContacto()"></a>
+            <!-- BUG-LZ-048: fix sesion anterior solo cubrio opcion_2 (NO). Opcion_3 (no puede atender)
+                 aún usaba <a> sin pointer. Cambiar a button real. -->
+            <button type="button" class="btn p-0 border-0 bg-transparent" (click)="editarContacto()" style="cursor:pointer">
+              <img src="iconos/intento_exitoso_agregar_telefono.svg" alt="Agregar teléfono"/>
+            </button>
 
           </div>
         </div>
