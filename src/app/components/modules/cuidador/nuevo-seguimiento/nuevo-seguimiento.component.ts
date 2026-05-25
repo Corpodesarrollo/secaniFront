@@ -91,9 +91,16 @@ export class NuevoSeguimientoComponent {
   ) {
   }
 
-  // BUG-LZ-034: filtrar caracteres numéricos en nombres y apellidos del NNA
-  onNombreChange(campo: 'primerNombre' | 'segundoNombre' | 'primerApellido' | 'segundoApellido', valor: string): void {
-    const limpio = (valor || '').replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]/g, '');
+  // BUG-LZ-034: filtrar caracteres numericos (y otros simbolos) en nombres/apellidos del NNA.
+  // Handler en (keyup) limpia el value del input directamente para que el usuario vea el
+  // resultado mientras escribe (el binding (ngModelChange) anterior dejaba el digito visible
+  // por un frame hasta que Angular reaplicaba el modelo).
+  onNombreChange(campo: 'primerNombre' | 'segundoNombre' | 'primerApellido' | 'segundoApellido', event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const limpio = (input.value || '').replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]/g, '');
+    if (input.value !== limpio) {
+      input.value = limpio;
+    }
     (this.reporte as any)[campo] = limpio;
   }
 

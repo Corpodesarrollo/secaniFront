@@ -54,13 +54,7 @@ export class ModalCrearComponent implements OnInit, OnChanges {
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
         if (this.isEditing && this.item) {
           const codigo = this.item.entidadId != null ? String(this.item.entidadId) : '';
-          const existe = this.listaEAPB.some(e => String(e.codigo) === codigo);
-          if (codigo && !existe) {
-            this.listaEAPB = [
-              { codigo: codigo, nombre: `EAPB no encontrada (código: ${codigo})` } as any,
-              ...this.listaEAPB
-            ];
-          }
+          this.ensureEAPBPlaceholder(codigo);
           this.contactForm.patchValue({
             ...this.item,
             entidadId: codigo
@@ -75,7 +69,21 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       this.listaContactos = lista;
     });
 
-    this.contactForm.get('estado')?.disable(); 
+    this.contactForm.get('estado')?.disable();
+  }
+
+  // BUG-LZ-043 (extension): si el codigo del contacto no esta en la lista paramétrica de EAPB
+  // (eliminada/desactivada en TP), insertar option placeholder "EAPB no encontrada (código: X)"
+  // para que el <select> muestre algo coherente con la tabla padre en vez de quedar vacio.
+  private ensureEAPBPlaceholder(codigo: string): void {
+    if (!codigo) return;
+    const existe = this.listaEAPB.some(e => String(e.codigo) === codigo);
+    if (!existe) {
+      this.listaEAPB = [
+        { codigo: codigo, nombre: `EAPB no encontrada (código: ${codigo})` } as any,
+        ...this.listaEAPB
+      ];
+    }
   }
 
   validarEmailUnico(control: AbstractControl) {
@@ -187,9 +195,13 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   updateForm(item: any) {
     // BUG-LZ-016: forzar string en entidadId para que coincida con [value] del select
+    const codigo = item?.entidadId != null ? String(item.entidadId) : '';
+    // BUG-LZ-043 (extension): garantizar placeholder cuando el codigo no esta en listaEAPB
+    // (ngOnInit solo corre 1 vez; al reabrir modal con item distinto la lista puede no incluirlo).
+    this.ensureEAPBPlaceholder(codigo);
     this.contactForm.patchValue({
       ...item,
-      entidadId: item?.entidadId != null ? String(item.entidadId) : ''
+      entidadId: codigo
     });
     if (this.isEditing) {
       this.contactForm.get('entidadId')?.disable();

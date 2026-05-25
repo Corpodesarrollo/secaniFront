@@ -322,4 +322,4 @@
   <app-nna-contacto-lista [nnaId]="NNA?.idNNA ?? NNA?.id ?? ContactoNNA?.nnaId" />
 </p-dialog>
 
-<app-dialog-crear-contacto [show]="displayModalEditContacto" [contactoId]="ContactoNNA.id" [nnaId]="NNA?.idNNA ?? NNA?.id ?? ContactoNNA?.nnaId"></app-dialog-crear-contacto>
+<app-dialog-crear-contacto [show]="displayModalEditContacto" [contactoId]="ContactoNNA.id" [nnaId]="NNA?.idNNA ?? NNA?.id ?? ContactoNNA?.nnaId" (closeModal)="displayModalEditContacto=false"></app-dialog-crear-contacto>
