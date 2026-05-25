@@ -321,12 +321,17 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEAPBs(){
-    this.repos.get_withoutParameters(`TablaParametrica/CodigoEAPByNit`, 'TablaParametrica').subscribe({
+    // BUG-LZ-053 (extension): endpoint anterior `TablaParametrica/CodigoEAPByNit` lee el
+    // directorio externo SISPRO y retorna `{codigo, nombre}` sin `id`. El dropdown usa
+    // optionValue="id" + ngModel datosNNA.eapbId (que es TPEAPB.Id) -> no matcheaba nunca,
+    // dropdown quedaba vacio aunque el NNA tuviera EAPB asignada en BD.
+    // Fix: usar `EAPB/Entidades` local que devuelve la fila completa (incluye id de TPEAPB).
+    this.repos.get_withoutParameters(`EAPB/Entidades`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.eapbs = data;
         this.ipss = data;
       },
-      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+      error: (err: any) => console.error('Error al cargar EAPBs', err)
     });
   }
 

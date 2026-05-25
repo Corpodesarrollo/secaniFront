@@ -52,7 +52,7 @@
                 <td>{{ contactos.telefonos }}</td>
                 <td class="text-center">{{ contactos.tipoResultadoIntento1 }}</td>
                 <td class="text-center">{{ contactos.tipoResultadoIntento2 }}</td>
-                <td class="text-center"><a (click) = "cargarIntento(contactos)"><img src="iconos/telefono.svg" alt="ojo" *ngIf="contactos.telefonos != ''"/></a></td>
+                <td class="text-center"><a (click) = "cargarIntento(contactos)" style="cursor:pointer"><img src="iconos/telefono.svg" alt="ojo" *ngIf="contactos.telefonos != ''"/></a></td>
             </tr>
         </ng-template>
     </p-table>

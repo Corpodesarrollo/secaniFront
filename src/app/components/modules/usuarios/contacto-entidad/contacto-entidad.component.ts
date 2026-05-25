@@ -82,16 +82,18 @@ export class ContactoEntidadComponent implements OnInit {
   constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
   ngOnInit(): void {
-    this.cargarDatos();
-
+    // BUG-LZ-045 (extension): suscribirse PRIMERO al stream para no perder emit que llegue
+    // antes que termine la carga inicial (race condition con Subject sin replay).
     this.compartirDatosService.nuevoContactoEAPB$.subscribe({
-      next: (contacto: any) => {
+      next: () => {
         // BUG-LZ-045/061: en lugar de push payload (que puede llegar incompleto del backend
         // CreatedAtAction sin shape consistente), recargar lista completa para garantizar
         // que el nuevo contacto aparezca con todos los campos derivados (NIT, locacion).
         this.cargarDatos();
       }
     });
+
+    this.cargarDatos();
   }
 
   private cargarDatos(): void {
@@ -105,8 +107,15 @@ export class ContactoEntidadComponent implements OnInit {
       .subscribe({
         next: (contactos: ContactoEntidad[]) => {
           const todos = contactos || [];
-          this.originalData = todos.map(c => this.contactoToRow(c));
-          this.compartirDatosService.actualizarListaContactos(todos);
+          // BUG-LZ-045 (extension): ordenar por dateCreated desc para que un nuevo contacto
+          // creado por modal aparezca en la primera fila al refrescar la lista.
+          const ordenados = todos.slice().sort((a: any, b: any) => {
+            const fa = a?.dateCreated ? new Date(a.dateCreated).getTime() : 0;
+            const fb = b?.dateCreated ? new Date(b.dateCreated).getTime() : 0;
+            return fb - fa;
+          });
+          this.originalData = ordenados.map(c => this.contactoToRow(c));
+          this.compartirDatosService.actualizarListaContactos(ordenados);
           this.aplicarFiltros();
         },
         error: (e) => console.error('Error cargando entidades territoriales', e)

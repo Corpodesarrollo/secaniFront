@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { UsuariosModule } from '../../usuarios.module';
 import { TpParametros } from '../../../../../core/services/tpParametros';
 import { NnaContactoListaComponent } from '../../nna-contacto/nna-contacto-lista/nna-contacto-lista.component';
+import { DialogCrearContactoComponent } from '../../nna-contacto/dialog-crear-contacto/dialog-crear-contacto.component';
 import { User } from '../../../../../core/services/user';
 
 @Component({
@@ -23,7 +24,7 @@ import { User } from '../../../../../core/services/user';
   styleUrls: ['../../general.component.css', './intento-exitoso.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule, NnaContactoListaComponent],
+    CalendarModule , DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule,UsuariosModule, NnaContactoListaComponent, DialogCrearContactoComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class IntentoExitosoComponent implements OnInit {
@@ -280,7 +281,11 @@ export class IntentoExitosoComponent implements OnInit {
   }
 
   editarContacto() {
-    this.displayModalEditContacto = true;
+    // BUG-LZ-048 (extension): p-dialog cierra mutando this.show interno pero el binding del padre
+    // [show] es one-way, asi que displayModalEditContacto queda true. Segundo click no dispara
+    // ngOnChanges porque el valor no cambia. Forzar reset a false antes de true (microtask).
+    this.displayModalEditContacto = false;
+    setTimeout(() => this.displayModalEditContacto = true, 0);
   }
 
 }

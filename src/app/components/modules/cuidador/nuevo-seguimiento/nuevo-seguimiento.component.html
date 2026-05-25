@@ -30,7 +30,7 @@
         <div class="mb-3">
           <label for="primerNombre" class="mb-1">Primer nombre</label>
           <input pInputText type="text" class="w-100" id="primerNombre" placeholder="Ingrese"
-                 [ngModel]="reporte.primerNombre" (ngModelChange)="onNombreChange('primerNombre', $event)"
+                 [(ngModel)]="reporte.primerNombre" (keyup)="onNombreChange('primerNombre', $event)"
                  name="primerNombre" [readonly]="readonly"/>
           <div *ngIf="submitted && (!reporte.primerNombre || reporte.primerNombre.trim() === '')" class="text-danger">
               Campo requerido
@@ -39,13 +39,13 @@
         <div class="mb-3">
           <label for="segundoNombre" class="mb-1">Segundo nombre</label>
           <input pInputText type="text" class="w-100" id="segundoNombre" placeholder="Ingrese"
-                 [ngModel]="reporte.segundoNombre" (ngModelChange)="onNombreChange('segundoNombre', $event)"
+                 [(ngModel)]="reporte.segundoNombre" (keyup)="onNombreChange('segundoNombre', $event)"
                  name="segundoNombre" [readonly]="readonly"/>
         </div>
         <div class="mb-3">
           <label for="primerApellido" class="mb-1">Primer apellido</label>
           <input pInputText type="text" class="w-100" id="primerApellido" placeholder="Ingrese"
-                 [ngModel]="reporte.primerApellido" (ngModelChange)="onNombreChange('primerApellido', $event)"
+                 [(ngModel)]="reporte.primerApellido" (keyup)="onNombreChange('primerApellido', $event)"
                  name="primerApellido" [readonly]="readonly"/>
           <div *ngIf="submitted && (!reporte.primerApellido || reporte.primerApellido.trim() === '')" class="text-danger">
               Campo requerido
@@ -54,7 +54,7 @@
         <div class="mb-3">
           <label for="segundoApellido" class="mb-1">Segundo apellido</label>
           <input pInputText type="text" class="w-100" id="segundoApellido" placeholder="Ingrese"
-                 [ngModel]="reporte.segundoApellido" (ngModelChange)="onNombreChange('segundoApellido', $event)"
+                 [(ngModel)]="reporte.segundoApellido" (keyup)="onNombreChange('segundoApellido', $event)"
                  name="segundoApellido" [readonly]="readonly"/>
         </div>
         <div class="mb-3">
