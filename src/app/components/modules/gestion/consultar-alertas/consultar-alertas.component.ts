@@ -105,14 +105,11 @@ export class ConsultarAlertasComponent implements OnInit {
     private location: Location,
   ) { }
 
-  // BUG-LZ-064: boton VOLVER sin handler. Usar location.back() para retornar a pantalla anterior;
-  // fallback a /gestion/seguimientos si no hay historial (apertura directa por URL).
+  // BUG-LZ-064 + BUG-LZ-078: VOLVER originalmente usaba location.back() pero eso permitia volver
+  // al form "Guardar y gestionar alertas" + hacer click nuevamente -> duplicaba alertas en BD.
+  // Ahora navegar siempre a la lista de seguimientos (forward navigation evita re-submit).
   volver(): void {
-    try {
-      this.location.back();
-    } catch {
-      this.router.navigate(['/gestion/seguimientos']);
-    }
+    this.router.navigate(['/gestion/seguimientos']);
   }
 
   ngOnInit() {

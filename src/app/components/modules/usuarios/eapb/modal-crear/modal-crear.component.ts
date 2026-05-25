@@ -36,7 +36,8 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       cargo: [''],
       telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
       email: ['', [Validators.required,
-        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
+        // BUG-LZ-077: regex previa rechazaba guion (-) y otros caracteres validos en RFC 5322 (e.g. luz-pineros@gmail.com)
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'),
         this.validarEmailUnico.bind(this)]],
       estado: ['Activo'],
       activo: [true]

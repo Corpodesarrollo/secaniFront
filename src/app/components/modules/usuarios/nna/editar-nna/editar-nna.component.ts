@@ -349,11 +349,13 @@ export class EditarNnaComponent implements OnInit {
   }
 
   loadEntidadesRecibirTratamiento(){
-    this.repos.get_withoutParameters(`Entidades/Entidades`, 'TablaParametrica').subscribe({
+    // BUG-LZ-073: endpoint previo `Entidades/Entidades` retornaba listado de EAPB/EPS (503 + fallback).
+    // Campo es "Institución donde recibe tratamiento (IPS)" -> usar endpoint IPS.
+    this.repos.get_withoutParameters(`IPS`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.entidadesRecibirTratamiento = data;
       },
-      error: (err: any) => console.error('Error al cargar datos del NNA', err)
+      error: (err: any) => console.error('Error al cargar IPS', err)
     });
   }
 
@@ -592,8 +594,12 @@ export class EditarNnaComponent implements OnInit {
     this.departamentoRecidenciaActual = extraerDosPrimeros(codigoMuniResiActualNNa);
     this.municipioRecidenciaActual = codigoMuniResiActualNNa;
 
-    if(this.departamentoOrigen!=''){
-      this.loadMunisPorDepto();
+    // BUG-LZ-072: copy-paste error - chequeaba departamentoOrigen + llamaba loadMunisPorDepto (origen)
+    // en vez de chequear departamentoRecidenciaActual + llamar loadMunisResiActualPorDepto. Resultado:
+    // la lista de municipios actual nunca se cargaba al abrir el edit (quedaba vacia hasta que user
+    // cambia depto). Fix: usar el depto + loader correctos.
+    if(this.departamentoRecidenciaActual!=''){
+      this.loadMunisResiActualPorDepto();
     }
   }
 
