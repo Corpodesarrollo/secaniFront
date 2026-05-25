@@ -209,7 +209,11 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   open() {
     // BUG-LZ-060: al cancelar + reabrir, form conservaba data porque ngOnChanges no se dispara
     // si @Input() item no cambio. Reset explicito en open() para modo creacion.
-    if (!this.isEditing) {
+    // BUG-LZ-043: en modo edicion, si user borra campos + cancela, ngOnChanges tampoco dispara
+    // (item ref no cambio) y al reabrir form muestra campos vacios. Re-patch del item original.
+    if (this.isEditing && this.item) {
+      this.updateForm(this.item);
+    } else {
       this.resetForm();
     }
     const modalElement = document.getElementById('exampleModal');

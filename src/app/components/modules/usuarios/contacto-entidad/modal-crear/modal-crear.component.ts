@@ -160,6 +160,13 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   open() {
+    // BUG-LZ-043/060: en modo edit, si user borra+cancela, ngOnChanges no dispara al reabrir
+    // (item ref no cambio). En modo create, reset al reabrir.
+    if (this.isEditing && this.item) {
+      this.updateForm(this.item);
+    } else {
+      this.resetForm();
+    }
     const modalElement = document.getElementById('exampleModal');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
