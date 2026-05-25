@@ -131,13 +131,17 @@ export class SeguimientoGuardarComponent {
   }
 
   enviar(){
+    // BUG-LZ-071: error handler silente -> usuario click Guardar y "nada pasa". Mostrar alert
+    // con mensaje del backend (incluye codigo HTTP) para que QA/funcional sepa por que no guardo.
     this.gs.post('Seguimiento/SetSeguimiento', this.seguimiento, apis.seguimiento).subscribe(
       response => {
         this.idSeguimiento = response as number;
         this.mostrarMensaje = true;
       },
       error => {
-        console.error('Error al subir el archivo', error);
+        console.error('Error al guardar seguimiento', error);
+        const detalle = error?.error?.message || error?.error?.title || error?.message || `Error HTTP ${error?.status ?? 'desconocido'} al guardar el seguimiento`;
+        alert(`No fue posible guardar el seguimiento: ${detalle}`);
       }
     );
   }
