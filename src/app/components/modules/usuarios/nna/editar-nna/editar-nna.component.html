@@ -254,10 +254,24 @@
             <div class="row">
               <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
               <div class="col">
-                <select class="form-select" aria-label="Default select example" name="ipsTratamiento" [(ngModel)]="datosNNA.ipsId">
-                  <option value="" selected>Seleccionar</option>
-                  <option *ngFor="let entidad of entidadesRecibirTratamiento" value="{{entidad.id}}">{{entidad.nombre}}</option>
-                </select>
+                <!-- BUG QA 2026-05-25: <select> con *ngFor sobre 330k IPS colgaba el navegador
+                     ("La pagina no responde") al expandir el accordion. p-dropdown con
+                     virtualScroll renderiza solo los visibles y filter permite buscar. -->
+                <p-dropdown
+                  name="ipsTratamiento"
+                  [(ngModel)]="datosNNA.ipsId"
+                  [options]="entidadesRecibirTratamiento"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  [filter]="true"
+                  filterBy="nombre"
+                  [showClear]="true"
+                  [virtualScroll]="true"
+                  [virtualScrollItemSize]="38"
+                  appendTo="body"
+                  styleClass="w-100"
+                  placeholder="Seleccionar">
+                </p-dropdown>
               </div>
             </div>
           </div>
@@ -823,10 +837,22 @@
                     <label for="ipsTraslados" class="form-label fw-bold">IPS:</label>
                   </div>
                   <div class="col-6">
-                    <select class="form-select" aria-label="Default select example" name="ipstraslado" [(ngModel)]="datosNNA.trasladosIPSId">
-                      <option value="" selected>Seleccionar</option>
-                      <option *ngFor="let ips of ipss" value="{{ips.codigo}}">{{ips.nombre}}</option>
-                    </select>
+                    <!-- BUG QA 2026-05-25: ipss tambien tiene 330k registros. p-dropdown virtualScroll. -->
+                    <p-dropdown
+                      name="ipstraslado"
+                      [(ngModel)]="datosNNA.trasladosIPSId"
+                      [options]="ipss"
+                      optionLabel="nombre"
+                      optionValue="codigo"
+                      [filter]="true"
+                      filterBy="nombre"
+                      [showClear]="true"
+                      [virtualScroll]="true"
+                      [virtualScrollItemSize]="38"
+                      appendTo="body"
+                      styleClass="w-100"
+                      placeholder="Seleccionar">
+                    </p-dropdown>
                   </div>
                 </div>
               </div>

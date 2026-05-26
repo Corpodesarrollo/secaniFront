@@ -4,6 +4,15 @@
   width: 100%;
   color: black; /* Usa el color del texto del evento */
   background-color: #F4F9FD; /* Usa el color de fondo del evento */
+  cursor: pointer;
+}
+
+/* BUG-LZ-058 cosmetico: indicar que los eventos del calendario son clickables. */
+:host ::ng-deep .fc-event,
+:host ::ng-deep .fc-event-main,
+:host ::ng-deep .fc-timegrid-event,
+:host ::ng-deep .fc-daygrid-event {
+  cursor: pointer;
 }
 
 :host ::ng-deep .fc-timegrid-slot {
