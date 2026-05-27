@@ -840,10 +840,10 @@
                     <!-- BUG QA 2026-05-25: ipss tambien tiene 330k registros. p-dropdown virtualScroll. -->
                     <p-dropdown
                       name="ipstraslado"
-                      [(ngModel)]="datosNNA.trasladosIPSId"
+                      [(ngModel)]="trasladoIpsSeleccionado"
                       [options]="ipss"
                       optionLabel="nombre"
-                      optionValue="codigo"
+                      optionValue="id"
                       [filter]="true"
                       filterBy="nombre"
                       [showClear]="true"

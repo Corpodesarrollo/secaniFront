@@ -107,6 +107,19 @@ export class EditarNnaComponent implements OnInit {
   idContacto: string | undefined;
   saving: boolean = false;
 
+  // BUG-LZ-078: `datosNNA.trasladosIPSId` es int[] en el backend (NNADto.TrasladosIPSId).
+  // El p-dropdown de IPS de traslado es single-select y emite un escalar. Si se enlaza
+  // directo, manda un string/numero suelto -> ASP.NET no puede bindear a int[] -> 400
+  // silencioso (Guardar "no hace nada"). Este accessor mapea escalar <-> int[].
+  get trasladoIpsSeleccionado(): number | null {
+    const arr = this.datosNNA?.trasladosIPSId;
+    return Array.isArray(arr) && arr.length ? Number(arr[0]) : null;
+  }
+  set trasladoIpsSeleccionado(val: number | null) {
+    if (!this.datosNNA) { return; }
+    this.datosNNA.trasladosIPSId = (val !== null && val !== undefined) ? [Number(val)] : [];
+  }
+
   constructor(
     private routerUrl: Router, 
     private route: ActivatedRoute,
@@ -329,7 +342,6 @@ export class EditarNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`EAPB/Entidades`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.eapbs = data;
-        this.ipss = data;
       },
       error: (err: any) => console.error('Error al cargar EAPBs', err)
     });
@@ -359,6 +371,9 @@ export class EditarNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`IPS`, 'TablaParametrica').subscribe({
       next: async (data: any) => {
         this.entidadesRecibirTratamiento = data;
+        // BUG-LZ-078: el dropdown de IPS de traslado (`ipss`) cargaba por error desde
+        // EAPB/Entidades (codigos no numericos). Debe usar el mismo listado IPS.
+        this.ipss = data;
       },
       error: (err: any) => console.error('Error al cargar IPS', err)
     });
@@ -837,6 +852,11 @@ export class EditarNnaComponent implements OnInit {
         error: (err) => {
           console.error('Error al actualizar NNA:', err);
           this.saving = false;   // ✅ SI HUBO ERROR, TAMBIÉN LIBERA
+          // BUG-LZ-078: antes el error era silencioso (solo console) -> el usuario veia
+          // que Guardar "no hacia nada". Mostrar el motivo real del backend.
+          const detalle = err?.error?.message || err?.error?.title
+            || (err?.status ? `Error HTTP ${err.status}` : 'No fue posible guardar los cambios');
+          this.messageService.add({ severity: 'error', summary: 'Error al guardar', detail: detalle });
         }
       });
   }
