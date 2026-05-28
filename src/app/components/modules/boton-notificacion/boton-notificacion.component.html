@@ -12,7 +12,10 @@
       <div class="col notification-text" [ngClass]="{'fw-bold': !notificacion.leida}">
         {{notificacion.textoNotificacion}}
       </div>
-      <button class="col-auto btn rounded-3 me-0" style="background-color: lightgray; width: 70px;" [ngClass]="{'text-success': notificacion.leida}" (click)="openUrl(notificacion.url, notificacion.idNotificacion )"><i *ngIf="notificacion.leida" class="pi pi-check-circle"></i> Ver</button>
+      <div class="col-auto d-flex gap-2 ms-2">
+        <button class="btn rounded-3" style="background-color: lightgray;" title="Ver caso" (click)="verNotificacion(notificacion.url)"><i class="pi pi-eye"></i> Ver</button>
+        <button class="btn rounded-3 text-danger" style="background-color: #f8d7da;" title="Eliminar notificación" (click)="eliminarNotificacion(notificacion.idNotificacion)"><i class="pi pi-trash"></i></button>
+      </div>
     </div>
     <div class="notification-date text-muted">{{notificacion.fechaNotificacion | date:'dd/MM/yyyy' }}</div>
     <hr>

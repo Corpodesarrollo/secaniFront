@@ -50,9 +50,24 @@ export class BotonNotificacionComponent implements OnInit {
       });
   }
 
-  openUrl(url:string, id: number){
+  // "Ver": solo navega al caso. NO borra la notificacion (antes openUrl hacia ambas cosas).
+  verNotificacion(url: string) {
+    this.showDialog = false;
+    if (url) {
+      this.router.navigate([url]);
+    }
+  }
+
+  // Boton basura: descarta la notificacion (soft delete) y la quita de la lista en vivo.
+  eliminarNotificacion(id: number) {
     this.repos.post('Notificacion/EliminarNotificacion/', { idNotificacionUsuario: id, idUsuario: this.idUsuario }, apis.seguimiento)
-      .subscribe({ next: () => {} });
-    this.router.navigate([url]);
+      .subscribe({
+        next: () => {
+          this.notificaciones = this.notificaciones.filter(n => n.idNotificacion !== id);
+          if (this.cntNotificaciones > 0) {
+            this.cntNotificaciones--;
+          }
+        }
+      });
   }
 }
