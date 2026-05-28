@@ -10,6 +10,7 @@ import { SeguimientoCntFiltros } from '../../../../models/seguimientoCntFiltros.
 import { Router, RouterModule } from '@angular/router';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { NNA } from '../../../../models/nna.model';
+import { User } from '../../../../core/services/user';
 import { DialogModule } from 'primeng/dialog';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
 import { Parametricas } from '../../../../models/parametricas.model';
@@ -36,8 +37,10 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class AsignacionSeguimientoComponent implements OnInit {
 
   nna: NNA = new NNA();
+  xUser = new User();
+  // BUG-LZ-086: antes hardcodeado a un GUID que no era agente con casos -> lista vacia.
+  // Usar el id del usuario logueado (Coordinador); el backend devuelve todos si es Coordinador.
   idUsuario: string = "48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5";
-  // idUsuario?: string;
   cntFiltros: SeguimientoCntFiltros = {
     hoy: 0,
     conAlerta: 0,
@@ -73,7 +76,9 @@ export class AsignacionSeguimientoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.idUsuario = this.user.id;
+    if (this.xUser.id) {
+      this.idUsuario = this.xUser.id;
+    }
     console.log("idUsuario", this.idUsuario);
 
     this.CargarDatos('1');
