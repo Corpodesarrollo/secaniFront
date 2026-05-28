@@ -360,6 +360,14 @@ export class EstadoSeguimientoComponent implements OnInit {
               console.log('Respuesta del servidor:', data);
               this.visible = false;
               this.mostrarMensaje = true;
+              // BUG-LZ-083: ademas del dialog de confirmacion, lanzar toast de exito
+              // (consistente con el path de error que ya usa messageService).
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Seguimiento solicitado',
+                detail: 'El seguimiento fue generado con exito.',
+                life: 5000
+              });
               resolve(data);
             },
             error: (err) => {
