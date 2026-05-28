@@ -506,10 +506,7 @@
                       <label for="capacidadEconomica" class="form-label fw-bold">Cuenta con la capacidad económica para asumir el traslado del menor: </label>
                     </div>
                     <div class="col-3">
-                      <select class="form-select" id="capacidadEconomica" [(ngModel)]="datosNNA.trasladoTieneCapacidadEconomica" [disabled]="true">
-                        <option value="true">Si</option>
-                        <option value="flase">No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladoTieneCapacidadEconomica === true ? 'Sí' : (datosNNA.trasladoTieneCapacidadEconomica === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -520,10 +517,7 @@
                       <label for="apoyoEAPB" class="form-label fw-bold">La EAPB le ha suministrado servicios sociales de apoyo (alojamiento, alimentación y desplazamiento) para el traslado: </label>
                     </div>
                     <div class="col-3">
-                      <select class="form-select" id="apoyoEAPB" [(ngModel)]="datosNNA.trasladoEAPBSuministroApoyo" [disabled]="true">
-                        <option value="true">Si</option>
-                        <option value="flase">No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladoEAPBSuministroApoyo === true ? 'Sí' : (datosNNA.trasladoEAPBSuministroApoyo === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -534,10 +528,7 @@
                       <label for="apoyoSocialOportuno" class="form-label fw-bold">¿Los servicios sociales de apoyo fueron entregados con oportunidad? </label>
                     </div>
                     <div class="col-3">
-                      <select class="form-select" id="apoyoSocialOportuno" [(ngModel)]="datosNNA.trasladosServiciosdeApoyoOportunos" [disabled]="true">
-                        <option value="true">Si</option>
-                        <option value="flase">No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladosServiciosdeApoyoOportunos === true ? 'Sí' : (datosNNA.trasladosServiciosdeApoyoOportunos === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -548,10 +539,7 @@
                       <label for="trasladoOportuno" class="form-label fw-bold">¿Los servicios sociales de apoyo logran dar cobertura al traslado del menor?: </label>
                     </div>
                     <div class="col-3">
-                      <select class="form-select" id="trasladoOportuno" [(ngModel)]="datosNNA.trasladosServiciosdeApoyoCobertura" [disabled]="true">
-                        <option value="true">Si</option>
-                        <option value="flase">No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladosServiciosdeApoyoCobertura === true ? 'Sí' : (datosNNA.trasladosServiciosdeApoyoCobertura === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -562,10 +550,7 @@
                       <label for="solicitoApoyoFundacion" class="form-label fw-bold">¿Ha solicitado apoyo de alguna fundación?: </label>
                     </div>
                     <div class="col-3">
-                      <select class="form-select" id="solicitoApoyoFundacion" [(ngModel)]="datosNNA.trasladosHaSolicitadoApoyoFundacion" [disabled]="true">
-                        <option value="true">Si</option>
-                        <option value="flase">No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladosHaSolicitadoApoyoFundacion === true ? 'Sí' : (datosNNA.trasladosHaSolicitadoApoyoFundacion === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -601,10 +586,7 @@
                       <label for="sitioResidencia" class="form-label fw-bold">El sitio de residencia actual es:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="sitioResidencia" [(ngModel)]="datosNNA.propietarioResidenciaActualOtro" [disabled]="true">
-                        <option>De un familiar</option>
-                        <option>Otro</option>
-                      </select>
+                      <span>{{ getNombreTipoVivienda(datosNNA.trasladosPropietarioResidenciaActualId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -690,10 +672,7 @@
                       <label for="cualIPS">¿Cuál?</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="cualIPS" [(ngModel)]="datosNNA.difMalaAtencionNombreIPSId" [disabled]="true">
-                        <option value="1">IPS A</option>
-                        <option value="2">IPS B</option>
-                      </select>
+                      <span>{{ getNombreIPS(datosNNA.difMalaAtencionNombreIPSId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -715,10 +694,7 @@
                       <label for="categoriaAlerta" class="form-label fw-bold">Categoría alerta:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="categoriaAlerta" [(ngModel)]="datosNNA.categoriaAlertaId" [disabled]="true">
-                        <option value="1">Categoría 1</option>
-                        <option value="2">Categoría 2</option>
-                      </select>
+                      <span>{{ getNombreCategoriaAlerta(datosNNA.categoriaAlertaId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -729,10 +705,7 @@
                       <label for="subcategoriaAlerta" class="form-label fw-bold">Subcategoría alerta:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="subcategoriaAlerta" [(ngModel)]="datosNNA.subcategoriaAlertaId" [disabled]="true">
-                        <option value="1">Subcategoría 1</option>
-                        <option value="2">Subcategoría 2</option>
-                      </select>
+                      <span>{{ getNombreSubcategoriaAlerta(datosNNA.subcategoriaAlertaId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -748,10 +721,7 @@
                       <label for="trasladoInstitucion" class="form-label fw-bold">¿Ha sido trasladado de institución?</label>
                     </div>
                     <div class="col-4">
-                      <select class="form-select" id="trasladoInstitucion" [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [disabled]="true">
-                        <option>Si</option>
-                        <option>No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladosHaSidoTrasladadodeInstitucion === true ? 'Sí' : (datosNNA.trasladosHaSidoTrasladadodeInstitucion === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -773,10 +743,7 @@
                       <label for="ipsTraslados" class="form-label fw-bold">IPS:</label>
                     </div>
                     <div class="col-6">
-                      <select class="form-select" id="ipsTraslados" [(ngModel)]="datosNNA.trasladosIPSId" [disabled]="true">
-                        <option>Clínica oncológica</option>
-                        <option>Otro</option>
-                      </select>
+                      <span>{{ getNombreIPSTraslados(datosNNA.trasladosIPSId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -787,10 +754,7 @@
                       <label for="accionLegal" class="form-label fw-bold">¿Ha tenido que recurrir a algún tipo de acción legal para acceder a la atención?</label>
                     </div>
                     <div class="col-4">
-                      <select class="form-select" id="accionLegal" [(ngModel)]="datosNNA.trasladosHaRecurridoAccionLegal" [disabled]="true">
-                        <option>Si</option>
-                        <option>No</option>
-                      </select>
+                      <span>{{ datosNNA.trasladosHaRecurridoAccionLegal === true ? 'Sí' : (datosNNA.trasladosHaRecurridoAccionLegal === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -812,10 +776,7 @@
                       <label for="tipoRecursoLegal" class="form-label fw-bold">Tipo de recurso:</label>
                     </div>
                     <div class="col-6">
-                      <select class="form-select" id="tipoRecursoLegal" [(ngModel)]="datosNNA.trasladosTipoAccionLegalId" [disabled]="true">
-                        <option selected>Tutela</option>
-                        <option>Otro</option>
-                      </select>
+                      <span>{{ datosNNA.trasladosTipoAccionLegalId || 'Dato no encontrado' }}</span>
                     </div>
                   </div>
                 </div>
@@ -840,10 +801,7 @@
                       <label for="haDejadoAsistir" class="form-label fw-bold">¿Ha dejado de asistir al tratamiento?</label>
                     </div>
                     <div class="col-4">
-                      <select class="form-select" id="haDejadoAsistir" [(ngModel)]="datosNNA.tratamientoHaDejadodeAsistir" [disabled]="true">
-                        <option>Si</option>
-                        <option>No</option>
-                      </select>
+                      <span>{{ datosNNA.tratamientoHaDejadodeAsistir === true ? 'Sí' : (datosNNA.tratamientoHaDejadodeAsistir === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -865,11 +823,7 @@
                       <label for="unidadMedidaTiempo" class="form-label fw-bold">Unidad de medida del tiempo:</label>
                     </div>
                     <div class="col-5">
-                      <select class="form-select" id="unidadMedidaTiempo" [(ngModel)]="datosNNA.tratamientoUnidadMedidaIdTiempoId" [disabled]="true">
-                        <option selected>Semanas</option>
-                        <option>Días</option>
-                        <option>Meses</option>
-                      </select>
+                      <span>{{ getNombreUnidadMedida(datosNNA.tratamientoUnidadMedidaIdTiempoId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -880,11 +834,7 @@
                       <label for="causasInasistencia" class="form-label fw-bold">Causas de inasistencia:</label>
                     </div>
                     <div class="col-5">
-                      <select class="form-select" id="causasInasistencia" [(ngModel)]="datosNNA.tratamientoCausasInasistenciaId" [disabled]="true">
-                        <option selected>Otra</option>
-                        <option>Motivo 1</option>
-                        <option>Motivo 2</option>
-                      </select>
+                      <span>{{ getNombreCausaInasistencia(datosNNA.tratamientoCausasInasistenciaId) }}</span>
                     </div>
                   </div>
                 </div>
@@ -902,10 +852,7 @@
                       <label for="estudiandoActualmente" class="form-label fw-bold">¿Está estudiando actualmente?</label>
                     </div>
                     <div class="col-4">
-                      <select class="form-select" id="estudiandoActualmente" [(ngModel)]="datosNNA.tratamientoEstudiaActualmente" [disabled]="true">
-                        <option>Si</option>
-                        <option>No</option>
-                      </select>
+                      <span>{{ datosNNA.tratamientoEstudiaActualmente === true ? 'Sí' : (datosNNA.tratamientoEstudiaActualmente === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -916,10 +863,7 @@
                       <label for="dejadoAsistirColegio" class="form-label fw-bold">¿En algún momento ha dejado de asistir al colegio?</label>
                     </div>
                     <div class="col-4">
-                      <select class="form-select" id="dejadoAsistirColegio" [(ngModel)]="datosNNA.tratamientoHaDejadodeAsistirColegio" [disabled]="true">
-                        <option>Si</option>
-                        <option>No</option>
-                      </select>
+                      <span>{{ datosNNA.tratamientoHaDejadodeAsistirColegio === true ? 'Sí' : (datosNNA.tratamientoHaDejadodeAsistirColegio === false ? 'No' : 'Dato no encontrado') }}</span>
                     </div>
                   </div>
                 </div>
@@ -941,11 +885,7 @@
                       <label for="unidadMedidaTiempoColegio" class="form-label fw-bold">Unidad de medida del tiempo:</label>
                     </div>
                     <div class="col-5">
-                      <select class="form-select" id="unidadMedidaTiempoColegio" [(ngModel)]="datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId" [disabled]="true">
-                        <option>Semanas</option>
-                        <option>Días</option>
-                        <option>Meses</option>
-                      </select>
+                      <span>{{ getNombreUnidadMedida(datosNNA.tratamientoTiempoInasistenciaUnidadMedidaId) }}</span>
                     </div>
                   </div>
                 </div>

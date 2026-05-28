@@ -70,6 +70,14 @@ export class DetalleNnaComponent implements OnInit {
   estadosNNA: any[] = [];
   estadosIngresoEstrategia: any[] = [];
   regimenesAfiliacion: Parametricas[] = [];
+  // BUG-LZ-085: parametricas para resolver nombres en el detalle (selects que estaban
+  // hardcodeados y nunca mostraban el valor real del NNA).
+  categoriasAlerta: any[] = [];
+  subcategoriasAlerta: any[] = [];
+  causasInasistencia: any[] = [];
+  unidadesMedida: any[] = [];
+  ipsList: any[] = [];
+  tiposVivienda: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -104,7 +112,74 @@ export class DetalleNnaComponent implements OnInit {
     this.loadEstadosIngresoEstrategia();
     this.loadRegimenes();
     this.loadCIE10();
+    // BUG-LZ-085
+    this.loadCategoriasAlerta();
+    this.loadSubCategoriasAlerta();
+    this.loadCausasInasistencia();
+    this.loadUnidadesMedida();
+    this.loadIPSList();
+    this.loadTiposVivienda();
 
+  }
+
+  // ---- BUG-LZ-085: loaders + getters de parametricas del detalle ----
+  loadCategoriasAlerta(){
+    this.repos.get_withoutParameters(`CategoriaAlerta`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.categoriasAlerta = data || [],
+      error: (err: any) => console.error('Error al cargar categorias alerta', err)
+    });
+  }
+  loadSubCategoriasAlerta(){
+    this.repos.get_withoutParameters(`SubCategoriaAlerta`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.subcategoriasAlerta = data || [],
+      error: (err: any) => console.error('Error al cargar subcategorias alerta', err)
+    });
+  }
+  loadCausasInasistencia(){
+    this.repos.get_withoutParameters(`CausaInasistencia`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.causasInasistencia = data || [],
+      error: (err: any) => console.error('Error al cargar causas inasistencia', err)
+    });
+  }
+  loadUnidadesMedida(){
+    this.repos.get_withoutParameters(`TablaParametrica/UnidadMedida`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.unidadesMedida = data || [],
+      error: (err: any) => console.error('Error al cargar unidades de medida', err)
+    });
+  }
+  loadIPSList(){
+    this.repos.get_withoutParameters(`IPS`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.ipsList = data || [],
+      error: (err: any) => console.error('Error al cargar IPS', err)
+    });
+  }
+  loadTiposVivienda(){
+    this.repos.get_withoutParameters(`TablaParametrica/RIBATipoVivienda`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.tiposVivienda = data || [],
+      error: (err: any) => console.error('Error al cargar tipos vivienda', err)
+    });
+  }
+
+  // Resuelve el nombre comparando contra codigo o id (los valores del NNA varian segun parametrica).
+  private nombrePorCodigoOId(lista: any[], val: any): string {
+    if (val === null || val === undefined || val === '') return 'Dato no encontrado';
+    const s = String(val).trim();
+    const r = (lista || []).find(x => String(x?.codigo).trim() === s || String(x?.id).trim() === s);
+    return r ? r.nombre : 'Dato no encontrado';
+  }
+  getNombreCategoriaAlerta(val: any): string { return this.nombrePorCodigoOId(this.categoriasAlerta, val); }
+  getNombreSubcategoriaAlerta(val: any): string { return this.nombrePorCodigoOId(this.subcategoriasAlerta, val); }
+  getNombreCausaInasistencia(val: any): string { return this.nombrePorCodigoOId(this.causasInasistencia, val); }
+  getNombreUnidadMedida(val: any): string { return this.nombrePorCodigoOId(this.unidadesMedida, val); }
+  getNombreTipoVivienda(val: any): string { return this.nombrePorCodigoOId(this.tiposVivienda, val); }
+  getNombreIPS(val: any): string { return this.nombrePorCodigoOId(this.ipsList, val); }
+  // trasladosIPSId puede ser int[] (multiples IPS). Mostrar nombres separados por coma.
+  getNombreIPSTraslados(val: any): string {
+    if (val === null || val === undefined || val === '') return 'Dato no encontrado';
+    const arr = Array.isArray(val) ? val : [val];
+    if (arr.length === 0) return 'Dato no encontrado';
+    const nombres = arr.map(v => this.nombrePorCodigoOId(this.ipsList, v)).filter(n => n !== 'Dato no encontrado');
+    return nombres.length ? nombres.join(', ') : 'Dato no encontrado';
   }
 
   // BUG-LZ-018: historial de cambios sobre contactos NNA (HistoricoTransaccion).
