@@ -419,10 +419,9 @@
                       <label for="departamentoActual" class="form-label fw-bold">Departamento:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="departamentoActual" [(ngModel)]="datosNNA.residenciaActualMunicipioId" [disabled]="true">
-                        <option selected>Antioquia</option>
-                        <!-- Más opciones -->
-                      </select>
+                      <!-- BUG-LZ-085: era un <select> con opciones hardcodeadas (Antioquia) que nunca
+                           reflejaba el dato real. Mostrar el valor resuelto como la columna procedencia. -->
+                      <span>{{ getNombreDeptoResidenciaActual() }}</span>
                     </div>
                   </div>
                 </div>
@@ -433,10 +432,8 @@
                       <label for="municipioActual" class="form-label fw-bold">Municipio:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="municipioActual" [(ngModel)]="datosNNA.residenciaActualMunicipioId" [disabled]="true">
-                        <option selected>Apartadó</option>
-                        <!-- Más opciones -->
-                      </select>
+                      <!-- BUG-LZ-085: idem, mostrar municipio real. -->
+                      <span>{{ getNombreMuniResidenciaActual() }}</span>
                     </div>
                   </div>
                 </div>
@@ -458,10 +455,8 @@
                       <label for="areaActual" class="form-label fw-bold">Área:</label>
                     </div>
                     <div class="col-8">
-                      <select class="form-select" id="areaActual" [(ngModel)]="datosNNA.residenciaActualAreaId" [disabled]="true">
-                        <option>Rural</option>
-                        <!-- Más opciones -->
-                      </select>
+                      <!-- BUG-LZ-085: idem, mostrar area real. -->
+                      <span>{{ getNombreAreaPorId(datosNNA.residenciaActualAreaId) }}</span>
                     </div>
                   </div>
                 </div>
