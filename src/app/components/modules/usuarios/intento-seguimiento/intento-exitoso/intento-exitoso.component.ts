@@ -171,7 +171,13 @@ export class IntentoExitosoComponent implements OnInit {
         "FechaSeguimiento": this.formatDateTimeForSQLServer(form.get('FechaIntento')?.value)
       }
 
-      await this.servicio.PutActualizarSeguimiento(data2);
+      // BUG-LZ-082: el backend retorna -3 si el agente ya tiene un seguimiento a menos de 10 min
+      // de la fecha/hora elegida. No confirmar "Almacenamiento correcto" ni navegar en ese caso.
+      const resultado = await this.servicio.PutActualizarSeguimiento(data2);
+      if (resultado === -3) {
+        alert("El agente ya tiene un seguimiento agendado a menos de 10 minutos de la fecha y hora seleccionada. Seleccione otro horario.");
+        return;
+      }
       alert("Almacenamiento correcto");
       this.router.navigate(['intento-seguimiento'], { state: { id_seguimiento: this.seguimiento.id } });
     }

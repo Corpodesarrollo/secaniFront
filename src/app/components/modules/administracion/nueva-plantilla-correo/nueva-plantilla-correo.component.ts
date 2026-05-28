@@ -90,6 +90,13 @@ export class NuevaPlantillaCorreoComponent {
     });
   }
 
+  // BUG-LZ-081: la seccion Cierre solo aplica para plantillas "Oficio de notificación".
+  // Antes el FormControl se deshabilitaba (no guardaba) pero el p-editor (Quill) seguia editable
+  // visualmente -> el usuario escribia y se confundia. Ahora se oculta del todo si no aplica.
+  get mostrarCierre(): boolean {
+    return this.plantillaCorreoForm.get('tipoPlantilla')?.value === 'Oficio de notificación';
+  }
+
   isValidField(field: string): boolean | null {
     return this.plantillaCorreoForm.controls[field].errors
       && this.plantillaCorreoForm.controls[field].touched;

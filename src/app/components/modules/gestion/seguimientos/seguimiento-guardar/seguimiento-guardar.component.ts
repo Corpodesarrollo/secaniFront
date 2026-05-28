@@ -140,7 +140,9 @@ export class SeguimientoGuardarComponent {
       },
       error => {
         console.error('Error al guardar seguimiento', error);
-        const detalle = error?.error?.message || error?.error?.title || error?.message || `Error HTTP ${error?.status ?? 'desconocido'} al guardar el seguimiento`;
+        // BUG-LZ-082: el backend devuelve BadRequest con el mensaje como string plano (ej. conflicto
+        // de agenda <10 min). Considerar tambien error.error string para mostrar ese motivo real.
+        const detalle = (typeof error?.error === 'string' ? error.error : null) || error?.error?.message || error?.error?.title || error?.message || `Error HTTP ${error?.status ?? 'desconocido'} al guardar el seguimiento`;
         alert(`No fue posible guardar el seguimiento: ${detalle}`);
       }
     );

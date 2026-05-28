@@ -418,7 +418,12 @@ export class MiSemanaComponent {
     }
 
     let respuesta = await this.servicios.PutActualizarSeguimiento(data);
-    //console.log("respuesta ", respuesta);
+    // BUG-LZ-082: -3 = el agente ya tiene un seguimiento a menos de 10 min de ese horario.
+    // Revertir el arrastre en el calendario y avisar.
+    if (respuesta === -3) {
+      alert("El agente ya tiene un seguimiento agendado a menos de 10 minutos de ese horario. Se revierte el cambio.");
+      info.revert();
+    }
   }
 
   formatDateTimeForSQLServer(dateString: string): string {
