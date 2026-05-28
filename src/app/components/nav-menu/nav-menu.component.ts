@@ -98,8 +98,25 @@ export class NavMenuComponent implements OnInit {
 
     // Convertir el mapa a un array
     this.arregloMenu = Array.from(menuMap.values());
+
+    // Ultima opcion del menu: Cerrar sesion
+    this.arregloMenu.push({
+      items: [{
+        label: 'Cerrar sesión',
+        icon: 'pi pi-sign-out',
+        command: () => this.logout(),
+        styleClass: 'sinSubMenus'
+      }]
+    });
+
     this.items = this.arregloMenu;
     this.cd.detectChanges();
 
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.menuService.toggleMenu();
+    window.location.href = '/qa-login';
   }
 }
