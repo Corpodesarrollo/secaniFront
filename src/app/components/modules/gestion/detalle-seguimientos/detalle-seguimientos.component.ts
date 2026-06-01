@@ -48,19 +48,34 @@ export class DetalleSeguimientosComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.idSeguimiento = params.get('idSeguimiento') || ''; // Recupera el valor del parámetro
-      this.idNNA = Number(this.idSeguimiento);
+      this.idSeguimiento = params.get('idSeguimiento') || '';
     });
-    console.log(this.idNNA);
-    this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idSeguimiento, 'Seguimiento').subscribe({
-      next: (data: any) => {
-        this.idSeguimientoX = data[0].idSeguimiento;
-        this.seguimientos = data;
-        this.datosNNA = data[0].nna;
-        this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
-        this.calcularTiempoTranscurrido();
-        console.log("Datos Seguimiento: ", this.seguimientos);
-        console.log("Datos NNA: ", this.datosNNA);
+
+    // BUG-LZ-088: el route param se llamaba idSeguimiento pero el codigo lo pasaba a
+    // GetSeguimientosNNA (que espera NNAId) -> 0 filas -> pantalla en blanco al venir desde la
+    // notificacion ("/gestion/detalle_seguimiento/{SeguimientoId}"). Resolver primero el NNAId
+    // a partir del SeguimientoId y luego cargar la grilla con el NNAId correcto.
+    this.repos.get(`Seguimiento/`, this.idSeguimiento, 'Seguimiento').subscribe({
+      next: (seguimiento: any) => {
+        const nnaId = seguimiento?.nNAId ?? seguimiento?.nnaId ?? seguimiento?.NNAId;
+        if (!nnaId) {
+          console.error('No se pudo resolver NNAId para el seguimiento', this.idSeguimiento, seguimiento);
+          return;
+        }
+        this.idNNA = Number(nnaId);
+        this.repos.get(`Seguimiento/GetSeguimientosNNA/`, String(this.idNNA), 'Seguimiento').subscribe({
+          next: (data: any) => {
+            if (!data || data.length === 0) {
+              console.warn('NNA sin seguimientos para mostrar', this.idNNA);
+              return;
+            }
+            this.idSeguimientoX = data[0].idSeguimiento;
+            this.seguimientos = data;
+            this.datosNNA = data[0].nna;
+            this.fechaInicio = new Date(this.datosNNA.fechaNacimiento);
+            this.calcularTiempoTranscurrido();
+          }
+        });
       }
     });
   }
