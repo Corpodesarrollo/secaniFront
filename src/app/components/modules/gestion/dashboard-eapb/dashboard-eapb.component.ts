@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DashboardEapbService } from './dashboard-eapb.services';
 import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
+import { User } from '../../../../core/services/user';
 
 @Component({
   selector: 'app-dashboard-eapb',
@@ -44,15 +45,16 @@ export class DashboardEapbComponent implements OnInit {
 
   usuarioId: any;
   eapbId: any;
+  xUser = new User();
+  eapbResuelto: boolean = false;
 
   hoy = new Date();
 
   constructor( private fb: FormBuilder, public servicios: DashboardEapbService,  public router: Router) {
 
-    //TODO: ACTUALIZAR TEMAS DE USUARIO Y EL EAPBID
-    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
-
-    this.eapbId = 2;
+    // BUG-LZ-087: el eapbId estaba hardcoded a 2 -> el dashboard mostraba 0 alertas para cualquier
+    // EAPB cuyo Id no fuera 2. Ahora se resuelve en ngOnInit via GetEAPBIdByNit(enterpriseIdentification).
+    this.usuarioId = this.xUser.id ?? '';
 
     this.diasLimite(this.currentDate);
     this.formFechas = this.fb.group({
@@ -92,15 +94,29 @@ export class DashboardEapbComponent implements OnInit {
 
   async ngOnInit() {
 
+    // BUG-LZ-087: resolver el TPEAPB.Id real desde el NIT del usuario (enterpriseIdentification)
+    // antes de disparar cargas. Si no resuelve, no cargar el dashboard para no mostrar ceros falsos.
+    const nit = this.xUser.enterpriseIdentification;
+    if (nit) {
+      try {
+        const id = await this.servicios.GetEAPBIdByNit(nit);
+        if (id) {
+          this.eapbId = Number(id);
+          this.eapbResuelto = true;
+        }
+      } catch (err) {
+        console.error('No se pudo resolver EAPB Id por NIT', nit, err);
+      }
+    }
+
+    if (!this.eapbResuelto) {
+      console.warn('Dashboard EAPB: no se resolvio el Id de la entidad (NIT=' + nit + '). No se cargan contadores.');
+      this.cargado = true;
+      return;
+    }
+
     await this.dataBarra();
-
     await this.filtroFechas(this.fechaInicial, this.fechaFinal);
-
-
-
-
-
-
   }
 
 

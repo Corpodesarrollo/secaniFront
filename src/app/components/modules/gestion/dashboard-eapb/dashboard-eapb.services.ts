@@ -48,4 +48,10 @@ export class DashboardEapbService {
     return await  this.comun.retorno_get_parametrica(url);
   }
 
+  // BUG-LZ-087: resolver TPEAPB.Id desde el NIT del usuario (enterpriseIdentification)
+  GetEAPBIdByNit = async (nit: string | number) => {
+    let url = `${'Dashboard/GetEAPBIdByNit?nit=' + nit}`;
+    return await this.comun.retorno_get(url);
+  }
+
 }
