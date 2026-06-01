@@ -143,11 +143,22 @@ export class NotificacionComponent {
 
   guardar(){
     this.repos.post("Notificacion/EnviarOficioNotificacion", this.notificacion, apis.seguimiento).subscribe({
-      next: (response) => {
+      next: (response: any) => {
+        // BUG-LZ-086: antes se mostraba el modal de exito siempre, aun cuando el backend
+        // respondia { estado: false, descripcion: 'SMTP error...' } (la alerta llega a la
+        // bandeja del EAPB porque se persiste por otro flujo, pero el correo no se envia).
+        // Ahora se muestra el motivo real cuando estado=false.
+        if (response && response.estado === false) {
+          const detalle = response.descripcion || 'No fue posible enviar el correo de notificacion.';
+          this.messageService.add({ severity: 'error', summary: 'No se envio el correo', detail: detalle, life: 6000 });
+          return;
+        }
         this.mostrarDialogo = true;
       },
       error: (error) => {
         console.error('Error al consumir el API:', error);
+        const detalle = (typeof error?.error === 'string' ? error.error : null) || error?.error?.message || error?.message || 'Error HTTP al enviar el correo.';
+        this.messageService.add({ severity: 'error', summary: 'No se envio el correo', detail: detalle, life: 6000 });
       }
     });
   }
