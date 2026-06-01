@@ -953,7 +953,7 @@
               <td>{{ h.fechaTransaccion | date:'dd/MM/yyyy HH:mm' }}</td>
               <td>{{ h.transaccion }}</td>
               <td>{{ h.usuarioId }}</td>
-              <td>{{ h.comentario || '-' }}</td>
+              <td>{{ formatCamposModificados(h.comentario) }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">

@@ -205,6 +205,41 @@ export class DetalleNnaComponent implements OnInit {
     });
   }
 
+  // BUG-LZ-085: el historial mostraba "Email, DateCreated, DateUpdated, CreatedByUserId,
+  // UpdatedByUserId" -> columnas tecnicas de auditoria que no aportan al usuario. Filtrar las
+  // columnas de auditoria/sistema y remapear las restantes a etiquetas legibles en espanol.
+  private readonly CAMPOS_AUDITORIA_OCULTOS = new Set<string>([
+    'datecreated','dateupdated','datedeleted',
+    'createdbyuserid','updatedbyuserid','deletedbyuserid',
+    'isdeleted','rowversion','id','contactonnaid','nnaid'
+  ]);
+
+  private readonly CAMPOS_ETIQUETAS: Record<string,string> = {
+    'email':'Correo electronico',
+    'telefono':'Telefono',
+    'celular':'Celular',
+    'nombres':'Nombres',
+    'apellidos':'Apellidos',
+    'tipoidentificacionid':'Tipo de identificacion',
+    'numeroidentificacion':'Numero de identificacion',
+    'direccion':'Direccion',
+    'parentescoid':'Parentesco',
+    'ocupacion':'Ocupacion',
+    'departamentoid':'Departamento',
+    'municipioid':'Municipio',
+    'fechanacimiento':'Fecha de nacimiento',
+    'genero':'Genero',
+  };
+
+  formatCamposModificados(comentario: string | null | undefined): string {
+    if (!comentario) return '-';
+    const campos = comentario.split(',').map(c => c.trim()).filter(c => c.length > 0);
+    const visibles = campos
+      .filter(c => !this.CAMPOS_AUDITORIA_OCULTOS.has(c.toLowerCase()))
+      .map(c => this.CAMPOS_ETIQUETAS[c.toLowerCase()] ?? c);
+    return visibles.length ? visibles.join(', ') : '-';
+  }
+
   loadDatosBasicosNNA() {
     this.repos.get_withoutParameters(`NNA/DatosBasicosNNAById/${this.idNna}`, 'NNA').subscribe({
       next: (datosBasicosData: any) => {

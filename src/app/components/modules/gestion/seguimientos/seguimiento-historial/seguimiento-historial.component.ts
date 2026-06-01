@@ -77,7 +77,17 @@ export class SeguimientoHistorialComponent {
   CargarDatos() {
     this.repos.get('Seguimiento/GetSeguimientosByNNA/', `${this.id}`, 'Seguimiento').subscribe({
       next: (data: any) => {
-        this.seguimientos = data;
+        // BUG-LZ-084: el backend no aplica orderby y los seguimientos recientes podian quedar al
+        // final, ocultos detras del paginador (5 filas por pagina). Ordenar desc por fecha de
+        // ultima actuacion / seguimiento; usar id desc como tiebreaker estable.
+        const items = Array.isArray(data) ? data.slice() : [];
+        items.sort((a: any, b: any) => {
+          const fa = new Date(a?.fechaUltimaActuacion ?? a?.fechaSeguimiento ?? 0).getTime();
+          const fb = new Date(b?.fechaUltimaActuacion ?? b?.fechaSeguimiento ?? 0).getTime();
+          if (fb !== fa) return fb - fa;
+          return (b?.id ?? 0) - (a?.id ?? 0);
+        });
+        this.seguimientos = items;
       }
     });
   }
