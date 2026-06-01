@@ -1029,7 +1029,8 @@
                     <label for="estudiandoActualmente" class="form-label fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
                   </div>
                   <div class="col-4">
-                    <select class="form-select" id="estudiandoActualmente" [(ngModel)]="datosNNA.tratamientoHaSidoInformadoClaramente">
+                    <select class="form-select" id="estudiandoActualmente" [(ngModel)]="tratamientoHaSidoInformadoBool">
+                      <option [ngValue]="null">Seleccionar</option>
                       <option [ngValue]="true">Si</option>
                       <option [ngValue]="false">No</option>
                     </select>

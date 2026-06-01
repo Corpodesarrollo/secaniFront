@@ -106,6 +106,24 @@ export class EditarNnaComponent implements OnInit {
   alertas: AlertasTratamiento[] = [];
   idContacto: string | undefined;
   saving: boolean = false;
+  // BUG-LZ-083: flag que indica que las parametricas (areas, IPS, diagnosticos, etc) ya cargaron;
+  // se setea tras Promise.all en ngOnInit para evitar pintar selects sin opciones.
+  listasCargadas: boolean = false;
+
+  // BUG-LZ-083: el select "¿La IPS le informo de manera clara...?" usa [ngValue]="true|false".
+  // Si la propiedad del NNA llega como string "True"/"False" (por algun serializer o reporte),
+  // el boolean no matchea y se ve "False" crudo. Accessor normaliza string<->boolean.
+  get tratamientoHaSidoInformadoBool(): boolean | null {
+    const v: any = this.datosNNA?.tratamientoHaSidoInformadoClaramente;
+    if (v === true || v === 'True' || v === 'true' || v === 1 || v === '1') return true;
+    if (v === false || v === 'False' || v === 'false' || v === 0 || v === '0') return false;
+    return null;
+  }
+  set tratamientoHaSidoInformadoBool(val: boolean | null) {
+    if (this.datosNNA) {
+      (this.datosNNA as any).tratamientoHaSidoInformadoClaramente = val;
+    }
+  }
 
   // BUG-LZ-078: `datosNNA.trasladosIPSId` es int[] en el backend (NNADto.TrasladosIPSId).
   // El p-dropdown de IPS de traslado es single-select y emite un escalar. Si se enlaza
@@ -134,39 +152,107 @@ export class EditarNnaComponent implements OnInit {
 
     this.panelSeleccionado = 1;
 
-    this.route.paramMap.subscribe(params => {
-      this.idNna = params.get('idNna') || '';
-      this.alertas = history.state.alertas;
-      this.idContacto = history.state.idContacto;
-      this.loadDatosBasicosNNA();
-      this.loadNNAData();
-      this.loadContactosNna();
+    // BUG-LZ-083: cargar todas las parametricas ANTES de pedir el JSON del NNA, para evitar la
+    // condicion de carrera intermitente que dejaba selects sin valor o mostrando codigo en
+    // lugar de nombre cuando datosNNA llegaba primero (areas, IPS, diagnosticos, etc).
+    await new Promise<void>(resolve => {
+      this.route.paramMap.subscribe(params => {
+        this.idNna = params.get('idNna') || '';
+        this.alertas = history.state.alertas;
+        this.idContacto = history.state.idContacto;
+        resolve();
+      });
     });
 
-    this.loadPaisesNacimiento();
-    this.loadDepartamentos();
-    this.loadMunicipios();
-    this.loadEtnias();
-    this.loadGruposPobla();
-    this.loadRegimenes();
-    this.loadEAPBs();
-    this.loadParentescos();
-    this.loadRazonesSinDiagnostico();
-    this.loadDiagnosticos();
-    this.loadEntidadesRecibirTratamiento();
-    this.loadTiposMalaAtencionIps();
-    this.loadCategoriasAlerta();
-    this.loadSubCategoriasAlerta();
-    this.loadCausasInasistencia();
-    this.loadEstadosNNA();
-    this.loadTiposOrigen();
-    this.loadEstadoIngresoEstrategia();
-    this.loadAreas();
-    this.loadEstratos();
-    this.loadTiposVivienda();
-    this.loadUnidadesMedida();
+    try {
+      const [
+        paises, deptos, munis, etniasD, gruposD, regimenesD, eapbsD, parentescosD,
+        razonesD, diagnosticosD, ipsD, malaAtenD, catAlertaD, subCatAlertaD,
+        causasInasistD, estadosD, tiposOrigenD, estadosIngresoD,
+        areasD, estratosD, tiposViviendaD, unidadesMedidaD
+      ] = await Promise.all([
+        this.fetchListSafe(`TablaParametrica/Pais`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/Departamento`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/Municipio`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/GrupoEtnico`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/LCETipoPoblacionEspecial`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/APSRegimenAfiliacion`, 'TablaParametrica'),
+        this.fetchListSafe(`EAPB/Entidades`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/RLCPDParentesco`, 'TablaParametrica'),
+        this.fetchListSafe(`RazonesSinDiagnostico`, 'TablaParametrica'),
+        this.fetchListSafe(`CIE10`, 'TablaParametrica'),
+        this.fetchListSafe(`IPS`, 'TablaParametrica'),
+        this.fetchListSafe(`MalaAtencionIPS`, 'TablaParametrica'),
+        this.fetchListSafe(`CategoriaAlerta`, 'TablaParametrica'),
+        this.fetchListSafe(`SubCategoriaAlerta`, 'TablaParametrica'),
+        this.fetchListSafe(`CausaInasistencia`, 'TablaParametrica'),
+        this.fetchListSafe(`EstadoNNA`, 'TablaParametrica'),
+        this.fetchListSafe(`OrigenReporte`, 'TablaParametrica'),
+        this.fetchListSafe(`EstadoIngresoEstrategia`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/ZonaTerritorial`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/EstratoSocioeconomico`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/RIBATipoVivienda`, 'TablaParametrica'),
+        this.fetchListSafe(`TablaParametrica/UnidadMedida`, 'TablaParametrica'),
+      ]);
 
+      this.listadoPais = paises ?? [];
+      this.listaDepartamentos = deptos ?? [];
+      this.departamentosOrigen = deptos ?? [];
+      this.departamentosResidenciaActual = deptos ?? [];
+      this.listaMunicipios = munis ?? [];
+      this.etnias = etniasD ?? [];
+      this.gruposponlacional = gruposD ?? [];
+      this.regimenesAfiliacion = regimenesD ?? [];
+      this.eapbs = eapbsD ?? [];
+      this.parentescos = parentescosD ?? [];
+      this.razonesSinDiagnostico = razonesD ?? [];
+      this.diagnosticos = diagnosticosD ?? [];
+      this.entidadesRecibirTratamiento = ipsD ?? [];
+      this.ipss = ipsD ?? [];
+      this.tiposMalaAtencionIps = malaAtenD ?? [];
+      this.categoriasAlerta = catAlertaD ?? [];
+      this.subcategoriasAlerta = subCatAlertaD ?? [];
+      this.cuasasInasistencia = causasInasistD ?? [];
+      this.estadosNNA = estadosD ?? [];
+      this.tiposOrigenReporte = tiposOrigenD ?? [];
+      this.estadosIngresoEstrategia = estadosIngresoD ?? [];
+      this.areas = areasD ?? [];
+      this.estratos = estratosD ?? [];
+      this.tiposVivienda = tiposViviendaD ?? [];
 
+      const fallbackUnidades = [
+        { codigo: 'D', nombre: 'Días' },
+        { codigo: 'S', nombre: 'Semanas' },
+        { codigo: 'M', nombre: 'Meses' },
+        { codigo: 'A', nombre: 'Años' }
+      ];
+      this.unidadesMedida = (Array.isArray(unidadesMedidaD) && unidadesMedidaD.length > 0)
+        ? unidadesMedidaD : fallbackUnidades;
+    } catch (err) {
+      console.error('BUG-LZ-083: error cargando parametricas, alguna fallo', err);
+    }
+
+    this.listasCargadas = true;
+
+    // Recien ahora cargar el NNA: las listas ya estan en memoria y los selects podran resolver
+    // sus valores (nombre en lugar de codigo crudo).
+    this.loadDatosBasicosNNA();
+    this.loadNNAData();
+    this.loadContactosNna();
+  }
+
+  // BUG-LZ-083: wrapper Observable -> Promise para usar Promise.all. Resuelve null en error
+  // para no abortar la carga completa si una parametrica concreta falla.
+  private fetchListSafe(endpoint: string, api: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.repos.get_withoutParameters(endpoint, api).subscribe({
+        next: (data: any) => resolve(data),
+        error: (err: any) => {
+          console.error('BUG-LZ-083: error cargando parametrica', endpoint, err);
+          resolve(null);
+        }
+      });
+    });
   }
 
   seleccionarPanel(numPanel:any){
