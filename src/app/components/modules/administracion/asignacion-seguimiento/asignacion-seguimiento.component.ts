@@ -25,6 +25,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { forkJoin } from 'rxjs';
+import { apis } from '../../../../models/apis.model';
 
 @Component({
   selector: 'app-asignacion-seguimiento',
@@ -222,20 +224,65 @@ export class AsignacionSeguimientoComponent implements OnInit {
     );
   }
 
+  // BUG-LZ-090 (2026-06-02): antes solo console.log -> "no pasaba nada" al confirmar.
+  // Ahora dispara PUT Seguimiento/PutSeguimientoActualizacionUsuario por cada caso seleccionado.
+  // El backend desactiva las asignaciones activas previas, crea la nueva al nuevo agente y
+  // notifica al destinatario (rama TipoNotificacion=1 AsignacionReasignacion).
   reasignarCasos(): void {
-
-    if (this.agente == undefined || this.agente == null) {
+    if (!this.agente) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Seleccione un agente.' });
+      return;
     }
 
-    if (this.motivo == '' || this.motivo == null) {
+    if (!this.motivo || this.motivo.trim() === '') {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe registrar motivo.' });
+      return;
     }
 
-    this.showDialogAgente = false;
+    if (this.selectedRecords.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Importante', detail: 'No hay casos seleccionados.' });
+      return;
+    }
 
-    console.log(this.selectedRecords);
+    const agenteId = this.agente.id;
+    const motivo = this.motivo;
+    const requests = this.selectedRecords.map((seg: any) =>
+      this.repos.put('Seguimiento/PutSeguimientoActualizacionUsuario', {
+        Id: seg.id,
+        UsuarioId: agenteId,
+        ObservacionesSolicitante: motivo
+      }, apis.seguimiento)
+    );
 
+    forkJoin(requests).subscribe({
+      next: (results: any[]) => {
+        // Backend devuelve int: 1 = ok, -1 = sin asignacion previa, -2 = horarios vencidos.
+        const fallidos = results.filter(r => r === -1 || r === -2).length;
+        const ok = results.length - fallidos;
+        if (ok === 0) {
+          this.messageService.add({ severity: 'error', summary: 'No se reasigno', detail: 'Ningun caso pudo reasignarse (horarios vencidos o sin asignacion previa).', life: 6000 });
+          return;
+        }
+        this.messageService.add({
+          severity: fallidos === 0 ? 'success' : 'warn',
+          summary: 'Reasignacion',
+          detail: fallidos === 0
+            ? `Reasignados ${ok} caso(s) al agente ${this.agente!.fullName}.`
+            : `Reasignados ${ok}/${results.length}. ${fallidos} no pudo reasignarse (horarios vencidos o sin asignacion previa).`,
+          life: 5000
+        });
+        this.showDialogAgente = false;
+        this.selectedRecords = [];
+        this.motivo = '';
+        this.agente = undefined;
+        this.CargarDatos(this.activeFilter);
+      },
+      error: (err: any) => {
+        console.error('Error reasignando casos', err);
+        const detalle = (typeof err?.error === 'string' ? err.error : null) || err?.error?.message || err?.message || 'Error al reasignar casos.';
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: detalle, life: 6000 });
+      }
+    });
   }
 
   private toDateOnly(value: string | Date): Date | null {
