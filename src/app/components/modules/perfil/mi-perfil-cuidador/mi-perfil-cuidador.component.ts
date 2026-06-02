@@ -9,6 +9,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { User } from '../../../../core/services/user';
+import { GenericService } from '../../../../services/generic.services';
+import { apis } from '../../../../models/apis.model';
 
 interface TelefonoExtra { id: number; numero: string; descripcion: string; }
 interface CorreoExtra { id: number; correo: string; }
@@ -49,7 +51,7 @@ export class MiPerfilCuidadorComponent implements OnInit {
   telefonos: TelefonoExtra[] = [];
   correos: CorreoExtra[] = [];
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService, private repos: GenericService) {}
 
   ngOnInit() {
     const alias = (this.xUser.alias ?? '').trim();
@@ -63,6 +65,30 @@ export class MiPerfilCuidadorComponent implements OnInit {
     }
     this.celular = '';
     this.celularOriginal = this.celular;
+
+    this.cargarAdicionales();
+  }
+
+  // BUG-LZ-089: leer los contactos adicionales guardados (antes el componente no consultaba
+  // backend al entrar; al guardar aparecia "exitoso" pero la pantalla quedaba vacia al volver).
+  private cargarAdicionales() {
+    if (!this.xUser.id) {
+      return;
+    }
+    this.repos.get('ContactoCuidador/ContactosAdicionales/', this.xUser.id, apis.nna).subscribe({
+      next: (data: any) => {
+        this.telefonos = (data?.telefonos ?? []).map((t: any, i: number) => ({
+          id: Date.now() + i,
+          numero: t.numero ?? '',
+          descripcion: t.descripcion ?? ''
+        }));
+        this.correos = (data?.correos ?? []).map((c: any, i: number) => ({
+          id: Date.now() + 1000 + i,
+          correo: c.correo ?? ''
+        }));
+      },
+      error: (err: any) => console.error('No se pudieron cargar contactos adicionales del cuidador', err)
+    });
   }
 
   editarCelular() {
@@ -108,7 +134,25 @@ export class MiPerfilCuidadorComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Campo requerido', detail: 'Complete telefonos (7-10 digitos) y correos validos.', life: 5000 });
       return;
     }
-    // TODO: persistir en backend cuando exista endpoint Cuidador profile
-    this.messageService.add({ severity: 'success', summary: 'Datos adicionales guardados', life: 3000 });
+    if (!this.xUser.id) {
+      this.messageService.add({ severity: 'error', summary: 'Sesion invalida', detail: 'No se pudo identificar al usuario.', life: 5000 });
+      return;
+    }
+
+    // BUG-LZ-089: persistir en ContactoCuidador/ContactosAdicionales/Guardar.
+    const payload = {
+      userId: this.xUser.id,
+      telefonos: this.telefonos.map(t => ({ numero: t.numero, descripcion: t.descripcion })),
+      correos: this.correos.map(c => ({ correo: c.correo }))
+    };
+    this.repos.post('ContactoCuidador/ContactosAdicionales/Guardar', payload, apis.nna).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Datos adicionales guardados', life: 3000 });
+      },
+      error: (err: any) => {
+        const detalle = (typeof err?.error === 'string' ? err.error : null) || err?.error?.message || err?.message || 'Error al guardar.';
+        this.messageService.add({ severity: 'error', summary: 'No se pudo guardar', detail: detalle, life: 5000 });
+      }
+    });
   }
 }
