@@ -9,6 +9,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { CasosEntidadService } from './casos-entidad.services';
+import { User } from '../../../../core/services/user';
 
 
 @Component({
@@ -27,20 +28,41 @@ export class CasosEntidadComponent implements OnInit {
 
   estadosSeguimiento = [];
 
-  eapbID=1;
-  epsID=1;
+  // Bug 2026-06-17: antes hardcoded eapbID=1/epsID=1 -> tabla vacia para cualquier usuario real.
+  // Resolvemos el TPEAPB.Id desde el NIT del usuario logueado (igual que dashboard-eapb).
+  eapbID: number = 0;
+  epsID: number = 0;
+  xUser = new User();
 
   constructor(public servicio: CasosEntidadService) { }
 
   async ngOnInit() {
-    //TODO: IMPLEMENTAR LA FORMA EN QUE SE RECIBE EL ID DE EAPB Y EL EPS
-
     this.estadosSeguimiento = await this.servicio.GetEstadoSeguimiento();
 
+    const nit = this.xUser.enterpriseIdentification;
+    if (nit) {
+      try {
+        const id = await this.servicio.GetEAPBIdByNit(nit);
+        if (id) {
+          const idNum = Number(id);
+          // Usar el mismo TPEAPB.Id para los dos filtros: el backend aplica OR
+          // entre NNA.EAPBId y NNA.EPSId, asi el caso aparece sin importar cual
+          // de los dos foreign keys apunte a la entidad del usuario.
+          this.eapbID = idNum;
+          this.epsID = idNum;
+        }
+      } catch (err) {
+        console.error('No se pudo resolver TPEAPB.Id por NIT', nit, err);
+      }
+    }
+
+    if (!this.eapbID && !this.epsID) {
+      console.warn('casos-entidad: no se resolvio el Id de la entidad (NIT=' + nit + '). No se cargan casos.');
+      return;
+    }
+
     this.casos = await this.servicio.GetListaCasos(this.eapbID, this.epsID);
-    console.log("casos ", this.casos);
-
-
+    console.log('casos ', this.casos);
   }
 
   verRespuesta(){

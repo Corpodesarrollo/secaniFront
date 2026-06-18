@@ -8,16 +8,16 @@
 export const environment = {
   cookie : false,
   production: false,
-  url: 'https://localhost:7084/',
-  url_MsAuthention: 'https://localhost:7084/',
-  url_MSEntidad: 'https://localhost:7084/',
-  url_MSPermisos: 'https://localhost:7084/',
-  url_Parametricas: 'https://localhost:7294/',
-  url_MSTablasParametricas: 'https://localhost:7294/',
-  url_MsNna: 'https://localhost:7291/',
-  url_MSSeguimiento: 'https://localhost:7085/',
-  url_MSParametricas: 'https://localhost:7294/',
-  url_MSUsuarioyRoles: 'https://localhost:7084/',
+  url: 'http://localhost:9111/',
+  url_MsAuthention: 'http://localhost:9111/',
+  url_MSEntidad: 'http://localhost:9111/',
+  url_MSPermisos: 'http://localhost:9111/',
+  url_Parametricas: 'http://localhost:9114/',
+  url_MSTablasParametricas: 'http://localhost:9114/',
+  url_MsNna: 'http://localhost:9112/',
+  url_MSSeguimiento: 'http://localhost:9113/',
+  url_MSParametricas: 'http://localhost:9114/',
+  url_MSUsuarioyRoles: 'http://localhost:9111/',
   url_Sispro: 'https://web.sispropreprod.gov.co/'
 };
 

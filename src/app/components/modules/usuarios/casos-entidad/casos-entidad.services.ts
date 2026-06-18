@@ -25,5 +25,12 @@ export class CasosEntidadService {
     return await  this.comun.retorno_get(url);
   }
 
+  // Bug 2026-06-17: resolver TPEAPB.Id desde el NIT del usuario logueado para no depender
+  // de los hardcodes eapbID=1/epsID=1 en el componente.
+  GetEAPBIdByNit = async (nit: string | number) => {
+    let url = `${'Dashboard/GetEAPBIdByNit?nit=' + nit}`;
+    return await this.comun.retorno_get(url);
+  }
+
 
 }

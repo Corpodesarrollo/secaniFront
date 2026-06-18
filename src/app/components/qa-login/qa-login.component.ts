@@ -123,24 +123,28 @@ export class QaLoginComponent {
       }
     },
     {
+      // Dashboard EAPB/ET requiere TPEAPB.Id real (BUG-LZ-087). NIT 9000000004 ficticio no
+      // resolvia -> eapbResuelto=false -> dashboard sale early sin cargar KPIs ni graficas.
+      // Apuntar a Medellin (NIT 890905211, codigo 05001, id 12805) para diferenciarlo del
+      // usuario "eapb" (Antioquia 890900286).
       key: 'externo',
       label: 'Externo / EAPB / ET',
-      description: 'QA Externo - CC9000000004',
+      description: 'QA Externo - Direccion de Salud de Medellin (NIT 890905211)',
       icon: 'pi-building',
       color: '#10b981',
       user: {
         id: 'qa-externo-004',
         idRol: '88775B35-E8A7-4A73-A603-841C9DB3DBAD',
-        alias: 'CC9000000004',
+        alias: 'NI890905211',
         email: 'qa.externo@secani.test',
-        name: 'QA Externo EAPB',
+        name: 'QA Externo ET Medellin',
         state: true,
-        rolCode: ['SECANI-Externo'],
-        enterpriseCode: '',
-        enterpriseDeptoCode: '',
+        rolCode: ['SECANI-ET'],
+        enterpriseCode: '890905211',
+        enterpriseDeptoCode: '05',
         enterpriseEmail: 'qa.externo@secani.test',
-        enterpriseName: 'QA Externo EAPB',
-        enterpriseIdentification: '9000000004',
+        enterpriseName: 'DIRECCION DE SALUD DE MEDELLIN',
+        enterpriseIdentification: '890905211',
         isMinSalud: false,
         isCoordinadorAdmin: false,
         isAgenteSeguimiento: false,
@@ -174,6 +178,36 @@ export class QaLoginComponent {
         isCuidador: false,
         isET: false,
         isEAPB: false,
+      }
+    },
+    {
+      // BUG-LZ-087: usuario QA EAPB para reproducir dashboard EAPB localmente.
+      // enterpriseIdentification = NIT real de TPEAPB (Direccion Departamental de Antioquia)
+      // para que el endpoint GetEAPBIdByNit resuelva el Id correcto.
+      key: 'eapb',
+      label: 'EAPB Antioquia',
+      description: 'QA EAPB - Direccion Departamental de Antioquia (NIT 890900286)',
+      icon: 'pi-building',
+      color: '#7c3aed',
+      user: {
+        id: 'qa-eapb-001',
+        idRol: '88775B35-E8A7-4A73-A603-841C9DB3DBAD',
+        alias: 'NI890900286',
+        email: 'qa.eapb@secani.test',
+        name: 'QA EAPB Antioquia',
+        state: true,
+        rolCode: ['SECANI-EAPB'],
+        enterpriseCode: '890900286',
+        enterpriseDeptoCode: '05',
+        enterpriseEmail: 'qa.eapb@secani.test',
+        enterpriseName: 'DIRECCION DEPARTAMENTAL DE ANTIOQUIA',
+        enterpriseIdentification: '890900286',
+        isMinSalud: false,
+        isCoordinadorAdmin: false,
+        isAgenteSeguimiento: false,
+        isCuidador: false,
+        isET: false,
+        isEAPB: true,
       }
     }
   ];
