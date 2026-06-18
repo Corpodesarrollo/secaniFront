@@ -156,14 +156,14 @@ export class DashboardEapbComponent implements OnInit {
   }
 
   calculoPorcentaje(data: any){
+    // BUG-LZ 2026-06-18: % "esta semana" = casos creados ultimos 7 dias / total general.
+    // Antes comparaba 2 ventanas iguales (actual vs anterior -7 dias) y daba crecimiento.
     let totalCasosActual = Number(data?.totalCasosActual) || 0;
-    let totalCasosAnterior = Number(data?.totalCasosAnterior) || 0;
+    let totalCasosGeneral = Number(data?.totalCasosGeneral) || 0;
 
-    let dataP = totalCasosAnterior > 0
-      ? ((totalCasosActual - totalCasosAnterior) / totalCasosAnterior) * 100
+    return totalCasosGeneral > 0
+      ? (totalCasosActual / totalCasosGeneral) * 100
       : 0;
-
-    return dataP;
   }
 
   async filtroFechas(fecha_inicial: any, fecha_final: any){
