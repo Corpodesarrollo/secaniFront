@@ -42,14 +42,25 @@
                         </span>
                     </td>
                     <td>{{ seguimiento.observacion }}</td>
-                    <td>{{ seguimiento.nombreEntidad }}</td>
-                    <td>{{ seguimiento.fechaNotificacion | date:'dd/MM/yyyy' }}</td>
-                    <td style="text-align: center;">
-                        <button (click)="respuestaEntidad()" class="btn" aria-label="Ver">
-                            <i class="bi bi-eye-fill" style="color: #73b7ad;"></i>
-                        </button>
+                    <!-- Bug 2026-06-17: estos 4 campos viven por-alerta en alertasSeguimientos[]
+                         (BUG-LZ-055). seguimiento.nombreEntidad/fechaNotificacion/fechaRespuesta
+                         a nivel seguimiento siempre vacios -> usar la lista de alertas. -->
+                    <td>
+                        <div *ngFor="let alerta of seguimiento.alertasSeguimientos">{{ alerta.entidadAlerta }}</div>
                     </td>
-                    <td>{{ seguimiento.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                        <div *ngFor="let alerta of seguimiento.alertasSeguimientos">{{ alerta.fechaNotificacion | date:'dd/MM/yyyy' }}</div>
+                    </td>
+                    <td style="text-align: center;">
+                        <ng-container *ngFor="let alerta of seguimiento.alertasSeguimientos">
+                            <button *ngIf="formatFechaRespuesta(alerta.fechaRespuesta)" (click)="verRespuestaAlerta(alerta)" class="btn" aria-label="Ver">
+                                <i class="bi bi-eye-fill" style="color: #73b7ad;"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                    <td>
+                        <div *ngFor="let alerta of seguimiento.alertasSeguimientos">{{ formatFechaRespuesta(alerta.fechaRespuesta) }}</div>
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
@@ -65,5 +76,42 @@
             </button>
         </div>
     </div>
+
+    <p-dialog header="Respuesta de la entidad" [(visible)]="mostrarRespuesta" [modal]="true" [style]="{width: '720px', maxWidth: '95vw'}" [contentStyle]="{maxHeight: '75vh', overflowY: 'auto', wordBreak: 'break-word'}" (onHide)="cerrarRespuesta()">
+        <div class="container-fluid p-3" *ngIf="respuestaSeleccionada" style="word-break: break-word; overflow-wrap: anywhere;">
+            <div class="row mb-2">
+                <div class="col-4 fw-bold">Entidad</div>
+                <div class="col-8">{{ respuestaSeleccionada.nombreEntidad || respuestaSeleccionada.entidadAlerta || '-' }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-4 fw-bold">Fecha respuesta</div>
+                <div class="col-8">{{ formatFechaRespuesta(respuestaSeleccionada.fechaRespuesta) || '-' }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-4 fw-bold">Asunto</div>
+                <div class="col-8">{{ respuestaSeleccionada.asunto || '-' }}</div>
+            </div>
+            <!-- Bug 2026-06-17: respuesta llega como HTML (editor Quill). Con {{ }} mostraba
+                 tags escapados. Render con [innerHTML]. -->
+            <div class="row mb-2">
+                <div class="col-4 fw-bold">Respuesta</div>
+                <div class="col-8">
+                    <div *ngIf="respuestaSeleccionada.respuestaEntidad; else sinResp" [innerHTML]="respuestaSeleccionada.respuestaEntidad"></div>
+                    <ng-template #sinResp>{{ respuestaSeleccionada.observacion || '-' }}</ng-template>
+                </div>
+            </div>
+            <div class="row mb-2" *ngIf="respuestaSeleccionada.archivoAdjunto">
+                <div class="col-4 fw-bold">Adjunto</div>
+                <div class="col-8">
+                    <a href="javascript:void(0)" (click)="descargarAdjuntoRespuesta(respuestaSeleccionada.archivoAdjunto)">
+                        <i class="bi bi-paperclip"></i> {{ respuestaSeleccionada.archivoAdjunto }}
+                    </a>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button class="btn btn-secondary" (click)="cerrarRespuesta()">Cerrar</button>
+            </div>
+        </div>
+    </p-dialog>
 
 </div>
