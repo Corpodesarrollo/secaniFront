@@ -132,7 +132,7 @@
     <div class="table-contenedor">
       <p-table
         [value]="alertas"
-        dataKey="alertaId"
+        dataKey="idAlertaSeguimiento"
         selectionMode="single"
         [responsive]="true"
         [paginator]="true" [rows]="5"
@@ -187,7 +187,7 @@
                 [rounded]="true"
                 [plain]="true"
                 [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                (onClick)="consultarNotificaciones(alerta.alertaId)" />
+                (onClick)="consultarNotificaciones(alerta.idAlertaSeguimiento)" />
             </td>
           </tr>
         </ng-template>

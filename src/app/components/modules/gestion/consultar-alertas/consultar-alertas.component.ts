@@ -331,15 +331,15 @@ export class ConsultarAlertasComponent implements OnInit {
 
   onRowExpand(event: any) {
     for (let key in this.expandedRowKeys) {
-      if (key !== event.data.alertaId) {
+      if (key !== event.data.idAlertaSeguimiento) {
         this.expandedRowKeys[key] = false;
       }
     }
-    this.expandedRowKeys[event.data.alertaId] = true;
+    this.expandedRowKeys[event.data.idAlertaSeguimiento] = true;
   }
 
   onRowCollapse(event: any) {
-    delete this.expandedRowKeys[event.data.alertaId];
+    delete this.expandedRowKeys[event.data.idAlertaSeguimiento];
   }
 
   consultarNotificaciones(alertaId: any){
