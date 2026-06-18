@@ -78,6 +78,9 @@ export class DetalleNnaComponent implements OnInit {
   unidadesMedida: any[] = [];
   ipsList: any[] = [];
   tiposVivienda: any[] = [];
+  // BUG fix: dropdown "Razones por las cuales el menor no tiene diagnostico" estaba sin
+  // [options] -> mostraba placeholder vacio aun teniendo motivoNoDiagnosticoId en el NNA.
+  razonesSinDiagnostico: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -119,7 +122,15 @@ export class DetalleNnaComponent implements OnInit {
     this.loadUnidadesMedida();
     this.loadIPSList();
     this.loadTiposVivienda();
+    this.loadRazonesSinDiagnostico();
 
+  }
+
+  loadRazonesSinDiagnostico(){
+    this.repos.get_withoutParameters(`RazonesSinDiagnostico`, 'TablaParametrica').subscribe({
+      next: (data: any) => this.razonesSinDiagnostico = data || [],
+      error: (err: any) => console.error('Error al cargar razones sin diagnostico', err)
+    });
   }
 
   // ---- BUG-LZ-085: loaders + getters de parametricas del detalle ----
@@ -131,7 +142,10 @@ export class DetalleNnaComponent implements OnInit {
   }
   loadSubCategoriasAlerta(){
     this.repos.get_withoutParameters(`SubCategoriaAlerta`, 'TablaParametrica').subscribe({
-      next: (data: any) => this.subcategoriasAlerta = data || [],
+      // Bug 2026-06-17: backend retorna `subCategoriaAlerta` (no `nombre`) -> el getter
+      // generico nombrePorCodigoOId leia x.nombre = undefined y mostraba span vacio.
+      // Normalizamos a `.nombre` para reutilizar el helper.
+      next: (data: any) => this.subcategoriasAlerta = (data || []).map((x: any) => ({ ...x, nombre: x?.nombre ?? x?.subCategoriaAlerta })),
       error: (err: any) => console.error('Error al cargar subcategorias alerta', err)
     });
   }
@@ -141,9 +155,23 @@ export class DetalleNnaComponent implements OnInit {
       error: (err: any) => console.error('Error al cargar causas inasistencia', err)
     });
   }
+  // Bug 2026-06-17: SISPRO no expone la tabla UnidadMedida (endpoint retorna 204) y el
+  // backend reenvia ese 204 -> data llega null -> getNombreUnidadMedida da "Dato no encontrado".
+  // Mantener el GET por si SISPRO la habilita pero precargar con un fallback hardcoded.
+  private static readonly UNIDADES_MEDIDA_FALLBACK = [
+    { id: 'D', codigo: 'D', nombre: 'Días' },
+    { id: 'S', codigo: 'S', nombre: 'Semanas' },
+    { id: 'M', codigo: 'M', nombre: 'Meses' },
+    { id: 'A', codigo: 'A', nombre: 'Años' },
+    { id: 'H', codigo: 'H', nombre: 'Horas' }
+  ];
+
   loadUnidadesMedida(){
+    this.unidadesMedida = DetalleNnaComponent.UNIDADES_MEDIDA_FALLBACK;
     this.repos.get_withoutParameters(`TablaParametrica/UnidadMedida`, 'TablaParametrica').subscribe({
-      next: (data: any) => this.unidadesMedida = data || [],
+      next: (data: any) => {
+        if (Array.isArray(data) && data.length > 0) this.unidadesMedida = data;
+      },
       error: (err: any) => console.error('Error al cargar unidades de medida', err)
     });
   }
@@ -285,11 +313,27 @@ export class DetalleNnaComponent implements OnInit {
     this.repos.get_withoutParameters(`NNA/${this.idNna}`, 'NNA').subscribe({
       next: async (nnaData: any) => {
         this.datosNNA = nnaData;
-        this.datosNNA.fechaDiagnostico = this.datosNNA?.fechaDiagnostico ? new Date(this.datosNNA.fechaDiagnostico) : null;
-        this.datosNNA.fechaUltimaRecaida = this.datosNNA?.fechaUltimaRecaida ? new Date(this.datosNNA.fechaUltimaRecaida) : null;
+        // BUG fix: <input type="date"> con [(ngModel)] requiere string YYYY-MM-DD,
+        // no Date ni ISO con hora -> sino el input queda vacio.
+        this.datosNNA.fechaDiagnostico = this.toDateInputString(this.datosNNA?.fechaDiagnostico);
+        this.datosNNA.fechaConsultaDiagnostico = this.toDateInputString(this.datosNNA?.fechaConsultaDiagnostico);
+        this.datosNNA.fechaInicioTratamiento = this.toDateInputString(this.datosNNA?.fechaInicioTratamiento);
+        this.datosNNA.fechaUltimaRecaida = this.toDateInputString(this.datosNNA?.fechaUltimaRecaida);
       },
       error: (err: any) => console.error('Error al cargar datos del NNA', err)
     });
+  }
+
+  private toDateInputString(value: any): any {
+    if (!value) return null;
+    const s = String(value);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const d = new Date(s);
+    if (isNaN(d.getTime())) return null;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   loadSeguimientoAlertas() {

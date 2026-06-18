@@ -215,7 +215,7 @@
               <div class="col" style="font-weight: bold;">Razones por las cuales el menor no tiene diagnóstico:<br></div>
               <div class="col">
                 <div class="row" style="margin-bottom: 10px;">
-                  <p-dropdown  placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoId"></p-dropdown>
+                  <p-dropdown placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoId" [options]="razonesSinDiagnostico" optionLabel="nombre" optionValue="id" appendTo="body"></p-dropdown>
                 </div>
                 <div class="row">
                   <input type="text" class="form-control" placeholder="Otro, ¿cuál?" [disabled]="true" [(ngModel)]="datosNNA.motivoNoDiagnosticoOtro">
@@ -258,7 +258,7 @@
               <div class="row">
                 <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
                 <div class="col">
-                  <p-dropdown  placeholder="Seleccionar" [disabled]="true" [(ngModel)]="datosNNA.ipsId" [options]="optionsIps"></p-dropdown>
+                  <span>{{ datosNNA.ipsNombre || getNombreIPS(datosNNA.ipsId) }}</span>
                 </div>
               </div>
             </div>
@@ -276,11 +276,11 @@
                 <div class="col d-flex align-items-center">
                   <!-- Radio buttons for Si / No -->
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input"  type="radio"  id="recSi"  name="recaida"  value="true"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === true" [disabled]="true">
+                    <input class="form-check-input" type="radio" id="recSi" name="recaida" [value]="true" [(ngModel)]="datosNNA.recaida" [disabled]="true">
                     <label class="form-check-label" for="recSi">Sí</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input"  type="radio"  id="recNo"  name="recaida"  value="false"  [(ngModel)]="datosNNA.recaida" [checked]="datosNNA.recaida === false" [disabled]="true">
+                    <input class="form-check-input" type="radio" id="recNo" name="recaida" [value]="false" [(ngModel)]="datosNNA.recaida" [disabled]="true">
                     <label class="form-check-label" for="recNo">No</label>
                   </div>
 
@@ -313,12 +313,12 @@
               </div>
               <div class="col-6">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input"  type="radio"  id="traslSi"  name="traslados"  value="true"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === true" [disabled]="true">
-                  <label class="form-check-label" for="trasladoSi">Sí</label>
+                  <input class="form-check-input" type="radio" id="traslSi" name="traslados" [value]="true" [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [disabled]="true">
+                  <label class="form-check-label" for="traslSi">Sí</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input"  type="radio"  id="traslNo"  name="traslados"  value="false"  [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [checked]="datosNNA.trasladosHaSidoTrasladadodeInstitucion === false" [disabled]="true">
-                  <label class="form-check-label" for="trasladoNo">No</label>
+                  <input class="form-check-input" type="radio" id="traslNo" name="traslados" [value]="false" [(ngModel)]="datosNNA.trasladosHaSidoTrasladadodeInstitucion" [disabled]="true">
+                  <label class="form-check-label" for="traslNo">No</label>
                 </div>
               </div>
             </div>
@@ -891,7 +891,9 @@
                 </div>
                 <div class="mb-3">
                   <label for="informacionCompleta" class="form-label fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
-                  <textarea class="form-control" id="informacionCompleta" rows="3" [(ngModel)]="datosNNA.tratamientoHaSidoInformadoClaramente" [disabled]="true"></textarea>
+                  <div id="informacionCompleta">
+                    <span>{{ datosNNA.tratamientoHaSidoInformadoClaramente === true ? 'Sí' : (datosNNA.tratamientoHaSidoInformadoClaramente === false ? 'No' : 'Dato no encontrado') }}</span>
+                  </div>
                 </div>
               </div>
             </div>

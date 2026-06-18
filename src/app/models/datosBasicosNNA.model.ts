@@ -6,6 +6,7 @@ export interface DatosBasicosNNA {
     diagnostico: string;
     fechaIngresoEstrategia: Date;
     fechaInicioSeguimiento: Date;
+    ultimaActuacionFecha?: Date | string | null;
     tiempoTranscurrido: string;
     seguimientosRealizados: number;
     estado: string;
