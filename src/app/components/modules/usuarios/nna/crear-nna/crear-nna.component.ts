@@ -283,6 +283,22 @@ export class CrearNnaComponent {
           this.visible = true;
         } else {
           let persona = await this.personaService.get(this.nna.tipoIdentificacionId, this.nna.numeroIdentificacion);
+          // BUG-LZ-76: si Maestro Personas no devuelve, intentar como fallback el cargue local
+          // SIVIGILA. Hay NNAs que estan en SIVIGILA (ReportesSIVIGILA) pero no en el directorio
+          // externo SISPRO -> Luz QA reportaba "no es posible crear" sin opcion.
+          if (!persona) {
+            try {
+              const sivigila: any = await this.axios.retorno_get(
+                `ReportesSIVIGILA/PersonaByDocumento/${this.nna.tipoIdentificacionId}/${this.nna.numeroIdentificacion}`,
+                baseUrl
+              );
+              if (sivigila && Object.keys(sivigila).length > 0) {
+                persona = sivigila;
+              }
+            } catch (errSivigila) {
+              console.error('Fallback ReportesSIVIGILA fallo', errSivigila);
+            }
+          }
           if (persona) {
             // BUG-025: rechazar fallecidos y mayores de edad antes de habilitar formulario
             if (persona.esFallecido === true) {
