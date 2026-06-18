@@ -12,13 +12,14 @@ import { DashboardEapbService } from './dashboard-eapb.services';
 import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { User } from '../../../../core/services/user';
+import { NotificacionVerComponent } from '../../notificacion-ver/notificacion-ver.component';
 
 @Component({
   selector: 'app-dashboard-eapb',
   templateUrl: './dashboard-eapb.component.html',
   styleUrls: ['./dashboard-eapb.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, SpinnerComponent, ReactiveFormsModule, CalendarModule],
+  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, SpinnerComponent, ReactiveFormsModule, CalendarModule, NotificacionVerComponent],
 })
 export class DashboardEapbComponent implements OnInit {
 
@@ -341,10 +342,20 @@ export class DashboardEapbComponent implements OnInit {
 
 
   verTodosCasosCriticos(){
-    const fechaInicio = this.formFechas.value.fechaInicio;
-    const fechaFin = this.formFechas.value.fechaFin;
-    //this.router.navigate(['/gestion/seguimientos'], { queryParams: { fechaInicio, fechaFin } });
-    this.router.navigate(['/casos-entidad'], { queryParams: { fechaInicio, fechaFin } });
+    // Bug 2026-06-17: PO solicita que "Ver todas" navegue al modulo de gestion de alertas.
+    this.router.navigate(['/gestionar-alertas']);
+  }
+
+  // Bug 2026-06-17: boton "Ver" abria /casos-entidad. Ahora abre el modal Notificacion con
+  // el alertaId, reutilizando el componente compartido NotificacionVer.
+  mostrarNotificacion: boolean = false;
+  alertaSeleccionadaId: number = 0;
+  abrirNotificacion(alertaId: number) {
+    this.alertaSeleccionadaId = alertaId;
+    this.mostrarNotificacion = true;
+  }
+  cerrarNotificacion() {
+    this.mostrarNotificacion = false;
   }
 
   async consultar() {

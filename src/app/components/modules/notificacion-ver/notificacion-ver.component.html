@@ -1,94 +1,65 @@
-<p-dialog header="Notificación" [(visible)]="show" [modal]="true" [style]="{width: '600px'}" (onHide)="close()">
-    <div class="container p-4">
-        <div class="card-body" *ngIf="alerta.id > 0; else noAlerta">
+<p-dialog header="Notificacion" [(visible)]="show" [modal]="true" [style]="{width: '720px', maxWidth: '95vw'}" [contentStyle]="{maxHeight: '75vh', overflowY: 'auto', wordBreak: 'break-word'}" [breakpoints]="{'960px': '90vw', '640px': '95vw'}" (onHide)="close()">
+    <div class="container-fluid p-3" style="word-break: break-word; overflow-wrap: anywhere;">
+        <div *ngIf="cargando" class="text-center p-3">
+            <i class="pi pi-spin pi-spinner" style="font-size: 1.5rem;"></i>
+            <p class="mt-2 mb-0">Cargando notificacion...</p>
+        </div>
+
+        <div *ngIf="!cargando && error" class="alert alert-danger">{{error}}</div>
+
+        <div *ngIf="!cargando && !error && !notificacion" class="alert alert-warning">
+            Aun no se ha generado una notificacion para esta alerta.
+        </div>
+
+        <div class="card-body" *ngIf="!cargando && !error && notificacion">
             <div class="row mb-3">
-                <div class="col-3"><strong>Fecha de notificación</strong></div>
-                <div class="col-9"><span>{{alerta.dateCreated | date:'dd/MM/yyyy'}}</span></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>De</strong></div>
-                <div class="col-9"><span>{{alerta.de}}</span></div>
+                <div class="col-3"><strong>Fecha de envio</strong></div>
+                <div class="col-9"><span>{{notificacion.fechaEnvio | date:'dd/MM/yyyy'}}</span></div>
             </div>
             <div class="row mb-3">
                 <div class="col-3"><strong>Para</strong></div>
-                <div class="col-9"><span>{{alerta.para}}</span></div>
+                <div class="col-9"><span>{{notificacion.emailPara}}</span></div>
             </div>
-            <div class="row mb-3">
+            <div class="row mb-3" *ngIf="notificacion.emailCC">
                 <div class="col-3"><strong>Con copia</strong></div>
-                <div class="col-9"><span>{{alerta.conCopia}}</span></div>
+                <div class="col-9"><span>{{notificacion.emailCC}}</span></div>
             </div>
             <div class="row mb-3">
                 <div class="col-3"><strong>Asunto</strong></div>
                 <div class="col-9">
-                    <p class="m-0">{{alerta.asunto}}</p>
+                    <p class="m-0">{{notificacion.asunto}}</p>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-3"><strong>Mensaje</strong></div>
                 <div class="col-9">
-                    <p class="m-0">{{alerta.mensaje}}</p>
+                    <div class="m-0" [innerHTML]="notificacion.mensaje"></div>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Firma</strong></div>
+            <div class="row mb-3" *ngIf="notificacion.comentario">
+                <div class="col-3"><strong>Comentario</strong></div>
                 <div class="col-9">
-                    <p class="m-0">{{alerta.firma}}</p>
+                    <p class="m-0">{{notificacion.comentario}}</p>
                 </div>
             </div>
-            <div class="row">
+            <!-- Bug 2026-06-17: campo cierre llega como HTML escapado (p ql-align-justify...).
+                 Antes con {{ }} se mostraba como texto literal. Render como HTML con [innerHTML]. -->
+            <div class="row mb-3" *ngIf="notificacion.cierre">
+                <div class="col-3"><strong>Cierre</strong></div>
+                <div class="col-9">
+                    <div class="m-0" [innerHTML]="notificacion.cierre"></div>
+                </div>
+            </div>
+            <div class="row" *ngIf="notificacion.archivoAdjunto">
                 <div class="col-3"><strong>Adjuntos</strong></div>
                 <div class="col-9">
-                    <a href="#">Oficio de notificacion de alerta</a>
+                    <a [href]="notificacion.archivoAdjunto" target="_blank" rel="noopener">Oficio de notificacion</a>
                 </div>
-            </div>
-            <div class="text-right mt-3">
-                <button class="btn btn-secondary" (click)="close()">Cerrar</button>
             </div>
         </div>
-        <ng-template #noAlerta>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Fecha de notificación</strong></div>
-                <div class="col-9"><span>01/01/2023</span></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>De</strong></div>
-                <div class="col-9"><span>Ejemplo Remitente</span></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Para</strong></div>
-                <div class="col-9"><span>Ejemplo Destinatario</span></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Con copia</strong></div>
-                <div class="col-9"><span>Ejemplo CC</span></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Asunto</strong></div>
-                <div class="col-9">
-                    <p class="m-0">Ejemplo Asunto</p>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Mensaje</strong></div>
-                <div class="col-9">
-                    <p class="m-0">Ejemplo Mensaje</p>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-3"><strong>Firma</strong></div>
-                <div class="col-9">
-                    <p class="m-0">Ejemplo Firma</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3"><strong>Adjuntos</strong></div>
-                <div class="col-9">
-                    <a href="#">Ejemplo de adjunto</a>
-                </div>
-            </div>
-            <div class="text-right mt-3">
-                <button class="btn btn-secondary" (click)="close()">Cerrar</button>
-            </div>
-        </ng-template>
+
+        <div class="text-end mt-3">
+            <button class="btn btn-secondary" (click)="close()">Cerrar</button>
+        </div>
     </div>
 </p-dialog>

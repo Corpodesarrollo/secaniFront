@@ -1,5 +1,6 @@
 export interface AlertasGestion {
     idAlerta: number;
+    idEstadoAlerta?: number;
     idSeguimiento: number;
     alerta: string;
     idAlertaSeguimiento: number;

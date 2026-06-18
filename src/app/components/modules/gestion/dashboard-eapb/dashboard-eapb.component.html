@@ -116,7 +116,7 @@
 
                 </td>
                 <td>
-                  <button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center"  style="background-color: #73b7ad;" (click)="enviarDatoNNa(alerta.nNaId)">Ver</button>
+                  <button type="button" class="btn position-relative text-white rounded-3 d-inline-flex align-items-center"  style="background-color: #73b7ad;" (click)="abrirNotificacion(alerta.alertaId)">Ver</button>
                 </td>
               </tr>
             </table>
@@ -128,5 +128,6 @@
     </div>
   </div>
 
+  <app-notificacion-ver [show]="mostrarNotificacion" [alertaId]="alertaSeleccionadaId" (closeModal)="cerrarNotificacion()"></app-notificacion-ver>
 
 </div>
