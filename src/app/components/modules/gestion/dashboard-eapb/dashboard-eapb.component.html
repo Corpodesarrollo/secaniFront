@@ -8,13 +8,13 @@
 
     <div class="row">
       <div class="col-4">
-        <app-tarjetaKPI [data] = "data_1"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_1" periodo="esta semana"></app-tarjetaKPI>
       </div>
       <div class="col-4">
-        <app-tarjetaKPI [data] = "data_2"></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_2" periodo="este mes"></app-tarjetaKPI>
       </div>
       <div class="col-4">
-        <app-tarjetaKPI [data] = "data_3" [crecimiento] = false></app-tarjetaKPI>
+        <app-tarjetaKPI [data] = "data_3" periodo="esta semana"></app-tarjetaKPI>
       </div>
 
 
@@ -72,7 +72,7 @@
       <br>
       <div class="card" style="padding:20px">
         <div class="chart">
-          <h4>Casos Activos</h4>
+          <h4>Alertas Abiertas vs Cerradas</h4>
           <p-chart type="pie" [data]="alertasData2" [options]="alertasOptions2" width="552" height="283"></p-chart>
 
         </div>

@@ -15,6 +15,7 @@ export class TarjetaKPIComponent implements OnInit {
 
   @Input() data: any;
   @Input() crecimiento: any = true;
+  @Input() periodo: string = 'esta semana';
 
 
 

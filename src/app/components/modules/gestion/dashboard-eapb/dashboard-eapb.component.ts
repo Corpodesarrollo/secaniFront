@@ -149,14 +149,14 @@ export class DashboardEapbComponent implements OnInit {
   }
 
   calculoPorcentaje(data: any){
-    // BUG-LZ 2026-06-18: % "esta semana" = casos creados ultimos 7 dias / total general.
-    // Antes comparaba 2 ventanas iguales (actual vs anterior -7 dias) y daba crecimiento.
-    let totalCasosActual = Number(data?.totalCasosActual) || 0;
-    let totalCasosGeneral = Number(data?.totalCasosGeneral) || 0;
+    // HU SECANI-RQ07-HU01: porcentaje "aumento/disminucion" entre el periodo actual y
+    // el anterior (semana vs semana, mes vs mes segun el KPI).
+    let actual = Number(data?.totalCasosActual) || 0;
+    let anterior = Number(data?.totalCasosAnterior) || 0;
 
-    return totalCasosGeneral > 0
-      ? (totalCasosActual / totalCasosGeneral) * 100
-      : 0;
+    if (anterior > 0) return ((actual - anterior) / anterior) * 100;
+    // Si no hubo periodo anterior y este aparecio, mostrar 100% para indicar incremento.
+    return actual > 0 ? 100 : 0;
   }
 
   async filtroFechas(fecha_inicial: any, fecha_final: any){
@@ -217,8 +217,11 @@ export class DashboardEapbComponent implements OnInit {
    let dataGraf = [datos.conAlerta, datos.sinAlerta];
 
 
+    // HU SECANI-RQ07-HU01: pie "Alertas abiertas vs cerradas" (datos.conAlerta y
+    // datos.sinAlerta del backend ahora son AlertaSeguimientos con EstadoId != 5 y == 5
+    // respectivamente, no NNAs con/sin alerta).
     this.alertasData2 = {
-      labels: ['Con Alerta', 'Sin Alerta'],
+      labels: ['Abiertas', 'Cerradas'],
       datasets: [
         {
           data: dataGraf,
