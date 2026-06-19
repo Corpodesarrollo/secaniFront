@@ -123,34 +123,33 @@ export class QaLoginComponent {
       }
     },
     {
-      // Dashboard EAPB/ET requiere TPEAPB.Id real (BUG-LZ-087). NIT 9000000004 ficticio no
-      // resolvia -> eapbResuelto=false -> dashboard sale early sin cargar KPIs ni graficas.
-      // Apuntar a Medellin (NIT 890905211, codigo 05001, id 12805) para diferenciarlo del
-      // usuario "eapb" (Antioquia 890900286).
+      // Apuntar a Caja de Compensacion Familiar Colsubsidio (NIT 860007336, id 14053)
+      // que es la EAPB real asociada a los NNAs con alertas en QA (3 alertas: 10061,
+      // 10064 y 10065 visibles en /home + /gestionar-alertas).
       key: 'externo',
       label: 'Externo / EAPB / ET',
-      description: 'QA Externo - Direccion de Salud de Medellin (NIT 890905211)',
+      description: 'QA Externo - Colsubsidio (NIT 860007336)',
       icon: 'pi-building',
       color: '#10b981',
       user: {
         id: 'qa-externo-004',
         idRol: '88775B35-E8A7-4A73-A603-841C9DB3DBAD',
-        alias: 'NI890905211',
+        alias: 'NI860007336',
         email: 'qa.externo@secani.test',
-        name: 'QA Externo ET Medellin',
+        name: 'QA Externo EAPB Colsubsidio',
         state: true,
-        rolCode: ['SECANI-ET'],
-        enterpriseCode: '890905211',
-        enterpriseDeptoCode: '05',
+        rolCode: ['SECANI-EAPB'],
+        enterpriseCode: '860007336',
+        enterpriseDeptoCode: '11',
         enterpriseEmail: 'qa.externo@secani.test',
-        enterpriseName: 'DIRECCION DE SALUD DE MEDELLIN',
-        enterpriseIdentification: '890905211',
+        enterpriseName: 'CAJA DE COMPENSACION FAMILIAR COLSUBSIDIO',
+        enterpriseIdentification: '860007336',
         isMinSalud: false,
         isCoordinadorAdmin: false,
         isAgenteSeguimiento: false,
         isCuidador: false,
-        isET: true,
-        isEAPB: false,
+        isET: false,
+        isEAPB: true,
       }
     },
     {

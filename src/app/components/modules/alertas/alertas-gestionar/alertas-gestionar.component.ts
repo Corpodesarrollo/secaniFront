@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { apis } from '../../../../models/apis.model';
 import { GenericService } from '../../../../services/generic.services';
 import { AlertasGestion } from '../../../../models/alertasGestion.model';
+import { User } from '../../../../core/services/user';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -18,9 +19,12 @@ import { Router } from '@angular/router';
   styleUrl: './alertas-gestionar.component.css'
 })
 export class AlertasGestionarComponent {
-  eapb: string = 'EPS Sanitas';
+  // HU SECANI-RQ07-HU03: la lista se restringe a las alertas de la entidad del usuario.
+  // alias = NI + NIT (convencion qa-login); backend lo traduce a EAPBId.
+  xUser = new User();
+  eapb: string = this.xUser.enterpriseName || 'EPS Sanitas';
   alertas: AlertasGestion[] = [];
-  user: string = 'admin';
+  user: string = this.xUser.alias || 'admin';
 
   displayModal: boolean = false;
   displayModalEnviarRespuesta: boolean = false;
