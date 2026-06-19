@@ -48,8 +48,8 @@
 
                     </p-card>
                   </div>
-                  <div class="row">
-                    <a [href]="respuesta.adjunto.url" target="_blank">{{ respuesta.adjunto.nombre }}</a>
+                  <div class="row" *ngIf="respuesta.adjunto?.url">
+                    <a [href]="respuesta.adjunto.url" target="_blank" rel="noopener">{{ respuesta.adjunto.nombre }}</a>
                   </div>
                 </div>
               </div>

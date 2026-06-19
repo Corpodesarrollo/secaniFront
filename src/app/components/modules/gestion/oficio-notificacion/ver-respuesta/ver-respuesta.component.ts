@@ -32,10 +32,7 @@ export class VerRespuestaComponent implements OnInit {
       correo: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
       telefono: '6013305043',
       mensaje: 'Notificación de alerta por barrera de acceso...',
-      adjunto: {
-        nombre: 'Oficio de notificación de alerta.pdf',
-        url: '/assets/notificacion-alerta.pdf'
-      }
+      adjunto: null
     },
     {
       fecha: '20/04/2024',
@@ -45,10 +42,7 @@ export class VerRespuestaComponent implements OnInit {
       correo: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
       telefono: '6013305043',
       mensaje: 'Notificación de alerta por barrera de acceso...',
-      adjunto: {
-        nombre: 'Oficio de notificación de alerta.pdf',
-        url: '/assets/notificacion-alerta.pdf'
-      }
+      adjunto: null
     },
     {
       fecha: '20/04/2024',
@@ -58,10 +52,7 @@ export class VerRespuestaComponent implements OnInit {
       correo: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
       telefono: '6013305043',
       mensaje: 'Notificación de alerta por barrera de acceso...',
-      adjunto: {
-        nombre: 'Oficio de notificación de alerta.pdf',
-        url: '/assets/notificacion-alerta.pdf'
-      }
+      adjunto: null
     }
   ];
 

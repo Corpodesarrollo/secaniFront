@@ -43,9 +43,9 @@
                 <div class="col-2"><span class="titulo">Firma</span></div>
                 <div class="col">{{ notificacion.firma }}</div>
               </div>
-              <div class="row">
+              <div class="row" *ngIf="notificacion.adjunto?.url">
                 <div class="col-2"><span class="titulo">Adjuntos</span></div>
-                <div class="col"><a [href]="notificacion.adjunto.url" target="_blank">{{ notificacion.adjunto.nombre }}</a></div>
+                <div class="col"><a [href]="notificacion.adjunto.url" target="_blank" rel="noopener">{{ notificacion.adjunto.nombre }}</a></div>
               </div>
             </div>
 

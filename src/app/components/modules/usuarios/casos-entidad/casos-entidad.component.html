@@ -37,7 +37,7 @@ currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
           </td>
           <td>{{ casos.observacionesSolicitante }}</td>
           <td><p-tag [value]="obtenerNombreEstadoSeguimiento(casos.estadoSeguimientoId)"   styleClass="custom-tag"/></td>
-          <td><a (click) = "verRespuesta()"><img src="iconos/ojo.svg" alt="ojo"/></a></td>
+          <td><a (click)="verRespuesta()" style="cursor: pointer"><img src="iconos/ojo.svg" alt="ojo"/></a></td>
       </tr>
   </ng-template>
 </p-table>

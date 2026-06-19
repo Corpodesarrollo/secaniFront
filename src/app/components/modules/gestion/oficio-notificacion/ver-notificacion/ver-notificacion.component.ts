@@ -32,10 +32,7 @@ export class VerNotificacionComponent implements OnInit {
 Centro de Contacto al Ciudadano
 Teléfono: 601 330 5043
 www.minsalud.gov.co`,
-      adjunto: {
-        nombre: 'Oficio de notificación de alerta.pdf',
-        url: '/assets/notificacion-alerta.pdf'
-      }
+      adjunto: null
     },
     {
       fecha: '20/04/2024',
@@ -48,10 +45,7 @@ www.minsalud.gov.co`,
 Centro de Contacto al Ciudadano
 Teléfono: 601 330 5043
 www.minsalud.gov.co`,
-      adjunto: {
-        nombre: 'Oficio de notificación de alerta.pdf',
-        url: '/assets/notificacion-alerta.pdf'
-      }
+      adjunto: null
     }
   ];
 
