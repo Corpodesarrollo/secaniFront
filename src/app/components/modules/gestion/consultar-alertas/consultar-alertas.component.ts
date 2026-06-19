@@ -207,6 +207,15 @@ export class ConsultarAlertasComponent implements OnInit {
             return alertasAcumuladas;
           }, []);
 
+          // BUG-LZ 2026-06-19: ordenar por fecha de creacion de la alerta (desc).
+          // Fallback a idAlertaSeguimiento desc cuando fechaCreacionAlerta venga vacia.
+          this.todasAlertas.sort((a: any, b: any) => {
+            const fa = a?.fechaCreacionAlerta ? new Date(a.fechaCreacionAlerta).getTime() : 0;
+            const fb = b?.fechaCreacionAlerta ? new Date(b.fechaCreacionAlerta).getTime() : 0;
+            if (fb !== fa) return fb - fa;
+            return (b?.idAlertaSeguimiento ?? 0) - (a?.idAlertaSeguimiento ?? 0);
+          });
+
           if (this.todasAlertas.length == 0) {
             console.warn('No se encontraron alertas en los seguimientos');
           }
