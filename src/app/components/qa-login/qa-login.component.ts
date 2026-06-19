@@ -153,6 +153,36 @@ export class QaLoginComponent {
       }
     },
     {
+      // FAMISANAR / COLSUBSIDIO E.P.S. (NIT 830003564, id 14163). EAPB destino real de las
+      // notificaciones enviadas en QA a las alertas 2.A/1.A; usarlo para probar el flujo
+      // "veo notificacion -> envio respuesta" sobre alertas dirigidas a FAMISANAR.
+      key: 'externo2',
+      label: 'Externo / EAPB - FAMISANAR',
+      description: 'QA Externo - FAMISANAR / COLSUBSIDIO (NIT 830003564)',
+      icon: 'pi-building',
+      color: '#0d9488',
+      user: {
+        id: 'qa-externo-006',
+        idRol: '88775B35-E8A7-4A73-A603-841C9DB3DBAD',
+        alias: 'NI830003564',
+        email: 'qa.externo.famisanar@secani.test',
+        name: 'QA Externo EAPB Famisanar',
+        state: true,
+        rolCode: ['SECANI-EAPB'],
+        enterpriseCode: '830003564',
+        enterpriseDeptoCode: '11',
+        enterpriseEmail: 'qa.externo.famisanar@secani.test',
+        enterpriseName: 'FAMISANAR LTDA. CAFAM - COLSUBSIDIO E.P.S.',
+        enterpriseIdentification: '830003564',
+        isMinSalud: false,
+        isCoordinadorAdmin: false,
+        isAgenteSeguimiento: false,
+        isCuidador: false,
+        isET: false,
+        isEAPB: true,
+      }
+    },
+    {
       key: 'agente2',
       label: 'Agente de Seguimiento 2',
       description: 'QA Agente 2 - CC9000000005',
