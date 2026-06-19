@@ -160,7 +160,19 @@
             <td>{{ alerta.ultimaFechaSeguimiento | date:'dd/MM/yyyy' }}</td>
             <td>{{ alerta.categoriaAlerta }}</td>
             <td class="subcategoria-column">{{ alerta.subcategoriaAlerta }}</td>
-            <td class="observacion-column">{{ alerta.observaciones }}</td>
+            <td class="observacion-column">
+              <span
+                *ngIf="alerta.observaciones === 'Alerta generada por seguimiento'"
+                class="badge bg-success text-white me-2"
+                style="font-size: 0.7rem;"
+                title="Alerta reportada en este seguimiento">Nueva</span>
+              <span
+                *ngIf="alerta.observaciones === 'Alerta sin resolver en seguimiento'"
+                class="badge bg-secondary text-white me-2"
+                style="font-size: 0.7rem;"
+                title="Alerta arrastrada del seguimiento anterior por no estar resuelta">Heredada</span>
+              {{ alerta.observaciones }}
+            </td>
             <td>
               <span [ngClass]="[getBadgeColor(alerta.estadoId), 'fixed-width-badge', 'text-wrap']" class="badge text-white me-1">
                 {{ getDescripcionEstado(alerta.estadoId) }}
