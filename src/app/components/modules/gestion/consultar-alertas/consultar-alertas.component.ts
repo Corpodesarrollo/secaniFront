@@ -200,15 +200,27 @@ export class ConsultarAlertasComponent implements OnInit {
       this.repos.get(`Seguimiento/GetSeguimientosNNA/`, this.idNna, 'Seguimiento').subscribe({
         next: async (data: any) => {
 
-          this.todasAlertas = data.reduce((alertasAcumuladas: any[], item: any) => {
+          const acumuladas: any[] = data.reduce((alertasAcumuladas: any[], item: any) => {
             if (item.alertasSeguimientos) {
               return alertasAcumuladas.concat(item.alertasSeguimientos);
             }
             return alertasAcumuladas;
           }, []);
 
-          // BUG-LZ 2026-06-19: ordenar por fecha de creacion de la alerta (desc).
-          // Fallback a idAlertaSeguimiento desc cuando fechaCreacionAlerta venga vacia.
+          // BUG-LZ 2026-06-19: cada seguimiento guarda un snapshot por AlertaId (diseno B).
+          // Aqui deduplicamos tomando el snapshot mas reciente (Max idAlertaSeguimiento) por
+          // AlertaId para que la tabla muestre el estado actual sin filas historicas duplicadas.
+          const porAlertaId = new Map<number, any>();
+          for (const a of acumuladas) {
+            const key = a.alertaId;
+            const prev = porAlertaId.get(key);
+            if (!prev || (a.idAlertaSeguimiento ?? 0) > (prev.idAlertaSeguimiento ?? 0)) {
+              porAlertaId.set(key, a);
+            }
+          }
+          this.todasAlertas = Array.from(porAlertaId.values());
+
+          // Ordenar por fecha de creacion de la alerta (desc); fallback a idAlertaSeguimiento.
           this.todasAlertas.sort((a: any, b: any) => {
             const fa = a?.fechaCreacionAlerta ? new Date(a.fechaCreacionAlerta).getTime() : 0;
             const fb = b?.fechaCreacionAlerta ? new Date(b.fechaCreacionAlerta).getTime() : 0;
