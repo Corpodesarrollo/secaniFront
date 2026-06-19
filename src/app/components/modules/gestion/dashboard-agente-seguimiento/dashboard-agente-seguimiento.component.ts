@@ -59,8 +59,11 @@ export class DashboardAgenteSeguimientoComponent implements OnInit {
 
   constructor(public servicios: DashboardAgenteSeguimientoService, private fb: FormBuilder,  public router: Router) {
 
-    //TODO: ACTUALIZAR TEMAS DE USUARIO
-    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
+    // HU SECANI-RQ02-HU01: el dashboard del agente filtra sus KPIs/graficas por el
+    // UsuarioId logueado. Antes habia un GUID hardcoded de prueba -> "Mis Casos" y
+    // "Alertas" daban 0 para cualquier agente real porque ese GUID no existe en
+    // UsuarioAsignados.UsuarioId.
+    this.usuarioId = this.user.id ?? '';
 
     this.diasLimite(this.currentDate);
     this.formFechas = this.fb.group({
