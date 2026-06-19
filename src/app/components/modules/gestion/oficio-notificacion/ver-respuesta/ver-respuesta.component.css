@@ -15,8 +15,26 @@
   padding: 16px;
   border-radius: 8px;
   background-color: #fff;
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.respuesta .row > .col,
+.respuesta .row > [class*="col-"] {
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.respuesta .col p,
+.respuesta .col span {
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .linea {
