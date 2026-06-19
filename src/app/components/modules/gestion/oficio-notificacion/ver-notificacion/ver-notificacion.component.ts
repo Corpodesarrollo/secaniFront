@@ -18,36 +18,11 @@ import { CarouselModule } from 'primeng/carousel';
 export class VerNotificacionComponent implements OnInit {
 
   @Input() show: boolean = false;
+  // BUG-LZ 2026-06-19: el modal mostraba data mock fija. Ahora recibe la lista real
+  // del backend cargada por consultar-alertas (Notificacion/GetNotificationAlerta) y
+  // la mapea al shape que el template espera (fecha/de/para/conCopia/asunto/mensaje/firma/adjunto).
+  @Input() notificacionesData: any[] = [];
   @Output() closeModal = new EventEmitter<void>();
-
-  notificaciones = [
-    {
-      fecha: '20/04/2024',
-      de: 'SECÁNI (secani_noreply@minsalud.gov.co)',
-      para: 'Maria Eugenia Robledo (mrobledo@ins.go.co)',
-      conCopia: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
-      asunto: 'URGENTE SEGUNDA Notificación de alerta...',
-      mensaje: 'Notificación de alerta por barrera de acceso...',
-      firma: `Estrategia De Seguimiento Nacional de Cáncer
-Centro de Contacto al Ciudadano
-Teléfono: 601 330 5043
-www.minsalud.gov.co`,
-      adjunto: null
-    },
-    {
-      fecha: '20/04/2024',
-      de: 'SECÁNI (secani_noreply@minsalud.gov.co)',
-      para: 'Maria Eugenia Robledo (mrobledo@ins.go.co)',
-      conCopia: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
-      asunto: '1232341541451   URGENTE SEGUNDA Notificación de alerta...',
-      mensaje: 'Notificación de alerta por barrera de acceso...',
-      firma: `Estrategia De Seguimiento Nacional de Cáncer
-Centro de Contacto al Ciudadano
-Teléfono: 601 330 5043
-www.minsalud.gov.co`,
-      adjunto: null
-    }
-  ];
 
   paginaActual = 0;
 
@@ -56,11 +31,27 @@ www.minsalud.gov.co`,
   ngOnInit() {
   }
 
+  get notificaciones() {
+    return (this.notificacionesData || []).map(n => ({
+      fecha: n.fechaNotificacion,
+      de: n.emailDe || '',
+      para: n.emailPara || n.entidadNotificada || '',
+      conCopia: n.emailConCopia || '',
+      asunto: n.asuntoNotificacion || '',
+      mensaje: n.notificacion || '',
+      firma: n.firma || '',
+      adjunto: n.archivoAdjunto ? {
+        nombre: n.archivoAdjunto,
+        url: `${(window as any).STORAGE_BASE || ''}/Storage/DownloadFile/${encodeURIComponent(n.archivoAdjunto)}`
+      } : null
+    }));
+  }
+
   prevPage() {
     if (this.paginaActual > 0) {
       this.paginaActual--;
     } else {
-      this.paginaActual = this.notificaciones.length - 1;
+      this.paginaActual = Math.max(0, this.notificaciones.length - 1);
     }
   }
 
@@ -75,5 +66,4 @@ www.minsalud.gov.co`,
   close() {
     this.closeModal.emit();
   }
-
 }

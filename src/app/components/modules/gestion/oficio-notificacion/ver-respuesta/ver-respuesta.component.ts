@@ -19,55 +19,44 @@ import { CardModule } from 'primeng/card';
 export class VerRespuestaComponent implements OnInit {
 
   @Input() show: boolean = false;
+  // BUG-LZ 2026-06-19: el modal mostraba data mock fija. Ahora recibe la lista real
+  // del backend cargada por consultar-alertas (Notificacion/GetNotificationAlerta) y
+  // filtra solo las entradas que tienen respuesta de la entidad.
+  @Input() notificacionesData: any[] = [];
   @Output() closeModal = new EventEmitter<void>();
 
-  alertaTexto: any = '1. Accesibilidad - 1.F. No tener implementados esquemas de diagnóstico'
-
-  respuestas = [
-    {
-      fecha: '20/04/2024',
-      entidad: '1 SECÁNI (secani_noreply@minsalud.gov.co)',
-      funcionario: 'Maria Eugenia Robledo (mrobledo@ins.go.co)',
-      cargo: 'Administración',
-      correo: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
-      telefono: '6013305043',
-      mensaje: 'Notificación de alerta por barrera de acceso...',
-      adjunto: null
-    },
-    {
-      fecha: '20/04/2024',
-      entidad: '2 SECÁNI (secani_noreply@minsalud.gov.co)',
-      funcionario: 'Maria Eugenia Robledo (mrobledo@ins.go.co)',
-      cargo: 'Administración',
-      correo: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
-      telefono: '6013305043',
-      mensaje: 'Notificación de alerta por barrera de acceso...',
-      adjunto: null
-    },
-    {
-      fecha: '20/04/2024',
-      entidad: '3 SECÁNI (secani_noreply@minsalud.gov.co)',
-      funcionario: 'Maria Eugenia Robledo (mrobledo@ins.go.co)',
-      cargo: 'Administración',
-      correo: 'mrobledo@ins.go.co, aruiz@ing.gov.co',
-      telefono: '6013305043',
-      mensaje: 'Notificación de alerta por barrera de acceso...',
-      adjunto: null
-    }
-  ];
-
   paginaActual = 0;
+
+  alertaTexto: string = '';
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  get respuestas() {
+    return (this.notificacionesData || [])
+      .filter(n => !!n.respuesta)
+      .map(n => ({
+        fecha: n.fechaRespuesta,
+        entidad: n.entidadNotificada || '',
+        funcionario: n.emailPara || '',
+        cargo: '',
+        correo: n.emailDe || '',
+        telefono: '',
+        mensaje: n.respuesta || '',
+        adjunto: n.archivoAdjunto ? {
+          nombre: n.archivoAdjunto,
+          url: `${(window as any).STORAGE_BASE || ''}/Storage/DownloadFile/${encodeURIComponent(n.archivoAdjunto)}`
+        } : null
+      }));
+  }
+
   prevPage() {
     if (this.paginaActual > 0) {
       this.paginaActual--;
     } else {
-      this.paginaActual = this.respuestas.length - 1;
+      this.paginaActual = Math.max(0, this.respuestas.length - 1);
     }
   }
 
@@ -82,5 +71,4 @@ export class VerRespuestaComponent implements OnInit {
   close() {
     this.closeModal.emit();
   }
-
 }

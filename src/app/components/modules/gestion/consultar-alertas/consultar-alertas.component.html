@@ -263,8 +263,8 @@
 </div>
 
 
-<app-ver-notificacion *ngIf="verNotificaciones" [show]="verNotificaciones" (closeModal)="closeVerNotificaciones()"></app-ver-notificacion>
-<app-ver-respuesta *ngIf="verRespuestas" [show]="verRespuestas" (closeModal)="closeVerRespuestas()"></app-ver-respuesta>
+<app-ver-notificacion *ngIf="verNotificaciones" [show]="verNotificaciones" [notificacionesData]="notificacionesAlerta" (closeModal)="closeVerNotificaciones()"></app-ver-notificacion>
+<app-ver-respuesta *ngIf="verRespuestas" [show]="verRespuestas" [notificacionesData]="notificacionesAlerta" (closeModal)="closeVerRespuestas()"></app-ver-respuesta>
 <app-crear-oficio *ngIf="verCrearOficio"
   [show]="verCrearOficio"
   [alerta]="alertaSeleccionada"

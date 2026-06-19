@@ -2,7 +2,12 @@
   <ng-template pTemplate="header">
     <h1 class="dialog-title">Notificación</h1>
   </ng-template>
-  <div class="contenedor-notificaciones">
+  <div class="contenedor-notificaciones" *ngIf="notificaciones.length === 0">
+    <div class="alert alert-info" style="margin: 16px;">
+      No registra notificaciones para esta alerta.
+    </div>
+  </div>
+  <div class="contenedor-notificaciones" *ngIf="notificaciones.length > 0">
       <!-- Carrusel -->
       <p-carousel
           [value]="notificaciones"
@@ -17,7 +22,7 @@
             <div class="notificacion">
               <div class="row">
                 <div class="col-4"><span class="titulo">Fecha de notificación</span></div>
-                <div class="col">{{ notificacion.fecha }}</div>
+                <div class="col">{{ notificacion.fecha | date:'dd/MM/yyyy HH:mm' }}</div>
               </div>
               <div class="row">
                 <div class="col-2"><span class="titulo">De</span></div>
@@ -37,11 +42,11 @@
               </div>
               <div class="row">
                 <div class="col-2"><span class="titulo">Mensaje</span></div>
-                <div class="col">{{ notificacion.mensaje }}</div>
+                <div class="col" [innerHTML]="notificacion.mensaje"></div>
               </div>
               <div class="row">
                 <div class="col-2"><span class="titulo">Firma</span></div>
-                <div class="col">{{ notificacion.firma }}</div>
+                <div class="col" [innerHTML]="notificacion.firma"></div>
               </div>
               <div class="row" *ngIf="notificacion.adjunto?.url">
                 <div class="col-2"><span class="titulo">Adjuntos</span></div>

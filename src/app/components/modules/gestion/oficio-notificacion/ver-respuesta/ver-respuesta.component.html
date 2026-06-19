@@ -2,7 +2,12 @@
   <ng-template pTemplate="header">
     <h1 class="dialog-title">Respuesta a notificación de alerta</h1>
   </ng-template>
-  <div class="contenedor-respuestas">
+  <div class="contenedor-respuestas" *ngIf="respuestas.length === 0">
+    <div class="alert alert-info" style="margin: 16px;">
+      No registra respuestas para esta alerta.
+    </div>
+  </div>
+  <div class="contenedor-respuestas" *ngIf="respuestas.length > 0">
 
       <p-carousel
           [value]="respuestas"
@@ -22,7 +27,7 @@
               </div>
               <div class="row">
                 <div class="col-4"><span class="titulo">Entidad</span></div>
-                <div class="col">{{ respuesta.entidad }}</div>
+                <div class="col">{{ respuesta.fecha | date:'dd/MM/yyyy HH:mm' }} - {{ respuesta.entidad }}</div>
               </div>
               <div class="row">
                 <div class="col-4"><span class="titulo">Nombre funcionario</span></div>
@@ -45,7 +50,7 @@
                 <div class="col">
                   <div class="row">
                     <p-card>
-
+                      <div [innerHTML]="respuesta.mensaje"></div>
                     </p-card>
                   </div>
                   <div class="row" *ngIf="respuesta.adjunto?.url">
