@@ -48,6 +48,12 @@ export class DashboardEapbService {
     return await  this.comun.retorno_get_parametrica(url);
   }
 
+  // HU SECANI-RQ07-HU01: pie "Alertas" agrupa por categoria de la alerta, no por estado.
+  GetCategoriaAlerta = async () => {
+    let url = `${'CategoriaAlerta'}`;
+    return await this.comun.retorno_get_parametrica(url);
+  }
+
   // BUG-LZ-087: resolver TPEAPB.Id desde el NIT del usuario (enterpriseIdentification)
   GetEAPBIdByNit = async (nit: string | number) => {
     let url = `${'Dashboard/GetEAPBIdByNit?nit=' + nit}`;

@@ -108,11 +108,11 @@
                 <td>
 
                   <strong>{{ alerta.primerNombre }} {{ alerta.segundoNombre }} {{ alerta.primerApellido }} {{ alerta.segundoApellido }}</strong>
-                  <strong>{{ calcularTiempoTranscurrido(alerta.fechaNacimiento, hoy) }}</strong><br>
+                  <strong> - {{ calcularEdad(alerta.fechaNacimiento) }} años</strong><br>
 
                   <span class="enfermedad">{{alerta.diagnostico}}</span>
 
-                    <p style="color: {{alerta.color}}">{{ calcularTiempoTranscurrido(alerta.fechaSeguimiento, hoy) }} sin respuesta</p>
+                    <p style="color: {{alerta.color}}">{{ calcularDiasSinRespuesta(alerta.fechaSeguimiento) }} días sin respuesta</p>
 
                 </td>
                 <td>
@@ -128,6 +128,5 @@
     </div>
   </div>
 
-  <app-notificacion-ver [show]="mostrarNotificacion" [alertaId]="alertaSeleccionadaId" (closeModal)="cerrarNotificacion()"></app-notificacion-ver>
 
 </div>

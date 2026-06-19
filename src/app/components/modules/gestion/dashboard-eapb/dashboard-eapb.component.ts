@@ -12,14 +12,13 @@ import { DashboardEapbService } from './dashboard-eapb.services';
 import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { User } from '../../../../core/services/user';
-import { NotificacionVerComponent } from '../../notificacion-ver/notificacion-ver.component';
 
 @Component({
   selector: 'app-dashboard-eapb',
   templateUrl: './dashboard-eapb.component.html',
   styleUrls: ['./dashboard-eapb.component.css'],
   standalone: true,
-  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, SpinnerComponent, ReactiveFormsModule, CalendarModule, NotificacionVerComponent],
+  imports: [ChartModule, TarjetaKPIComponent, TarjetaCasoCriticoComponent, TarjetaCabeceraComponent, CommonModule, SpinnerComponent, ReactiveFormsModule, CalendarModule],
 })
 export class DashboardEapbComponent implements OnInit {
 
@@ -69,26 +68,20 @@ export class DashboardEapbComponent implements OnInit {
   }
 
   diasLimite(currentDate: Date) {
-
-
-    const currentWeekday = currentDate.getDay(); // Obtiene el día de la semana actual (0 = domingo, 1 = lunes, ..., 6 = sábado)
-
-    let f1 = new Date(currentDate);
-    let f2 = new Date(currentDate);
-
+    // HU SECANI-RQ07-HU01: rango por defecto = ultimo trimestre (90 dias) para
+    // dinamizar las graficas. Antes era lunes-viernes de la semana actual.
     const formatDate = (date: Date) => {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0 a 11
+      const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
-    }
+    };
 
-
-    f1.setDate(currentDate.getDate() - currentWeekday + 1);
-    f2.setDate(currentDate.getDate() - currentWeekday + 5);
+    const f1 = new Date(currentDate);
+    f1.setDate(currentDate.getDate() - 90);
 
     this.fechaInicial = formatDate(f1);
-    this.fechaFinal = formatDate(f2);
+    this.fechaFinal = formatDate(currentDate);
   }
 
 
@@ -170,7 +163,8 @@ export class DashboardEapbComponent implements OnInit {
     this.cargado = false;
 
 
-    let parametrica4  = await this.servicios.GetEstadoAlerta();
+    // HU SECANI-RQ07-HU01: pie "Alertas" usa CATEGORIA de la alerta, no estado.
+    let parametrica4  = await this.servicios.GetCategoriaAlerta();
 
     let datos4  = await this.servicios.GetEstadosAlertasEAPB(fecha_inicial, fecha_final, this.eapbId);
 
@@ -292,11 +286,31 @@ export class DashboardEapbComponent implements OnInit {
     })
 
 
-    this.alertas = this.alertas.slice(0, 2);
-
+    // HU SECANI-RQ07-HU01: el tablero "Alertas Pendientes" muestra todas las alertas
+    // pendientes de gestion (antes slice(0, 2) las recortaba arbitrariamente).
     this.cargado = true;
   }
 
+
+  // HU SECANI-RQ07-HU01: edad simple en anios cumplidos a partir de fecha de nacimiento.
+  calcularEdad(fechaNacimiento: any): number {
+    if (!fechaNacimiento) return 0;
+    const nac = new Date(fechaNacimiento);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nac.getFullYear();
+    const m = hoy.getMonth() - nac.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+    return edad < 0 ? 0 : edad;
+  }
+
+  // HU SECANI-RQ07-HU01: tiempo desde que se creo la alerta (DateCreated) hasta hoy en dias.
+  calcularDiasSinRespuesta(fechaCreacionAlerta: any): number {
+    if (!fechaCreacionAlerta) return 0;
+    const inicio = new Date(fechaCreacionAlerta).getTime();
+    const hoy = Date.now();
+    const dias = Math.floor((hoy - inicio) / (1000 * 60 * 60 * 24));
+    return dias < 0 ? 0 : dias;
+  }
 
   calcularTiempoTranscurrido(fech1: any, fech2: any) {
 
@@ -346,16 +360,10 @@ export class DashboardEapbComponent implements OnInit {
     this.router.navigate(['/gestionar-alertas']);
   }
 
-  // Bug 2026-06-17: boton "Ver" abria /casos-entidad. Ahora abre el modal Notificacion con
-  // el alertaId, reutilizando el componente compartido NotificacionVer.
-  mostrarNotificacion: boolean = false;
-  alertaSeleccionadaId: number = 0;
+  // HU SECANI-RQ07-HU01: "Ver" debe navegar a HU03 (gestionar-alertas) filtrado por la
+  // alerta seleccionada (no abrir modal Notificacion como hacia el patch del 2026-06-17).
   abrirNotificacion(alertaId: number) {
-    this.alertaSeleccionadaId = alertaId;
-    this.mostrarNotificacion = true;
-  }
-  cerrarNotificacion() {
-    this.mostrarNotificacion = false;
+    this.router.navigate(['/gestionar-alertas'], { queryParams: { alertaId } });
   }
 
   async consultar() {
