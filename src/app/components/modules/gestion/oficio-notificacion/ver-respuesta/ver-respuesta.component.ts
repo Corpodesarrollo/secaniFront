@@ -6,6 +6,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { CarouselModule } from 'primeng/carousel';
 import { CardModule } from 'primeng/card';
+import { GenericService } from '../../../../../services/generic.services';
 
 @Component({
   selector: 'app-ver-respuesta',
@@ -29,7 +30,7 @@ export class VerRespuestaComponent implements OnInit {
 
   alertaTexto: string = '';
 
-  constructor() { }
+  constructor(private repos: GenericService) { }
 
   ngOnInit() {
   }
@@ -45,11 +46,40 @@ export class VerRespuestaComponent implements OnInit {
         correo: n.emailDe || '',
         telefono: '',
         mensaje: n.respuesta || '',
-        adjunto: n.archivoAdjunto ? {
-          nombre: n.archivoAdjunto,
-          url: `${(window as any).STORAGE_BASE || ''}/Storage/DownloadFile/${encodeURIComponent(n.archivoAdjunto)}`
+        // BUG-LZ 2026-06-20: el modal mostraba archivoAdjunto (oficio del agente).
+        // Aqui debe mostrar el adjunto que envio la EAPB en la respuesta. Backend
+        // ahora expone archivoAdjuntoRespuesta poblado desde tabla Adjuntos.
+        adjunto: n.archivoAdjuntoRespuesta ? {
+          nombre: this.nombreAdjuntoLimpio(n.archivoAdjuntoRespuesta),
+          storage: n.archivoAdjuntoRespuesta
         } : null
       }));
+  }
+
+  private nombreAdjuntoLimpio(storageName: string): string {
+    if (!storageName) return '';
+    // Nuevo pattern: AdjuntoRespuesta-{idAlerta}-{FileName}
+    let n = storageName.replace(/^AdjuntoRespuesta-\d+-/, '');
+    if (n !== storageName) return n;
+    // Legacy: AdjuntoRespuesta-{guid}.{ext} -> "Adjunto.{ext}" (FileName original perdido)
+    n = storageName.replace(/^AdjuntoRespuesta-/, '');
+    const ext = n.split('.').pop();
+    return ext ? `Adjunto.${ext}` : n;
+  }
+
+  async descargarAdjunto(nombreStorage: string) {
+    if (!nombreStorage) return;
+    try {
+      const blob: any = await this.repos.getFile(`Storage/${nombreStorage}`, '', 'Authentication');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.nombreAdjuntoLimpio(nombreStorage);
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error al descargar adjunto respuesta', err);
+    }
   }
 
   prevPage() {

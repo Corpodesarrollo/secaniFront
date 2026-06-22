@@ -176,11 +176,13 @@ export class SeguimientoGuardarComponent {
     this.onClose.emit();
     if (this.seguimiento && this.seguimiento.nnaId !== undefined && this.seguimiento.nnaId !== null) {
       if (this.seguimiento.alertas && this.seguimiento.alertas.length > 0) {
-        this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true } }).then(() => {
+        // BUG-LZ 2026-06-20: replaceUrl saca el form del historial -> el boton VOLVER
+        // en /consultar-alertas no cae sobre el form ya submitado (evita regresion BUG-LZ-064/078).
+        this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true }, replaceUrl: true }).then(() => {
           window.scrollTo(0, 0);
         });
       } else {
-        this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true } }).then(() => {
+        this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true }, replaceUrl: true }).then(() => {
           window.scrollTo(0, 0);
         });
       }

@@ -15,6 +15,8 @@ export interface Seguimiento {
     diagnostico: string;
     aseguradora: string;
     observaciones: string;
+    respuestaEntidad?: string;
+    fechaRespuesta?: Date | null;
     entidadAlerta: string;
     estadoSeguimiento: string;
     estado: EstadoNNA;

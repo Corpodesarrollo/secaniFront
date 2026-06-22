@@ -17,8 +17,7 @@
               <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-12 col-12 text-left">
                   <label for="Estado" class="form-label">Estado</label>
-                  <select class="form-select form-select-lg" aria-label="Estado NNA" [(ngModel)]="filtroEstado"
-                    (change)="buscar()" id="Estado" name="Estado">
+                  <select class="form-select form-select-lg" aria-label="Estado NNA" [(ngModel)]="filtroEstado" id="Estado" name="Estado">
                     <option selected value="0">Seleccione</option>
                     <option *ngFor="let estado of estadosNNA" [value]="estado.id">
                       {{ estado.nombre }}
@@ -27,8 +26,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 col-12 text-left">
                   <label for="Agentes" class="form-label">Agente asignado</label>
-                  <select class="form-select form-select-lg" aria-label="Agentes asignado" [(ngModel)]="filtroAgente"
-                    (change)="buscar()" [value]="filtroAgente" id="Agentes" name="Agentes">
+                  <select class="form-select form-select-lg" aria-label="Agentes asignado" [(ngModel)]="filtroAgente" id="Agentes" name="Agentes">
                     <option selected value="">Seleccione</option>
                     <option *ngFor="let agente of agenteAsignado" [value]="agente.id">
                       {{ agente.fullName }}
@@ -39,15 +37,16 @@
                   <label for="buscar" class="form-label">&nbsp;</label>
                   <p-iconField iconPosition="left" class="form-input">
                     <p-inputIcon styleClass="pi pi-search" />
-                    <input class="col-12 mb-3" type="text" pInputText id="buscar" name="buscar" (change)="buscar()"
-                      (keyup)="buscar()" (keydown)="buscar()" placeholder="Buscar" [value]="filtroBuscar"
-                      [(ngModel)]="filtroBuscar">
+                    <!-- BUG-LZ 2026-06-20: antes el input disparaba buscar() en cada keydown/keyup/change
+                         (3 POST por tecla). Ahora se aplica via boton "Aplicar Filtros" o Enter. -->
+                    <input class="col-12 mb-3" type="text" pInputText id="buscar" name="buscar"
+                      placeholder="Buscar" [(ngModel)]="filtroBuscar"
+                      (keyup.enter)="buscar()">
                   </p-iconField>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 col-12">
                   <label for="orden" class="form-label">&nbsp;</label>
-                  <select class="form-select form-select-lg" aria-label="Orden" [(ngModel)]="filtroOrganizar"
-                    (change)="buscar()" id="orden" name="orden">
+                  <select class="form-select form-select-lg" aria-label="Orden" [(ngModel)]="filtroOrganizar" id="orden" name="orden">
                     <option selected value="1">Organizar por: <strong>El más reciente</strong>
                     </option>
                     <option value="2">Organizar por: <strong>El más antiguo</strong></option>
@@ -56,6 +55,10 @@
               </div>
               <div class="row">
                 <div class="col-12 text-end">
+                  <button class="btn btn-principal me-2" (click)="buscar()">
+                    <i class="pi pi-search"></i>
+                    <span>Aplicar Filtros</span>
+                  </button>
                   <button class="btn btn-principal" (click)="limpiar()">
                     <i class="pi pi-trash"></i>
                     <span>Limpiar Filtros</span>
@@ -80,6 +83,7 @@
                   <th>Último segumiento</th>
                   <th>Agente asignado</th>
                   <th class="text-center" width="200">Estado</th>
+                  <th class="text-center" width="100">Alertas</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-visualizar>
@@ -90,11 +94,15 @@
                   <td>{{ visualizar.ultimaActualizacion | date:'dd/MM/yyyy' }}</td>
                   <td>{{ visualizar.agenteAsignado }}</td>
                   <td class="text-center"><span class="badge w-100" [ngStyle]="{'font-weight': 'normal', 'font-size': '14px', 'background-color': visualizar.estadoColorBG, 'color': visualizar.estadoColorText}">{{ visualizar.estado }}</span></td>
+                  <td class="text-center">
+                    <i *ngIf="visualizar.idSeguimiento" class="pi pi-bell" style="font-size: 1.2rem; color: #73b7ad; cursor: pointer;"
+                       title="Ver alertas" (click)="verAlertas(visualizar.idSeguimiento)"></i>
+                  </td>
                 </tr>
               </ng-template>
               <ng-template pTemplate="emptymessage">
                 <tr>
-                  <td colspan="6" class="text-center">No se ha encontrado ningún registro de NNA</td>
+                  <td colspan="7" class="text-center">No se ha encontrado ningún registro de NNA</td>
                 </tr>
               </ng-template>
             </p-table>

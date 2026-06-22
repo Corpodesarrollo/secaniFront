@@ -29,6 +29,7 @@ import { apis } from '../../../../models/apis.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
+import { User } from '../../../../core/services/user';
 
 
 @Component({
@@ -103,13 +104,38 @@ export class ConsultarAlertasComponent implements OnInit {
     private plantillasService: PlantillasCorreoService,
     private router: Router,
     private location: Location,
+    private currentUser: User,
   ) { }
 
-  // BUG-LZ-064 + BUG-LZ-078: VOLVER originalmente usaba location.back() pero eso permitia volver
-  // al form "Guardar y gestionar alertas" + hacer click nuevamente -> duplicaba alertas en BD.
-  // Ahora navegar siempre a la lista de seguimientos (forward navigation evita re-submit).
+  // BUG-LZ 2026-06-20: per HU SECANI-RQ07-HU03, EAPB solo visualiza notificaciones
+  // recibidas y responde alertas (HU RQ07-HU04). Crear/enviar oficio de notificacion
+  // es flow exclusivo del Agente de seguimiento (HU RQ03-HU03/HU04). Ocultar el
+  // boton "envelope" para perfiles que no son agente/coordinador.
+  // Lee localStorage en cada evaluacion porque el singleton User cachea en constructor
+  // y puede haber sido instanciado antes del login (boton aparecia hasta el F5).
+  get puedeEnviarNotificacion(): boolean {
+    try {
+      const raw = localStorage.getItem('user');
+      if (!raw) return false;
+      const u = JSON.parse(raw);
+      return !!(u?.isAgenteSeguimiento || u?.isCoordinadorAdmin);
+    } catch {
+      return false;
+    }
+  }
+
+  // BUG-LZ 2026-06-20: VOLVER ahora usa location.back() para regresar a la pantalla
+  // anterior real. La regresion historica (BUG-LZ-064/078: volver caia al form de
+  // "Guardar y gestionar alertas" y re-submeteaba) se evita en seguimiento-guardar via
+  // router.navigate(..., { replaceUrl: true }) que saca al form del historial.
   volver(): void {
-    this.router.navigate(['/gestion/seguimientos']);
+    this.location.back();
+  }
+
+  // BUG-LZ 2026-06-20: per HU SECANI-RQ03-HU05 el boton "Ver detalle NNA" navega
+  // al detalle del NNA. Estaba sin handler -> no hacia nada.
+  verDetalleNna(): void {
+    if (this.idNna) this.router.navigate(['/usuarios/detalle_nna/', this.idNna]);
   }
 
   ngOnInit() {
@@ -165,12 +191,13 @@ export class ConsultarAlertasComponent implements OnInit {
         }
 
         try {
+          const muniActual = this.datosNNA.residenciaActualMunicipioId || this.datosNNA.residenciaOrigenMunicipioId;
           const [regimenAfiliacion, nombreDeptoOrigen, nombreMuniOrigen, nombreDeptoActual, nombreMuniActual] = await Promise.all([
             this.getNombreTipoAfiliacion(this.datosNNA.tipoRegimenSSId),
             this.getNombreDepto(this.datosNNA.residenciaOrigenMunicipioId),
             this.getNombreMuni(this.datosNNA.residenciaOrigenMunicipioId),
-            this.getNombreDepto(this.datosNNA.residenciaActualMunicipioId),
-            this.getNombreMuni(this.datosNNA.residenciaActualMunicipioId)
+            this.getNombreDepto(muniActual),
+            this.getNombreMuni(muniActual)
           ]);
 
           this.regimenAfiliacion = regimenAfiliacion;
@@ -218,7 +245,28 @@ export class ConsultarAlertasComponent implements OnInit {
               porAlertaId.set(key, a);
             }
           }
-          this.todasAlertas = Array.from(porAlertaId.values());
+          let alertasUnicas = Array.from(porAlertaId.values());
+
+          // BUG-LZ 2026-06-20: SetSeguimiento crea Alerta-base nueva por cada subcategoria
+          // pasada en request.Alertas, sin chequear si ya existe una alerta-base sin resolver
+          // del mismo tipo para el NNA. Esto deja dos AlertaIds distintos para la misma
+          // (categoria, subcategoria) cuando el agente "re-genera" una alerta heredada.
+          // Segunda pasada de dedup: por (categoria, subcategoria), priorizar SIN RESOLVER (3) >
+          // IDENTIFICADA (1) > otros estados, y dentro del mismo estado el snapshot mas reciente.
+          const prioridad = (eid: number) => eid === 3 ? 0 : eid === 1 ? 1 : 2;
+          const porCatSub = new Map<string, any>();
+          for (const a of alertasUnicas) {
+            const key = `${a.categoriaAlerta || ''}|${a.subcategoriaAlerta || ''}`;
+            const prev = porCatSub.get(key);
+            if (!prev) { porCatSub.set(key, a); continue; }
+            const pPrev = prioridad(prev.estadoId ?? 99);
+            const pNew = prioridad(a.estadoId ?? 99);
+            if (pNew < pPrev ||
+                (pNew === pPrev && (a.idAlertaSeguimiento ?? 0) > (prev.idAlertaSeguimiento ?? 0))) {
+              porCatSub.set(key, a);
+            }
+          }
+          this.todasAlertas = Array.from(porCatSub.values());
 
           // Ordenar por fecha de creacion de la alerta (desc); fallback a idAlertaSeguimiento.
           this.todasAlertas.sort((a: any, b: any) => {
@@ -399,6 +447,7 @@ export class ConsultarAlertasComponent implements OnInit {
 
   cerrarDialogPlantilla() {
     this.verDialogPlantilla = false;
+    this.limpiarOverflowBody();
   }
 
   confirmarPlantillaYAbrirOficio() {
@@ -409,6 +458,16 @@ export class ConsultarAlertasComponent implements OnInit {
   closeCrearOficio(){
     this.verCrearOficio = false;
     this.plantillaSeleccionada = null;
+    this.limpiarOverflowBody();
+  }
+
+  // BUG-LZ 2026-06-20: tras enviar la notificacion el modal de PrimeNG dejaba
+  // `p-overflow-hidden` en body -> pagina sin scroll hasta F5. Replica del fix de
+  // BUG-LZ-049 (que solo limpiaba en ngOnInit). Aplicar al cerrar cada dialog.
+  private limpiarOverflowBody(): void {
+    if (typeof document === 'undefined') return;
+    document.body.style.overflow = '';
+    document.body.classList.remove('p-overflow-hidden');
   }
 
   verNotificaciones: boolean = false;
@@ -419,6 +478,7 @@ export class ConsultarAlertasComponent implements OnInit {
 
   closeVerNotificaciones(){
     this.verNotificaciones = false;
+    this.limpiarOverflowBody();
   }
 
   verRespuestas: boolean = false;
@@ -429,6 +489,7 @@ export class ConsultarAlertasComponent implements OnInit {
 
   closeVerRespuestas(){
     this.verRespuestas = false;
+    this.limpiarOverflowBody();
   }
 
 

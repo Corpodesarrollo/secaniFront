@@ -13,4 +13,5 @@ export interface AlertasGestion {
     categoria: string;
     subcategoria: string;
     estado: string;
+    tieneRespuesta?: boolean;
 }

@@ -24,7 +24,6 @@
                     <th class="header-th">Fecha Seguimiento</th>
                     <th class="header-th">Asunto</th>
                     <th class="header-th">Alerta</th>
-                    <th class="header-th">Observación</th>
                     <th class="header-th">Entidad sobre la que se genera la alerta</th>
                     <th class="header-th">Fecha Notificación</th>
                     <th class="header-th">Respuesta de la entidad</th>
@@ -41,7 +40,6 @@
                             {{ alerta.nombreAlerta }}
                         </span>
                     </td>
-                    <td>{{ seguimiento.observacion }}</td>
                     <!-- Bug 2026-06-17: estos 4 campos viven por-alerta en alertasSeguimientos[]
                          (BUG-LZ-055). seguimiento.nombreEntidad/fechaNotificacion/fechaRespuesta
                          a nivel seguimiento siempre vacios -> usar la lista de alertas. -->

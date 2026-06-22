@@ -930,7 +930,7 @@
                   <td class="descripcion-column">{{ seguimiento.descripcion }}</td>
                   <td>{{ seguimiento.entidad }}</td>
                   <td>{{ seguimiento.fechaNotifi | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ seguimiento.respuestaEntidad }}</td>
+                  <td>{{ stripHtml(seguimiento.respuestaEntidad) }}</td>
                   <td>{{ seguimiento.fechaRespuesta | date:'dd/MM/yyyy' }}</td>
               </tr>
           </ng-template>
@@ -969,7 +969,7 @@
 
   <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
     <div>
-        <a href="/usuarios/historico_nna" class="btn btn-volver-nna" >VOLVER</a>
+        <button type="button" class="btn btn-volver-nna" (click)="volver()">VOLVER</button>
     </div>
   </div>
 </div>

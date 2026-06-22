@@ -12,7 +12,20 @@
                         <h3 class="ms-4 mt-3">Gestionar Alertas</h3>
                     </div>
                 </div>
-                <p-table [value]="alertas" 
+                <div class="row px-4 pb-2">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label small mb-1">Nombre NNA</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Buscar por nombre" [(ngModel)]="filtroNombre" />
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label small mb-1">Categoria</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="filtroCategoria">
+                            <option value="">Todas</option>
+                            <option *ngFor="let c of categoriasUnicas" [value]="c">{{c}}</option>
+                        </select>
+                    </div>
+                </div>
+                <p-table [value]="alertasFiltradas"
                     [paginator]="true" [rows]="5"
                     [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
@@ -43,14 +56,17 @@
                             <td>{{alerta.subcategoria}}</td>
                             <td><span class="badge bg-{{alerta.colorEstado}} text-white p-2 ">{{alerta.textoEstado}}</span></td>
                             <td class="text-center"><i class="bi bi-eye-fill" style="font-size: large; color: #73b7ad; cursor: pointer;" (click)="verRespuesta(alerta)"></i></td>
-                            <td class="text-center"><i class="bi bi-send-plus" style="font-size: large; color: #73b7ad; cursor: pointer;" (click)="enviarRespuesta(alerta)"></i></td>
+                            <td class="text-center">
+                                <i *ngIf="!alerta.tieneRespuesta" class="bi bi-send-plus" style="font-size: large; color: #73b7ad; cursor: pointer;" (click)="enviarRespuesta(alerta)"></i>
+                            </td>
                         </tr>
                     </ng-template>
                 </p-table>
             </div>
         </div>
     </div>
-    <app-notificacion-ver [show]="displayModal" [alertaId]="alertaId" (closeModal)="closeModalAlerta()" />
+    <app-ver-notificacion [show]="displayModal" [notificacionesData]="notificacionesAlerta" (closeModal)="closeModalAlerta()" />
+    <app-ver-respuesta [show]="displayModalRespuesta" [notificacionesData]="notificacionesAlerta" (closeModal)="closeModalRespuesta()" />
     <app-alertas-enviar-respuesta [show]="displayModalEnviarRespuesta"  (closeModal)="closeModalEnviarRespuesta()"
         [alertaId]="alertaId"
         [nombreNNA]="nombreNNA"

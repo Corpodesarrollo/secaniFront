@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, NgZone, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BadgeModule } from 'primeng/badge';
@@ -87,8 +87,15 @@ export class DetalleNnaComponent implements OnInit {
     private repos: GenericService,
     private tpp: TpParametros,
     private renderer: Renderer2, private el: ElementRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private location: Location,
   ) { }
+
+  // BUG-LZ 2026-06-20: VOLVER ahora regresa a la pantalla anterior real (location.back)
+  // en lugar de href hardcoded a /usuarios/historico_nna.
+  volver(): void {
+    this.location.back();
+  }
 
   ngOnInit() {
 
@@ -259,6 +266,12 @@ export class DetalleNnaComponent implements OnInit {
     'genero':'Genero',
   };
 
+  stripHtml(html: string | null | undefined): string {
+    if (!html) return '';
+    const txt = html.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+    return txt;
+  }
+
   formatCamposModificados(comentario: string | null | undefined): string {
     if (!comentario) return '-';
     const campos = comentario.split(',').map(c => c.trim()).filter(c => c.length > 0);
@@ -372,6 +385,12 @@ export class DetalleNnaComponent implements OnInit {
             });
           }
         }
+        this.seguimientos.sort((a, b) => {
+          const fa = new Date(a.fechaSeguimiento ?? 0).getTime();
+          const fb = new Date(b.fechaSeguimiento ?? 0).getTime();
+          if (fb !== fa) return fb - fa;
+          return (b.idSeguimiento ?? 0) - (a.idSeguimiento ?? 0);
+        });
       },
       error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
     });

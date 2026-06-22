@@ -33,7 +33,7 @@
                 <div class="col-4"><span class="titulo">Nombre funcionario</span></div>
                 <div class="col">{{ respuesta.funcionario }}</div>
               </div>
-              <div class="row">
+              <div class="row" *ngIf="respuesta.cargo">
                 <div class="col-4"><span class="titulo">Cargo</span></div>
                 <div class="col">{{ respuesta.cargo }}</div>
               </div>
@@ -41,7 +41,7 @@
                 <div class="col-4"><span class="titulo">Correo electrónico</span></div>
                 <div class="col">{{ respuesta.correo }}</div>
               </div>
-              <div class="row">
+              <div class="row" *ngIf="respuesta.telefono">
                 <div class="col-4"><span class="titulo">Teléfono de contacto</span></div>
                 <div class="col">{{ respuesta.telefono }}</div>
               </div>
@@ -53,8 +53,8 @@
                       <div [innerHTML]="respuesta.mensaje"></div>
                     </p-card>
                   </div>
-                  <div class="row" *ngIf="respuesta.adjunto?.url">
-                    <a [href]="respuesta.adjunto.url" target="_blank" rel="noopener">{{ respuesta.adjunto.nombre }}</a>
+                  <div class="row" *ngIf="respuesta.adjunto?.storage">
+                    <a href="javascript:void(0)" (click)="descargarAdjunto(respuesta.adjunto.storage)">{{ respuesta.adjunto.nombre }}</a>
                   </div>
                 </div>
               </div>

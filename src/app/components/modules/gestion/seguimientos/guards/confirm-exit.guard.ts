@@ -25,9 +25,8 @@ export const confirmExitGuard: CanDeactivateFn<any> = async(component, currentRo
     });
 
     const result = await firstValueFrom(ref.onClose, { defaultValue: false });
-    if (!result) return false; // El usuario no confirmó
-      
-    // Si el usuario confirmó ("Sí"), ejecutamos abrirGuardarYReagendar
+    if (!result) return false;
+    if (result === 'exit') return true;
     component.abrirGuardarYReagendar?.();
     return false;
   } catch (error) {

@@ -256,6 +256,11 @@ export class SeguimientoGestionarComponent {
 
   closeModal(){
     this.showDialog = false;
+    // BUG-LZ 2026-06-20: dialog PrimeNG deja body con p-overflow-hidden al cerrar.
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+      document.body.classList.remove('p-overflow-hidden');
+    }
   }
 
   actualizar() {

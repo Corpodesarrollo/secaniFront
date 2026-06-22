@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { CarouselModule } from 'primeng/carousel';
+import { GenericService } from '../../../../../services/generic.services';
 
 @Component({
   selector: 'app-ver-notificacion',
@@ -26,7 +27,7 @@ export class VerNotificacionComponent implements OnInit {
 
   paginaActual = 0;
 
-  constructor() { }
+  constructor(private repos: GenericService) { }
 
   ngOnInit() {
   }
@@ -41,10 +42,39 @@ export class VerNotificacionComponent implements OnInit {
       mensaje: n.notificacion || '',
       firma: n.firma || '',
       adjunto: n.archivoAdjunto ? {
-        nombre: n.archivoAdjunto,
-        url: `${(window as any).STORAGE_BASE || ''}/Storage/DownloadFile/${encodeURIComponent(n.archivoAdjunto)}`
+        // BUG-LZ 2026-06-20: nombre limpio para UI (storage usa prefijo
+        // "AdjuntoEmail-{idNoti}-" para garantizar unicidad; lo escondemos al usuario).
+        nombre: this.nombreAdjuntoLimpio(n.archivoAdjunto),
+        storage: n.archivoAdjunto
+      } : null,
+      // BUG-LZ 2026-06-20: PDF del oficio formal autogenerado. EAPB y Agente pueden
+      // descargarlo desde el modal para revisar el documento enviado.
+      oficio: n.archivoOficio ? {
+        nombre: 'Oficio de notificacion.pdf',
+        storage: n.archivoOficio
       } : null
     }));
+  }
+
+  private nombreAdjuntoLimpio(storageName: string): string {
+    if (!storageName) return '';
+    return storageName.replace(/^AdjuntoEmail-\d+-/, '');
+  }
+
+  async descargarAdjunto(nombreStorage: string) {
+    if (!nombreStorage) return;
+    try {
+      // Mismo patron que detalle-seguimientos: StorageController vive en MSAuthentication.
+      const blob: any = await this.repos.getFile(`Storage/${nombreStorage}`, '', 'Authentication');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.nombreAdjuntoLimpio(nombreStorage);
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error al descargar adjunto', err);
+    }
   }
 
   prevPage() {

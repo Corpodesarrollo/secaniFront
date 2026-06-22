@@ -13,7 +13,11 @@ export class ConfirmDialogComponent {
   constructor(public ref: DynamicDialogRef) {}
 
   onSave() {
-    this.ref.close(true);
+    this.ref.close('save');
+  }
+
+  onExit() {
+    this.ref.close('exit');
   }
 
   onCancel() {

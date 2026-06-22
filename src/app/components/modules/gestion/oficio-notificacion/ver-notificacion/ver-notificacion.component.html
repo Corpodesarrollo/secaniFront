@@ -48,9 +48,17 @@
                 <div class="col-2"><span class="titulo">Firma</span></div>
                 <div class="col" [innerHTML]="notificacion.firma"></div>
               </div>
-              <div class="row" *ngIf="notificacion.adjunto?.url">
+              <div class="row" *ngIf="notificacion.oficio?.storage || notificacion.adjunto?.storage">
                 <div class="col-2"><span class="titulo">Adjuntos</span></div>
-                <div class="col"><a [href]="notificacion.adjunto.url" target="_blank" rel="noopener">{{ notificacion.adjunto.nombre }}</a></div>
+                <div class="col">
+                  <a *ngIf="notificacion.oficio?.storage" href="javascript:void(0)" (click)="descargarAdjunto(notificacion.oficio.storage)">
+                    {{ notificacion.oficio.nombre }}
+                  </a>
+                  <br *ngIf="notificacion.oficio?.storage && notificacion.adjunto?.storage" />
+                  <a *ngIf="notificacion.adjunto?.storage" href="javascript:void(0)" (click)="descargarAdjunto(notificacion.adjunto.storage)">
+                    {{ notificacion.adjunto.nombre }}
+                  </a>
+                </div>
               </div>
             </div>
 

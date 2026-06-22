@@ -115,4 +115,9 @@ export class HistoricoNnaComponent {
     this.router.navigate(["/usuarios/detalle_nna/", idNna]);
   }
 
+  // BUG-LZ 2026-06-20: link al modulo de alertas del ultimo seguimiento del NNA.
+  verAlertas(idSeguimiento: number): void {
+    this.router.navigate(['/gestion/consultar-alertas/', idSeguimiento]);
+  }
+
 }
