@@ -52,4 +52,6 @@ export interface ReporteDetalleNuevoDepurados {
     cuidadorEmail:                string;
     cuidadorTelefono:             string;
     agente:                       null | string;
+    estadoNNAId:                  number | null;
+    estado:                       string | null;
 }

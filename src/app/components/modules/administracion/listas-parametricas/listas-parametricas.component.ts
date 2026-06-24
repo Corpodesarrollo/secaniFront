@@ -41,6 +41,7 @@ export class ListasParametricasComponent implements OnInit {
     "cie10": 'Diagnóstico',
     "estadoalerta": 'Estado alerta',
     "estadoingresoestrategia": 'Estado ingreso estrategia',
+    "tiporecurso": 'Tipo de recurso',
   }
 
   constructor(private formBuilder: FormBuilder, private listasParametricasService: ListasParametricasService) {

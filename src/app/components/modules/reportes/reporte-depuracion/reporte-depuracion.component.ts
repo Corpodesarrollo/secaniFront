@@ -70,13 +70,7 @@ export class ReporteDepuracionComponent implements OnInit {
     this.reportesService.getReporteEstadoDepuracion(fechaInicio, fechaFin)
       .subscribe({
         next: (response: any) => {
-          this.reportes = response.map((reporte: any) => {
-            switch (String(reporte.estado)) {
-              case '1': return { ...reporte, estado: 'Procesado' };
-              case '2': return { ...reporte, estado: 'Fallido' };
-              default: return reporte;
-            }
-          });
+          this.reportes = response ?? [];
           this.cargando = false;
         },
         error: (err) => {

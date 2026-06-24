@@ -27,7 +27,7 @@ export class ReportesService {
     return this.generico.get(url, '', 'Seguimiento');
   }
 
-  getReporteDetalleRegDepurados(idReporteDepuracion: string, tipoRegistro: number = 1) {
+  getReporteDetalleRegDepurados(idReporteDepuracion: string, tipoRegistro: number = 0) {
     const url: string = `Reportes/ReporteDetalleRegDepurados?IdReporteDepuracion=${idReporteDepuracion}&TipoRegistro=${tipoRegistro}`;
     return this.generico.get(url, '', 'Seguimiento');
   }
@@ -40,8 +40,9 @@ export class ReportesService {
   
   getReporteDinamicoEAPB(data: any) {
     const fechas = this.convertirFechasEntrada(data.fechaInicio, data.fechaFin, 'mm-dd-yyyy');
-    const newData = { ...data, fechaInicial: fechas.fechaInicio, fechaFinal: fechas.fechaFin };
-    const url: string = `ReporteDinamicoEAPB?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
+    let url: string = `ReporteDinamicoEAPB?FechaInicial=${fechas.fechaInicio}&FechaFinal=${fechas.fechaFin}`;
+    if (data.eapb) url += `&EAPB=${encodeURIComponent(data.eapb)}`;
+    if (data.departamento) url += `&Departamento=${encodeURIComponent(data.departamento)}`;
     return this.generico.get(url, '', 'NNA');
   }
   
@@ -63,8 +64,13 @@ export class ReportesService {
   }
 
   getReporteInconsistenciasPorNNA(nnaId: string) {
-    const url: string = `ReporteInconsistenciaPersona/ReporteInconsistenciaPersona/${nnaId}`;
+    const url: string = `ReporteInconsistenciaPersona/${nnaId}`;
     return this.generico.get(url, '', 'NNA');
+  }
+
+  marcarInconsistenciaResuelta(reporteId: number, userId?: string) {
+    const url: string = `ReporteInconsistenciaPersona/${reporteId}/Resolver${userId ? `?userId=${userId}` : ''}`;
+    return this.generico.put(url, {}, 'NNA');
   }
 
   getNNA() {

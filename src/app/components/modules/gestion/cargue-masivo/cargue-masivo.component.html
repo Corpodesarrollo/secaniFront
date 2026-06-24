@@ -8,15 +8,15 @@
     <div>
       <p class="fw-bold">En el momento de cargar el archivo debe tener en cuenta las siguientes recomendaciones:</p>
       <ul>
-        <li>Formato <strong>.csv</strong>, <strong>.xlsx</strong></li>
+        <li>Formato <strong>.csv</strong>, <strong>.xlsx</strong> (no se admite .xls antiguo)</li>
         <li>Máximo 500 registros</li>
-        <li>Debe cumplir con los campos predefinidos <a href="#">(ver ejemplo)</a></li>
+        <li>Debe cumplir con los campos predefinidos <a href="plantilla-sivigila.csv" download="plantilla-sivigila.csv">(ver ejemplo)</a></li>
       </ul>
     </div>
 
     <div class="custom-file-upload">
       <div>
-        <input type="file" id="fileInput" class="d-none" (change)="onFileSelect($event)" accept=".csv, .xlsx, .xls" [disabled]="selectedFile"/>
+        <input type="file" id="fileInput" class="d-none" (change)="onFileSelect($event)" accept=".csv, .xlsx" [disabled]="selectedFile"/>
         <label for="fileInput"
           [class.p-button-success]="!selectedFile" [class.p-button-secondary]="selectedFile" [attr.disabled]="selectedFile ? true : null"
           [ngStyle]="selectedFile ? {'pointer-events': 'none'} : {}">

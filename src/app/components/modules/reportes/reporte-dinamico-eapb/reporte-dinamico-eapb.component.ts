@@ -90,10 +90,9 @@ export class ReporteDinamicoEapbComponent implements OnInit {
   onCheckboxChange(event: any, columna: Columna<ReporteDinamicoEAPB>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
-
-    if (event.checked && index === -1) {
+    if (index === -1) {
       selected.push(new FormControl(columna));
-    } else if (!event.checked && index !== -1) {
+    } else {
       selected.removeAt(index);
     }
   }

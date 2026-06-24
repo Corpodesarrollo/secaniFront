@@ -339,7 +339,8 @@ export class NotificacionOficioComponent {
 
     cambiarEstadoEnlace() {
       if (this.notificacion.agregarEnlace) {
-        this.notificacion.enlace = `${environment.url}respuesta-notificacion/${this.stringTobase64(this.idNotificacion?.toString() ?? "")}`;
+        // window.location.origin = host real del frontend (9110), no environment.url (MSAuth 9111).
+        this.notificacion.enlace = `${window.location.origin}/respuesta-notificacion/${this.stringTobase64(this.idNotificacion?.toString() ?? "")}`;
       } else {
         this.notificacion.enlace = '';
       }

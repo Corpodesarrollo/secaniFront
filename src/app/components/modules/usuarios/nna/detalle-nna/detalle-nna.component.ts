@@ -44,6 +44,8 @@ export class DetalleNnaComponent implements OnInit {
 
   seguimientos: { fechaSeguimiento?: Date | null, categoriaAlerta: string, subcategoriaAlerta: string, descripcion: string, entidad: string, fechaNotifi?: Date | null, fechaRespuesta?: Date | null, idSeguimiento: number, respuestaEntidad?: string }[] = [];
 
+  historialAsignaciones: any[] = [];
+
   estadoSeguimientoNombre: string = '';
 
   optionsDiagnostico: any[] = [];
@@ -393,6 +395,14 @@ export class DetalleNnaComponent implements OnInit {
         });
       },
       error: (err: any) => console.error('Error al cargar datos del Seguimiento', err)
+    });
+
+    // HU SECANI-RQ06-HU01: historial asignaciones/reasignaciones del NNA
+    this.repos.get_withoutParameters(`Seguimiento/HistorialAsignacionesNNA/${this.idNna}`, 'Seguimiento').subscribe({
+      next: (data: any) => {
+        this.historialAsignaciones = Array.isArray(data) ? data : [];
+      },
+      error: () => { this.historialAsignaciones = []; }
     });
   }
 

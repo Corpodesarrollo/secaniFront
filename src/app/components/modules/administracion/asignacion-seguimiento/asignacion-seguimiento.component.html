@@ -73,7 +73,7 @@
           [rowsPerPageOptions]="[5, 10, 20, 50, 100]" [showCurrentPageReport]="true"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}" [(selection)]="selectedRecords"
           (selectionChange)="onSelectionChange($event)"
-          [globalFilterFields]="['noCaso','fechaNotificacion','nombreCompleto','estado.nombre','asuntoUltimaActuacion','fechaUltimaActuacion','nombreAgenteActual','alertas.nombre']">
+          [globalFilterFields]="['noCaso','fechaNotificacion','nombreCompleto','estado.nombre','asuntoUltimaActuacion','fechaUltimaActuacion','usuario','alertas.nombre']">
           <ng-template pTemplate="header">
             <tr>
               <th>
@@ -101,6 +101,10 @@
                 <p-columnFilter type="date" field="fechaUltimaActuacion" display="menu" />
               </th>
               <th>
+                Agente asignado
+                <p-columnFilter type="text" field="usuario" display="menu" />
+              </th>
+              <th>
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
             </tr>
@@ -121,6 +125,7 @@
               </td>
               <td>{{ seguimiento.asuntoUltimaActuacion }}</td>
               <td>{{ seguimiento.fechaUltimaActuacion | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ seguimiento.usuario || '-' }}</td>
               <td class="accion-container">
                 <p-tableCheckbox [value]="seguimiento" class="accion-item" />
                 <i *ngIf="seguimiento.asuntoUltimaActuacion?.toLowerCase() == 'solicitado por cuidador'"

@@ -13,73 +13,56 @@
       <div *ngIf="tipoReporte === TipoReporte.GENERAL">
         <form [formGroup]="camposForm" (ngSubmit)="onSubmit()">
           <div class="row g-3 mb-2">
-            <!-- Fecha Inicio -->
             <div class="col-12 col-md-5">
               <label for="fechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
               <p-calendar inputId="fechaInicio" formControlName="fechaInicio" styleClass="w-100" [showIcon]="true"
                 [iconDisplay]="'input'" dateFormat="dd/mm/yy" />
               <div style="min-height: 1.8rem;" class="mt-1">
-                <div
-                  *ngIf="camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')"
-                  class="text-danger small">
+                <div *ngIf="camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')" class="text-danger small">
                   La fecha inicio es requerida
                 </div>
                 <div *ngIf="camposForm.errors?.['fechasInvalidas'] && camposForm.touched" class="text-danger small">
                   La fecha inicial no puede ser mayor a la fecha final
                 </div>
-                <!-- Espacio reservado si no hay errores -->
-                <div
-                  *ngIf="!(camposForm.get('fechaInicio')?.touched && camposForm.get('fechaInicio')?.hasError('required')) && !(camposForm.errors?.['fechasInvalidas'] && camposForm.touched)"
-                  class="invisible small">
-                  Placeholder
-                </div>
               </div>
             </div>
 
-            <!-- Fecha Fin -->
             <div class="col-12 col-md-5">
               <label for="fechaFin" class="form-label fw-semibold">Fecha Fin</label>
               <p-calendar inputId="fechaFin" formControlName="fechaFin" styleClass="w-100" [showIcon]="true"
                 [iconDisplay]="'input'" dateFormat="dd/mm/yy" />
               <div style="min-height: 1.8rem;" class="mt-1">
-                <div *ngIf="camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')"
-                  class="text-danger small">
+                <div *ngIf="camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')" class="text-danger small">
                   La fecha fin es requerida
                 </div>
                 <div *ngIf="camposForm.errors?.['fechaFutura'] && camposForm.touched" class="text-danger small">
                   La fecha fin no puede ser mayor a la fecha actual
                 </div>
-                <!-- Espacio reservado si no hay errores -->
-                <div
-                  *ngIf="!(camposForm.get('fechaFin')?.touched && camposForm.get('fechaFin')?.hasError('required')) && !(camposForm.errors?.['fechaFutura'] && camposForm.touched)"
-                  class="invisible small">
-                  Placeholder
-                </div>
               </div>
             </div>
-            
-            <!-- Botón Generar -->
+
             <div class="col-12 col-md-2 d-grid align-self-center">
-              <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
+              <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [loading]="cargando" [disabled]="cargando" />
             </div>
           </div>
         </form>
 
-        <div class="d-flex justify-content-end mb-2" *ngIf="reportesInconsistenciaGeneral">
+        <div class="d-flex justify-content-end mb-2 gap-2" *ngIf="reportesInconsistenciaGeneral">
           <p-button severity="success" icon="pi pi-file-excel" label="Exportar a Excel" (onClick)="exportExcel()" />
+          <p-button severity="danger" icon="pi pi-file-pdf" label="Exportar a PDF" (onClick)="exportPDF()" />
         </div>
 
-        <!-- Reporte de Inconsistencias -->
+        <!-- KPI 1: Total + período -->
         <div class="p-4 my-3">
           <table class="custom-table text-center align-middle">
             <tr>
               <th colspan="2" class="fs-5">Reporte de Inconsistencias</th>
             </tr>
             <tr>
-              <td colspan="2" class="fs-2 fw-bold">{{ reportesInconsistenciaGeneral?.totalInconsistencias  }}</td>
+              <td colspan="2" class="fs-2 fw-bold">{{ reportesInconsistenciaGeneral?.totalInconsistencias }}</td>
             </tr>
             <tr>
-              <td colspan="2">Total Inconsistencias</td>
+              <td colspan="2">Total Inconsistencias (KPI 1)</td>
             </tr>
             <tr>
               <td class="fw-bold">Periodo</td>
@@ -88,44 +71,51 @@
           </table>
         </div>
 
-        <!-- Tabla: Inconsistencias por campo -->
-        <div class="mb-4">
-          <div>
-            <p class="fs-5 fw-semibold">Inconsistencias por campo</p>
-          </div>
-          <p-table [value]="reportesInconsistenciaGeneral?.inconsistenciasPorCampo || []" [paginator]="false">
+        <!-- KPI 2: Por campo (22 campos) -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <p class="fs-5 fw-semibold">KPI 2 — Distribución de Inconsistencias por Tipo de Campo</p>
+          <p-table [value]="camposArr" [paginator]="true" [rows]="10">
             <ng-template pTemplate="header">
               <tr>
-                <th>Tipo de Identificación</th>
-                <th>Nombres</th>
-                <th>Sexo</th>
-                <th>Fecha de Defunción</th>
+                <th>Campo</th>
+                <th>Total Inconsistencias</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-reporte>
+            <ng-template pTemplate="body" let-row>
               <tr>
-                <td>{{ reporte.tipoIdentificacion }}</td>
-                <td>{{ reporte.nombres }}</td>
-                <td>{{ reporte.sexo }}</td>
-                <td>{{ reporte.fechaDefuncion }}</td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td> 0 </td>
-                <td> 0 </td>
-                <td> 0 </td>
-                <td> 0 </td>
+                <td>{{ row.campo }}</td>
+                <td>{{ row.total | number }}</td>
               </tr>
             </ng-template>
           </p-table>
         </div>
 
-        <!-- Tabla: Inconsistencias por departamento -->
-        <div class="mb-4">
-          <div class="row py-4">
+        <!-- KPI 3: Por fuente -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <p class="fs-5 fw-semibold">KPI 3 — Porcentaje de Inconsistencias por Fuente de Datos</p>
+          <p-table [value]="reportesInconsistenciaGeneral?.inconsistenciasPorFuente || []" [paginator]="false">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Fuente</th>
+                <th>Total Inconsistencias</th>
+                <th>Porcentaje</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.fuente }}</td>
+                <td>{{ row.totalInconsistencias | number }}</td>
+                <td>{{ (row.porcentaje | number:'1.0-2') + '%' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <!-- KPI 4a: Departamento -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <div class="row py-2">
             <div class="col">
-              <p class="fs-5 fw-semibold">Inconsistencias por departamento</p>
+              <p class="fs-5 fw-semibold">KPI 4 — Tasa de Inconsistencias por Departamento</p>
             </div>
             <div class="col">
               <p-inputGroup>
@@ -141,32 +131,85 @@
             <ng-template pTemplate="header">
               <tr>
                 <th>Departamento</th>
+                <th>Total NNAs</th>
+                <th>Porcentaje</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.departamento || '(Sin asignar)' }}</td>
+                <td>{{ row.totalInconsistencias }}</td>
+                <td>{{ (row.porcentaje | number:'1.0-2') + '%' }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="text-center">Sin datos</td></tr></ng-template>
+          </p-table>
+        </div>
+
+        <!-- KPI 4b: Municipio -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <div class="row py-2">
+            <div class="col">
+              <p class="fs-5 fw-semibold">KPI 4 — Tasa de Inconsistencias por Municipio</p>
+            </div>
+            <div class="col">
+              <p-inputGroup>
+                <input class="w-25" type="text" placeholder="Buscar..." pInputText
+                  (input)="tablaMunicipio.filterGlobal($any($event.target).value, 'contains')" />
+                <p-inputGroupAddon>
+                  <i class="pi pi-search"></i>
+                </p-inputGroupAddon>
+              </p-inputGroup>
+            </div>
+          </div>
+          <p-table #tablaMunicipio [value]="reportesInconsistenciaGeneral?.inconsistenciasPorMunicipio || []" [paginator]="true" [rows]="10">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Municipio</th>
+                <th>Departamento</th>
+                <th>Total</th>
+                <th>Porcentaje</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.municipio || '(Sin asignar)' }}</td>
+                <td>{{ row.departamento || '—' }}</td>
+                <td>{{ row.totalInconsistencias }}</td>
+                <td>{{ (row.porcentaje | number:'1.0-2') + '%' }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="4" class="text-center">Sin datos</td></tr></ng-template>
+          </p-table>
+        </div>
+
+        <!-- KPI 5a: Tipo de Cáncer -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <p class="fs-5 fw-semibold">KPI 5 — Frecuencia de Inconsistencias por Tipo de Cáncer</p>
+          <p-table [value]="reportesInconsistenciaGeneral?.inconsistenciasPorTipoCancer || []" [paginator]="false">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tipo de Cáncer</th>
                 <th>Total Inconsistencias</th>
                 <th>Porcentaje</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-reporte>
+            <ng-template pTemplate="body" let-row>
               <tr>
-                <td>{{ reporte.departamento }}</td>
-                <td>{{ reporte.total }}</td>
-                <td>{{ reporte.porcentaje }}</td>
+                <td>{{ row.tipoCancer || '(Sin asignar)' }}</td>
+                <td>{{ row.totalInconsistencias }}</td>
+                <td>{{ (row.porcentaje | number:'1.0-2') + '%' }}</td>
               </tr>
             </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td> 0 </td>
-                <td> 0 </td>
-                <td> 0% </td>
-              </tr>
-            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="text-center">Sin datos</td></tr></ng-template>
           </p-table>
         </div>
 
-        <!-- Tabla: Inconsistencias por diagnóstico -->
-        <div class="mb-4">
-          <div class="row py-4">
+        <!-- KPI 5b: Diagnóstico CIE10 -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <div class="row py-2">
             <div class="col">
-              <p class="fs-5 fw-semibold">Inconsistencias por diagnóstico</p>
+              <p class="fs-5 fw-semibold">Inconsistencias por Diagnóstico (CIE10)</p>
             </div>
             <div class="col">
               <p-inputGroup>
@@ -178,28 +221,93 @@
               </p-inputGroup>
             </div>
           </div>
-          <p-table #tablaDiagnostico [value]="reportesInconsistenciaGeneral?.inconsistenciasPorDiagnostico || []" [paginator]="false">
+          <p-table #tablaDiagnostico [value]="reportesInconsistenciaGeneral?.inconsistenciasPorDiagnostico || []" [paginator]="true" [rows]="10">
             <ng-template pTemplate="header">
               <tr>
                 <th>Diagnóstico</th>
-                <th>Total Inconsistencias</th>
+                <th>Total</th>
                 <th>Porcentaje</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-reporte>
+            <ng-template pTemplate="body" let-row>
               <tr>
-                <td>{{ reporte.diagnostico }}</td>
-                <td>{{ reporte.total }}</td>
-                <td>{{ reporte.porcentaje }}</td>
+                <td>{{ row.diagnostico || '(Sin diagnóstico)' }}</td>
+                <td>{{ row.totalInconsistencias }}</td>
+                <td>{{ (row.porcentaje | number:'1.0-2') + '%' }}</td>
               </tr>
             </ng-template>
-            <ng-template pTemplate="emptymessage">
+            <ng-template pTemplate="emptymessage"><tr><td colspan="3" class="text-center">Sin datos</td></tr></ng-template>
+          </p-table>
+        </div>
+
+        <!-- KPI 6/7/8/9: Métricas agregadas -->
+        <div class="row mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <div class="col-md-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">KPI 6 — Tiempo Promedio de Resolución</h5>
+                <p class="display-6 fw-bold text-success mb-0">{{ reportesInconsistenciaGeneral?.tiempoPromedioResolucionDias | number:'1.0-2' }} días</p>
+                <small class="text-muted">Resueltos: {{ reportesInconsistenciaGeneral?.totalResueltos }} / Pendientes: {{ reportesInconsistenciaGeneral?.totalPendientes }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">KPI 7 — Validados Auto vs Manual</h5>
+                <p class="mb-1"><span class="badge bg-success me-2">Auto</span>{{ reportesInconsistenciaGeneral?.validadasAutomaticamente | number }}</p>
+                <p class="mb-0"><span class="badge bg-warning me-2">Manual</span>{{ reportesInconsistenciaGeneral?.validadasManualmente | number }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">KPI 8 — Tasa de Reincidencia</h5>
+                <p class="display-6 fw-bold text-warning mb-0">{{ reportesInconsistenciaGeneral?.tasaReincidencia | number:'1.0-2' }}%</p>
+                <small class="text-muted">Casos reincidentes: {{ reportesInconsistenciaGeneral?.totalReincidentes }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">KPI 9 — Impacto en Tiempos</h5>
+                <p class="mb-1"><strong>Notificación:</strong> +{{ reportesInconsistenciaGeneral?.impactoNotificacionDias | number:'1.0-2' }} días</p>
+                <p class="mb-0"><strong>Tratamiento:</strong> +{{ reportesInconsistenciaGeneral?.impactoTratamientoDias | number:'1.0-2' }} días</p>
+                <small class="text-muted">vs NNAs sin inconsistencias</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 10: Campos críticos trazabilidad -->
+        <div class="mb-4" *ngIf="reportesInconsistenciaGeneral">
+          <p class="fs-5 fw-semibold">KPI 10 — Campos Críticos con Mayor Trazabilidad</p>
+          <p-table [value]="reportesInconsistenciaGeneral?.camposCriticosTrazabilidad || []" [paginator]="false">
+            <ng-template pTemplate="header">
               <tr>
-                <td> 0 </td>
-                <td> 0 </td>
-                <td> 0% </td>
+                <th>Campo</th>
+                <th>NNAs sin dato</th>
+                <th>Total NNAs período</th>
+                <th>% Inconsistencia</th>
               </tr>
             </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.campo }}</td>
+                <td>{{ row.nnAsConFalta | number }}</td>
+                <td>{{ row.totalNNAs | number }}</td>
+                <td>
+                  <span [class.text-danger]="row.porcentajeInconsistencia >= 20"
+                        [class.text-warning]="row.porcentajeInconsistencia >= 5 && row.porcentajeInconsistencia < 20"
+                        [class.text-success]="row.porcentajeInconsistencia < 5">
+                    {{ row.porcentajeInconsistencia | number:'1.0-2' }}%
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage"><tr><td colspan="4" class="text-center">Sin datos</td></tr></ng-template>
           </p-table>
         </div>
       </div>
@@ -211,11 +319,13 @@
             <div class="col-12 col-md-5">
               <label for="nna" class="form-label fw-semibold">NNA:</label>
               <p-dropdown
-                optionLabel="nombre"
-                optionValue="codigo"
+                optionLabel="nombreNNA"
+                optionValue="idNNA"
                 [options]="NNA"
                 styleClass="w-100"
                 placeholder="Seleccione"
+                [filter]="true"
+                filterBy="nombreNNA,noDocumento"
                 (onChange)="onNNAChange($event)"
               />
             </div>
@@ -267,6 +377,7 @@
                 <th>SexoId REAL</th>
                 <th>Fecha Defunción SIVIGILA</th>
                 <th>Fecha Defunción REAL</th>
+                <th>Estado</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-reporte>
@@ -291,11 +402,15 @@
                 <td>{{ reporte.sexoId }}</td>
                 <td>{{ reporte.fechaDefuncionSIVIGILA | date:'dd/MM/yyyy' }}</td>
                 <td>{{ reporte.fechaDefuncion | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <span *ngIf="reporte.resuelto" class="badge bg-success">Resuelto</span>
+                  <span *ngIf="!reporte.resuelto" class="badge bg-warning">Pendiente</span>
+                </td>
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
               <tr>
-                <td colspan="20" class="text-center">
+                <td colspan="21" class="text-center">
                   No se ha encontrado ningún registro.
                 </td>
               </tr>

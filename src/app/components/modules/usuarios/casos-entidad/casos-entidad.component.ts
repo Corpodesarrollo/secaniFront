@@ -10,6 +10,8 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { CasosEntidadService } from './casos-entidad.services';
 import { User } from '../../../../core/services/user';
+import { GenericService } from '../../../../services/generic.services';
+import { VerRespuestaComponent } from '../../gestion/oficio-notificacion/ver-respuesta/ver-respuesta.component';
 
 
 @Component({
@@ -18,13 +20,14 @@ import { User } from '../../../../core/services/user';
   styleUrls: ['./casos-entidad.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-      CardModule, DialogModule, ButtonModule, TableModule, PaginatorModule, TagModule,  ]
+      CardModule, DialogModule, ButtonModule, TableModule, PaginatorModule, TagModule, VerRespuestaComponent ]
 })
 export class CasosEntidadComponent implements OnInit {
   // BUG-smoke-A: p-table [value]="casos" llama .slice() en render inicial. Antes era {} → TypeError
   // hasta que ngOnInit async asignaba el array real.
   casos: any[] = [];
   displayModal: boolean = false;
+  notificacionesData: any[] = [];
 
   estadosSeguimiento = [];
 
@@ -34,7 +37,7 @@ export class CasosEntidadComponent implements OnInit {
   epsID: number = 0;
   xUser = new User();
 
-  constructor(public servicio: CasosEntidadService) { }
+  constructor(public servicio: CasosEntidadService, private repos: GenericService) { }
 
   async ngOnInit() {
     this.estadosSeguimiento = await this.servicio.GetEstadoSeguimiento();
@@ -65,8 +68,26 @@ export class CasosEntidadComponent implements OnInit {
     console.log('casos ', this.casos);
   }
 
-  verRespuesta(){
-    this.displayModal = true;
+  verRespuesta(seguimientoId: number) {
+    this.notificacionesData = [];
+    if (!seguimientoId) {
+      this.displayModal = true;
+      return;
+    }
+    this.repos.get('Notificacion/GetNotificationSeguimiento/', `${seguimientoId}`, 'Seguimiento').subscribe({
+      next: (data: any) => {
+        this.notificacionesData = Array.isArray(data) ? data : [];
+        this.displayModal = true;
+      },
+      error: () => {
+        this.notificacionesData = [];
+        this.displayModal = true;
+      }
+    });
+  }
+
+  cerrarModal() {
+    this.displayModal = false;
   }
 
 

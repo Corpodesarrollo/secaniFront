@@ -169,7 +169,7 @@ export class EditarNnaComponent implements OnInit {
         paises, deptos, munis, etniasD, gruposD, regimenesD, eapbsD, parentescosD,
         razonesD, diagnosticosD, ipsD, malaAtenD, catAlertaD, subCatAlertaD,
         causasInasistD, estadosD, tiposOrigenD, estadosIngresoD,
-        areasD, estratosD, tiposViviendaD, unidadesMedidaD
+        areasD, estratosD, tiposViviendaD, unidadesMedidaD, tiposRecursoD
       ] = await Promise.all([
         this.fetchListSafe(`TablaParametrica/Pais`, 'TablaParametrica'),
         this.fetchListSafe(`TablaParametrica/Departamento`, 'TablaParametrica'),
@@ -193,6 +193,7 @@ export class EditarNnaComponent implements OnInit {
         this.fetchListSafe(`TablaParametrica/EstratoSocioeconomico`, 'TablaParametrica'),
         this.fetchListSafe(`TablaParametrica/RIBATipoVivienda`, 'TablaParametrica'),
         this.fetchListSafe(`TablaParametrica/UnidadMedida`, 'TablaParametrica'),
+        this.fetchListSafe(`TipoRecurso`, 'TablaParametrica'),
       ]);
 
       this.listadoPais = paises ?? [];
@@ -219,6 +220,7 @@ export class EditarNnaComponent implements OnInit {
       this.areas = areasD ?? [];
       this.estratos = estratosD ?? [];
       this.tiposVivienda = tiposViviendaD ?? [];
+      this.tiposRecursoLegal = (tiposRecursoD ?? []).map((x: any) => ({ codigo: x.id, nombre: x.nombre }));
 
       const fallbackUnidades = [
         { codigo: 'D', nombre: 'Días' },

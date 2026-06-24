@@ -936,6 +936,37 @@
           </ng-template>
         </p-table>
       </div>
+
+      <!-- HU SECANI-RQ06-HU01: historial asignaciones/reasignaciones del NNA -->
+      <div class="row mt-4" *ngIf="historialAsignaciones?.length">
+        <h5 class="fw-bold mt-3 mb-2">Historial de Asignaciones</h5>
+        <p-table [value]="historialAsignaciones" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm" [paginator]="historialAsignaciones.length > 10" [rows]="10">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Fecha de asignación</th>
+              <th>No. Caso (Seguimiento)</th>
+              <th>Agente asignado</th>
+              <th>Asignado por</th>
+              <th>Motivo</th>
+              <th>Estado</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-h>
+            <tr>
+              <td>{{ h.fechaAsignacion | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ h.seguimientoId }}</td>
+              <td>{{ h.agenteAsignadoNombre || '-' }}</td>
+              <td>{{ h.creadoPorNombre || '-' }}</td>
+              <td>{{ h.motivo || '-' }}</td>
+              <td>
+                <span class="badge" [ngClass]="h.activo ? 'bg-success' : 'bg-secondary'">
+                  {{ h.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
     </div>
 
     <!-- BUG-LZ-018: Historial de cambios (HistoricoTransaccion sobre ContactoNNA) -->

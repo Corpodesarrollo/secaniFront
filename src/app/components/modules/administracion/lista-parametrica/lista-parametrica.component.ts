@@ -41,6 +41,7 @@ export class ListaParametricaComponent {
     "cie10": 'Diagnóstico',
     "estadoalerta": 'Estado alerta',
     "estadoingresoestrategia": 'Estado ingreso estrategia',
+    "tiporecurso": 'Tipo de recurso',
   }
 
   private listasProtegidas: string[] = ['TPEstadoNNA', 'TPEstadoSeguimiento', 'TPEstadoAlerta'];

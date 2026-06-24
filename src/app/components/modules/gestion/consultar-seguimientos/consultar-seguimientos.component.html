@@ -61,10 +61,40 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="card p-3">
+          <div class="row align-items-end">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-12 text-left">
+              <label for="Estado" class="form-label">Estado</label>
+              <select class="form-select form-select-lg" aria-label="Estado NNA" [(ngModel)]="filtroEstado" id="Estado" name="Estado">
+                <option [value]="0">Seleccione</option>
+                <option *ngFor="let estado of estadosNNA" [value]="estado.id">{{ estado.nombre }}</option>
+              </select>
+            </div>
+            <div class="col-lg-5 col-md-6 col-sm-12 col-12">
+              <label for="buscar" class="form-label">&nbsp;</label>
+              <p-iconField iconPosition="left" class="form-input">
+                <p-inputIcon styleClass="pi pi-search" />
+                <input class="col-12" type="text" pInputText id="buscar" name="buscar"
+                  placeholder="Buscar" [(ngModel)]="filtroBuscar" (keyup.enter)="aplicarFiltros()">
+              </p-iconField>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-12 text-end">
+              <button class="btn btn-principal" (click)="aplicarFiltros()">
+                <i class="pi pi-search"></i>
+                <span class="ms-2">Filtrar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card m-0 p-0">
-                <p-table 
+                <p-table
                     [value]="seguimientos" 
                     [paginator]="true" 
                     [rows]="5" 

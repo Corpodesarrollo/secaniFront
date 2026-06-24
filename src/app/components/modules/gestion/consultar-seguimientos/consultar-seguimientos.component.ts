@@ -15,11 +15,15 @@ import { TablasParametricas } from '../../../../core/services/tablasParametricas
 import { Parametricas } from '../../../../models/parametricas.model';
 import { Injectable } from "@angular/core";
 import { User } from '../../../../core/services/user';
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-consultar-seguimientos',
   standalone: true,
-  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule, DialogModule],
+  imports: [TableModule, BadgeModule, CardModule, CommonModule, BotonNotificacionComponent, RouterModule, DialogModule, FormsModule, InputTextModule, IconFieldModule, InputIconModule],
   templateUrl: './consultar-seguimientos.component.html',
   styleUrl: './consultar-seguimientos.component.css',
   encapsulation: ViewEncapsulation.None
@@ -36,6 +40,10 @@ export class ConsultarSeguimientosComponent implements OnInit {
     solicitadosPorCuidador: 0
   };
   seguimientos: Seguimiento[] = [];
+  seguimientosOriginal: Seguimiento[] = [];
+  estadosNNA: Parametricas[] = [];
+  filtroEstado: number | string = 0;
+  filtroBuscar: string = '';
   mensajeCarga: string = 'Cargando datos...';
   colorMensaje: string = 'text-primary';
   activeFilter: string = '1';
@@ -54,7 +62,7 @@ export class ConsultarSeguimientosComponent implements OnInit {
     private tpp: TpParametros
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // BUG-017 + BUG-LZ-006: leer userId fresco desde localStorage (no via field-init que cachea entre cambios de usuario)
     this.xUser = new User();
     this.idUsuario = this.xUser.id ?? '';
@@ -62,6 +70,8 @@ export class ConsultarSeguimientosComponent implements OnInit {
       console.warn('Usuario no autenticado');
       return;
     }
+
+    this.estadosNNA = await this.tpp.getTpEstadosNNA();
 
     this.CargarDatos('1');
 
@@ -80,9 +90,27 @@ export class ConsultarSeguimientosComponent implements OnInit {
   CargarDatos(filter: string) {
     this.repos.get('Seguimiento/GetAllByIdUser/', `${this.idUsuario}/${filter}`, 'Seguimiento').subscribe({
       next: (data: any) => {
-        this.seguimientos = data;
-        console.log("Respuesta seguimiento : ", data)
+        this.seguimientosOriginal = Array.isArray(data) ? data : [];
+        this.aplicarFiltros();
       }
+    });
+  }
+
+  aplicarFiltros() {
+    const estadoId = Number(this.filtroEstado) || 0;
+    const txt = (this.filtroBuscar || '').toLowerCase().trim();
+    this.seguimientos = this.seguimientosOriginal.filter(s => {
+      if (estadoId > 0 && Number(s.estado?.id) !== estadoId) return false;
+      if (txt) {
+        const haystack = [
+          String(s.noCaso ?? ''),
+          (s.nombreCompleto ?? '').toLowerCase(),
+          (s.asuntoUltimaActuacion ?? '').toLowerCase(),
+          (s.estado?.nombre ?? '').toLowerCase()
+        ].join(' ');
+        if (!haystack.includes(txt)) return false;
+      }
+      return true;
     });
   }
 

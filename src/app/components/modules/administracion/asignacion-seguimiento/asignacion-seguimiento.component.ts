@@ -244,13 +244,17 @@ export class AsignacionSeguimientoComponent implements OnInit {
       return;
     }
 
-    const agenteId = this.agente.id;
+    const agenteId = (typeof this.agente === 'object') ? this.agente.id : this.agente;
+    const agenteObj = this.agentes.find((a: any) => a.id === agenteId);
+    const agenteNombre = agenteObj?.fullName ?? '';
     const motivo = this.motivo;
+    const coordinadorId = this.xUser?.id ?? '';
     const requests = this.selectedRecords.map((seg: any) =>
       this.repos.put('Seguimiento/PutSeguimientoActualizacionUsuario', {
         Id: seg.id,
         UsuarioId: agenteId,
-        ObservacionesSolicitante: motivo
+        ObservacionesSolicitante: motivo,
+        CoordinadorId: coordinadorId
       }, apis.seguimiento)
     );
 
@@ -267,7 +271,7 @@ export class AsignacionSeguimientoComponent implements OnInit {
           severity: fallidos === 0 ? 'success' : 'warn',
           summary: 'Reasignacion',
           detail: fallidos === 0
-            ? `Reasignados ${ok} caso(s) al agente ${this.agente!.fullName}.`
+            ? `Reasignados ${ok} caso(s) al agente ${agenteNombre}.`
             : `Reasignados ${ok}/${results.length}. ${fallidos} no pudo reasignarse (horarios vencidos o sin asignacion previa).`,
           life: 5000
         });

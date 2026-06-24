@@ -86,6 +86,8 @@ export class MiPerfilCuidadorComponent implements OnInit {
           id: Date.now() + 1000 + i,
           correo: c.correo ?? ''
         }));
+        this.celular = data?.celular ?? '';
+        this.celularOriginal = this.celular;
       },
       error: (err: any) => console.error('No se pudieron cargar contactos adicionales del cuidador', err)
     });
@@ -106,9 +108,21 @@ export class MiPerfilCuidadorComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Celular invalido', detail: 'Ingrese un numero de 7 a 10 digitos.', life: 5000 });
       return;
     }
-    // TODO: persistir en backend cuando exista endpoint Cuidador profile
-    this.celularEditando = false;
-    this.messageService.add({ severity: 'success', summary: 'Celular actualizado', life: 3000 });
+    if (!this.xUser.id) {
+      this.messageService.add({ severity: 'error', summary: 'Sesion invalida', detail: 'No se pudo identificar al usuario.', life: 5000 });
+      return;
+    }
+    this.repos.post('ContactoCuidador/Celular', { userId: this.xUser.id, celular: this.celular }, apis.nna).subscribe({
+      next: () => {
+        this.celularOriginal = this.celular;
+        this.celularEditando = false;
+        this.messageService.add({ severity: 'success', summary: 'Celular actualizado', life: 3000 });
+      },
+      error: (err: any) => {
+        const detalle = (typeof err?.error === 'string' ? err.error : null) || err?.error?.message || err?.message || 'Error al guardar celular.';
+        this.messageService.add({ severity: 'error', summary: 'No se pudo guardar', detail: detalle, life: 5000 });
+      }
+    });
   }
 
   agregarTelefono() {

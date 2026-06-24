@@ -37,65 +37,9 @@ currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
           </td>
           <td>{{ casos.observacionesSolicitante }}</td>
           <td><p-tag [value]="obtenerNombreEstadoSeguimiento(casos.estadoSeguimientoId)"   styleClass="custom-tag"/></td>
-          <td><a (click)="verRespuesta()" style="cursor: pointer"><img src="iconos/ojo.svg" alt="ojo"/></a></td>
+          <td><a (click)="verRespuesta(casos.seguimientoId)" style="cursor: pointer"><img src="iconos/ojo.svg" alt="ojo"/></a></td>
       </tr>
   </ng-template>
 </p-table>
 
-<p-dialog  [(visible)]="displayModal" [modal]="true">
-  <div style="text-align:center">
-    <p class="tituloAlerta">Respuesta a notificación de alerta</p>
-    1.Accesibilidad - 1.F No tener implementados esquemas de diagnóstico.
-  </div>
-  <br>
-  <table class="table">
-    <tr>
-      <th>
-        Para
-      </th>
-      <td>
-        aaaa
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Con copia
-      </th>
-      <td>
-        bbb
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Asunto
-      </th>
-      <td>
-        ccccccc
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Mensaje
-      </th>
-      <td>
-        ddddd
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Firma
-      </th>
-      <td>
-        eeee
-      </td>
-    </tr>
-    <tr>
-      <th>
-        Adjuntos
-      </th>
-      <td>
-        hhhh
-      </td>
-    </tr>
-  </table>
-</p-dialog>
+<app-ver-respuesta [show]="displayModal" [notificacionesData]="notificacionesData" (closeModal)="cerrarModal()"></app-ver-respuesta>

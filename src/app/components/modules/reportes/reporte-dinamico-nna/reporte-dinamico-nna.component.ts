@@ -95,11 +95,33 @@ export class ReporteDinamicoNnaComponent {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
 
-    if (event.checked && index === -1) {
+    // p-checkbox PrimeNG con [value] sin ngModel emite event.checked como array.
+    // Toggle por presencia en lista (ignorar event.checked).
+    if (index === -1) {
       selected.push(new FormControl(columna));
-    } else if (!event.checked && index !== -1) {
+    } else {
       selected.removeAt(index);
     }
+  }
+
+  isDateField(field: string): boolean {
+    return ['fechaNacimiento', 'fechaNotificacionSIVIGILA', 'fechaIngresoEstrategia'].includes(field);
+  }
+
+  formatCell(value: any, field: string): string {
+    if (this.isDateField(field) && value) {
+      if (typeof value === 'string' && value.startsWith('0001-01-01')) return '';
+      const date = new Date(value);
+      if (isNaN(date.getTime()) || date.getFullYear() < 1900) return '';
+      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const yyyy = date.getFullYear();
+      const hh = String(date.getHours()).padStart(2, '0');
+      const mi = String(date.getMinutes()).padStart(2, '0');
+      return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+    }
+    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
+    return value ?? '';
   }
 
   get columnasParaMostrar(): Columna<ReporteDinamicoNNA>[] {

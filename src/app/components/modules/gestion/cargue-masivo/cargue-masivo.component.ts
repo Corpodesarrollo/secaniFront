@@ -49,10 +49,18 @@ export class CargueMasivoComponent {
     if (input && input.files) {
       const file = input.files[0];
 
-      const allowedExtensions = ['.csv', '.xlsx', '.xls'];
+      const allowedExtensions = ['.csv', '.xlsx'];
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
-      if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
+      if (fileExtension === 'xls') {
+        this.selectedFile = null;
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Formato no soportado',
+          detail: 'El formato .xls (Excel 97-2003) no es compatible. Abra el archivo en Excel y guarde como .xlsx.',
+          life: 7000
+        });
+      } else if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
         this.selectedFile = file;
         this.resetErrores();
       } else {
@@ -60,7 +68,7 @@ export class CargueMasivoComponent {
         this.messageService.add({
           severity: 'warn',
           summary: 'Archivo inválido',
-          detail: 'El archivo debe tener una extensión válida (.csv, .xlsx, .xls).',
+          detail: 'El archivo debe tener una extensión válida (.csv o .xlsx).',
         });
       }
     }

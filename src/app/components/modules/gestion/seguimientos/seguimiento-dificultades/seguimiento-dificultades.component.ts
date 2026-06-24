@@ -98,7 +98,8 @@ export class SeguimientoDificultadesComponent implements OnInit {
     this.id = this.routeAct.snapshot.paramMap.get('id')!;
     this.nna = await this.tpp.getNNA(this.id);
 
-    //this.tiposRecursos =  await this.tp.getTP('TiposRecursos'); ///falta por definir
+    this.tiposRecursos = await this.tpp.getTipoRecurso();
+    this.isLoadingTipoRecurso = false;
     this.IPS =  await this.tpp.getIPS(this.nna.municipioNacimientoId);
     this.selectedIPSCual = this.IPS.find(x => x.id == this.nna.ipsId);
 

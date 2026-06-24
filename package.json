@@ -39,6 +39,8 @@
     "chart.js": "^4.4.4",
     "chartjs-plugin-datalabels": "^2.2.0",
     "fullcalendar": "^6.1.15",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.15",
     "quill": "^2.0.2",

@@ -353,6 +353,9 @@ export class EstadoSeguimientoComponent implements OnInit {
     let reporte = {
       tipoIdentificacion: this.nna.tipoIdentificacionId,
       numeroIdentificacion: this.nna.numeroIdentificacion,
+      // BUG: el backend resolvia SolicitanteId via JWT.Alias y en QA caia al agente.
+      // Enviar explicito el id del Cuidador logueado para que el seguimiento quede asociado.
+      usuarioId: this.xUser.id ?? ''
     };
     return new Promise((resolve, reject) => {
         this.repos.post('ReportesSIVIGILA/CrearSeguimiento', reporte, 'NNA').subscribe({
