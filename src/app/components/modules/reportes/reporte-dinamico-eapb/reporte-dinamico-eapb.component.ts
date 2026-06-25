@@ -34,16 +34,17 @@ export class ReporteDinamicoEapbComponent implements OnInit {
   public columnasObligatorias: Columna<ReporteDinamicoEAPB>[] = [
     { header: 'EAPB', field: 'eapb' },
     { header: 'Casos asociados', field: 'casosAsociados' },
-    { header: 'Casos con alertas sin resolver', field: 'casosAlertasSinResolver' },
-    { header: 'Total de alertas sin resolver', field: 'totalAlertasSinResolver' } 
+    { header: 'Casos con alertas sin resolver', field: 'casosConAlertasSinResolver' },
+    { header: 'Total de alertas sin resolver', field: 'totalDeAlertasSinResolver' }
   ];
 
   public columnasOpcionales: Columna<ReporteDinamicoEAPB>[] = [
-    { header: 'Promedio de tiempo de respuesta a alertas', field: 'promedioTiempoRespuestaAlertas' },
-    { header: 'Casos por Régimen de afiliación Contributivo', field: 'casosRegimenAfiliacionContributivo' },
-    { header: 'Casos por Régimen de afiliación Subsidiado', field: 'casosRegimenAfiliacionSubsidiado' },
-    { header: 'Casos por Régimen de afiliación Especial/Excepción', field: 'casosRegimenAfiliacionEspecial' },
-    { header: 'Casos por Régimen de afiliación No asegurados', field: 'casosRegimenAfiliacionNoAsegurados' },
+    { header: 'Promedio de tiempo de respuesta a alertas (días)', field: 'promedioTiempoRespuestaAlertas' },
+    { header: 'Casos Régimen Contributivo', field: 'casosRegimenContributivo' },
+    { header: 'Casos Régimen Subsidiado', field: 'casosRegimenSubsidiado' },
+    { header: 'Casos Régimen Especial', field: 'casosRegimenEspecial' },
+    { header: 'Casos Régimen Excepción', field: 'casosRegimenExcepcion' },
+    { header: 'Casos Régimen No Afiliado', field: 'casosRegimenNoAfiliado' },
     { header: 'Total alertas resueltas', field: 'totalAlertasResueltas' },
     { header: 'Casos con seguimiento por iniciar', field: 'casosSeguimientoPorIniciar' },
     { header: 'Casos con seguimiento en proceso', field: 'casosSeguimientoEnProceso' },

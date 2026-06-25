@@ -1,15 +1,17 @@
 export interface ReporteDinamicoEAPB {
-    eapb:                                string;
-    casosAsociados:                      string;
-    casosAlertasSinResolver:             string;
-    totalAlertasSinResolver:             string;
-    promedioTiempoRespuestaAlertas:      string;
-    casosRegimenAfiliacionContributivo:  string;
-    casosRegimenAfiliacionSubsidiado:    string;
-    casosRegimenAfiliacionEspecial:      string;
-    casosRegimenAfiliacionNoAsegurados:  string;
-    totalAlertasResueltas:               string;
-    casosSeguimientoPorIniciar:          string;
-    casosSeguimientoEnProceso:           string;
-    casosSeguimientoCulminado:           string;
+    eapbId: number;
+    eapb: string;
+    casosAsociados: number;
+    casosConAlertasSinResolver: number;
+    totalDeAlertasSinResolver: number;
+    promedioTiempoRespuestaAlertas: number;
+    casosRegimenContributivo: number;
+    casosRegimenSubsidiado: number;
+    casosRegimenEspecial: number;
+    casosRegimenExcepcion: number;
+    casosRegimenNoAfiliado: number;
+    totalAlertasResueltas: number;
+    casosSeguimientoPorIniciar: number;
+    casosSeguimientoEnProceso: number;
+    casosSeguimientoCulminado: number;
 }
