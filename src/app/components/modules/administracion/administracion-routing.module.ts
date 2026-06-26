@@ -13,12 +13,13 @@ import { NuevaPlantillaCorreoComponent } from './nueva-plantilla-correo/nueva-pl
 
 import { AsignacionSeguimientoComponent } from '../administracion/asignacion-seguimiento/asignacion-seguimiento.component';
 import { ModuloGuard } from '../../../services/modulo.guard';
+import { permisoGuard } from '../../../guards/permiso.guard';
 
 const routes: Routes = [
   { 
     path: 'permisos', 
     component: PermisosComponent,
-    canActivate: [ModuloGuard],
+    canActivate: [ModuloGuard, permisoGuard],
     data: {
       path: 'administracion/permisos',
       permiso: 'canView'
@@ -30,7 +31,7 @@ const routes: Routes = [
       { 
         path: '', component: 
         ListasParametricasComponent,
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/lista_parametricas',
           permiso: 'canView'
@@ -39,7 +40,7 @@ const routes: Routes = [
       { 
         path: ':id', 
         component: ListaParametricaComponent, 
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/lista_parametricas',
           permiso: 'canView'
@@ -48,7 +49,7 @@ const routes: Routes = [
       { 
         path: ':id/historico', 
         component: ListaParametricaHistoricoComponent,
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/lista_parametricas',
           permiso: 'canView'
@@ -57,7 +58,7 @@ const routes: Routes = [
       { 
         path: ':id/items', 
         component: ListaParametricaItemsComponent,
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/lista_parametricas',
           permiso: 'canView'
@@ -71,7 +72,7 @@ const routes: Routes = [
     children: [
       { 
         path: '', component: PlantillasCorreoComponent, 
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/plantilla_de_correo',
           permiso: 'canView'
@@ -80,7 +81,7 @@ const routes: Routes = [
       { 
         path: ':id/historico', 
         component: PlantillaCorreoHistoricoComponent,
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/plantilla_de_correo',
           permiso: 'canView'
@@ -89,7 +90,7 @@ const routes: Routes = [
       { 
         path: 'nueva', 
         component: NuevaPlantillaCorreoComponent,
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/plantilla_de_correo',
           permiso: 'canAdd'
@@ -98,7 +99,7 @@ const routes: Routes = [
       { 
         path: ':id/editar', 
         component: NuevaPlantillaCorreoComponent,
-        canActivate: [ModuloGuard],
+        canActivate: [ModuloGuard, permisoGuard],
         data: {
           path: 'administracion/plantilla_de_correo',
           permiso: 'canEdit'
@@ -112,7 +113,7 @@ const routes: Routes = [
   { 
     path: 'asignacion_de_seguimiento', 
     component: AsignacionSeguimientoComponent,
-    canActivate: [ModuloGuard],
+    canActivate: [ModuloGuard, permisoGuard],
     data: {
       path: 'administracion/asignacion_de_seguimiento',
       permiso: 'canView'

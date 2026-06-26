@@ -124,7 +124,7 @@
 
         <p-card>
             <div class="header">
-                <button class="top-right-button" (click)="onGuardarClick()">GUARDAR</button>
+                <button class="top-right-button" (click)="onGuardarClick()" [appPermiso]="'canEdit'" path="administracion/permisos" mode="disable">GUARDAR</button>
             </div>
             <br>
             <div>

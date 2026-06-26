@@ -10,13 +10,12 @@ import { CardModule } from 'primeng/card';
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { Entidad } from '../../../../models/entidad.model';
 import { Rol } from '../../../../models/rol.model';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule, BotonNotificacionComponent, TabViewModule],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule, BotonNotificacionComponent, TabViewModule, PermisoDirective],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })
@@ -68,16 +67,13 @@ export class PermisosComponent implements OnInit {
       complete: () => console.info('Se lleno la lista de Entidades')
     });
 
-    // BUG-003: usuarios vienen de SISPRO API, no de BD local
-    this.dataService.get_withoutParameters('User/GetAllFromSispro', 'Authentication').subscribe({
+    this.dataService.get_withoutParameters('User/GetAllUserDetails', 'Authentication').subscribe({
       next: (data: any) => {
-        this.dataUsers = Array.isArray(data) ? data : (data?.data ?? []);
-        console.log('SISPRO users:', this.dataUsers);
+        this.dataUsers = data
+        console.log(data)
       },
-      error: (e) => {
-        console.error('Error consultando usuarios SISPRO', e);
-        this.dataUsers = [];
-      }
+      error: (e) => console.error('Se presento un error al llenar la lista de usuarios', e),
+      complete: () => console.info('Se lleno la lista de usuarios')
     });
   }
 
@@ -119,29 +115,16 @@ export class PermisosComponent implements OnInit {
   }
 
   onGuardarClick(): void {
-    if (!this.tableData?.length) return;
-    // BUG-LZ-008: backend retorna 204 NoContent. HttpClient con responseType:json puede fallar
-    // al parsear cuerpo vacio (SyntaxError). Status 2xx en HttpErrorResponse = success real.
-    const requests = this.tableData.map(permiso =>
-      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').pipe(
-        catchError((err: any) => {
-          const status = err?.status ?? 0;
-          if (status >= 200 && status < 300) {
-            return of(null);
-          }
-          return of({ __error: err, permiso });
-        })
-      )
-    );
-    forkJoin(requests).subscribe((results: any[]) => {
-      const errores = results.filter(r => r && r.__error);
-      if (errores.length === 0) {
-        alert('¡Permisos guardados exitosamente! Se recargará la página para aplicar cambios.');
-      } else {
-        console.error('Permisos con error:', errores);
-        alert(`Guardado parcial: ${results.length - errores.length} OK, ${errores.length} con error. Se recargará la página.`);
-      }
-      window.location.reload();
+    this.tableData.forEach(permiso => {
+      console.log(permiso);
+      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').subscribe({
+        next: (data: any) => {
+          console.log(data)
+          alert('¡Se guardo de forma exitosa!')
+        },
+        error: (e) => console.error('Se presento un error al actualizar los permisos', e),
+        complete: () => console.info('Se actualizaron los permisos')
+      });
     });
   }
 
