@@ -1,7 +1,7 @@
 // Ambiente EC2 - Apunta a los microservicios via IP publica y puertos 9110-9116
 export const environment = {
   cookie: false,
-  production: false,
+  production: true,
   url: 'http://18.232.27.199:9111/',
   url_MsAuthention: 'http://18.232.27.199:9111/',
   url_MSEntidad: 'http://18.232.27.199:9111/',

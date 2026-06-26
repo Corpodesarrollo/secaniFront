@@ -7,8 +7,16 @@
    @font-face para usar font del sistema en lugar del WOFF2 roto. */
 @font-face {
     font-family: 'Inter var';
+    font-style: normal;
     font-display: swap;
     src: local('Inter'), local('-apple-system'), local('BlinkMacSystemFont'),
+         local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
+}
+@font-face {
+    font-family: 'Inter var';
+    font-style: italic;
+    font-display: swap;
+    src: local('Inter Italic'), local('-apple-system'), local('BlinkMacSystemFont'),
          local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
 }
 

@@ -235,8 +235,9 @@ export class DetalleNnaComponent implements OnInit {
       next: (data: any) => {
         this.historialCambios = Array.isArray(data) ? data : [];
       },
-      error: (err: any) => {
-        console.error('Error cargando historial cambios NNA', err);
+      error: (_err: any) => {
+        // Endpoint ContactoNNAs/Historico/{id} no implementado en backend.
+        // Silenciado para no contaminar consola. Restaurar log si se implementa.
         this.historialCambios = [];
       }
     });
