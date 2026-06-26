@@ -2,6 +2,16 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
+/* BUG font WOFF2: PrimeNG empaqueta Inter-roman.var.woff2 corrupto (header
+   length=227180 vs disk size=410665 -> OTS parsing error en browser). Override
+   @font-face para usar font del sistema en lugar del WOFF2 roto. */
+@font-face {
+    font-family: 'Inter var';
+    font-display: swap;
+    src: local('Inter'), local('-apple-system'), local('BlinkMacSystemFont'),
+         local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
+}
+
 @import "primeicons/primeicons.css";
 /* BUG-front-blanco: @import url('https://fonts.googleapis.com/...') BLOQUEA render
    hasta resolver. Si user tiene red lenta/bloqueada para Google Fonts → pantalla
