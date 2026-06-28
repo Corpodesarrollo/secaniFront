@@ -85,7 +85,7 @@
           </div>
         </div>
 
-        <div class="row mb-3" *ngIf="mostrarCierre">
+        <div class="row mb-3">
           <div class="col-12 col-md-2 mb-1 mb-md-0 fw-semibold">Cierre:</div>
           <div class="col-12 col-md-10">
             <p-editor [style]="{ height: '140px' }" formControlName="cierre">
@@ -126,7 +126,7 @@
 
         <div class="d-flex mb-3 justify-content-end">
           <p-button label="Volver" routerLink="/administracion/plantilla_de_correo" severity="secondary" styleClass="me-2"/>
-          <p-button type="submit" label="Guardar" severity="success" />
+          <p-button type="submit" label="Guardar" severity="success" [appPermiso]="'canEdit'" path="administracion/plantilla_de_correo" mode="disable" />
         </div>
       </form>
     </div>

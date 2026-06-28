@@ -15,6 +15,7 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ReporteInconsistenciaGeneral } from '../../../../models/reporteInconsistenciaGeneral';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 export enum TipoReporte {
   GENERAL = 'GENERAL',
@@ -24,7 +25,7 @@ export enum TipoReporte {
 @Component({
   selector: 'app-reporte-inconsistencia',
   standalone: true,
-  imports: [CalendarModule, InputGroupAddonModule, InputGroupModule, DropdownModule, CommonModule, ButtonModule, InputTextModule, SelectButtonModule, ReactiveFormsModule, TableModule],
+  imports: [CalendarModule, InputGroupAddonModule, InputGroupModule, DropdownModule, CommonModule, ButtonModule, InputTextModule, SelectButtonModule, ReactiveFormsModule, TableModule, PermisoDirective],
   templateUrl: './reporte-inconsistencia.component.html',
   styleUrl: './reporte-inconsistencia.component.css'
 })

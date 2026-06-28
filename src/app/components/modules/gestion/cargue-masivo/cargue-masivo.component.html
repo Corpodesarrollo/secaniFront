@@ -8,15 +8,15 @@
     <div>
       <p class="fw-bold">En el momento de cargar el archivo debe tener en cuenta las siguientes recomendaciones:</p>
       <ul>
-        <li>Formato <strong>.csv</strong>, <strong>.xlsx</strong> (no se admite .xls antiguo)</li>
+        <li>Formato <strong>.csv</strong>, <strong>.xlsx</strong></li>
         <li>Máximo 500 registros</li>
-        <li>Debe cumplir con los campos predefinidos <a href="plantilla-sivigila.csv" download="plantilla-sivigila.csv">(ver ejemplo)</a></li>
+        <li>Debe cumplir con los campos predefinidos <a href="#">(ver ejemplo)</a></li>
       </ul>
     </div>
 
     <div class="custom-file-upload">
       <div>
-        <input type="file" id="fileInput" class="d-none" (change)="onFileSelect($event)" accept=".csv, .xlsx" [disabled]="selectedFile"/>
+        <input type="file" id="fileInput" class="d-none" (change)="onFileSelect($event)" accept=".csv, .xlsx, .xls" [disabled]="selectedFile"/>
         <label for="fileInput"
           [class.p-button-success]="!selectedFile" [class.p-button-secondary]="selectedFile" [attr.disabled]="selectedFile ? true : null"
           [ngStyle]="selectedFile ? {'pointer-events': 'none'} : {}">
@@ -33,21 +33,8 @@
 
     @if (selectedFile) {
       <div class="mt-4">
-        <button pButton [loading]="cargando" [label]="cargando ? 'Cargando': 'Cargar'" class="p-button-success me-2" (click)="uploadFile()"></button>
+        <button pButton [loading]="cargando" [label]="cargando ? 'Cargando': 'Cargar'" class="p-button-success me-2" (click)="uploadFile()" [appPermiso]="'canAdd'" path="gestion/gestion" mode="disable"></button>
         <button pButton [disabled]="cargando" label="Cancelar" class="p-button-secondary" (click)="cancelUpload()"></button>
-      </div>
-    }
-
-    @if (errorTitulo) {
-      <div class="alert alert-danger mt-4" role="alert">
-        <strong>{{ errorTitulo }}</strong>
-        @if (errores.length > 0) {
-          <ul class="mt-2 mb-0" style="max-height: 280px; overflow-y: auto;">
-            @for (e of errores; track e) {
-              <li>{{ e }}</li>
-            }
-          </ul>
-        }
       </div>
     }
   </div>

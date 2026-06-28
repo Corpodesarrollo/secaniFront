@@ -18,11 +18,12 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
 import { ReporteDinamicoEAPB } from '../../../../models/reporteDinamicoEAPB';
 import { EAPB } from '../../../../models/eapb.model';
 import { GenericService } from '../../../../services/generic.services';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-dinamico-eapb',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, DropdownModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule],
+  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, DropdownModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, PermisoDirective],
   templateUrl: './reporte-dinamico-eapb.component.html',
   styleUrl: './reporte-dinamico-eapb.component.css'
 })

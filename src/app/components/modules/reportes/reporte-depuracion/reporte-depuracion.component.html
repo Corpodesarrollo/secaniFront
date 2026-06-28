@@ -58,7 +58,7 @@
 
           <!-- Botón Generar -->
           <div class="col-12 col-md-2 d-grid align-self-center">
-            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" />
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [appPermiso]="'canView'" path="reportes/depuracion_p115" mode="disable" />
           </div>
         </div>
 
@@ -87,7 +87,7 @@
         <p-table
           #tabla
           [value]="reportes"
-          [globalFilterFields]="['id', 'fecha', 'hora', 'registrosIngresados', 'registrosNuevos', 'registrosDuplicados', 'recaidas', 'segundasNeoplasias', 'estado']"
+          [globalFilterFields]="['id', 'fecha', 'hora', 'registrosIngresados', 'registrosNuevos', 'registrosDuplicados', 'estado']"
           [tableStyle]="{ 'min-width': '60rem' }"
           [paginator]="true"
           [rows]="5"
@@ -119,8 +119,6 @@
               <th>Registros Ingresados</th>
               <th>Registros Nuevos</th>
               <th>Registros Duplicados</th>
-              <th>Recaídas</th>
-              <th>Segundas Neoplasias</th>
               <th>Estado</th>
             </tr>
           </ng-template>
@@ -145,8 +143,6 @@
               <td>{{ reporte.registrosIngresados }}</td>
               <td>{{ reporte.registrosNuevos }}</td>
               <td>{{ reporte.registrosDuplicados }}</td>
-              <td>{{ reporte.recaidas }}</td>
-              <td>{{ reporte.segundasNeoplasias }}</td>
               <td>{{ reporte.estado }}</td>
             </tr>
           </ng-template>
@@ -154,12 +150,12 @@
           <!-- Mensaje vacío -->
           <ng-template pTemplate="emptymessage">
             <tr style="height: 120px;">
-              <td [attr.colspan]="9" class="text-center" *ngIf="cargando">
+              <td [attr.colspan]="7" class="text-center" *ngIf="cargando">
                   <div class="table-loading">
                       <span>Cargando datos...</span>
                   </div>
               </td>
-              <td [attr.colspan]="9" class="text-center" *ngIf="!cargando && reportes.length === 0">
+              <td [attr.colspan]="7" class="text-center" *ngIf="!cargando && reportes.length === 0">
                   No se encontraron registros
               </td>
             </tr>

@@ -70,7 +70,7 @@
             </div>
             <div class="row align-items-center mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;">GUARDAR Y GESTIONAR ALERTAS</button>
+                    <button class="btn text-white rounded-4 btn-lg" type="submit" style="background-color: #ff9801; width: 400px;" [appPermiso]="'canEdit'" path="gestion/seguimientos" mode="disable">GUARDAR Y GESTIONAR ALERTAS</button>
                 </div>
             </div>
         </div>

@@ -68,8 +68,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
-                        <button type="submit" class="btn btn-guardar">{{ isEditing ?
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" [disabled]="contactForm.invalid" class="btn btn-guardar" [appPermiso]="'canEdit'" path="usuarios/externos_et" mode="disable">{{ isEditing ?
                             'Actualizar' : 'Guardar' }}</button>
                     </div>
                 </form>

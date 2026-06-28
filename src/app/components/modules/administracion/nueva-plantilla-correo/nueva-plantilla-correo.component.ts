@@ -13,12 +13,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 import { filter, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-nueva-plantilla-correo',
   standalone: true,
-  imports: [CommonModule, ButtonModule, DropdownModule, EditorModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, RouterModule, ToastModule],
+  imports: [CommonModule, ButtonModule, DropdownModule, EditorModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, RouterModule, ToastModule, PermisoDirective],
   templateUrl: './nueva-plantilla-correo.component.html',
   styleUrl: './nueva-plantilla-correo.component.css',
   providers: [MessageService],
@@ -88,13 +89,6 @@ export class NuevaPlantillaCorreoComponent {
       }
       cierreControl?.updateValueAndValidity({ emitEvent: false });
     });
-  }
-
-  // BUG-LZ-081: la seccion Cierre solo aplica para plantillas "Oficio de notificación".
-  // Antes el FormControl se deshabilitaba (no guardaba) pero el p-editor (Quill) seguia editable
-  // visualmente -> el usuario escribia y se confundia. Ahora se oculta del todo si no aplica.
-  get mostrarCierre(): boolean {
-    return this.plantillaCorreoForm.get('tipoPlantilla')?.value === 'Oficio de notificación';
   }
 
   isValidField(field: string): boolean | null {

@@ -11,11 +11,12 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { Seguimiento } from '../../../../../models/seguimiento.model';
 import { apis } from '../../../../../models/apis.model';
 import { Router } from '@angular/router';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-seguimiento-guardar',
   standalone: true,
-  imports: [CommonModule, CalendarModule, ReactiveFormsModule, FormsModule, DialogModule, InputTextModule, SelectButtonModule ],
+  imports: [CommonModule, CalendarModule, ReactiveFormsModule, FormsModule, DialogModule, InputTextModule, SelectButtonModule, PermisoDirective ],
   templateUrl: './seguimiento-guardar.component.html',
   styleUrl: './seguimiento-guardar.component.css'
 })
@@ -131,19 +132,13 @@ export class SeguimientoGuardarComponent {
   }
 
   enviar(){
-    // BUG-LZ-071: error handler silente -> usuario click Guardar y "nada pasa". Mostrar alert
-    // con mensaje del backend (incluye codigo HTTP) para que QA/funcional sepa por que no guardo.
     this.gs.post('Seguimiento/SetSeguimiento', this.seguimiento, apis.seguimiento).subscribe(
       response => {
         this.idSeguimiento = response as number;
         this.mostrarMensaje = true;
       },
       error => {
-        console.error('Error al guardar seguimiento', error);
-        // BUG-LZ-082: el backend devuelve BadRequest con el mensaje como string plano (ej. conflicto
-        // de agenda <10 min). Considerar tambien error.error string para mostrar ese motivo real.
-        const detalle = (typeof error?.error === 'string' ? error.error : null) || error?.error?.message || error?.error?.title || error?.message || `Error HTTP ${error?.status ?? 'desconocido'} al guardar el seguimiento`;
-        alert(`No fue posible guardar el seguimiento: ${detalle}`);
+        console.error('Error al subir el archivo', error);
       }
     );
   }
@@ -167,26 +162,18 @@ export class SeguimientoGuardarComponent {
   }
 
   terminar(){
-    // BUG-LZ-041: cerrar dialogs ANTES de navegar y pasar skipGuard en ambas ramas para que
-    // el confirmExitGuard no intercepte y muestre el modal "¿Desea abandonar?" que producia un
-    // bucle infinito entre "Seguimiento gestionado con éxito" y "¿Desea abandonar?".
-    this.mostrarMensaje = false;
-    this.mostrarDialogo = false;
-    this.show = false;
     this.onClose.emit();
     if (this.seguimiento && this.seguimiento.nnaId !== undefined && this.seguimiento.nnaId !== null) {
       if (this.seguimiento.alertas && this.seguimiento.alertas.length > 0) {
-        // BUG-LZ 2026-06-20: replaceUrl saca el form del historial -> el boton VOLVER
-        // en /consultar-alertas no cae sobre el form ya submitado (evita regresion BUG-LZ-064/078).
-        this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true }, replaceUrl: true }).then(() => {
+        this.router.navigate([`/gestion/consultar-alertas/${this.idSeguimiento}`], { state: { skipGuard: true } }).then(() => {
           window.scrollTo(0, 0);
         });
       } else {
-        this.router.navigate([`/gestion/seguimientos`], { state: { skipGuard: true }, replaceUrl: true }).then(() => {
+        this.router.navigate([`/gestion/seguimientos`]).then(() => {
           window.scrollTo(0, 0);
         });
       }
-
+      
     }
   }
 }

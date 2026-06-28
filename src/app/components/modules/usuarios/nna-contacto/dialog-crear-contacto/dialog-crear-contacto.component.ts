@@ -18,11 +18,12 @@ import { ChipsModule } from 'primeng/chips';
 import { ToastModule } from 'primeng/toast';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 import { apis } from '../../../../../models/apis.model';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-dialog-crear-contacto',
   standalone: true,
-  imports: [DialogModule, CommonModule, ButtonModule,FormsModule,ReactiveFormsModule,DropdownModule,InputTextModule,ChipsModule,ToastModule],
+  imports: [DialogModule, CommonModule, ButtonModule,FormsModule,ReactiveFormsModule,DropdownModule,InputTextModule,ChipsModule,ToastModule, PermisoDirective],
   templateUrl: './dialog-crear-contacto.component.html',
   styleUrls: ['../../general.component.css', './dialog-crear-contacto.component.css'],
   providers: [MessageService]
@@ -206,13 +207,6 @@ export class DialogCrearContactoComponent {
       if (!campo || campo.toString().trim() === '') {
         return false;
       }
-    }
-
-    // BUG-LZ-017: validar formato correo si fue diligenciado
-    const email = (this.contacto.email ?? '').trim();
-    if (email && !this.isValidEmail(email)) {
-      this.messageService.add({ severity: 'error', summary: 'Correo inválido', detail: 'El correo no tiene un formato válido (ej: usuario@dominio.com).' });
-      return false;
     }
 
     return true;

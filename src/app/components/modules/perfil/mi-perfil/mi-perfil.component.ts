@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,10 +8,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { TooltipModule } from 'primeng/tooltip';
 
 import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notificacion.component";
 import { ModalCrearComponent } from '../../usuarios/eapb/modal-crear/modal-crear.component';
@@ -21,60 +18,63 @@ import { GenericService } from '../../../../services/generic.services';
 import { NotificacionService } from '../../../../core/services/notificacionService';
 import { User } from '../../../../core/services/user';
 import { apis } from '../../../../models/apis.model';
-import { forkJoin, switchMap, tap } from 'rxjs';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule, ConfirmDialogModule, TooltipModule],
+  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, PermisoDirective],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css',
-  providers: [MessageService, ConfirmationService]
+  providers: [MessageService]
 })
 export class MiPerfilComponent implements OnInit {
   @ViewChild(ModalCrearComponent) modalCrearComponent!: ModalCrearComponent;
 
-  usuario!: any;
+  estadoUsuario: boolean = true;
+  fecha: string = '';
+  usuario!: Usuario;
+  idUser: string = "";
   user = new User();
 
-  estadoUsuario: boolean = true;
-  idUser: string = "";
+  data: any[] = [
+    { nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987514', correo: 'luz1@sanitas.com', estado: 'Activo' },
+    { nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987515', correo: 'luz2@sanitas.com', estado: 'Inactivo' },
+    { nombreApe: 'Felipe Arias', cargo: 'Jefe de Doctores', telefono: '3208987516', correo: 'luz3@sanitas.com', estado: 'Activo' },
+    { nombreApe: 'Luz Maria Soler', cargo: 'Jefe de Enfermeras', telefono: '3208987516', correo: 'luz4@sanitas.com', estado: 'Activo' }
+  ];
 
-  data: any[] = [];
+  selectedItem: any = null;
+  isEditing: boolean = false;
 
-  // Variables para controlar vistas
-  public vistaEntidad: boolean = false;
+  first = 0;
+  rows = 10;
 
+  vistaPerfil: string = '';
   // Datos para la primera tabla
   public datosHorarioAgente = [
-    { diaActivo: false, dia: 'Domingo', horaEntrada: '', horaSalida: '' },
-    { diaActivo: false, dia: 'Lunes', horaEntrada: '', horaSalida: '' },
-    { diaActivo: false, dia: 'Martes', horaEntrada: '', horaSalida: '' },
-    { diaActivo: false, dia: 'Miercoles', horaEntrada: '', horaSalida: '' },
-    { diaActivo: false, dia: 'Jueves', horaEntrada: '', horaSalida: '' },
-    { diaActivo: false, dia: 'Viernes', horaEntrada: '', horaSalida: '' },
-    { diaActivo: false, dia: 'Sabado', horaEntrada: '', horaSalida: '' },
+    { diaActivo: false, dia: 'Domingo', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Lunes', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Martes', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Miercoles', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Jueves', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Viernes', horaInicio: '', horaFin: '' },
+    { diaActivo: false, dia: 'Sabado', horaInicio: '', horaFin: '' },
   ];
 
   // Datos para la segunda tabla
   public datosAusenciasAgente: { id: string, fecha: Date; motivo: string }[] = [];
 
-  public datosContactosAgente: any[] = [];
-  public contactoSeleccionado: any = null;
-  public editarContancto: boolean = false;
+  public workScheduleForm: FormGroup;
+  public visibleWorkScheduleForm: boolean = false;
+  public selectedSchedule: any = null;
 
-  public formularioHorarioLaboral: FormGroup;
-  public dialogoHorarioLaboralVisible: boolean = false;
-  public horarioSeleccionado: any = null;
+  public selectedDate: Date | null = null;
+  public visibleAbsenceForm = false;
+  public absenceForm: FormGroup;
 
-  public fechaSeleccionada: Date | null = null;
-  public dialogoAusenciaVisible: boolean = false;
-  public formularioAusencia: FormGroup;
-  public minFechaAusencia: Date = (() => { const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(0,0,0,0); return d; })();
-
-  constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService, private confirmationService: ConfirmationService, private router: Router) {
-    this.formularioHorarioLaboral = this.fb.group({
+  constructor(private dataService: GenericService, private fb: FormBuilder, private notificacionService: NotificacionService, private messageService: MessageService) {
+    this.workScheduleForm = this.fb.group({
       inicio: this.fb.group({
         hh: ['', [Validators.required, Validators.min(1), Validators.max(12)]],
         mm: ['', [Validators.required, Validators.min(0), Validators.max(59)]],
@@ -87,79 +87,109 @@ export class MiPerfilComponent implements OnInit {
       })
     });
 
-    this.formularioAusencia = this.fb.group({
-      motivo: ['', Validators.required]
+    this.absenceForm = this.fb.group({
+      reason: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    // BUG-007: Redirigir EAPB/ET a perfil entidad, HU RQ09-HU05
-    if (this.user.isEAPB || this.user.isET) {
-      this.router.navigate(['/perfil/mi-perfil-entidad']);
-      return;
-    }
+  async ngOnInit() {
+    
     this.idUser = this.user.id ?? '0';
-    this.cargarPerfilCompleto();
+    //this.vistaSegunPerfiil(this.user.enterpriseCode);
+    this.obtenerDatosUsuario();
+    this.vistaSegunPerfiil('M');
+    this.obtenerHorarioAgente();
   }
 
-  private cargarPerfilCompleto(): void {
-    this.dataService.get('User/GetUserDetails/', this.idUser, 'Permisos').pipe(
-      tap((data: any) => {
+  obtenerDatosUsuario() {
+    if (!this.idUser || this.idUser === '0') return;
+    this.dataService.get('User/GetUserDetails/', this.idUser, 'Permisos').subscribe({
+      next: (data: any) => {
         this.usuario = data;
-        // BUG-015: backend retorna bool, legacy string 'Activo'
-        this.estadoUsuario = data.estado === true || data.estado === 'Activo' || data.activo === true;
-        this.vistaEntidad = this.esVistaEntidad(data.enterpriseCode);
-      }),
-
-      switchMap((user: any) => {
-        if (this.esVistaEntidad(user.enterpriseCode)) {
-          return this.dataService.get('ContactoEntidad/Entidades/', this.idUser, 'Entidad')
-            .pipe(
-              tap(contactos => {
-                this.datosContactosAgente = contactos;
-              })
-            );
-        }
-
-        return forkJoin({
-          horarios: this.dataService.get('api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento'),
-          ausencias: this.dataService.get('api/Ausencias/usuario/', this.idUser, 'Seguimiento'),
-        }).pipe(
-          tap(({ horarios, ausencias }) => {
-            this.actualizarHorarios(horarios);
-            this.datosAusenciasAgente = ausencias;
-          })
-        );
-      })
-    ).subscribe({
-      error: () => {
+        this.estadoUsuario = this.usuario.estado === 'Activo';
+        
+      },
+      error: (e) => {
         this.messageService.add({
           severity: 'error',
-          summary: 'Error al cargar perfil',
-          detail: 'Ocurrió un problema al cargar los datos del usuario.',
+          summary: 'Error al obtener los del usuario',
+          detail: 'Ocurrió un problema al obtener los datos del usuario en el sistema.',
           life: 3000
         });
+      },
+      complete: () => console.info('Consulta usuario exitosa')
+    });
+  }
+
+  obtenerHorarioAgente(): void {
+    if (!this.idUser || this.idUser === '0') return;
+    this.dataService.get('api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento').subscribe({
+      next: (data: any[]) => { this.actualizarHorarios(data) },
+      error: (e) => console.error('Se presento un error al consultar los horarios del usuario', e),
+      complete: () => console.info('Consulta del horario del usuario existosa')
+    });
+  }
+
+  obtenerDatosAusenciaAgente(): void {
+    if (!this.idUser || this.idUser === '0') return;
+    this.dataService.get('api/Ausencias/usuario/', this.idUser, 'Seguimiento').subscribe({
+      next: (data: { id: string, fecha: Date; motivo: string }[]) => { this.datosAusenciasAgente = data },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al obtener los datos de ausencia',
+          detail: 'Ocurrió un problema al obtener los datos de las ausencia registradas.',
+          life: 3000
+        });
+      },
+      complete: () => console.info('Consulta del horario del usuario existosa')
+    });
+  }
+
+  vistaSegunPerfiil(parametro: any): void {
+    if (parametro === 'MU' || parametro === 'DE' || parametro === 'DI') {
+      this.vistaPerfil = 'vistaEntidadEAPB';
+    } else {
+      this.vistaPerfil = 'vistaUsuario';
+    }
+  }
+
+  actualizarHorarios(horariosRecibidos: any[]) {
+    // Primero, resetear todos los días a inactivos
+    this.datosHorarioAgente.forEach(dia => {
+      dia.diaActivo = false;
+      dia.horaInicio = '';
+      dia.horaFin = '';
+    });
+
+    // Actualizar solo los días que vienen en la respuesta
+    horariosRecibidos.forEach(horario => {
+      const indice = horario.dia;
+      if (indice !== undefined && indice >= 0 && indice < this.datosHorarioAgente.length) {
+        this.datosHorarioAgente[indice].diaActivo = true;
+        this.datosHorarioAgente[indice].horaInicio = this.formatearHora(horario.horaEntrada);
+        this.datosHorarioAgente[indice].horaFin = this.formatearHora(horario.horaSalida);
       }
     });
   }
 
-  // Función para determinar si se muestra la vista de entidad o usuario
-  private esVistaEntidad(code: string | null | undefined): boolean {
-    const enterpriseCodes = ['MU', 'DE', 'DI'];
-    return enterpriseCodes.includes(code?.toUpperCase() ?? '');
+  // Función auxiliar para formatear la hora
+  // Convierte "08:00:00" a "08:00"
+  formatearHora(horaCompleta: string): string {
+    return horaCompleta.substring(0, 5);
   }
 
- 
-  // Función para abrir el modal de creación/edición de contacto
-  editarContacto(item: any) {
-    this.contactoSeleccionado = item;
-    this.editarContancto = true;      // Modo edición
+  /**Modal Crear y Editar**/
+
+  onEdit(item: any) {
+    this.selectedItem = item;
+    this.isEditing = true; // Modo edición
     this.openModal();
   }
 
-  crearContacto() {
-    this.contactoSeleccionado = null; // Asegúrate de que no hay datos seleccionados
-    this.editarContancto = false;     // Modo creación
+  onCreate() {
+    this.selectedItem = null; // Asegúrate de que no hay datos seleccionados
+    this.isEditing = false; // Modo creación
     this.openModal();
   }
 
@@ -169,31 +199,39 @@ export class MiPerfilComponent implements OnInit {
     }
   }
 
-  // BUG-015: Cambio de estado con confirmación + regla único agente
-  onEstadoChange(nuevoEstado: boolean) {
-    if (nuevoEstado === false) {
-      this.confirmationService.confirm({
-        header: 'Inactivar usuario',
-        message: '¿Está seguro de inactivar el usuario? Todos sus casos serán reasignados a otros agentes. Al activarse nuevamente los casos asignados serán diferentes a los actuales.',
-        acceptLabel: 'Inactivar usuario',
-        rejectLabel: 'Volver',
-        accept: () => this.aplicarCambioEstado(false),
-        reject: () => {
-          this.estadoUsuario = true;
-        }
-      });
-      return;
-    }
-    this.aplicarCambioEstado(true);
+  /**Paginador**/
+  next() {
+    this.first = this.first + this.rows;
   }
 
-  private aplicarCambioEstado(nuevoEstado: boolean) {
+  prev() {
+    this.first = this.first - this.rows;
+  }
+
+  reset() {
+    this.first = 0;
+  }
+
+  pageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+  }
+
+  isLastPage(): boolean {
+    return this.data ? this.first === this.data.length - this.rows : true;
+  }
+
+  isFirstPage(): boolean {
+    return this.data ? this.first === 0 : true;
+  }
+
+  onEstadoChange(nuevoEstado: boolean) {
     const data = { ...this.usuario, estado: nuevoEstado };
+    console.log(data);
     this.dataService.put(`user/EditUserProfile/${this.idUser}`, data, apis.authentication).subscribe({
-      next: async () => {
-        this.usuario = { ...this.usuario, estado: nuevoEstado ? 'Activo' : 'Inactivo' };
-        this.estadoUsuario = nuevoEstado;
-        this.messageService.add({ severity: 'success', summary: 'Estado actualizado', detail: nuevoEstado ? 'Usuario activado' : 'Usuario inactivado', life: 3000 });
+      next: async (value) => {
+        console.log('Estado actualizado con éxito');
+        this.usuario = { ...this.usuario, estado: `${nuevoEstado}` } 
         await this.notificacionService.set({
           idAgenteOrigen: this.usuario.id ?? '',
           agenteOrigen: '',
@@ -209,107 +247,57 @@ export class MiPerfilComponent implements OnInit {
           idNotificacion: 0,
         });
       },
-      error: (err) => {
-        const msg = err?.error?.message || 'No fue posible actualizar el estado';
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg, life: 6000, sticky: false });
-        this.estadoUsuario = !nuevoEstado;
-      }
+      error: (err) => { console.log },
     });
   }
 
-  // BUG-LZ-002: backend retorna 7 dias siempre (faltantes con 00:00:00).
-  // Solo marcar diaActivo si tiene horas configuradas (!= 00:00:00).
-  private actualizarHorarios(horariosRecibidos: any[]) {
-    this.datosHorarioAgente.forEach(d => {
-      d.diaActivo = false;
-      d.horaEntrada = '';
-      d.horaSalida = '';
-    });
-    horariosRecibidos.forEach(horario => {
-      const indice = horario.dia;
-      if (indice === undefined || indice < 0 || indice >= this.datosHorarioAgente.length) return;
-      const entrada = (horario.horaEntrada || '').toString();
-      const salida = (horario.horaSalida || '').toString();
-      const inactivo = this.esHoraVacia(entrada) && this.esHoraVacia(salida);
-      this.datosHorarioAgente[indice].diaActivo = !inactivo;
-      this.datosHorarioAgente[indice].horaEntrada = inactivo ? '' : entrada;
-      this.datosHorarioAgente[indice].horaSalida = inactivo ? '' : salida;
-    });
+  showWorkScheduleDialog(item: any) {
+    this.selectedSchedule = item; // guardamos cuál se está editando
+    const start = this.convertTimeToForm(item.horaInicio);
+    const end = this.convertTimeToForm(item.horaFin);
+    this.workScheduleForm.patchValue({ start, end });
+    this.visibleWorkScheduleForm = true;
   }
 
-  private esHoraVacia(t: string): boolean {
-    if (!t) return true;
-    const norm = t.trim();
-    return norm === '' || norm === '00:00:00' || norm === '00:00' || norm.startsWith('00:00:00');
-  }
+  saveSchedule() {
+    if (this.workScheduleForm.valid) {
+      const formValue = this.workScheduleForm.value;
+      // Construimos el objeto que el backend espera
+      const payload = {
+        userId: this.idUser,
+        dia: this.selectedSchedule.dia,
+        horaEntrada: this.convertFormToTime(formValue.start),
+        horaSalida: this.convertFormToTime(formValue.end)
+      };
 
-  private cargarHorarios(): void {
-    this.dataService
-      .get('api/horario-laboral/obtener-usuario/', this.idUser, 'Seguimiento')
-      .subscribe({
-        next: (horarios) => this.actualizarHorarios(horarios),
+      this.dataService.post(`api/horario-laboral/guardar-dia`, payload, "Seguimiento").subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Horario guardado',
+            detail: 'El horario laboral se guardó correctamente.',
+            life: 3000
+          });
+          this.visibleWorkScheduleForm = false;
+        },
         error: (err) => {
           this.messageService.add({
             severity: 'error',
-            summary: 'Error al cargar horarios',
-            detail: 'Ocurrió un problema al cargar los horarios laborales del usuario.',
+            summary: 'Error al guardar',
+            detail: 'Ocurrió un problema al guardar el horario laboral.',
             life: 3000
           });
+          console.error('Error al guardar el horario:', err);
         }
       });
+
+    } else {
+      this.workScheduleForm.markAllAsTouched();
+    }
   }
 
-  mostrarDialogoHorarioLaboral(item: any): void {
-    // BUG-LZ INC-08: reset antes de patch para evitar arrastre del dia anterior
-    this.formularioHorarioLaboral.reset();
-    this.horarioSeleccionado = item;
-    this.formularioHorarioLaboral.patchValue({
-      inicio: this.convertTimeToForm(item.horaEntrada || '08:00:00'),
-      fin: this.convertTimeToForm(item.horaSalida || '17:00:00')
-    });
-    this.dialogoHorarioLaboralVisible = true;
-  }
-
-  guardarHorario() {
-    if (!this.formularioHorarioLaboral.valid) return this.formularioHorarioLaboral.markAllAsTouched();
-
-    const formValue = this.formularioHorarioLaboral.value;
-    const payload = {
-      userId: this.idUser,
-      dia: this.obtenerNumeroDia(this.horarioSeleccionado.dia),
-      horaEntrada: this.convertFormToTime(formValue.inicio),
-      horaSalida: this.convertFormToTime(formValue.fin)
-    };
-    console.log('Payload a enviar:', payload);
-
-    this.dataService.post(`api/horario-laboral/guardar-dia`, payload, "Seguimiento").subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Horario guardado',
-          detail: 'El horario laboral se guardó correctamente.',
-          life: 3000
-        });
-        this.cargarHorarios(); // Refrescar horarios después de guardar
-        this.cerrarDialogoHorarioLaboral(); // Cerrar diálogo después de guardar
-      },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al guardar',
-          detail: 'Ocurrió un problema al guardar el horario laboral.',
-          life: 3000
-        });
-        console.error('Error al guardar el horario:', err);
-      }
-    });
-
-  }
-
-  cerrarDialogoHorarioLaboral(): void {
-    this.dialogoHorarioLaboralVisible = false;
-    this.formularioHorarioLaboral.reset();
-    this.horarioSeleccionado = null;
+  closeWorkScheduleDialog() {
+    this.visibleWorkScheduleForm = false;
   }
 
   /** Convert "08:00:00" -> { hh: 8, mm: 0, meridiem: 'AM' } */
@@ -340,144 +328,96 @@ export class MiPerfilComponent implements OnInit {
     return `${hh}:${mm}:00`;
   }
 
-  // Función para obtener el número del día de la semana a partir del nombre (0=Domingo, 1=Lunes, ..., 6=Sábado)
-  private obtenerNumeroDia(nombreDia: string): number {
-    const dias: any = {
-      "domingo": 0,
-      "lunes": 1,
-      "martes": 2,
-      "miercoles": 3,
-      "miércoles": 3,
-      "jueves": 4,
-      "viernes": 5,
-      "sabado": 6,
-      "sábado": 6
-    };
+  openAbsenceDialog(): void {
+  if (!this.selectedDate) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Selecciona una fecha',
+      detail: 'Debes seleccionar una fecha antes de registrar la ausencia.',
+      life: 3000
+    });
+    return;
+  }
+  this.visibleAbsenceForm = true;
+}
 
-    return dias[nombreDia.toLowerCase()];
+saveAbsence(): void {
+  if (!this.absenceForm.valid || !this.selectedDate) {
+    this.absenceForm.markAllAsTouched();
+    return;
   }
 
+  // Construir payload
+  const payload = {
+    usuarioId: this.idUser,
+    fechaAusencia: this.selectedDate.toISOString().split('T')[0],
+    motivoAusencia: this.absenceForm.value.reason
+  };
 
-  private cargarAusencias(): void {
-    this.dataService
-      .get('api/Ausencias/usuario/', this.idUser, 'Seguimiento')
-      .subscribe({
-        next: (ausencias) => this.datosAusenciasAgente = ausencias,
-        error: (err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error al cargar ausencias',
-            detail: 'Ocurrió un problema al cargar las ausencias del usuario.',
-            life: 3000
-          });
-        }
-      });
-  }
-
-  mostrarDialogoAusencia(): void {
-    if (!this.fechaSeleccionada) {
+  // Enviar solicitud al backend
+  this.dataService.post("api/ausencias", payload, 'Seguimiento').subscribe({
+    next: () => {
+      // Éxito
       this.messageService.add({
-        severity: 'warn',
-        summary: 'Selecciona una fecha',
-        detail: 'Debes seleccionar una fecha antes de registrar la ausencia.',
+        severity: 'success',
+        summary: 'Ausencia guardada',
+        detail: 'La ausencia se guardó correctamente.',
         life: 3000
       });
-      return;
-    }
-    this.dialogoAusenciaVisible = true;
-  }
 
-  guardarAusencia(): void {
-    if (!this.formularioAusencia.valid || !this.fechaSeleccionada) {
-      this.formularioAusencia.markAllAsTouched();
-      return;
-    }
+      // Limpiar formulario y cerrar modal
+      this.absenceForm.reset();
+      this.visibleAbsenceForm = false;
 
-    // BUG-LZ-003: validar minimo 1 dia anticipacion antes de enviar
-    const seleccion = new Date(this.fechaSeleccionada);
-    seleccion.setHours(0, 0, 0, 0);
-    const manana = new Date();
-    manana.setHours(0, 0, 0, 0);
-    manana.setDate(manana.getDate() + 1);
-    if (seleccion < manana) {
+      // Refrescar tabla o datos relacionados
+      this.obtenerDatosAusenciaAgente();
+    },
+
+    error: (err) => {
+      // Mensaje original del backend
+      const rawMessage = err?.error?.MESSAGE || 'Ocurrió un error desconocido.';
+
+      // Limpiar UUID del mensaje para mostrarlo al usuario
+      const cleanedMessage = rawMessage.replace(
+        /para\s+[\w-]+\s+en\s+/,
+        'para este usuario en '
+      );
+
+      // Mostrar mensaje de error
       this.messageService.add({
-        severity: 'warn',
-        summary: 'Fecha inválida',
-        detail: 'La fecha de ausencia debe registrarse con al menos un día de anticipación.',
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: cleanedMessage,
         life: 4000
       });
-      return;
     }
+  });
+}
 
-    const payload = {
-      usuarioId: this.idUser,
-      fechaAusencia: this.fechaSeleccionada.toISOString().split('T')[0],
-      motivoAusencia: this.formularioAusencia.value.motivo
-    };
+cancelAbsenceDialog(): void {
+  this.visibleAbsenceForm = false;
+}
 
-    this.dataService.post("api/ausencias", payload, 'Seguimiento').subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Ausencia guardada',
-          detail: 'La ausencia se guardó correctamente.',
-          life: 3000
-        });
-        this.formularioAusencia.reset();
-        this.cerrarDialogoAusencia();
-        this.cargarAusencias();
-      },
-
-      error: (err) => {
-        // BUG-LZ-003: backend retorna array [{code, message, field}]; antes leía MESSAGE (uppercase)
-        const detail = this.extraerMensajeError(err) || 'Ocurrió un error al guardar la ausencia.';
-        const cleaned = detail.replace(/para\s+[\w-]+\s+en\s+/, 'para este usuario en ');
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al guardar',
-          detail: cleaned,
-          life: 5000
-        });
-      }
-    });
-  }
-
-  private extraerMensajeError(err: any): string {
-    const body = err?.error;
-    if (!body) return '';
-    if (Array.isArray(body) && body.length > 0) {
-      const first = body[0];
-      return first?.message || first?.Message || '';
+deleteAbsence(data: any): void {
+  this.dataService.deleteWithApi(`api/ausencias/${data.id}`, '' ,"Seguimiento").subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Ausencia eliminada',
+        detail: 'La ausencia se eliminó correctamente.',
+        life: 3000
+      });
+      this.obtenerDatosAusenciaAgente(); // refrescar tabla
+    },
+    error: (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al eliminar',
+        detail: 'Ocurrió un problema al eliminar la ausencia.',
+        life: 3000
+      });
+      console.error('Error al eliminar ausencia:', err);
     }
-    if (typeof body === 'string') return body;
-    return body?.message || body?.Message || body?.MESSAGE || '';
-  }
-
-  cerrarDialogoAusencia(): void {
-    this.dialogoAusenciaVisible = false;
-    this.fechaSeleccionada = null;
-    this.formularioAusencia.reset();
-  }
-
-  eliminarAusencia(data: any): void {
-    this.dataService.deleteWithApi(`api/ausencias/${data.id}`, '', "Seguimiento").subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Ausencia eliminada',
-          detail: 'La ausencia se eliminó correctamente.',
-          life: 3000
-        });
-        this.cargarAusencias(); // refrescar tabla
-      },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al eliminar',
-          detail: 'Ocurrió un problema al eliminar la ausencia.',
-          life: 3000
-        });
-      }
-    }); 
-  }
+  });
+}
 }

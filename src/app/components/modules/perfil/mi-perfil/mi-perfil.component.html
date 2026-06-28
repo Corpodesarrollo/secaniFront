@@ -1,6 +1,4 @@
-<div>
-    <p-toast></p-toast>
-    <p-confirmDialog [style]="{ width: '500px' }" acceptButtonStyleClass="p-button-danger" rejectButtonStyleClass="p-button-secondary"></p-confirmDialog>
+<div *ngIf="vistaPerfil === 'vistaEntidadEAPB'" class="fuente-letra">
     <div class="header-container">
         <h1>Mi Perfil</h1>
         <div class="top-right-buttons">
@@ -8,323 +6,287 @@
         </div>
     </div>
 
-    <div>
-        <div *ngIf="vistaEntidad" class="d-flex row gap-4">
-            <!-- Contenido para vistaEntidad -->
-            <p-card>
-                <div class="card-content">
-                    <div class="left-content">
-                        <h2>Nombre entidad territorial</h2>
+    <br>
 
-                        <div>
-                            <span style="font-weight: bold;">Representante Legal: </span>
-                            <span>{{ usuario?.fullName ?? 'SIN NOMBRE' }}</span>
-                        </div>
-
-                        <div>
-                            <span style="font-weight: bold;">Correo: </span>
-                            <span>{{ usuario.email }}</span>
-                        </div>
-                    </div>
-
-                    <div class="right-content">
-                        <p-card [style]="{ backgroundColor: '#73b7ad48' }">
-                            <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                            <p-inputSwitch [(ngModel)]="estadoUsuario" class="custom-switch"
-                                (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
-                        </p-card>
-                    </div>
-                </div>
-            </p-card>
-
-            <p-card>
-                <div class="header">
-                    <button class="btn-crear" (click)="crearContacto()">CREAR</button>
-                </div>
-                <br>
-                <div>
-                    <p-table [value]="data" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
-                        [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[2, 5, 10, 25, 50]"
-                        currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>Nombres y apellidos</th>
-                                <th>Cargo</th>
-                                <th>Estado</th>
-                                <th>Numero de contacto</th>
-                                <th>Correo electronico</th>
-                                <th>Editar</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-data>
-                            <tr>
-                                <td>{{ data.nombreApe }}</td>
-                                <td>{{ data.cargo }}</td>
-                                <td>{{ data.estado }}</td>
-                                <td>{{ data.telefono }}</td>
-                                <td>{{ data.correo }}</td>
-                                <td class="table-actions">
-                                    <button class="btn-round" (click)="editarContacto(data)">
-                                        <i class="pi pi-pencil"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-            </p-card>
-
-            <app-modal-crear [item]="contactoSeleccionado" [isEditing]="editarContancto"></app-modal-crear>
+    <p-card>
+        <div class="card-content">
+            <div class="left-content">
+                <!-- Componentes alineados a la izquierda -->
+                <h2>Nombre entidad territorial</h2>
+                <span style="font-weight: bold;">Representante Legal: </span>
+                <span>{{ usuario.fullName ?? '' }}</span><br>
+                <span style="font-weight: bold;">Correo: </span>
+                <span>{{ usuario.email }}</span>
+            </div>
+            <div class="right-content">
+                <p-card [style]="{ backgroundColor: '#73b7ad48' }">
+                    <span style="margin-right: 150px; font-weight: bold;">Estado</span>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" class="custom-switch"
+                        (onChange)="onEstadoChange($event.checked)"></p-inputSwitch>
+                </p-card>
+            </div>
         </div>
+    </p-card>
 
-        <div *ngIf="!vistaEntidad" class="d-flex row gap-4">
-            <!-- Contenido para vistaUsuario -->
-            <p-card>
-                <div class="card-content">
-                    <div class="left-content">
-                        <div>
-                            <span>{{ usuario?.fullName ?? 'SIN NOMBRE' }}</span>
-                        </div>
+    <br>
 
-                        <div>
-                            <span>{{ usuario?.email ?? 'SIN CORREO' }}</span>
-                        </div>
-
-                        <div>
-                            <span style="font-weight: bold;">Rol: </span>
-                            <span>{{ (usuario?.roles?.join(', ') ?? '') || 'NINGUNO' }}</span>
-                        </div>
-                    </div>
-
-                    <div class="right-content">
-                        <label>Telefono de Contacto</label>
-                        <input type="text" id="exampleInput" class="form-control" style="text-align: center;"
-                            value="{{ usuario?.telefonos ?? '' }}" disabled>
-                    </div>
-
-                    <div class="right-content">
-                        <p-card [style]="{ backgroundColor: '#73b7ad48' }">
-                            <span style="margin-right: 150px; font-weight: bold;">Estado</span>
-                            <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)"
-                                class="custom-switch"
-                                pTooltip="{{ estadoUsuario ? 'Estado activo: el agente recibe asignaciones automáticas de seguimientos.' : 'Estado inactivo: no recibe nuevas asignaciones; los casos se reasignan a otros agentes.' }}"
-                                tooltipPosition="left"></p-inputSwitch>
-                            <i class="pi pi-info-circle ms-2" style="cursor: help;"
-                                pTooltip="{{ estadoUsuario ? 'Estado activo: el agente recibe asignaciones automáticas de seguimientos.' : 'Estado inactivo: no recibe nuevas asignaciones; los casos se reasignan a otros agentes.' }}"
-                                tooltipPosition="left"></i>
-                        </p-card>
-                    </div>
-                </div>
-            </p-card>
-
-            <p-card>
-                <div class="row">
-                    <!-- Primera tabla a la izquierda -->
-                    <div class="col-12 col-md-6">
-                        <h5 class="mb-3">Días laborales y horario de trabajo</h5>
-                        <p-table [value]="datosHorarioAgente">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th></th>
-                                    <th>Dia</th>
-                                    <th>Hora Inicio</th>
-                                    <th>Hora Fin</th>
-                                    <th>Editar</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-data>
-                                <tr>
-                                    <td>
-                                        <p-checkbox [binary]="true" [(ngModel)]="data.diaActivo"></p-checkbox>
-                                    </td>
-                                    <td>{{ data.dia }}</td>
-                                    <td>{{ data.horaEntrada }}</td>
-                                    <td>{{ data.horaSalida }}</td>
-                                    <td class="table-actions">
-                                        <button class="btn-round" (click)="mostrarDialogoHorarioLaboral(data)">
-                                            <i class="pi pi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-
-                    <!-- Segunda tabla a la derecha -->
-                    <div class="col-12 col-md-6">
-                        <h5 class="mb-3">Fechas de ausencia</h5>
-
-                        <div class="d-flex align-items-end gap-3 w-100 bg-light p-3 rounded">
-
-                            <!-- Calendario -->
-                            <div class="flex-fill">
-                                <p-calendar [(ngModel)]="fechaSeleccionada" dateFormat="dd/mm/yy"
-                                    placeholder="Selecciona una fecha" [showIcon]="true" inputStyleClass="w-100"
-                                    styleClass="w-100" [minDate]="minFechaAusencia">
-                                </p-calendar>
-                            </div>
-
-                            <!-- Botón -->
-                            <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-success"
-                                (click)="mostrarDialogoAusencia()" [disabled]="!fechaSeleccionada">
+    <p-card>
+        <div class="header">
+            <button class="btn-crear" (click)="onCreate()">CREAR</button>
+        </div>
+        <br>
+        <div>
+            <p-table [value]="data" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nombres y apellidos</th>
+                        <th>Cargo</th>
+                        <th>Estado</th>
+                        <th>Numero de contacto</th>
+                        <th>Correo electronico</th>
+                        <th>Editar</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-data>
+                    <tr>
+                        <td>{{ data.nombreApe }}</td>
+                        <td>{{ data.cargo }}</td>
+                        <td>{{ data.estado }}</td>
+                        <td>{{ data.telefono }}</td>
+                        <td>{{ data.correo }}</td>
+                        <td class="table-actions">
+                            <button class="btn-round" (click)="onEdit(data)">
+                                <i class="pi pi-pencil"></i>
                             </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </p-card>
 
-                        </div>
+    <app-modal-crear [item]="selectedItem" [isEditing]="isEditing"></app-modal-crear>
+</div>
 
-                        <p-table [value]="datosAusenciasAgente">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Motivo</th>
-                                    <th></th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-data>
-                                <tr>
-                                    <td>{{ data.fechaAusencia }}</td>
-                                    <td>{{ data.motivoAusencia }}</td>
-                                    <td class="table-actions">
-                                        <button class="btn-round" (click)="eliminarAusencia(data)">
-                                            <i class="pi pi-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </div>
-            </p-card>
+<div *ngIf="vistaPerfil === 'vistaUsuario'" class="fuente-letra">
+    <div class="header-container">
+        <h1>Mi Perfil</h1>
+        <div class="top-right-buttons">
+            <app-boton-notificacion></app-boton-notificacion>
         </div>
     </div>
+
+    <br>
+
+    <p-card>
+        <div class="card-content">
+            <div class="left-content">
+                <span>{{ usuario.fullName ?? '' }}</span><br>
+                <span>{{ usuario.email ?? '' }}</span><br>
+                <span style="font-weight: bold;">Rol: </span>
+                <span>{{ (usuario.roles?.join(', ') ?? '') || 'Ninguno' }}</span>
+            </div>
+            <br>
+            <div class="right-content">
+                <label>Telefono de Contacto</label>
+                <input type="text" id="exampleInput" class="form-control" style="text-align: center;"
+                    value="{{ usuario.telefonos ?? '' }}" disabled>
+            </div>
+            <br>
+            <div class="right-content">
+                <p-card [style]="{ backgroundColor: '#73b7ad48' }">
+                    <span style="margin-right: 150px; font-weight: bold;">Estado</span>
+                    <p-inputSwitch [(ngModel)]="estadoUsuario" (onChange)="onEstadoChange($event.checked)" class="custom-switch"></p-inputSwitch>
+                </p-card>
+            </div>
+        </div>
+    </p-card>
+
+    <br>
+
+    <p-card>
+        <div class="row">
+            <!-- Primera tabla a la izquierda -->
+            <div class="col-12 col-md-6">
+                <h5>Días laborales y horario de trabajo</h5><br>
+                <p-table [value]="datosHorarioAgente">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th></th>
+                            <th>Dia</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Editar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-data>
+                        <tr>
+                            <td>
+                                <p-checkbox [binary]="true" [(ngModel)]="data.diaActivo"></p-checkbox>
+                            </td>
+                            <td>{{ data.dia }}</td>
+                            <td>{{ data.horaEntrada }}</td>
+                            <td>{{ data.horaSalida }}</td>
+                            <td class="table-actions">
+                                <button class="btn-round" (click)="showWorkScheduleDialog(data)">
+                                    <i class="pi pi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <br>
+            <br>
+
+            <!-- Segunda tabla a la derecha -->
+            <div class="col-12 col-md-6">
+                <h5>Fechas de ausencia</h5><br>
+
+                <div class="d-flex" style="gap: 10px;"> <!-- Utiliza d-flex para un diseño flexible -->
+                    <p-calendar [(ngModel)]="selectedDate" dateFormat="dd/mm/yy" placeholder="Selecciona una fecha"
+                        [showIcon]="true" styleClass="w-full">
+                    </p-calendar>
+
+                    <button class="btn-round" (click)="openAbsenceDialog()">
+                        <i class="pi pi-plus"></i>
+                    </button>
+                </div>
+
+                <p-table [value]="datosAusenciasAgente">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Motivo</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-data>
+                        <tr>
+                            <td>{{ data.fechaAusencia }}</td>
+                            <td>{{ data.motivoAusencia }}</td>
+                            <td class="table-actions">
+                                <button class="btn-round" (click)="deleteAbsence(data)">
+                                    <i class="pi pi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </p-card>
+
 </div>
 
 
-
-<!-- Dialogos para editar horario de trabajo y registrar ausencia -->
-<p-dialog [(visible)]="dialogoHorarioLaboralVisible" [modal]="true" [modal]="true" [closable]="false"
-    [style]="{ width: '480px' }" [contentStyle]="{ padding: '0rem 2rem 2rem 2.5rem' }" [draggable]="false"
-    [resizable]="false" (onHide)="cerrarDialogoHorarioLaboral()">
-    <!-- Header -->
+<p-dialog 
+    [(visible)]="visibleWorkScheduleForm" 
+    [modal]="true" 
+    [closable]="false" 
+    [style]="{width: '420px'}"
+>
     <ng-template pTemplate="header">
-        <span class="fw-bold">Horario laboral</span>
+        <h3>Work Schedule</h3>
     </ng-template>
 
-    <form [formGroup]="formularioHorarioLaboral" class="p-fluid" (ngSubmit)="guardarHorario()">
-        <!-- Día -->
+    <form [formGroup]="workScheduleForm" class="p-fluid" (ngSubmit)="saveSchedule()">
         <div class="mb-3">
-            <strong>{{ horarioSeleccionado?.dia }}</strong>
+            <strong>Monday</strong>
         </div>
 
         <!-- Start -->
-        <div class="mb-4 row" formGroupName="inicio">
-            <label class="col-3 col-form-label">Hora Inicio:</label>
+        <div class="mb-3 row" formGroupName="start">
+            <label class="col-3 col-form-label">Start:</label>
             <div class="col-9 d-flex align-items-center gap-2">
-                <input pInputText type="number" formControlName="hh" placeholder="HH"
-                    class="form-control form-control-sm" min="1" max="12" />
-                <input pInputText type="number" formControlName="mm" placeholder="MM"
-                    class="form-control form-control-sm" min="0" max="59" />
+                <input pInputText type="number" formControlName="hh" placeholder="HH" class="form-control form-control-sm" min="1" max="12"/>
+                <input pInputText type="number" formControlName="mm" placeholder="MM" class="form-control form-control-sm" min="0" max="59"/>
 
-                <div class="d-flex align-items-center gap-2 ms-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" formControlName="meridiem" value="AM"
-                            id="inicio-am" name="inicio-meridiem">
-                        <label class="form-check-label" for="inicio-am">AM</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" formControlName="meridiem" value="PM"
-                            id="inicio-pm" name="inicio-meridiem">
-                        <label class="form-check-label" for="inicio-pm">PM</label>
-                    </div>
+                <div class="form-check ms-2">
+                    <input class="form-check-input" type="radio" formControlName="meridiem" value="AM" id="am-start">
+                    <label class="form-check-label" for="am-start">AM</label>
+                </div>
+                <div class="form-check ms-2">
+                    <input class="form-check-input" type="radio" formControlName="meridiem" value="PM" id="pm-start">
+                    <label class="form-check-label" for="pm-start">PM</label>
                 </div>
             </div>
-            <small class="text-danger"
-                *ngIf="formularioHorarioLaboral.get('start')?.invalid && formularioHorarioLaboral.get('start')?.touched">
+            <small class="text-danger" *ngIf="workScheduleForm.get('start')?.invalid && workScheduleForm.get('start')?.touched">
                 Horario de inicio inválido
             </small>
         </div>
 
         <!-- End -->
-        <div class="mb-4 row" formGroupName="fin">
-            <label class="col-3 col-form-label">Hora Fin:</label>
+        <div class="mb-3 row" formGroupName="end">
+            <label class="col-3 col-form-label">End:</label>
             <div class="col-9 d-flex align-items-center gap-2">
-                <input pInputText type="number" formControlName="hh" placeholder="HH"
-                    class="form-control form-control-sm" min="1" max="12" />
-                <input pInputText type="number" formControlName="mm" placeholder="MM"
-                    class="form-control form-control-sm" min="0" max="59" />
+                <input pInputText type="number" formControlName="hh" placeholder="HH" class="form-control form-control-sm" min="1" max="12"/>
+                <input pInputText type="number" formControlName="mm" placeholder="MM" class="form-control form-control-sm" min="0" max="59"/>
 
-                <div class="d-flex align-items-center gap-2 ms-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" formControlName="meridiem" value="AM" id="fin-am" name="fin-meridiem">
-                        <label class="form-check-label" for="fin-am">AM</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" formControlName="meridiem" value="PM" id="fin-pm" name="fin-meridiem">
-                        <label class="form-check-label" for="fin-pm">PM</label>
-                    </div>
+                <div class="form-check ms-2">
+                    <input class="form-check-input" type="radio" formControlName="meridiem" value="AM" id="am-end">
+                    <label class="form-check-label" for="am-end">AM</label>
+                </div>
+                <div class="form-check ms-2">
+                    <input class="form-check-input" type="radio" formControlName="meridiem" value="PM" id="pm-end">
+                    <label class="form-check-label" for="pm-end">PM</label>
                 </div>
             </div>
-            <small class="text-danger"
-                *ngIf="formularioHorarioLaboral.get('end')?.invalid && formularioHorarioLaboral.get('end')?.touched">
+            <small class="text-danger" *ngIf="workScheduleForm.get('end')?.invalid && workScheduleForm.get('end')?.touched">
                 Horario de fin inválido
             </small>
         </div>
 
         <!-- Footer -->
-        <div class="d-flex justify-content-end gap-2 pt-3">
-            <button pButton label="Cancelar" type="button" class="p-button-secondary"
-                (click)="cerrarDialogoHorarioLaboral()"></button>
-            <button pButton label="Guardar" type="submit" class="p-button-success"
-                [disabled]="formularioHorarioLaboral.invalid"></button>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button pButton label="Cancelar" type="button" class="btn btn-secondary" (click)="closeWorkScheduleDialog()"></button>
+            <button pButton label="Guardar" type="submit" class="btn btn-success" [disabled]="workScheduleForm.invalid" [appPermiso]="'canEdit'" path="perfil" mode="disable"></button>
         </div>
     </form>
 </p-dialog>
 
 <!-- Modal para registrar ausencia -->
-<p-dialog [(visible)]="dialogoAusenciaVisible" [modal]="true" [closable]="true" [dismissableMask]="true"
-    [draggable]="false" [resizable]="false" [style]="{ width: '580px' }" styleClass="p-fluid">
+<p-dialog 
+    header="Fecha de ausencia" 
+    [(visible)]="visibleAbsenceForm" 
+    [modal]="true" 
+    [closable]="true"
+    [style]="{width: '420px'}"
+    [dismissableMask]="true"
+>
 
-    <!-- Header -->
-    <ng-template pTemplate="header">
-        <span class="fw-bold">Registrar Ausencia</span>
-    </ng-template>
-
-    <!-- Fecha destacada -->
-    <div class="text-center mb-4">
-        <div class="text-600 text-sm">Fecha seleccionada</div>
-        <div class="text-xl font-semibold">
-            {{ fechaSeleccionada | date:'fullDate' }}
-        </div>
+    <div class="text-center mb-3">
+        <h3>{{ selectedDate | date:'dd/MM/yyyy' }}</h3>
     </div>
 
-    <form [formGroup]="formularioAusencia" (ngSubmit)="guardarAusencia()">
-
-        <!-- Campo motivo -->
-        <div class="field mb-4">
-            <label for="reason" class="font-medium mb-2 block">
-                Motivo <span class="text-red-500">*</span>
-            </label>
-
-            <textarea id="motivo" rows="5" cols="30" pInputTextarea formControlName="motivo"
-                placeholder="Ej: Cita médica, vacaciones, diligencia personal" class="w-full"></textarea>
-
-            <small *ngIf="formularioAusencia.get('motivo')?.invalid && formularioAusencia.get('motivo')?.touched"
-                class="p-error block mt-1">
+    <form [formGroup]="absenceForm" (ngSubmit)="saveAbsence()">
+        <div class="p-field">
+            <label for="reason">Motivo*</label>
+            <input id="reason" type="text" pInputText formControlName="reason" placeholder="Escribe el motivo" />
+            <small *ngIf="absenceForm.get('reason')?.invalid && absenceForm.get('reason')?.touched" class="p-error">
                 El motivo es obligatorio.
             </small>
         </div>
+        
+        <div className="d-flex justify-content-end gap-2 mt-4">
+            <button 
+                type="button" 
+                pButton 
+                label="Cancelar" 
+                class="p-button-secondary" 
+                (click)="cancelAbsenceDialog()"
+            ></button>
 
-        <!-- Footer -->
-        <div class="d-flex justify-content-end gap-2 pt-3">
-            <button pButton label="Cancelar" type="button" class="p-button-secondary"
-                (click)="cerrarDialogoAusencia()"></button>
-            <button pButton label="Guardar" type="submit" class="p-button-success"></button>
+            <button
+                type="submit" 
+                pButton 
+                label="Guardar" 
+                class="p-button-success" 
+            ></button>
         </div>
-
     </form>
-
 </p-dialog>
-
-
-<p-toast></p-toast>

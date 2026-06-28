@@ -3,43 +3,27 @@
 
   <div class="card border border-0 pt-2">
     <div class="card-body">
-      <p-table #tablaListas [value]="listasParametricas" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
+      <p-table [value]="listasParametricas" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5"
         [rowsPerPageOptions]="[5, 10, 25, 50]" [showCurrentPageReport]="true"
-        [globalFilterFields]="['id','nombre','nombreTablaPadre','descripcion']"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}">
-        <ng-template pTemplate="caption">
-          <!-- BUG-LZ-013: filtro global + filtros por columna -->
-          <div class="d-flex">
-            <span class="p-input-icon-left ms-auto">
-              <i class="pi pi-search"></i>
-              <input pInputText type="text" placeholder="Buscar..."
-                (input)="tablaListas.filterGlobal($any($event.target).value, 'contains')" />
-            </span>
-          </div>
-        </ng-template>
         <ng-template pTemplate="header">
             <tr>
-              <th pSortableColumn="id">ID Lista</th>
-              <th pSortableColumn="nombre">Nombre de la lista</th>
-              <th pSortableColumn="tablaPadre">Lista padre</th>
-              <th pSortableColumn="descripcion">Descripción</th>
-              <th>Editar</th>
-              <th>Items</th>
-              <th>Histórico</th>
-            </tr>
-            <tr>
-              <th><input pInputText type="text" class="w-100" placeholder="Buscar..."
-                  (input)="tablaListas.filter($any($event.target).value, 'id', 'contains')" /></th>
-              <th><input pInputText type="text" class="w-100" placeholder="Buscar..."
-                  (input)="tablaListas.filter($any($event.target).value, 'nombre', 'contains')" /></th>
-              <th><input pInputText type="text" class="w-100" placeholder="Buscar..."
-                  (input)="tablaListas.filter($any($event.target).value, 'nombreTablaPadre', 'contains')" /></th>
-              <th><input pInputText type="text" class="w-100" placeholder="Buscar..."
-                  (input)="tablaListas.filter($any($event.target).value, 'descripcion', 'contains')" /></th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
+              <th pSortableColumn="id">
+                ID Lista
+              </th>
+              <th pSortableColumn="nombre">
+                Nombre de la lista
+              </th>
+              <th pSortableColumn="tablaPadre">
+                Lista padre
+              </th>
+              <th pSortableColumn="descripcion">
+                Descripción
+              </th>
+            <th>Editar</th>
+            <th>Items</th>
+            <th>Histórico</th>
+          </tr>
         </ng-template>
         <ng-template pTemplate="body" let-listaParametrica>
           <tr>
@@ -105,7 +89,7 @@
 
     <div class="d-flex justify-content-center mt-5">
       <p-button type="button" styleClass="me-3" severity="secondary" (click)="closeEditModal()">Cancelar</p-button>
-      <p-button type="submit" severity="success">Guardar</p-button>
+      <p-button type="submit" severity="success" [appPermiso]="'canEdit'" path="administracion/lista_parametricas" mode="disable">Guardar</p-button>
     </div>
   </form>
 </p-dialog>

@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { IntentoService } from './intento.services';
 import { Router } from '@angular/router';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-intento',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./intento.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule]
+    CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, PermisoDirective]
 })
 export class IntentoComponent implements OnInit {
   @Output() recargaPadre: EventEmitter<void> = new EventEmitter<void>();
@@ -49,7 +50,6 @@ export class IntentoComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("ContactoNNA:", this.ContactoNNA);
   }
 
   ngOnChanges() {
