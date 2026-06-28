@@ -11,13 +11,14 @@ import { CompartirDatosService } from '../../../../services/compartir-datos.serv
 import { ContactoEAPB } from '../../../../models/contactoEapb.model';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-eapb',
   standalone: true,
-  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent, CardModule],
+  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent, CardModule, PermisoDirective],
   templateUrl: './eapb.component.html',
   styleUrl: './eapb.component.css'
 })
@@ -56,55 +57,46 @@ export class EAPBComponent implements OnInit {
   constructor(private dataService: GenericService, private compartirDatosService: CompartirDatosService) { }
 
   ngOnInit(): void {
-    // BUG-LZ-045 (extension): subscribirse PRIMERO al stream nuevoContactoEAPB$ para no perder
-    // el emit si llega antes que termine la carga inicial.
-    this.compartirDatosService.nuevoContactoEAPB$.subscribe({
-      next: () => {
-        // BUG-LZ-061: refrescar lista completa desde el endpoint (no push del payload, que puede
-        // llegar incompleto o con shape distinto). Garantiza shape consistente.
-        this.recargarContactos();
-      },
-      error: (e) => console.error('Error al recibir el nuevo dato', e),
-      complete: () => console.info('Actualización del array completada')
-    });
-
     this.dataService.get_withoutParameters('EAPB', 'TablaParametrica')
     .pipe(
       switchMap((entidades: any) => {
         this.listaEAPB = entidades;
         this.listaEAPB.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        console.log('EAPB ', this.listaEAPB);
+        // Encadenar segunda petición
         return this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad') as Observable<ContactoEAPB[]>;
       })
     )
     .subscribe({
       next: (contactos: ContactoEAPB[]) => {
-        this.aplicarContactos(contactos);
+        const idsValidos = new Set(this.listaEAPB.map(e => String(e.codigo)));
+        const dataFiltrada = contactos.filter(contacto => idsValidos.has(String(contacto.entidadId)));
+        this.data = dataFiltrada;
+        this.originalData = dataFiltrada;
+        this.compartirDatosService.actualizarListaContactos(this.originalData);
+        console.log('Contactos: ', contactos);
       },
-      error: (e) => console.error('Error cargando contactos EAPB', e)
+      error: (e) => console.error('Error en alguna de las llamadas', e),
+      complete: () => console.info('Ambas listas se cargaron exitosamente')
     });
-  }
 
-  // BUG-LZ-061 / BUG-LZ-045 (extension): recargar lista contactos desde backend tras crear/editar
-  // y aplicar el mismo orden que ngOnInit (fechaCreacion desc) para que el nuevo registro
-  // aparezca en la primera fila visible.
-  private recargarContactos(): void {
-    this.dataService.get_withoutParameters('ContactoEntidad', 'Entidad').subscribe({
-      next: (contactos: any) => this.aplicarContactos(contactos as ContactoEAPB[]),
-      error: (e) => console.error('Error recargando contactos EAPB', e)
+    this.compartirDatosService.nuevoContactoEAPB$.subscribe({
+      next: (data: any) => {
+        if (this.isEditing) {
+          const index = this.data.findIndex(datanueva => datanueva.id === data.id);
+          if (index !== -1) {
+            this.data[index] = { ...this.data[index], ...data };
+          }
+        } else {
+          this.data.push(data);
+        }
+        this.originalData = this.data;
+        this.compartirDatosService.actualizarListaContactos(this.originalData);
+        console.log('Array actualizado:', this.data);
+      },
+      error: (e) => console.error('Error al recibir el nuevo dato', e),
+      complete: () => console.info('Actualización del array completada')
     });
-  }
-
-  // Ordena por DateCreated descendente (los recien creados arriba) y publica al servicio
-  // compartido para que el validador de email del modal vea la lista actualizada.
-  private aplicarContactos(contactos: ContactoEAPB[] | null | undefined): void {
-    const lista = (contactos || []).slice().sort((a: any, b: any) => {
-      const fa = a?.dateCreated ? new Date(a.dateCreated).getTime() : 0;
-      const fb = b?.dateCreated ? new Date(b.dateCreated).getTime() : 0;
-      return fb - fa;
-    });
-    this.data = lista;
-    this.originalData = lista;
-    this.compartirDatosService.actualizarListaContactos(this.originalData);
   }
 
   /**Modal Crear y Editar**/
@@ -155,12 +147,9 @@ export class EAPBComponent implements OnInit {
     }
   }
 
-  // BUG-LZ-016: cuando el codigo EAPB ya no existe en la TP (sincronizacion SISPRO eliminó/cambió),
-  // mostrar etiqueta descriptiva en lugar del codigo crudo.
-  buscarNombreEntidadPorId(id: any): string {
-    if (id == null || String(id).trim() === '') return '-';
-    const item = this.listaEAPB.find(eapb => String(eapb.codigo) === String(id));
-    return item ? item.nombre : `EAPB no encontrada (código: ${id})`;
+  buscarNombreEntidadPorId(id: number): string {
+    const item = this.listaEAPB.find(eapb => eapb.codigo === id);
+    return item ? item.nombre : 'No encontrado';
   }
 
   onFiltroBuscarChange(): void {

@@ -2,7 +2,7 @@
     <div class="header-container">
         <h1>EAPB</h1>
         <div class="top-right-buttons">
-            <button type="button" class="btn-general btn-crear" (click)="onCreate()">Crear</button>
+            <button type="button" class="btn-general btn-crear" (click)="onCreate()" [appPermiso]="'canAdd'" path="usuarios/consultar_eapb" mode="disable">Crear</button>
             <app-boton-notificacion></app-boton-notificacion>
         </div>
     </div>
