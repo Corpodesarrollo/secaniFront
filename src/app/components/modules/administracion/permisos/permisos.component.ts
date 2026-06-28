@@ -11,11 +11,14 @@ import { BotonNotificacionComponent } from "../../boton-notificacion/boton-notif
 import { Entidad } from '../../../../models/entidad.model';
 import { Rol } from '../../../../models/rol.model';
 import { PermisoDirective } from '../../../../directives/permiso.directive';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-permisos',
   standalone: true,
-  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule, BotonNotificacionComponent, TabViewModule, PermisoDirective],
+  imports: [RouterModule, CheckboxModule, FormsModule, CommonModule, TableModule, CardModule, BotonNotificacionComponent, TabViewModule, PermisoDirective, ToastModule],
+  providers: [MessageService],
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.css'
 })
@@ -35,7 +38,7 @@ export class PermisosComponent implements OnInit {
   first = 0;
   rows = 10;
 
-  constructor(private dataService: GenericService) { }
+  constructor(private dataService: GenericService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.dataService.get_withoutParameters('Role/GetAll', 'Authentication').subscribe({
@@ -115,15 +118,22 @@ export class PermisosComponent implements OnInit {
   }
 
   onGuardarClick(): void {
+    if (!this.tableData?.length) return;
+    let pendientes = this.tableData.length;
+    let hayError = false;
+    const mostrarToastFinal = () => {
+      if (pendientes !== 0) return;
+      if (hayError) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Se guardaron permisos con errores. Revise consola.' });
+      } else {
+        this.messageService.add({ severity: 'success', summary: 'Permisos', detail: '¡Se guardó de forma exitosa!' });
+      }
+    };
     this.tableData.forEach(permiso => {
-      console.log(permiso);
       this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').subscribe({
-        next: (data: any) => {
-          console.log(data)
-          alert('¡Se guardo de forma exitosa!')
-        },
-        error: (e) => console.error('Se presento un error al actualizar los permisos', e),
-        complete: () => console.info('Se actualizaron los permisos')
+        next: () => {},
+        error: (e: any) => { hayError = true; console.error('Error actualizando permiso', e); pendientes--; mostrarToastFinal(); },
+        complete: () => { pendientes--; mostrarToastFinal(); }
       });
     });
   }
