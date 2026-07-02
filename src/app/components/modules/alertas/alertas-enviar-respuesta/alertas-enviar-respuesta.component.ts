@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EditorModule } from 'primeng/editor';
 import { ButtonModule } from 'primeng/button';
-import { MessageService } from 'primeng/api';
+import { MessageService, PrimeTemplate } from 'primeng/api';
 import { ContactoEAPBService } from '../../../../core/services/contactoEAPBService';
 import { apis } from '../../../../models/apis.model';
 import { Attachment } from '../../../../models/attachmentFile.model';
@@ -40,6 +40,7 @@ import { firstValueFrom } from 'rxjs';
     CheckboxModule,
     EditorModule,
     ButtonModule,
+    PrimeTemplate,
   ],
   templateUrl: './alertas-enviar-respuesta.component.html',
   styleUrl: './alertas-enviar-respuesta.component.css',

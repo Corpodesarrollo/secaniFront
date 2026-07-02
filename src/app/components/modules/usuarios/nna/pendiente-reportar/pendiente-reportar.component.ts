@@ -22,6 +22,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { SplitterModule } from 'primeng/splitter';
 import { MessageService } from 'primeng/api';
+import { User } from '../../../../../core/services/user';
 
 @Component({
   selector: 'app-pendiente-reportar',
@@ -35,33 +36,11 @@ export class PendienteReportarComponent implements OnInit {
 
 
 
-  casos: any[] = [
-    {"noCaso": 1,"nombreNnaCompleto": "Persona Perez Roa", "diagnosticoSiNo": "Si", "nombreReportanteCompleto": "Reportante Ramirez Gutierrez", "idContacto": 1, "aseguradora": "Aseguradora EPS", "municipio": "05001"},
-    {"noCaso": 2,"nombreNnaCompleto": "Persona Perez Roa", "diagnosticoSiNo": "Si", "nombreReportanteCompleto": "Reportante Ramirez Gutierrez", "idContacto": 2, "aseguradora": "Aseguradora EPS", "municipio": "05001"},
-    {"noCaso": 3,"nombreNnaCompleto": "Persona Perez Roa", "diagnosticoSiNo": "Si", "nombreReportanteCompleto": "Reportante Ramirez Gutierrez", "idContacto": 3, "aseguradora": "Aseguradora EPS", "municipio": "05001"},
-    {"noCaso": 4,"nombreNnaCompleto": "Persona Perez Roa", "diagnosticoSiNo": "Si", "nombreReportanteCompleto": "Reportante Ramirez Gutierrez", "idContacto": 4, "aseguradora": "Aseguradora EPS", "municipio": "05001"},
-    {"noCaso": 5,"nombreNnaCompleto": "Persona Perez Roa", "diagnosticoSiNo": "Si", "nombreReportanteCompleto": "Reportante Ramirez Gutierrez", "idContacto": 5, "aseguradora": "Aseguradora EPS", "municipio": "05001"}
-  ];
+  casos: any[] = [];
+  cargandoCasos = false;
 
-  datosNNA: any = {
-    "noCaso": 1,
-    "nombreCompletoNNA" : "Persona Perez Roa",
-    "sexoAlNacer" : "Masculino",
-    "fechaNacimiento" : "10/01/2016",
-    "tipoIdentificacion" : "TI",
-    "identificacion" : "1.234.567.890"
-  };
-
-  datosReportante: any = {
-    "noCaso": 1,
-    "nombreCompleto" : "Reportante Ramirez Gutierrez",
-    "tipoIdentificacion" : "CC",
-    "identificacion" : "1.234.567.890",
-    "numeroCelular" : "3201564789",
-    "correo" : "pendiente@gmail.com",
-
-
-  };
+  datosNNA: any = {};
+  datosReportante: any = {};
 
   departamentos: any[] = [];
   municipios: any[] = [];
@@ -76,6 +55,8 @@ export class PendienteReportarComponent implements OnInit {
   validar: boolean = false;
 
 
+  xUser = new User();
+
   constructor(
     private router: Router,
     private genericService: GenericService,
@@ -87,6 +68,44 @@ export class PendienteReportarComponent implements OnInit {
   async ngOnInit() {
     this.loadDepartamentos();
     this.loadMunicipios();
+    await this.loadCasosPendientes();
+  }
+
+  async loadCasosPendientes() {
+    this.cargandoCasos = true;
+    const params: string[] = [];
+
+    // EAPB: resolver TPEAPB.Id desde NIT (mismo patron casos-entidad / dashboard-eapb)
+    if (this.xUser.isEAPB && this.xUser.enterpriseIdentification) {
+      try {
+        const id: any = await this.genericService
+          .get_withoutParameters('Dashboard/GetEAPBIdByNit?nit=' + this.xUser.enterpriseIdentification, 'Seguimiento')
+          .toPromise();
+        const eapbId = Number(id);
+        if (eapbId) params.push('eapbId=' + eapbId);
+      } catch (err) {
+        console.warn('No se pudo resolver TPEAPB.Id por NIT', err);
+      }
+    }
+
+    // ET: usar enterpriseDeptoCode (codigo DANE 2 digitos) para ver toda jurisdiccion departamento
+    if (this.xUser.isET && this.xUser.enterpriseDeptoCode) {
+      params.push('departamentoId=' + this.xUser.enterpriseDeptoCode);
+    }
+
+    const qs = params.length ? '?' + params.join('&') : '';
+    this.genericService.get_withoutParameters('NNA/PendientesSivigila' + qs, 'NNA').subscribe({
+      next: (data: any) => {
+        this.casos = data || [];
+        this.cargandoCasos = false;
+      },
+      error: (err: any) => {
+        console.error('Error cargando NNA pendientes SIVIGILA', err);
+        this.casos = [];
+        this.cargandoCasos = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los casos pendientes' });
+      }
+    });
   }
 
   loadDepartamentos(){
@@ -131,26 +150,66 @@ export class PendienteReportarComponent implements OnInit {
     return resultado ? resultado.nombre : 'No se encuentra el código: ' + codigo;
   }
 
-  descargarDiagnostico(casoId: any): void{
-    console.log('Descargar diagnostico para caso '+casoId);
+  async descargarDiagnostico(caso: any): Promise<void> {
+    await this.descargarArchivo(caso?.archivoDiagnostico, 'No hay diagnóstico adjunto para este caso');
   }
 
-  descargarParentesco(casoId: any): void{
-    console.log('Descargar diagnostico para caso '+casoId);
+  async descargarParentesco(caso: any): Promise<void> {
+    await this.descargarArchivo(caso?.archivoParentesco, 'No hay parentesco adjunto para este caso');
   }
 
-  mostrarNNA(casoId: any){
+  private async descargarArchivo(fileName: string | null | undefined, mensajeFaltante: string): Promise<void> {
+    if (!fileName) {
+      this.messageService.add({ severity: 'warn', summary: 'Sin archivo', detail: mensajeFaltante });
+      return;
+    }
+    try {
+      const blob: Blob = await this.genericService.getFile('Storage', fileName, apis.authentication);
+      if (!blob || blob.size === 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Archivo vacío del servidor' });
+        return;
+      }
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    } catch (err) {
+      console.error('Error descargando archivo', fileName, err);
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo descargar el archivo' });
+    }
+  }
+
+  mostrarNNA(caso: any){
+    this.datosNNA = {
+      nombreCompletoNNA: caso?.nombreNnaCompleto,
+      sexoAlNacer: caso?.sexoNNA,
+      fechaNacimiento: caso?.fechaNacimientoNNA,
+      tipoIdentificacion: caso?.tipoIdentificacionId,
+      identificacion: caso?.numeroIdentificacion
+    };
     this.verNNA = true;
-
   }
 
   closeNNA(){
     this.verNNA = false;
   }
 
-  mostrarReportante(casoId: any){
+  mostrarReportante(caso: any){
+    this.datosReportante = {
+      nombreCompleto: caso?.nombreReportante || caso?.nombreReportanteCompleto,
+      tipoIdentificacion: caso?.tipoIdReportante,
+      identificacion: caso?.numeroIdReportante || caso?.aliasReportante,
+      numeroCelular: caso?.celularReportante,
+      correo: caso?.emailReportante
+    };
     this.verReportante = true;
-
   }
 
   closeReportante(){

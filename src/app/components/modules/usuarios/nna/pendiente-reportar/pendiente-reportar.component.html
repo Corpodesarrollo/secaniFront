@@ -33,25 +33,25 @@
                   <ng-template pTemplate="body" let-caso>
                     <tr>
                       <td>
-                        <button type="button" class="btn btn-link" (click)="mostrarNNA(caso.noCaso)">{{ caso.nombreNnaCompleto }}</button>
+                        <button type="button" class="btn btn-link" (click)="mostrarNNA(caso)">{{ caso.nombreNnaCompleto }}</button>
                       </td>
                       <td>{{ caso.diagnosticoSiNo }}</td>
                       <td>
-                        <button class="icon-button" (click)="descargarDiagnostico(caso.noCaso)">
-                          <i class="pi pi-file-pdf icon-style"></i>
+                        <button class="icon-button" (click)="descargarDiagnostico(caso)" [disabled]="!caso.archivoDiagnostico" [title]="caso.archivoDiagnostico || 'No hay archivo'">
+                          <i class="pi pi-file-pdf icon-style" [class.text-muted]="!caso.archivoDiagnostico"></i>
                         </button>
                       </td>
                       <td>
-                        <button type="button" class="btn btn-link" (click)="mostrarReportante(caso.noCaso)">{{ caso.nombreReportanteCompleto }}</button>
+                        <button type="button" class="btn btn-link" (click)="mostrarReportante(caso)">{{ caso.nombreReportanteCompleto }}</button>
                       </td>
                       <td>
-                        <button class="icon-button" (click)="descargarParentesco(caso.noCaso)">
-                          <i class="pi pi-file-pdf icon-style"></i>
+                        <button class="icon-button" (click)="descargarParentesco(caso)" [disabled]="!caso.archivoParentesco" [title]="caso.archivoParentesco || 'No hay archivo'">
+                          <i class="pi pi-file-pdf icon-style" [class.text-muted]="!caso.archivoParentesco"></i>
                         </button>
                       </td>
                       <td>{{ caso.aseguradora }}</td>
-                      <td>{{getNombreDeptoPorId(caso.municipio)}}</td>
-                      <td>{{getNombreMuniPorId(caso.municipio)}}</td>
+                      <td>{{getNombreDeptoPorId(caso.municipioId)}}</td>
+                      <td>{{getNombreMuniPorId(caso.municipioId)}}</td>
                       <td>
                         <button class="vali-button" (click)="validarCaso(caso.noCaso)">
                           VALIDAR
@@ -91,7 +91,7 @@
       </div>
       <div class="row">
         <div class="col-5"><span class="titulo">Fecha de nacimiento:</span></div>
-        <div class="col">{{ datosNNA.fechaNacimiento }}</div>
+        <div class="col">{{ datosNNA.fechaNacimiento ? (datosNNA.fechaNacimiento | date:'dd/MM/yyyy') : '-' }}</div>
       </div>
       <div class="row">
         <div class="col-5"><span class="titulo">Tipo de identificación:</span></div>
@@ -111,29 +111,35 @@
       <h1 class="dialog-title">REPORTANTE - NNA pendiente por reportar en SIVIGILA</h1>
     </div>
     <br>
-    <div class="contenedor">
+    <div class="contenedor" *ngIf="datosReportante.nombreCompleto || datosReportante.identificacion || datosReportante.numeroCelular || datosReportante.correo; else sinReportante">
       <div class="row">
         <div class="col-5"><span class="titulo">Nombres y apellidos:</span></div>
-        <div class="col">{{ datosReportante.nombreCompleto }}</div>
+        <div class="col">{{ datosReportante.nombreCompleto || '—' }}</div>
       </div>
       <div class="row">
         <div class="col-5"><span class="titulo">Tipo de identificación:</span></div>
-        <div class="col">{{ datosReportante.tipoIdentificacion }}</div>
+        <div class="col">{{ datosReportante.tipoIdentificacion || '—' }}</div>
       </div>
       <div class="row">
         <div class="col-5"><span class="titulo">Número de identificación:</span></div>
-        <div class="col">{{ datosReportante.identificacion }}</div>
+        <div class="col">{{ datosReportante.identificacion || '—' }}</div>
       </div>
       <div class="row">
         <div class="col-5"><span class="titulo">Número de celular:</span></div>
-        <div class="col">{{ datosReportante.numeroCelular }}</div>
+        <div class="col">{{ datosReportante.numeroCelular || '—' }}</div>
       </div>
       <div class="row">
         <div class="col-5"><span class="titulo">Email:</span></div>
-        <div class="col">{{ datosReportante.correo }}</div>
+        <div class="col">{{ datosReportante.correo || '—' }}</div>
       </div>
-
     </div>
+    <ng-template #sinReportante>
+      <div style="text-align:center; padding:20px; color:#666;">
+        <i class="pi pi-info-circle" style="font-size:32px; margin-bottom:10px;"></i>
+        <p>No hay datos del reportante disponibles.</p>
+        <small>El caso fue creado sin sesión SISPRO autenticada.</small>
+      </div>
+    </ng-template>
   </p-dialog>
 
 

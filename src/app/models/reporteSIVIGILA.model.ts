@@ -19,5 +19,6 @@ export class ReportesSIVIGILA {
   municipioProcedenciaId?: string;
   evidenciaDiagnostico?: UploadFileRequest;
   evidenciaParentesco?: UploadFileRequest;
+  usuarioId?: string;
 }
 

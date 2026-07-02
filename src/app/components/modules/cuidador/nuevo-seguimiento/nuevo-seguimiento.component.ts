@@ -18,6 +18,7 @@ import { TpParametros } from '../../../../core/services/tpParametros';
 import { TablasParametricas } from '../../../../core/services/tablasParametricas';
 import { ReportesSIVIGILA } from '../../../../models/reporteSIVIGILA.model';
 import { GenericService } from '../../../../services/generic.services'
+import { User } from '../../../../core/services/user';
 
 @Component({
   selector: 'app-nuevo-seguimiento',
@@ -79,6 +80,7 @@ export class NuevoSeguimientoComponent {
   // BUG-LZ-033: tamaño máximo permitido para evidencias (5MB) y extensiones aceptadas
   private readonly maxFileSize = 5 * 1024 * 1024;
   private readonly extensionesPermitidas = ['pdf', 'jpg', 'jpeg', 'png'];
+  xUser = new User();
 
   constructor(
     private router: Router,
@@ -213,6 +215,8 @@ export class NuevoSeguimientoComponent {
   }
 
   async Actualizar() {
+    // Identificar al cuidador que reporta para que CreatedByUserId no quede como "Sistema"
+    this.reporte.usuarioId = this.xUser?.id || this.xUser?.enterpriseIdentification || undefined;
     await this.post(this.reporte);
   }
 

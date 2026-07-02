@@ -1,6 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+/* CSS spec: @import DEBE ir antes de cualquier regla (incluido @font-face).
+   Un @font-face intercalado invalida silenciosamente TODOS los @import posteriores. */
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "@ng-select/ng-select/themes/default.theme.css";
 
 /* BUG font WOFF2: PrimeNG empaqueta Inter-roman.var.woff2 corrupto (header
    length=227180 vs disk size=410665 -> OTS parsing error en browser). Override
@@ -19,20 +26,6 @@
     src: local('Inter Italic'), local('-apple-system'), local('BlinkMacSystemFont'),
          local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
 }
-
-@import "primeicons/primeicons.css";
-/* BUG-front-blanco: @import url('https://fonts.googleapis.com/...') BLOQUEA render
-   hasta resolver. Si user tiene red lenta/bloqueada para Google Fonts → pantalla
-   blanca eterna. Font moved to <link rel="preload" ... onload> async en index.html
-   o eliminado (fallback system fonts). */
-
-
-@import "../node_modules/quill/dist/quill.core.css";
-@import "../node_modules/quill/dist/quill.snow.css";
-
-@import "bootstrap/dist/css/bootstrap.min.css";
-
-@import "@ng-select/ng-select/themes/default.theme.css";
 
 :root {
     --color-base: #73b7ad; /* Reemplaza este valor por tu color */
@@ -162,4 +155,81 @@ SECÁNI-RQ00-HU00- Menú y Perfiles
 
 .card {
   overflow: visible !important;
+}
+
+/* Quill p-editor toolbar - PrimeNG theme solo aplica color, base size/svg perdido en bundle prod.
+   Force visibility iconos SVG dentro de botones toolbar. */
+.p-editor-container .p-editor-toolbar.ql-snow button,
+.p-editor-container .ql-snow.ql-toolbar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  float: left;
+  height: 24px;
+  padding: 3px 5px;
+  width: 28px;
+}
+.p-editor-container .p-editor-toolbar.ql-snow button svg,
+.p-editor-container .ql-snow.ql-toolbar button svg {
+  float: left;
+  height: 100%;
+  width: 18px;
+}
+.p-editor-container .ql-snow .ql-formats {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 15px;
+}
+/*! Quill ql-tooltip / ql-hidden purge guard - cssnano respeta !important + comment */
+.p-editor-container .p-editor-content.ql-container .ql-tooltip {
+  display: none !important;
+}
+.p-editor-container .ql-snow .ql-hidden,
+.p-editor-container .ql-snow.ql-toolbar .ql-hidden,
+.p-editor-container .p-editor-toolbar .ql-hidden {
+  display: none !important;
+}
+.p-editor-container .ql-container.ql-snow {
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  position: relative;
+}
+.p-editor-container .ql-editor {
+  box-sizing: border-box;
+  line-height: 1.42;
+  height: 100%;
+  outline: none;
+  overflow-y: auto;
+  padding: 12px 15px;
+  tab-size: 4;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.p-editor-container .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.6);
+  content: attr(data-placeholder);
+  font-style: italic;
+  left: 15px;
+  pointer-events: none;
+  position: absolute;
+  right: 15px;
+}
+.p-editor-container .ql-snow .ql-stroke {
+  fill: none;
+  stroke: #444;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+.p-editor-container .ql-snow .ql-fill,
+.p-editor-container .ql-snow .ql-stroke.ql-fill {
+  fill: #444;
+}
+.p-editor-container .ql-snow .ql-thin,
+.p-editor-container .ql-snow .ql-stroke.ql-thin {
+  stroke-width: 1;
 }
