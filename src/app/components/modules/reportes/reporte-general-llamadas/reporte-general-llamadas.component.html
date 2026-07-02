@@ -42,7 +42,7 @@
             </p-inputGroup>
           </div>
           <div class="col-6 mb-3 col-sm-2 mb-sm-0 d-flex flex-column">
-            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [loading]="cargando" [disabled]="cargando"/>
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [loading]="cargando" [disabled]="cargando" [appPermiso]="'canView'" path="reportes/llamadas" mode="disable"/>
           </div>
         </div>
       </form>
@@ -143,7 +143,7 @@
 
     <div class="d-flex justify-content-center mt-5">
       <p-button type="button" styleClass="me-3" severity="secondary" (click)="closeEditModal()">Cancelar</p-button>
-      <p-button type="submit" severity="success">Guardar</p-button>
+      <p-button type="submit" severity="success" [appPermiso]="'canEdit'" path="reportes/llamadas" mode="disable">Guardar</p-button>
     </div>
   </form>
 </p-dialog>

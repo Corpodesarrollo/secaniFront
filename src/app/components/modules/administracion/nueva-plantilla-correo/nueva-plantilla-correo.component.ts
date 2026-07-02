@@ -13,12 +13,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 
 import { PlantillasCorreoService } from '../../../../services/plantillas-correo.service';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 import { filter, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-nueva-plantilla-correo',
   standalone: true,
-  imports: [CommonModule, ButtonModule, DropdownModule, EditorModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, RouterModule, ToastModule],
+  imports: [CommonModule, ButtonModule, DropdownModule, EditorModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, RouterModule, ToastModule, PermisoDirective],
   templateUrl: './nueva-plantilla-correo.component.html',
   styleUrl: './nueva-plantilla-correo.component.css',
   providers: [MessageService],

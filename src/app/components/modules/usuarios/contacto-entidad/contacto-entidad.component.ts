@@ -13,6 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { BadgeModule } from 'primeng/badge';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 interface EntidadTerritorialRow {
   id: string;
@@ -38,7 +39,7 @@ interface EntidadTerritorialRow {
 @Component({
   selector: 'app-contacto-entidad',
   standalone: true,
-  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent, CardModule, DialogModule, BadgeModule],
+  imports: [ModalCrearComponent, CommonModule, FormsModule, TableModule, BotonNotificacionComponent, CardModule, DialogModule, BadgeModule, PermisoDirective],
   templateUrl: './contacto-entidad.component.html',
   styleUrl: './contacto-entidad.component.css'
 })

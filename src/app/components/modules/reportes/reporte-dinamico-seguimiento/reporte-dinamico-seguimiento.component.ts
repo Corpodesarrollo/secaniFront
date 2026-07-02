@@ -14,11 +14,12 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
 import { ReporteDinamicoSeguimiento } from '../../../../models/reporteDinamicoSeguimiento';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-dinamico-seguimiento',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule],
+  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, PermisoDirective],
   templateUrl: './reporte-dinamico-seguimiento.component.html',
   styleUrl: './reporte-dinamico-seguimiento.component.css'
 })

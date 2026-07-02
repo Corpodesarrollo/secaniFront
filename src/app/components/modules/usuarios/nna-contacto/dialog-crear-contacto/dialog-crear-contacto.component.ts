@@ -18,11 +18,12 @@ import { ChipsModule } from 'primeng/chips';
 import { ToastModule } from 'primeng/toast';
 import { ContactoNNA } from '../../../../../models/contactoNNA.model';
 import { apis } from '../../../../../models/apis.model';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-dialog-crear-contacto',
   standalone: true,
-  imports: [DialogModule, CommonModule, ButtonModule,FormsModule,ReactiveFormsModule,DropdownModule,InputTextModule,ChipsModule,ToastModule],
+  imports: [DialogModule, CommonModule, ButtonModule,FormsModule,ReactiveFormsModule,DropdownModule,InputTextModule,ChipsModule,ToastModule,PermisoDirective],
   templateUrl: './dialog-crear-contacto.component.html',
   styleUrls: ['../../general.component.css', './dialog-crear-contacto.component.css'],
   providers: [MessageService]

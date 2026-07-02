@@ -17,11 +17,12 @@ import { Parametricas } from '../../../../../models/parametricas.model';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { AlertasTratamiento } from '../../../../../models/alertasTratamiento.model';
 import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-seguimiento-sin-tratamiento',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, BreadcrumbComponent],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, BreadcrumbComponent, PermisoDirective],
   templateUrl: './seguimiento-sin-tratamiento.component.html',
   styleUrl: './seguimiento-sin-tratamiento.component.css'
 })

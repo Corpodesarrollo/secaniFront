@@ -5,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { GenericService } from '../../../../../services/generic.services';
 import { CompartirDatosService } from '../../../../../services/compartir-datos.service';
 import { Entidad } from '../../../../../models/entidad.model';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-modal-crear',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, PermisoDirective],
   templateUrl: './modal-crear.component.html',
   styleUrl: './modal-crear.component.css'
 })

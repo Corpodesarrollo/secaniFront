@@ -23,11 +23,12 @@ import { User } from '../../../../core/services/user';
 import { apis } from '../../../../models/apis.model';
 import { forkJoin, switchMap, tap } from 'rxjs';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule, ConfirmDialogModule, TooltipModule],
+  imports: [CommonModule, CalendarModule, CheckboxModule, CardModule, DialogModule, InputSwitchModule, FormsModule, BotonNotificacionComponent, TableModule, ModalCrearComponent, ReactiveFormsModule, ToastModule, InputTextareaModule, ConfirmDialogModule, TooltipModule, PermisoDirective],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css',
   providers: [MessageService, ConfirmationService]

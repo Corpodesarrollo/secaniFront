@@ -7,11 +7,12 @@ import { MessageService } from 'primeng/api';
 
 import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
 import { CargueMasivoService } from '../../../../services/cargue-masivo.service';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-cargue-masivo',
   standalone: true,
-  imports: [BotonNotificacionComponent, ButtonModule, CommonModule, ToastModule],
+  imports: [BotonNotificacionComponent, ButtonModule, CommonModule, ToastModule, PermisoDirective],
   templateUrl: './cargue-masivo.component.html',
   styleUrl: './cargue-masivo.component.css',
   providers: [MessageService],

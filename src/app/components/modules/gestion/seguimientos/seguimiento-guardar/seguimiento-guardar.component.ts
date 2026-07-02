@@ -11,11 +11,12 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { Seguimiento } from '../../../../../models/seguimiento.model';
 import { apis } from '../../../../../models/apis.model';
 import { Router } from '@angular/router';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-seguimiento-guardar',
   standalone: true,
-  imports: [CommonModule, CalendarModule, ReactiveFormsModule, FormsModule, DialogModule, InputTextModule, SelectButtonModule ],
+  imports: [CommonModule, CalendarModule, ReactiveFormsModule, FormsModule, DialogModule, InputTextModule, SelectButtonModule, PermisoDirective ],
   templateUrl: './seguimiento-guardar.component.html',
   styleUrl: './seguimiento-guardar.component.css'
 })

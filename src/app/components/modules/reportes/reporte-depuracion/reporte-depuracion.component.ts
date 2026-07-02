@@ -14,11 +14,12 @@ import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { ReporteDepuracion } from '../../../../models/reporteDepuracion';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-depuracion',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, RouterModule],
+  imports: [ButtonModule, CalendarModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, RouterModule, PermisoDirective],
   templateUrl: './reporte-depuracion.component.html',
   styleUrl: './reporte-depuracion.component.css'
 })

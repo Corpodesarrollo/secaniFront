@@ -1060,7 +1060,7 @@
   <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
     <div>
       <button class="btn btn-volver-nna me-2" (click)="volver()" *ngIf="(alertas && alertas.length > 0) || idContacto">VOLVER</button>
-      <button class="btn btn-guardar-nna" (click)="guardarCambios()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR</button>
+      <button class="btn btn-guardar-nna" (click)="guardarCambios()" [appPermiso]="'canEdit'" path="usuarios/historico_nna" mode="disable"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR</button>
     </div>
   </div>
 </div>

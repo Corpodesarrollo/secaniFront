@@ -25,6 +25,7 @@ import { NNAService } from '../../../../../core/services/nnaService';
 import { Persona } from '../../../../../models/persona.model';
 import { PersonaService } from '../../../../../core/services/personaService';
 import { User } from '../../../../../core/services/user';
+import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-crear-nna',
@@ -44,6 +45,7 @@ import { User } from '../../../../../core/services/user';
     DialogCrearNnaMsgRolCoordinadorComponent,
     NnaContactoListaComponent,
     DropdownModule,
+    PermisoDirective,
   ],
   styleUrls: ['./crear-nna.component.css'],
   encapsulation: ViewEncapsulation.Emulated, // Esto es por defecto

@@ -14,11 +14,12 @@ import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { ReporteDetalleNuevoDepurados } from '../../../../models/reporteDetalleNuevoDepurados';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-detalle-nuevo-depurados',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CommonModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, ReactiveFormsModule],
+  imports: [ButtonModule, CalendarModule, CommonModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, ReactiveFormsModule, PermisoDirective],
   templateUrl: './reporte-detalle-nuevo-depurados.component.html',
   styleUrl: './reporte-detalle-nuevo-depurados.component.css'
 })

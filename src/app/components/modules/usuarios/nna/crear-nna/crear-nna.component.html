@@ -53,7 +53,7 @@
         </div>
         <div class="row align-items-center">
           <div class="col-md-12 text-end">
-            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar && !isPersona"><i *ngIf="buscando" class="pi pi-spin pi-spinner"></i> VALIDAR
+            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar && !isPersona" [appPermiso]="'canAdd'" path="usuarios/historico_nna" mode="disable"><i *ngIf="buscando" class="pi pi-spin pi-spinner"></i> VALIDAR
               EXISTENCIA</button>
             <button class="btn botonSecundario" (click)="cancelarExistencia()"
               *ngIf="!nnaFormCrearSinActivar || isPersona">CANCELAR</button>
@@ -309,7 +309,7 @@
   <!-- <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" (click)="Probar()">Probar</button> -->
 
   <div class="col-md-12 text-center">
-    <button class="btn btn-guardar-nna" (click)="onSubmit()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> Guardar</button>
+    <button class="btn btn-guardar-nna" (click)="onSubmit()" [appPermiso]="'canAdd'" path="usuarios/historico_nna" mode="disable"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> Guardar</button>
   </div>
 </div>
 

@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { IntentoComponent } from '../intento-seguimiento/intento/intento.component';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
+import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-mi-semana',
@@ -27,7 +28,7 @@ import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notif
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, BotonNotificacionComponent]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, BotonNotificacionComponent, PermisoDirective]
 })
 export class MiSemanaComponent {
   @ViewChild('calendar')
