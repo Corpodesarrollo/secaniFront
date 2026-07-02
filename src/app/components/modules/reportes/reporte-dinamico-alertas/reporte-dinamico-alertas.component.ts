@@ -15,12 +15,11 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
 import { ReporteDinamicoAlertas } from '../../../../models/reporteDinamicoAlertas';
-import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-dinamico-alertas',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, PermisoDirective],
+  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule],
   templateUrl: './reporte-dinamico-alertas.component.html',
   styleUrl: './reporte-dinamico-alertas.component.css',
   providers: [DatePipe]
@@ -33,18 +32,16 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
   public columnasObligatorias: Columna<any>[] = [
     { header: 'Fecha notificación', field: 'fechaNotificacion' },
     { header: 'Fecha de resolución', field: 'fechaResolucion' },
-    { header: 'Gestión de correos', field: 'correo' },
-    { header: 'Nombres y apellidos NNA', field: 'primerNombre' },
+    { header: 'Gestión de correos', field: 'cuidadorEmail' },
+    { header: 'Nombres y apellidos NNA', field: 'nombreCompleto' },
     { header: 'Observación', field: 'observacion' }
   ];
 
   public columnasOpcionales: Columna<any>[] = [
-    { header: 'Nombre NNA', field: 'nombreNNA' },
-    { header: 'EAPB', field: 'eapb' },
+    { header: 'EAPB', field: 'eps' },
     { header: 'Categoría alerta', field: 'categoriaAlerta' },
-    { header: 'Procesos con dificultad', field: 'procesosConDificultad' },
     { header: 'Edad NNA', field: 'edad' },
-    { header: 'Correo electrónico', field: 'emailNNA' },
+    { header: 'Correo electrónico', field: 'cuidadorEmail' },
     { header: 'Subcategoria alerta', field: 'subCategoriaAlerta' },
     { header: 'Respuesta entidad', field: 'respuestaEntidad' },
     { header: 'Diagnóstico', field: 'diagnostico' },
@@ -54,21 +51,22 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     { header: 'Sitio de residencia actual', field: 'residenciaActualDireccion' },
     { header: 'Por cuanto tiempo dejó de asistir', field: 'tratamientoCuantoTiemposinAsistir' },
     { header: 'Estudia actualmente', field: 'tratamientoEstudiaActualmente' },
-    { header: 'Claridad de IPS y médicos del diagnóstico y tratamiento', field: 'claridadIpsMedicos' },
+    { header: 'Claridad de IPS y médicos del diagnóstico y tratamiento', field: 'tratamientoHaSidoInformadoClaramente' },
     { header: 'Quién asumió los costos de traslado', field: 'trasladosQuienAsumioCostosTraslado' },
     { header: 'Unidad de medida de tiempo', field: 'tratamientoUnidadMedidaTiempo' },
     { header: 'Ha dejado de asistir al colegio', field: 'tratamientoHaDejadodeAsistirColegio' },
-    { header: 'Viáticos dan cobertura al traslado', field: 'viaticosCoberturaTraslado' },
-    { header: 'Quién asumió los costos de la vivienda', field: 'costosVivienda' },
+    { header: 'Quién asumió los costos de la vivienda', field: 'trasladosQuienAsumioCostosVivienda' },
     { header: 'Causas de inasistencias', field: 'tratamientoCausasInasistencia' },
     { header: 'Tiempo de inasistencia al colegio', field: 'tratamientoTiempoInasistenciaColegio' },
-    { header: 'Apoyo de fundaciones', field: 'apoyoFundaciones' },
+    { header: 'Apoyo de fundaciones', field: 'trasladosHaSolicitadoApoyoFundacion' },
     { header: 'Ha dejado de asistir al tratamiento', field: 'tratamientoHaDejadodeAsistir' },
-    { header: 'Otra', field: 'tratamientoCausasInasistenciaOtra' },
-    { header: 'Unidad de medida tiempo', field: 'unidadMedidaTiempoOtra' },
+    { header: 'Otra causa de inasistencia', field: 'tratamientoCausasInasistenciaOtra' },
+    { header: 'Unidad de medida tiempo inasistencia colegio', field: 'tratamientoTiempoInasistenciaUnidadMedida' },
     { header: 'Nombre de la fundación', field: 'trasladosNombreFundacion' },
     { header: 'Tipo de seguimiento', field: 'tipoSeguimiento' },
-    { header: 'Apoyo recibido por fundación', field: 'trasladosApoyoRecibidoxFundacion' } 
+    { header: 'Apoyo recibido por fundación', field: 'trasladosApoyoRecibidoxFundacion' },
+    { header: 'Trasladado de institución', field: 'trasladosHaSidoTrasladadodeInstitucion' },
+    { header: 'Cantidad de notificaciones', field: 'notificaciones' }
   ];
 
   constructor(
@@ -96,9 +94,11 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
 
-    if (event.checked && index === -1) {
+    // p-checkbox PrimeNG con [value] sin ngModel emite event.checked como array
+    // de valores activos. Toggle: si ya esta lista -> quitar, si no -> agregar.
+    if (index === -1) {
       selected.push(new FormControl(columna));
-    } else if (!event.checked && index !== -1) {
+    } else {
       selected.removeAt(index);
     }
   }
@@ -113,7 +113,10 @@ export class ReporteDinamicoAlertasComponent implements OnInit {
 
   formatCell(value: any, field: string): string {
     if (this.isDateField(field) && value) {
+      // Guard DateTime.MinValue serializado desde backend
+      if (typeof value === 'string' && value.startsWith('0001-01-01')) return '';
       const date = new Date(value);
+      if (isNaN(date.getTime()) || date.getFullYear() < 1900) return '';
       return this.datePipe.transform(date, 'dd/MM/yyyy') ?? '';
     }
 

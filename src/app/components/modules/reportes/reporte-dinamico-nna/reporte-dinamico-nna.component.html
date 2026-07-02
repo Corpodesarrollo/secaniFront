@@ -61,7 +61,7 @@
         </div>
         <div class="d-flex justify-content-end mb-3">
           <div class="col-12 col-sm-2 d-flex justify-content-end">
-            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [appPermiso]="'canView'" path="reportes/nna" mode="disable" />
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [loading]="cargando" [disabled]="cargando" />
           </div>
         </div>
       </form>
@@ -77,6 +77,8 @@
           [globalFilterFields]="columnasFiltroGlobal"
           [rowsPerPageOptions]="[5, 10, 25, 50]"
           [showCurrentPageReport]="true"
+          [loading]="cargando"
+          loadingIcon="pi pi-spin pi-spinner"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
         >
           <ng-template pTemplate="caption">
@@ -97,12 +99,7 @@
           <ng-template pTemplate="body" let-reporte let-columns="columns">
             <tr>
               @for (col of columns; track col) {
-                <td *ngIf="col.field === 'fechaNacimiento' || col.field === 'fechaNotificacionSIVIGILA' || col.field === 'fechaIngresoEstrategia'">
-                  {{ reporte[col.field] | date: 'dd/MM/yyyy HH:mm' }}
-                </td>
-                <td *ngIf="col.field !== 'fechaNacimiento' && col.field !== 'fechaNotificacionSIVIGILA' && col.field !== 'fechaIngresoEstrategia'">
-                  {{ reporte[col.field] }}
-                </td>
+                <td>{{ formatCell(reporte[col.field], col.field) }}</td>
               }
             </tr>
           </ng-template>

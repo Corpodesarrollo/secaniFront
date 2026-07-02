@@ -20,12 +20,11 @@ import { NotificacionComponent } from "../../../notificacion/notificacion.compon
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { NNAService } from '../../../../../core/services/nnaService';
 import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
-import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-seguimiento-fallecido',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent, EstadoNnaComponent, BreadcrumbComponent, PermisoDirective],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, CalendarModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, NotificacionComponent, EstadoNnaComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-fallecido.component.html',
   styleUrl: './seguimiento-fallecido.component.css'
 })

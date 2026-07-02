@@ -53,7 +53,7 @@
         </div>
         <div class="row align-items-center">
           <div class="col-md-12 text-end">
-            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar && !isPersona" [appPermiso]="'canAdd'" path="usuarios/historico_nna" mode="disable"><i *ngIf="buscando" class="pi pi-spin pi-spinner"></i> VALIDAR
+            <button class="btn botonPrimario" (click)="validarExistencia()" *ngIf="nnaFormCrearSinActivar && !isPersona"><i *ngIf="buscando" class="pi pi-spin pi-spinner"></i> VALIDAR
               EXISTENCIA</button>
             <button class="btn botonSecundario" (click)="cancelarExistencia()"
               *ngIf="!nnaFormCrearSinActivar || isPersona">CANCELAR</button>
@@ -70,7 +70,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.primerNombre" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.primerNombre" (ngModelChange)="onNombreChange('primerNombre', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.primerNombre || nna.primerNombre.trim() === '')">
               Primer nombre es requerido.
             </div>
@@ -83,7 +83,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.segundoNombre" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.segundoNombre" (ngModelChange)="onNombreChange('segundoNombre', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
           </div>
         </div>
         <div class="row align-items-center">
@@ -93,7 +93,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.primerApellido" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.primerApellido" (ngModelChange)="onNombreChange('primerApellido', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
             <div class="text-danger" *ngIf="submitted && (!nna.primerApellido || nna.primerApellido.trim() === '')">
               Primer apellido es requerido.
             </div>
@@ -106,7 +106,7 @@
             </label>
           </div>
           <div class="col-8 p-fluid">
-            <input type="text" pInputText [(ngModel)]="nna.segundoApellido" [readonly]="nnaFormCrearSinActivar || isPersona" />
+            <input type="text" pInputText [ngModel]="nna.segundoApellido" (ngModelChange)="onNombreChange('segundoApellido', $event)" [readonly]="nnaFormCrearSinActivar || isPersona" />
           </div>
         </div>
         <div class="row align-items-center">
@@ -208,7 +208,7 @@
         <div class="row align-items-center">
           <div class="col-md-4">
             <label>
-              Grupo poblacional<span *ngIf="selectedPaisNacimiento?.codigo == '170'">*</span>
+              Grupo poblacional
             </label>
           </div>
           <div class="col-md-8 p-fluid">
@@ -309,7 +309,7 @@
   <!-- <button class="btn rondear fondo-color-secundario  text-color-blanco col-1" (click)="Probar()">Probar</button> -->
 
   <div class="col-md-12 text-center">
-    <button class="btn btn-guardar-nna" (click)="onSubmit()" [appPermiso]="'canAdd'" path="usuarios/historico_nna" mode="disable"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> Guardar</button>
+    <button class="btn btn-guardar-nna" (click)="onSubmit()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> Guardar</button>
   </div>
 </div>
 

@@ -15,12 +15,11 @@ import { ReportesService } from '../../../../services/reportes.service';
 import { ExcelExportService } from '../../../../services/excel-export.service';
 import { ReporteGeneralLlamadas } from '../../../../models/reporteGeneralLlamadas';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-general-llamadas',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CommonModule, DialogModule, InputGroupAddonModule, InputGroupModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, TableModule, PermisoDirective],
+  imports: [ButtonModule, CalendarModule, CommonModule, DialogModule, InputGroupAddonModule, InputGroupModule, InputTextModule, InputTextareaModule, ReactiveFormsModule, TableModule],
   templateUrl: './reporte-general-llamadas.component.html',
   styleUrl: './reporte-general-llamadas.component.css'
 })

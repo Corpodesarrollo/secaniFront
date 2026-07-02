@@ -5,14 +5,13 @@ import { CommonModule } from '@angular/common';
 import { GenericService } from '../../../../../services/generic.services';
 import { CompartirDatosService } from '../../../../../services/compartir-datos.service';
 import { Entidad } from '../../../../../models/entidad.model';
-import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-modal-crear',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule, PermisoDirective],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './modal-crear.component.html',
   styleUrl: './modal-crear.component.css'
 })
@@ -26,13 +25,38 @@ export class ModalCrearComponent implements OnInit, OnChanges {
 
   listaContactos: any[] = [];
 
-  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {}
+  constructor(private fb: FormBuilder, private dataService: GenericService, private compartirDatosService: CompartirDatosService) {
+    // BUG-smoke-C: ngOnChanges puede ejecutarse ANTES de ngOnInit (lifecycle Angular). Antes
+    // contactForm se inicializaba en ngOnInit → resetForm en ngOnChanges crashea por undefined.
+    // Paridad con eapb/modal-crear.component.ts que ya lo hace bien.
+    this.contactForm = this.fb.group({
+      id: [''],
+      entidadId: ['', [Validators.required]],
+      nombres: [''],
+      cargo: [''],
+      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
+      email: ['', [Validators.required,
+        // BUG-LZ-077: regex previa rechazaba guion (-) en email RFC 5322 valido.
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'),
+        this.validarEmailUnico.bind(this)]],
+      estado: ['Activo'],
+      activo: [true]
+    });
+    this.contactForm.get('estado')?.disable();
+  }
 
   ngOnInit(): void {
     this.dataService.get_withoutParameters('ET', 'TablaParametrica').subscribe({
       next: (data: any) => {
         this.listaEntidades = data
         this.listaEntidades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        // BUG-LZ-016: re-aplica patchValue tras cargar opciones
+        if (this.isEditing && this.item) {
+          this.contactForm.patchValue({
+            ...this.item,
+            entidadId: this.item.entidadId != null ? String(this.item.entidadId) : ''
+          });
+        }
       },
       error: (e) => console.error('Se presento un error al llenar la lista de ET para creacion', e),
       complete: () => console.info('Se lleno la lista de ET para creacion')
@@ -41,21 +65,6 @@ export class ModalCrearComponent implements OnInit, OnChanges {
     this.compartirDatosService.listaContactos$.subscribe(lista => {
       this.listaContactos = lista;
     });
-
-    this.contactForm = this.fb.group({
-      id: [''],
-      entidadId: ['', [Validators.required]],
-      nombres: [''],
-      cargo: [''],
-      telefonos: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10)]],
-      email: ['', [Validators.required, 
-        Validators.pattern('[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}'),
-        this.validarEmailUnico.bind(this)]],
-      estado: ['Activo'],
-      activo: [true]
-    });
-
-    this.contactForm.get('estado')?.disable(); 
   }
 
   validarEmailUnico(control: AbstractControl) {
@@ -63,45 +72,59 @@ export class ModalCrearComponent implements OnInit, OnChanges {
       return null; // No validar si el campo está vacío o si la lista no está cargada aún
     }
 
-    const emailExiste = this.listaContactos.some(contacto => 
-      contacto.email === control.value && (!this.item || contacto.id !== this.item.id) // 🔥 Ignora el contacto en edición
-    )
+    // BUG-LZ-021: comparar IDs como string para evitar falso positivo cuando el id viene como número/string
+    const itemIdStr = this.item?.id != null ? String(this.item.id) : null;
+    const emailExiste = this.listaContactos.some(contacto =>
+      contacto.email === control.value && (!itemIdStr || String(contacto.id) !== itemIdStr)
+    );
 
     return emailExiste ? { emailRepetido: true } : null;
   }
 
+  onCancel() {
+    // BUG-LZ-020: cierre explícito que descarta cambios sin emitir update
+    this.resetForm();
+    this.close();
+  }
+
   onSubmit() {
-    if (this.contactForm.valid) {
-      this.contactForm.get('estado')?.enable(); 
-      console.log(this.contactForm.value);
-      console.log(this.isEditing);
-
-      this.contactForm.get('estado')?.valueChanges.subscribe((estadoValue) => {
-        this.contactForm.patchValue({
-          activo: estadoValue === 'Activo',
-        });
+    if (this.contactForm.invalid) {
+      // BUG-LZ-020: el botón Actualizar quedaba siempre disabled; ahora valida en click y muestra errores
+      this.contactForm.markAllAsTouched();
+      return;
+    }
+    // BUG-LZ-059 root cause: contactForm.value excluye disabled controls. entidadId
+    // disabled en edit -> payload sin EntidadId -> backend SQL "Cannot insert NULL".
+    // Fix: enable + getRawValue() para incluir disabled.
+    this.contactForm.get('estado')?.enable();
+    this.contactForm.get('entidadId')?.enable();
+    const payload = this.contactForm.getRawValue();
+    if (this.isEditing){
+      this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, payload, 'Entidad').subscribe({
+        // BUG-LZ-044: cerrar SOLO si backend confirmo.
+        next: (data: any) => {
+          this.compartirDatosService.emitirNuevoContactoEAPB(data);
+          this.resetForm();
+          this.close();
+        },
+        error: (e) => {
+          console.error('Error al actualizar contacto ET', e);
+          alert(e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible actualizar el contacto. Verifique los campos requeridos.');
+        }
       });
-
-      if (this.isEditing){
-        this.contactForm.get('entidadId')?.enable();
-        this.dataService.put(`ContactoEntidad/${this.contactForm.get('id')?.value}`, this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => this.compartirDatosService.emitirNuevoContactoEAPB(data),
-          error: (e) => console.error('Se presento un error al actualizar la ET', e),
-          complete: () => console.info('Se actualizo la ET')
-        });
-        console.log(`ContactoEntidad/${this.contactForm.get('id')?.value}`);
-      }else{
-        this.dataService.post('ContactoEntidad', this.contactForm.value, 'Entidad').subscribe({
-          next: (data: any) => {
-            this.compartirDatosService.emitirNuevoContactoEAPB(data)
-            //console.log("Ahora esto es lo que retorna",data)
-          },
-          error: (e) => console.error('Se presento un error al crear un contacto de ET', e),
-          complete: () => console.info('Se creo el nuevo contacto de ET')
-        });
-      }
-      this.resetForm();
-      this.close();
+    } else {
+      this.dataService.post('ContactoEntidad', payload, 'Entidad').subscribe({
+        // BUG-LZ-045: idem.
+        next: (data: any) => {
+          this.compartirDatosService.emitirNuevoContactoEAPB(data);
+          this.resetForm();
+          this.close();
+        },
+        error: (e) => {
+          console.error('Error al crear contacto ET', e);
+          alert(e?.error?.message || e?.error?.[0]?.errorMessage || 'No fue posible crear el contacto. Verifique los campos requeridos.');
+        }
+      });
     }
   }
 
@@ -115,13 +138,17 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   updateForm(item: any) {
-    this.contactForm.patchValue(item);
+    // BUG-LZ-016 (analogo ET): coercion string para que el select encuentre la option
+    this.contactForm.patchValue({
+      ...item,
+      entidadId: item?.entidadId != null ? String(item.entidadId) : ''
+    });
     if (this.isEditing) {
-      this.contactForm.get('entidadId')?.disable(); 
-      this.contactForm.get('estado')?.enable(); 
+      this.contactForm.get('entidadId')?.disable();
+      this.contactForm.get('estado')?.enable();
     } else {
-      this.contactForm.get('entidadId')?.enable(); 
-      this.contactForm.get('estado')?.enable(); 
+      this.contactForm.get('entidadId')?.enable();
+      this.contactForm.get('estado')?.enable();
     }
   }
 
@@ -133,6 +160,13 @@ export class ModalCrearComponent implements OnInit, OnChanges {
   }
 
   open() {
+    // BUG-LZ-043/060: en modo edit, si user borra+cancela, ngOnChanges no dispara al reabrir
+    // (item ref no cambio). En modo create, reset al reabrir.
+    if (this.isEditing && this.item) {
+      this.updateForm(this.item);
+    } else {
+      this.resetForm();
+    }
     const modalElement = document.getElementById('exampleModal');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);

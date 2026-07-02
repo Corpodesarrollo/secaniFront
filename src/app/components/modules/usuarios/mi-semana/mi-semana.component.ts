@@ -20,7 +20,6 @@ import { Router } from '@angular/router';
 import { IntentoComponent } from '../intento-seguimiento/intento/intento.component';
 import { TpParametros } from '../../../../core/services/tpParametros';
 import { BotonNotificacionComponent } from '../../boton-notificacion/boton-notificacion.component';
-import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-mi-semana',
@@ -28,7 +27,7 @@ import { PermisoDirective } from '../../../../directives/permiso.directive';
   styleUrls: ['./mi-semana.component.css'],
   standalone: true,
   imports: [ CommonModule, ReactiveFormsModule,
-    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, BotonNotificacionComponent, PermisoDirective]
+    FullCalendarModule, DragDropModule, CardModule, DialogModule, ButtonModule, DropdownModule, InputTextareaModule, IntentoComponent, BotonNotificacionComponent]
 })
 export class MiSemanaComponent {
   @ViewChild('calendar')
@@ -130,15 +129,107 @@ export class MiSemanaComponent {
     2. Cargar los datos del perfil de horario del usuario, mezclar con los festivos
     */
 
-    // TODO: Determinar id del usuario
-    //let usuarioId = sessionStorage.getItem('usuarioId');
-    this.usuarioId = '48e6efab-2c8a-4d37-bc6c-d62ec8fdd0c5';
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      try {
+        const u = JSON.parse(stored);
+        this.usuarioId = u?.id || '';
+      } catch {
+        this.usuarioId = '';
+      }
+    }
 
     this.diasLimite(this.currentDate);
     await this.horarioLaboral();
+    // BUG-LZ-014: eventos() debe ejecutarse ANTES que ausencias() porque eventos() asigna
+    // this.events = eventosBD.map(...) sobreescribiendo cualquier ausencia agregada antes.
+    // Después ausencias() concatena con [...this.events, ...ausenciaEvents].
     await this.eventos();
+    await this.ausencias();
+    await this.reprogramarSeguimientosEnAusencia();
 
 
+  }
+
+  private async reprogramarSeguimientosEnAusencia() {
+    if (!this.ausenciaFechas.length || !this.events.length) return;
+    const ausenciaSet = new Set(this.ausenciaFechas);
+    const afectados = this.events.filter((e: any) => {
+      if (!e.start || e.display === 'background' || e.allDay) return false;
+      const fechaStr = new Date(e.start).toISOString().substring(0, 10);
+      return ausenciaSet.has(fechaStr);
+    });
+    for (const e of afectados) {
+      const original = new Date(e.start);
+      let nueva = new Date(original);
+      for (let i = 0; i < 30; i++) {
+        nueva.setDate(nueva.getDate() + 1);
+        const dow = nueva.getDay();
+        if (dow === 0 || dow === 6) continue;
+        const ymd = nueva.toISOString().substring(0, 10);
+        if (!ausenciaSet.has(ymd)) break;
+      }
+      e.start = nueva;
+      e.end = new Date(nueva.getTime() + 30 * 60000);
+      try {
+        await this.servicios.PutActualizarSeguimiento({
+          Id: e.id,
+          FechaSeguimiento: this.formatDateTimeForSQLServer(nueva.toISOString())
+        });
+      } catch (err) {
+        console.error('Error reprogramando seguimiento', e.id, err);
+      }
+    }
+    this.calendarOptions.events = [...this.events];
+  }
+
+  ausenciaFechas: string[] = [];
+
+  async ausencias() {
+    if (!this.usuarioId) return;
+    try {
+      const ausencias = await this.servicios.GetAusenciasUsuario(this.usuarioId);
+      if (!Array.isArray(ausencias)) return;
+      const ausenciaEvents: any[] = [];
+      this.ausenciaFechas = [];
+      for (const a of ausencias) {
+        const fechaBase = (a.fechaAusencia || a.FechaAusencia || '').toString().substring(0, 10);
+        if (!fechaBase) continue;
+        const dias = Math.max(1, Number(a.diasAusencia || a.DiasAusencia || 1));
+        const motivo = (a.motivoAusencia || a.MotivoAusencia || '').toString().trim();
+        const startDate = new Date(fechaBase + 'T00:00:00');
+        for (let i = 0; i < dias; i++) {
+          const d = new Date(startDate);
+          d.setDate(startDate.getDate() + i);
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          const fecha = `${y}-${m}-${dd}`;
+          this.ausenciaFechas.push(fecha);
+          ausenciaEvents.push({
+            start: fecha,
+            end: fecha,
+            allDay: true,
+            display: 'background',
+            backgroundColor: '#dc3545',
+            title: motivo ? `Ausencia: ${motivo}` : 'Ausencia'
+          });
+          ausenciaEvents.push({
+            start: fecha,
+            allDay: true,
+            title: motivo ? `Ausencia: ${motivo}` : 'Ausencia',
+            backgroundColor: '#dc3545',
+            borderColor: '#b02a37',
+            textColor: '#ffffff',
+            editable: false
+          });
+        }
+      }
+      this.events = [...this.events, ...ausenciaEvents];
+      this.calendarOptions.events = this.events;
+    } catch (err) {
+      console.error('Error cargando ausencias', err);
+    }
   }
 
   diasLimite(currentDate: Date) {
@@ -264,7 +355,7 @@ export class MiSemanaComponent {
   }
 
   control = 2;
-  handlePrev() {
+  async handlePrev() {
     if(this.control > 1){
       const currentDate = new Date(this.currentDate);
       const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() - 7));
@@ -277,13 +368,15 @@ export class MiSemanaComponent {
         console.error('Calendar component is not initialized');
       }
       this.diasLimite(this.currentDate);
-      this.horarioLaboral();
-      this.eventos();
+      await this.horarioLaboral();
+      await this.eventos();
+      // BUG-LZ-014: re-cargar ausencias al cambiar de semana para que sigan visibles bloqueadas.
+      await this.ausencias();
       this.control--;
     }
   }
 
-  handleNext() {
+  async handleNext() {
     if(this.control < 3){
       const currentDate = new Date(this.currentDate);
       const oneWeekAhead = new Date(currentDate.setDate(currentDate.getDate() + 7));
@@ -296,8 +389,10 @@ export class MiSemanaComponent {
         console.error('Calendar component is not initialized');
       }
       this.diasLimite(this.currentDate);
-      this.horarioLaboral();
-      this.eventos();
+      await this.horarioLaboral();
+      await this.eventos();
+      // BUG-LZ-014: re-cargar ausencias al cambiar de semana para que sigan visibles bloqueadas.
+      await this.ausencias();
       this.control++;
     //console.log(this.currentDate);
     }
@@ -323,7 +418,12 @@ export class MiSemanaComponent {
     }
 
     let respuesta = await this.servicios.PutActualizarSeguimiento(data);
-    //console.log("respuesta ", respuesta);
+    // BUG-LZ-082: -3 = el agente ya tiene un seguimiento a menos de 10 min de ese horario.
+    // Revertir el arrastre en el calendario y avisar.
+    if (respuesta === -3) {
+      alert("El agente ya tiene un seguimiento agendado a menos de 10 minutos de ese horario. Se revierte el cambio.");
+      info.revert();
+    }
   }
 
   formatDateTimeForSQLServer(dateString: string): string {
@@ -341,14 +441,12 @@ export class MiSemanaComponent {
   }
 
   isEventAllowed(dropInfo: any) {
-    const date = dropInfo.startStr.split('T')[0]; // Obtiene la parte de la fecha sin la hora
+    const date = dropInfo.startStr.split('T')[0];
     const now = new Date();
     const eventStart = new Date(dropInfo.startStr);
 
-    // Verifica si la fecha es un feriado o es anterior a la fecha y hora actual
-    if (this.holidays.includes(date) || eventStart < now) {
-      return false;
-    }
+    if (this.holidays.includes(date) || eventStart < now) return false;
+    if (this.ausenciaFechas?.includes(date)) return false;
 
     return true;
   }

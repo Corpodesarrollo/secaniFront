@@ -13,6 +13,8 @@ import { Rol } from '../../../../models/rol.model';
 import { PermisoDirective } from '../../../../directives/permiso.directive';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-permisos',
@@ -70,10 +72,9 @@ export class PermisosComponent implements OnInit {
       complete: () => console.info('Se lleno la lista de Entidades')
     });
 
-    this.dataService.get_withoutParameters('User/GetAllUserDetails', 'Authentication').subscribe({
+    this.dataService.get_withoutParameters('User/GetAllFromSispro', 'Authentication').subscribe({
       next: (data: any) => {
         this.dataUsers = data
-        console.log(data)
       },
       error: (e) => console.error('Se presento un error al llenar la lista de usuarios', e),
       complete: () => console.info('Se lleno la lista de usuarios')
@@ -119,22 +120,32 @@ export class PermisosComponent implements OnInit {
 
   onGuardarClick(): void {
     if (!this.tableData?.length) return;
-    let pendientes = this.tableData.length;
-    let hayError = false;
-    const mostrarToastFinal = () => {
-      if (pendientes !== 0) return;
-      if (hayError) {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Se guardaron permisos con errores. Revise consola.' });
-      } else {
+    // BUG-LZ-008: forkJoin + catchError con detección 204 NoContent como éxito.
+    // Backend Permisos.Put a veces retorna cuerpo vacío -> SyntaxError JSON parse en cliente.
+    // Debe contarse como OK, no como fallo.
+    const requests = this.tableData.map(permiso =>
+      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').pipe(
+        map(() => ({ ok: true })),
+        catchError((e: any) => {
+          const status = e?.status ?? 0;
+          if (status >= 200 && status < 300) {
+            return of({ ok: true });
+          }
+          console.error('Error actualizando permiso', e);
+          return of({ ok: false });
+        })
+      )
+    );
+    forkJoin(requests).subscribe((results: any[]) => {
+      const ok = results.filter(r => r.ok).length;
+      const err = results.length - ok;
+      if (err === 0) {
         this.messageService.add({ severity: 'success', summary: 'Permisos', detail: '¡Se guardó de forma exitosa!' });
+      } else if (ok === 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar ningún permiso.' });
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Permisos', detail: `${ok} OK, ${err} con error.` });
       }
-    };
-    this.tableData.forEach(permiso => {
-      this.dataService.put(`Permisos/${permiso.moduloComponenteObjetoId}`, permiso, 'Permisos').subscribe({
-        next: () => {},
-        error: (e: any) => { hayError = true; console.error('Error actualizando permiso', e); pendientes--; mostrarToastFinal(); },
-        complete: () => { pendientes--; mostrarToastFinal(); }
-      });
     });
   }
 

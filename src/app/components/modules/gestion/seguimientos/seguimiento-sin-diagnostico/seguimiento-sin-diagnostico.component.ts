@@ -17,12 +17,11 @@ import { TableModule } from 'primeng/table';
 import { EstadoNnaComponent } from "../../../estado-nna/estado-nna.component";
 import { BreadcrumbComponent } from "../../../shared/breadcrumb/breadcrumb.component";
 import { NNA } from '../../../../../models/nna.model';
-import { PermisoDirective } from '../../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-seguimiento-sin-diagnostico',
   standalone: true,
-  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, BreadcrumbComponent, PermisoDirective],
+  imports: [CommonModule, BreadcrumbModule, CardModule, SeguimientoStepsComponent, ReactiveFormsModule, DropdownModule, TableModule, FormsModule, InputTextModule, SeguimientoAlertasComponent, EstadoNnaComponent, BreadcrumbComponent],
   templateUrl: './seguimiento-sin-diagnostico.component.html',
   styleUrl: './seguimiento-sin-diagnostico.component.css'
 })

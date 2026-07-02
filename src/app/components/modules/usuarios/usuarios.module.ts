@@ -36,7 +36,6 @@ import { InputIconModule } from 'primeng/inputicon';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { NnaContactoListaComponent } from "./nna-contacto/nna-contacto-lista/nna-contacto-lista.component";
-import { PermisoDirective } from '../../../directives/permiso.directive';
 
 @NgModule({
   declarations: [
@@ -77,8 +76,7 @@ import { PermisoDirective } from '../../../directives/permiso.directive';
     DialogCrearNnaMsgRolCoordinadorComponent,
     DialogNnaMsgSeguimientoComponent,
     DialogCrearContactoComponent,
-    NnaContactoListaComponent,
-    PermisoDirective
+    NnaContactoListaComponent
 ],
   providers: [
     MessageService,

@@ -14,12 +14,11 @@ import { ExcelExportService } from '../../../../services/excel-export.service';
 import { FormUtils } from '../../../../utils/form-utils';
 import { Columna } from '../../../../models/columna';
 import { ReporteDinamicoSeguimiento } from '../../../../models/reporteDinamicoSeguimiento';
-import { PermisoDirective } from '../../../../directives/permiso.directive';
 
 @Component({
   selector: 'app-reporte-dinamico-seguimiento',
   standalone: true,
-  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule, PermisoDirective],
+  imports: [ButtonModule, CalendarModule, CheckboxModule, CommonModule, ReactiveFormsModule, InputGroupAddonModule, InputGroupModule, InputTextModule, TableModule],
   templateUrl: './reporte-dinamico-seguimiento.component.html',
   styleUrl: './reporte-dinamico-seguimiento.component.css'
 })
@@ -42,7 +41,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     { header: 'EAPB', field: 'eapb' },
     { header: 'Estado', field: 'estado' },
     { header: 'Fecha del seguimiento', field: 'fechaSeguimiento' },
-    { header: 'Observación', field: 'observacionAgente' },
+    { header: 'Observación del agente', field: 'observacionAgente' },
   ];
 
   public columnasOpcionales: Columna<ReporteDinamicoSeguimiento>[] = [
@@ -65,7 +64,7 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
     { header: 'Capacidad económica para traslado', field: 'trasladoTieneCapacidadEconomica' },
     { header: 'La EAPB suministró servicios sociales de apoyo', field: 'eapb' },
     { header: 'Los servicios sociales de apoyo los entregaron oportunamente', field: 'trasladosServiciosdeApoyoOportunos' },
-    { header: 'Observación', field: 'observacionesSolicitante' },
+    { header: 'Observación del solicitante', field: 'observacionesSolicitante' },
     { header: 'Parentesco contacto', field: 'cuidadorParentesco' },
     { header: 'Teléfono contacto', field: 'cuidadorTelefono' },
     { header: 'Nombre contacto', field: 'cuidadorNombres' },
@@ -97,12 +96,30 @@ export class ReporteDinamicoSeguimientoComponent implements OnInit {
   onCheckboxChange(event: any, columna: Columna<ReporteDinamicoSeguimiento>): void {
     const selected = this.camposSeleccionados;
     const index = selected.controls.findIndex(ctrl => ctrl.value.field === columna.field);
-
-    if (event.checked && index === -1) {
+    // Toggle por presencia (event.checked PrimeNG no es confiable sin ngModel)
+    if (index === -1) {
       selected.push(new FormControl(columna));
-    } else if (!event.checked && index !== -1) {
+    } else {
       selected.removeAt(index);
     }
+  }
+
+  isDateField(field: string): boolean {
+    return ['fechaSeguimiento', 'fechaConsultaDiagnostico', 'fechaDiagnostico',
+            'fechaInicioTratamiento', 'fechaUltimaRecaida'].includes(field);
+  }
+
+  formatCell(value: any, field: string): string {
+    if (this.isDateField(field) && value) {
+      if (typeof value === 'string' && value.startsWith('0001-01-01')) return '';
+      const date = new Date(value);
+      if (isNaN(date.getTime()) || date.getFullYear() < 1900) return '';
+      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      return `${dd}/${mm}/${date.getFullYear()}`;
+    }
+    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
+    return value ?? '';
   }
 
   get columnasParaMostrar(): Columna<ReporteDinamicoSeguimiento>[] {

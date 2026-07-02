@@ -18,7 +18,7 @@
   <p-footer>
     <button type="button" pButton class="color-fondo" (click) = "iniciarSeguimiento()">Iniciar Seguimiento</button>
     &nbsp;
-    <button type="button" pButton  class="color-fondo" (click) = "reasignar()" [appPermiso]="'canEdit'" path="gestion/mi_semana" mode="disable">Reasignar Seguimiento</button>
+    <button type="button" pButton  class="color-fondo" (click) = "reasignar()">Reasignar Seguimiento</button>
   </p-footer>
 </p-dialog>
 
@@ -67,7 +67,7 @@
         <button type="button" pButton class="color-fondo_gris" (click)="cerrarDialog()">Cancelar</button>
       </div>
       <div class="col-sm-6">
-        <button type="submit" pButton class="color-fondo" [appPermiso]="'canEdit'" path="gestion/mi_semana" mode="disable">Guardar</button>
+        <button type="submit" pButton class="color-fondo">Guardar</button>
       </div>
     </div>
 </form>

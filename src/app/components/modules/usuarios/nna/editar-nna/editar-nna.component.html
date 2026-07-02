@@ -125,12 +125,17 @@
         <div class="row mb-3">
           <div class="col-6 fw-bold">EAPB:</div>
           <div class="col-6">
+            <!-- BUG-LZ-053: optionValue=codigo (string) NO matchea con datosNNA.eapbId (numero Id).
+                 Cambiar a id para que el value preseleccionado coincida. dataKey ayuda PrimeNG. -->
             <p-dropdown
               placeholder="Seleccionar"
               [(ngModel)]="datosNNA.eapbId"
               [options]="eapbs"
               optionLabel="nombre"
-              optionValue="codigo"
+              optionValue="id"
+              dataKey="id"
+              [filter]="true"
+              filterBy="nombre"
               name="eapbId"
               styleClass="w-100"
               appendTo="body"
@@ -249,10 +254,24 @@
             <div class="row">
               <div class="col" style="font-weight: bold;">Nombre de la Institución en la que recibe tratamiento actualmente (IPS):<br></div>
               <div class="col">
-                <select class="form-select" aria-label="Default select example" name="ipsTratamiento" [(ngModel)]="datosNNA.ipsId">
-                  <option value="" selected>Seleccionar</option>
-                  <option *ngFor="let entidad of entidadesRecibirTratamiento" value="{{entidad.id}}">{{entidad.nombre}}</option>
-                </select>
+                <!-- BUG QA 2026-05-25: <select> con *ngFor sobre 330k IPS colgaba el navegador
+                     ("La pagina no responde") al expandir el accordion. p-dropdown con
+                     virtualScroll renderiza solo los visibles y filter permite buscar. -->
+                <p-dropdown
+                  name="ipsTratamiento"
+                  [(ngModel)]="datosNNA.ipsId"
+                  [options]="entidadesRecibirTratamiento"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  [filter]="true"
+                  filterBy="nombre"
+                  [showClear]="true"
+                  [virtualScroll]="true"
+                  [virtualScrollItemSize]="38"
+                  appendTo="body"
+                  styleClass="w-100"
+                  placeholder="Seleccionar">
+                </p-dropdown>
               </div>
             </div>
           </div>
@@ -773,9 +792,10 @@
                     <label for="subcategoriaAlerta" class="form-label fw-bold">Subcategoría alerta:</label>
                   </div>
                   <div class="col-8">
-                    <select class="form-select" aria-label="Default select example" name="categoriaalerta" [(ngModel)]="datosNNA.subcategoriaAlertaId">
+                    <!-- BUG-LZ-066: filtrar subcategorias por categoria seleccionada. Antes mostraba las 26. -->
+                    <select class="form-select" aria-label="Default select example" name="subcategoriaalerta" [(ngModel)]="datosNNA.subcategoriaAlertaId">
                       <option value="" selected>Seleccionar</option>
-                      <option *ngFor="let subcateg of subcategoriasAlerta" value="{{subcateg.id}}">{{subcateg.indicador}} - {{subcateg.subCategoriaAlerta}}</option>
+                      <option *ngFor="let subcateg of subcategoriasAlerta" [hidden]="datosNNA.categoriaAlertaId && +subcateg.categoriaAlertaId !== +datosNNA.categoriaAlertaId" value="{{subcateg.id}}">{{subcateg.indicador}} - {{subcateg.subCategoriaAlerta}}</option>
                     </select>
                   </div>
                 </div>
@@ -817,10 +837,22 @@
                     <label for="ipsTraslados" class="form-label fw-bold">IPS:</label>
                   </div>
                   <div class="col-6">
-                    <select class="form-select" aria-label="Default select example" name="ipstraslado" [(ngModel)]="datosNNA.trasladosIPSId">
-                      <option value="" selected>Seleccionar</option>
-                      <option *ngFor="let ips of ipss" value="{{ips.codigo}}">{{ips.nombre}}</option>
-                    </select>
+                    <!-- BUG QA 2026-05-25: ipss tambien tiene 330k registros. p-dropdown virtualScroll. -->
+                    <p-dropdown
+                      name="ipstraslado"
+                      [(ngModel)]="trasladoIpsSeleccionado"
+                      [options]="ipss"
+                      optionLabel="nombre"
+                      optionValue="id"
+                      [filter]="true"
+                      filterBy="nombre"
+                      [showClear]="true"
+                      [virtualScroll]="true"
+                      [virtualScrollItemSize]="38"
+                      appendTo="body"
+                      styleClass="w-100"
+                      placeholder="Seleccionar">
+                    </p-dropdown>
                   </div>
                 </div>
               </div>
@@ -997,7 +1029,8 @@
                     <label for="estudiandoActualmente" class="form-label fw-bold">¿Considera usted que la IPS y/o el médico le han informado de manera clara y completa sobre el diagnóstico y el tratamiento del paciente?</label>
                   </div>
                   <div class="col-4">
-                    <select class="form-select" id="estudiandoActualmente" [(ngModel)]="datosNNA.tratamientoHaSidoInformadoClaramente">
+                    <select class="form-select" id="estudiandoActualmente" [(ngModel)]="tratamientoHaSidoInformadoBool">
+                      <option [ngValue]="null">Seleccionar</option>
                       <option [ngValue]="true">Si</option>
                       <option [ngValue]="false">No</option>
                     </select>
@@ -1027,7 +1060,7 @@
   <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px;">
     <div>
       <button class="btn btn-volver-nna me-2" (click)="volver()" *ngIf="(alertas && alertas.length > 0) || idContacto">VOLVER</button>
-      <button class="btn btn-guardar-nna" (click)="guardarCambios()" [appPermiso]="'canEdit'" path="usuarios/historico_nna" mode="disable"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR</button>
+      <button class="btn btn-guardar-nna" (click)="guardarCambios()"><i *ngIf="saving" class="pi pi-spin pi-spinner"></i> GUARDAR</button>
     </div>
   </div>
 </div>

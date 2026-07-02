@@ -42,7 +42,7 @@
             </p-inputGroup>
           </div>
           <div class="col-6 mb-3 col-sm-2 mb-sm-0 d-flex flex-column">
-            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [appPermiso]="'canView'" path="reportes/llamadas" mode="disable"/>
+            <p-button type="submit" severity="success" label="Generar" styleClass="w-100" [loading]="cargando" [disabled]="cargando"/>
           </div>
         </div>
       </form>
@@ -57,7 +57,9 @@
           [globalFilterFields]="['agente', 'fechaIntento', 'observaciones']"
           [rowsPerPageOptions]="[5, 10, 25, 50]"
           [showCurrentPageReport]="true"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"  
+          [loading]="cargando"
+          loadingIcon="pi pi-spin pi-spinner"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
         >
           <ng-template pTemplate="caption">
             <div class="d-flex align-items-center justify-content-between">
@@ -141,7 +143,7 @@
 
     <div class="d-flex justify-content-center mt-5">
       <p-button type="button" styleClass="me-3" severity="secondary" (click)="closeEditModal()">Cancelar</p-button>
-      <p-button type="submit" severity="success" [appPermiso]="'canEdit'" path="reportes/llamadas" mode="disable">Guardar</p-button>
+      <p-button type="submit" severity="success">Guardar</p-button>
     </div>
   </form>
 </p-dialog>
